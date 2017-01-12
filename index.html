@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>API Reference</title>
 
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -16,11 +14,11 @@
   background-color: #272822;
 }
 .highlight .err {
-  color: #151515;
-  background-color: #ac4142;
+  color: #272822;
+  background-color: #f92672;
 }
 .highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
-  color: #505050;
+  color: #75715e;
 }
 .highlight .cp {
   color: #f4bf75;
@@ -29,45 +27,45 @@
   color: #f4bf75;
 }
 .highlight .o, .highlight .ow {
-  color: #d0d0d0;
+  color: #f8f8f2;
 }
 .highlight .p, .highlight .pi {
-  color: #d0d0d0;
+  color: #f8f8f2;
 }
 .highlight .gi {
-  color: #90a959;
+  color: #a6e22e;
 }
 .highlight .gd {
-  color: #ac4142;
+  color: #f92672;
 }
 .highlight .gh {
-  color: #6a9fb5;
-  background-color: #151515;
+  color: #66d9ef;
+  background-color: #272822;
   font-weight: bold;
 }
 .highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
-  color: #aa759f;
+  color: #ae81ff;
 }
 .highlight .kc {
-  color: #d28445;
+  color: #fd971f;
 }
 .highlight .kt {
-  color: #d28445;
+  color: #fd971f;
 }
 .highlight .kd {
-  color: #d28445;
+  color: #fd971f;
 }
 .highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
-  color: #90a959;
+  color: #a6e22e;
 }
 .highlight .sr {
-  color: #75b5aa;
+  color: #a1efe4;
 }
 .highlight .si {
-  color: #8f5536;
+  color: #cc6633;
 }
 .highlight .se {
-  color: #8f5536;
+  color: #cc6633;
 }
 .highlight .nn {
   color: #f4bf75;
@@ -79,31 +77,31 @@
   color: #f4bf75;
 }
 .highlight .na {
-  color: #6a9fb5;
+  color: #66d9ef;
 }
 .highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
-  color: #90a959;
+  color: #a6e22e;
 }
 .highlight .ss {
-  color: #90a959;
+  color: #a6e22e;
 }
     </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
-        <img src="images/navbar.png" />
+        <img src="images/navbar.png" alt="Navbar" />
       </span>
     </a>
     <div class="tocify-wrapper">
-      <img src="images/logo.png" />
+      <img src="images/logo.png" alt="Logo" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
+              <a href="#" data-language-name="shell">cURL</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -112,7 +110,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='http://api.resourcewatch.org:82'>Sign Up for a Developer Key</a></li>
             <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -121,167 +119,535 @@
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>Welcome to the Awesome API!</p>
 
 <p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
 
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
+<p>This API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>.</p>
 
-<h1 id="authentication">Authentication</h1>
+          <h1 id="authentication">Authentication</h1>
 
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>The RW API uses JWT Tokens to identify and authenticate to the users.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<h2 id="generate-your-own-oauth-token">Generate your own Oauth Token</h2>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<p>For generate your own token, follow the next steps:</p>
 
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<p>1- Enter in Control Tower Application
+Navigate to <a href="http://api.resourcewatch.org:82">http://api.resourcewatch.org:82</a></p>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<p>If you don&rsquo;t login before, the application will redirect you to the login page.
+You will see:
+<img src="images/authentication/login.png" class="screenshot"/>
+You can login with Email/Password or with your account of Google, Facebook, Twitter. If you don&rsquo;t remember your password, it happens to all of us, you can restart your password by clicking on &lsquo;Recover password&rsquo;.</p>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<p>2- When you login correctly, you will be redirected to Control Tower Application and you will see:
+<img src="images/authentication/control-tower.png" class="screenshot"/></p>
 
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+<p>3- To obtain your token, you click in Profile menu item and you will see:
+<img src="images/authentication/profile.png" class="screenshot"/></p>
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
+<p>4- Copy your token clicking in Copy button. Remember to use it, add the header <code class="prettyprint">Authorization: Bearer: &lt;yourToken&gt;</code></p>
 
-<h1 id="kittens">Kittens</h1>
+          <h1 id="dataset">Dataset</h1>
 
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h2 id="what-is-a-dataset">What is a Dataset?</h2>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<p>Lorem Ipsum
+&ldquo;Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit&hellip;&rdquo;
+&ldquo;There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain&hellip;&rdquo;</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vulputate ultrices condimentum. Sed venenatis arcu lacus, sit amet scelerisque nunc ullamcorper in. Donec sagittis placerat dolor, in faucibus ligula dapibus quis. Mauris scelerisque, velit id suscipit feugiat, enim ipsum vehicula arcu, aliquet ornare ipsum odio ac lectus. Ut suscipit tortor mauris, in euismod neque lacinia sed. Nam a nisi lacinia, posuere enim in, gravida erat.</p>
 
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
+<h2 id="dataset-types">Dataset types</h2>
 
-<p>This endpoint retrieves all kittens.</p>
+<h3 id="carto">Carto</h3>
 
-<h3 id="http-request">HTTP Request</h3>
+<p><a href="https://www.carto.com" target="_blank"><img src="images/dataset/carto.png" class="logo-third"/></a>
+Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit…” “There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain…”</p>
 
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
+<h3 id="arcgis">ArcGIS</h3>
 
-<h3 id="query-parameters">Query Parameters</h3>
+<p><a href="https://www.arcgis.com/features/index.html" target="_blank"><img src="https://www.arcgis.com/features/img/logo-esri.png" class="logo-third"/></a>
+Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit…” “There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain…”</p>
+
+<h3 id="csv">CSV</h3>
+
+<p>Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit…” “There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain…”</p>
+
+<h3 id="json">JSON</h3>
+
+<p>Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit…” “There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain…”</p>
+
+<h3 id="wms">WMS</h3>
+
+<p>Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit…” “There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain…”</p>
+
+<h3 id="google-earth-engine-coming-soon">Google Earth Engine (Coming soon&hellip;)</h3>
+
+<p><a href="https://earthengine.google.com/" target="_blank"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
+Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit…” “There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain…”</p>
+
+<h2 id="how-create-a-dataset">How create a Dataset?</h2>
+
+<p>Important!! To create a dataset, you need a authorization token. To create one you follow the steps of this <a href="#generate-your-own-oauth-token">guide</a>. </p>
+
+<p>To create a dataset, you need define any required fields. The fields that compose the dataset are:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>name</td>
+<td style="text-align: center">Name of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">Yes</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>connectorType</td>
+<td style="text-align: center">Type of connector.</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">rest, json, document</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>connectorProvider</td>
+<td style="text-align: center">Provider of connector</td>
+<td style="text-align: right">text</td>
+<td style="text-align: right">rwjson, csv, carto, featureservice, wms</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>connectorUrl</td>
+<td style="text-align: center">Url of the data</td>
+<td style="text-align: right">Url</td>
+<td style="text-align: right">Any url</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the dataset belongs</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">gfw, forest-atlas, rw, prep, aqueduct, data4sdg</td>
+<td style="text-align: right">Yes</td>
 </tr>
 </tbody></table>
 
+<h3 id="carto">Carto</h3>
+
+<p>To create a Carto dataset, you have to do a POST with the following body</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{  
+   "dataset": {  
+      "connectorType":"rest", 
+      "connectorProvider":"cartodb", 
+      "connectorUrl":"&lt;cartoUrl&gt;", 
+      "application":[  
+         "your", "apps" 
+      ], 
+      "name":"Example Carto Dataset" 
+   } 
+}'</span>
+</code></pre>
+<blockquote>
+<p>Real example:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{  
+   "dataset": {  
+      "connectorType":"rest",
+      "connectorProvider":"cartodb",
+      "connectorUrl":"https://wri-01.carto.com/tables/wdpa_protected_areas/table",
+      "application":[  
+         "gfw", "forest-atlas"
+      ],
+      "name":"World Database on Protected Areas -- Global"
+   }
+}'</span>
+</code></pre>
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Remember — create dataset is an authenticated endpoint!
 </aside>
 
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h3 id="arcgis">ArcGIS</h3>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<p>To create a ArcGIS dataset, you have to do a POST with the following body</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{  
+   "dataset": {  
+      "connectorType":"rest", 
+      "connectorProvider":"featureservice", 
+      "connectorUrl":"&lt;arcgisUrl&gt;", 
+      "application":[  
+         "your", "apps" 
+      ], 
+      "name":"Example ArcGIS Dataset" 
+   } 
+}'</span>
 </code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<blockquote>
+<p>Real example:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{  
+   "dataset": {  
+      "connectorType":"rest",
+      "connectorProvider":"featureservice",
+      "connectorUrl":"http://hsip.geoplatform.gov/arcgis/rest/services/HSIP_Public/TransportationAir/MapServer/1?f=pjson",
+      "application":[  
+         "prep"
+      ],
+      "name":"Uncontrolled Public-Use Airports -- U.S."
+   }
+}'</span>
+</code></pre>
+<aside class="success">
+Remember — create dataset is an authenticated endpoint!
+</aside>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<h3 id="csv">CSV</h3>
+
+<p>Now, CSV Dataset only support files separated by semicolon. TSV not supported.</p>
+
+<p>The <code class="prettyprint">connectorUrl</code> must be a accessible csv file. Zip, tar, tar.zip, tsv not supported.</p>
+
+<p>CSV Dataset has some optional fields in the creation process, that they are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>legend</td>
+<td style="text-align: center"></td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right"></td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>&ndash; lat</td>
+<td style="text-align: center">Name of column with latitude value</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any word</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>&ndash; long</td>
+<td style="text-align: center">Name of column with longitude value</td>
+<td style="text-align: right">text</td>
+<td style="text-align: right">Any word</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>&ndash; date</td>
+<td style="text-align: center">Name of columns with date value (ISO Format)</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Any list word</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>&ndash; country</td>
+<td style="text-align: center">Name of columns with country value (ISO3 code)</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Any list word</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{  
+   "dataset": {  
+      "connectorType":"rest", 
+      "connectorProvider":"featureservice", 
+      "connectorUrl":"&lt;csvUrl&gt;", 
+      "application":[  
+         "your", "apps" 
+      ], 
+      "legend": {
+          "lat": "lat-column",
+          "long": "long-column",
+          "date": ["date1Column", "date2Column"],
+          "country": ["country1Column", "country2Column"]
+      }
+      "name":"Example CSV Dataset" 
+   } 
+}'</span>
 </code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<blockquote>
+<p>Real example:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{  
+   "dataset": {  
+      "connectorType":"document",
+      "connectorProvider":"csv",
+      "connectorUrl":"http://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv",
+      "application":[  
+         "gfw"
+      ],
+      "legend": {
+          "lat": "lat",
+          "long": "lon"
+      },
+      "name":"Glad points"
+   }
+}'</span>
 </code></pre>
+<aside class="success">
+Remember — create dataset is an authenticated endpoint!
+</aside>
+
+          <h1 id="widget">Widget</h1>
+
+<h2 id="what-is-a-widget">What is a Widget?</h2>
+
+<p>Is a graphic representation of a Dataset&rsquo;s data. The most of them are defined with <a href="#what-is-vega">Vega grammar</a>.</p>
+
+<p>Widget contains the next fields:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>userId</td>
+<td style="text-align: center">Id of the owner</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>Application</td>
+<td style="text-align: center">Application to which the dataset belongs</td>
+<td style="text-align: right">Array</td>
+</tr>
+<tr>
+<td>slug</td>
+<td style="text-align: center">Unique identifier of the widget</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of the widget</td>
+<td style="text-align: right">Url</td>
+</tr>
+<tr>
+<td>description</td>
+<td style="text-align: center">Description of the widget</td>
+<td style="text-align: right">Array</td>
+</tr>
+<tr>
+<td>source</td>
+<td style="text-align: center">TODO</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>sourceUrl</td>
+<td style="text-align: center">TODO</td>
+<td style="text-align: right">Url</td>
+</tr>
+<tr>
+<td>layerId</td>
+<td style="text-align: center">Id of the relationship with layer</td>
+<td style="text-align: right">Array</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">Id of the dataset that the widget belongs</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>authors</td>
+<td style="text-align: center">Name of the authors</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>queryUrl</td>
+<td style="text-align: center">Url with the data of the chart shows</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>widgetConfig</td>
+<td style="text-align: center">Vega configuration</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>template</td>
+<td style="text-align: center">If it&rsquo;s a template (base schema to create other widgets)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>default</td>
+<td style="text-align: center">If it&rsquo;s a default widget for the dataset that it belongs</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Status of the Widget</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>published</td>
+<td style="text-align: center">If it&rsquo;s available to use</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>verified</td>
+<td style="text-align: center">If it&rsquo;s verified by other user</td>
+<td style="text-align: right">Text</td>
+</tr>
+</tbody></table>
+
+<h3 id="what-is-vega">What is Vega?</h3>
+
+<p>Vega is a visualization grammar, a declarative format for creating, saving and sharing interactive visualization designs. This wiki contains documentation and learning materials for getting up and running with Vega.
+<a href="https://github.com/vega/vega/wiki">More info</a></p>
+
+<h2 id="how-obtain-all-widgets">How obtain all widgets</h2>
+
+<p>To obtain all widgets:</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget
+</code></pre>
+<aside class="success">
+Remember — the response is jsonapi format
+</aside>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Example response:</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="w">  
+   </span><span class="nt">"data"</span><span class="p">:[</span><span class="w">  
+      </span><span class="p">{</span><span class="w">  
+         </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"8f67fadd-d8df-4a28-82dd-a22a337d71b9"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"attributes"</span><span class="p">:{</span><span class="w">  
+            </span><span class="nt">"userId"</span><span class="p">:</span><span class="s2">"5858f37140621f11066fb2f7"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"application"</span><span class="p">:[</span><span class="w">  
+               </span><span class="s2">"aqueduct"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"slug"</span><span class="p">:</span><span class="s2">"ercentage-of-country-s-population-is-at-high-risk-of-hunger"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"Percentage of country's population at high risk of hunger."</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"description"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"sourceUrl"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"layerId"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"dataset"</span><span class="p">:</span><span class="s2">"f1d24950-c764-4f90-950a-4541f798eb95"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"authors"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"queryUrl"</span><span class="p">:</span><span class="s2">"query/f1d24950-c764-4f90-950a-4541f798eb95?sql=select * from crops"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"widgetConfig"</span><span class="p">:{</span><span class="w">  
+                </span><span class="err">...</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"template"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"default"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"published"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"verified"</span><span class="p">:</span><span class="kc">false</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">],</span><span class="w">
+   </span><span class="nt">"links"</span><span class="p">:{</span><span class="w">  
+      </span><span class="nt">"first"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/widget?page%5Bnumber%5D=1"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"prev"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/widget?page%5Bnumber%5D=1"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"next"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/widget?page%5Bnumber%5D=2&amp;page%5Bsize%5D=10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/widget?page%5Bnumber%5D=64&amp;page%5Bsize%5D=10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"self"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/widget?page%5Bnumber%5D=1&amp;page%5Bsize%5D=10"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<h3 id="filter-params">Filter params</h3>
 
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
+<p>The filters available are:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Description</th>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td>name</td>
+<td style="text-align: center">Filter the widgets whose name contains the filter text</td>
+<td style="text-align: right">Text</td>
 </tr>
 </tbody></table>
+
+<blockquote>
+<p>Return the widgets filtered whose name contains glad</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?name<span class="o">=</span>glad
+</code></pre>
+<h3 id="pagination-params">Pagination params</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">Number elements per page</td>
+<td style="text-align: right">Number</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">Number of page</td>
+<td style="text-align: right">Number</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>Return the widgets of the page 2 with 5 elements per page</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
+</code></pre>
+<h2 id="create-a-widget">Create a Widget</h2>
+
+<h2 id="update-a-widget">Update a Widget</h2>
+
+<h2 id="delete-a-widget">Delete a Widget</h2>
+
+          <h1 id="layer">Layer</h1>
+
+          <h1 id="query">Query</h1>
+
+          <h1 id="fields">Fields</h1>
+
+          <h1 id="metadata">Metadata</h1>
+
+          <h1 id="vocabulary">Vocabulary</h1>
+
+          <h1 id="geostore">Geostore</h1>
 
           <h1 id="errors">Errors</h1>
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
-
-<p>The Kittn API uses the following error codes:</p>
+<p>The Resource Watch API uses the following error codes:</p>
 
 <table><thead>
 <tr>
@@ -291,7 +657,7 @@ Remember — a happy kitten is an authenticated kitten!
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>Bad Request &ndash; Your request is incomplete or contains errors</td>
 </tr>
 <tr>
 <td>401</td>
@@ -318,10 +684,6 @@ Remember — a happy kitten is an authenticated kitten!
 <td>Gone &ndash; The kitten requested has been removed from our servers</td>
 </tr>
 <tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
-</tr>
-<tr>
 <td>429</td>
 <td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
 </tr>
@@ -338,9 +700,7 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
+                <a href="#" data-language-name="shell">cURL</a>
           </div>
       </div>
     </div>
