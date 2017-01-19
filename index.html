@@ -127,27 +127,28 @@
 
           <h1 id="authentication">Authentication</h1>
 
-<p>The RW API uses JWT Tokens to identify and authenticate to the users.</p>
+<p>The RW API uses JWT Tokens to identify and authenticate users.</p>
 
-<h2 id="generate-your-own-oauth-token">Generate your own Oauth Token</h2>
+<h2 id="how-to-generate-your-own-oauth-token">How to generate your own Oauth Token</h2>
 
-<p>For generate your own token, follow the next steps:</p>
+<p>To generate your own token, follow the next steps:</p>
 
-<p>1- Enter in Control Tower Application
-Navigate to <a href="http://api.resourcewatch.org:82">http://api.resourcewatch.org:82</a></p>
-
-<p>If you don&rsquo;t login before, the application will redirect you to the login page.
+<ol>
+<li>Navigate to <a href="http://api.resourcewatch.org:82">http://api.resourcewatch.org:82</a>
+If you aren&rsquo;t logged in yet, the application will redirect you to the login page.
 You will see:
-<img src="images/authentication/login.png" class="screenshot"/>
-You can login with Email/Password or with your account of Google, Facebook, Twitter. If you don&rsquo;t remember your password, it happens to all of us, you can restart your password by clicking on &lsquo;Recover password&rsquo;.</p>
+<img src="images/authentication/login.png" alt="Control Tower login page" /></li>
+</ol>
 
-<p>2- When you login correctly, you will be redirected to Control Tower Application and you will see:
-<img src="images/authentication/control-tower.png" class="screenshot"/></p>
+<p>You can login with your WRI credentials (email and password), or with your Google, Facebook, or Twitter account. If you don&rsquo;t remember your password (don&rsquo;t worry! it happens to everyone!), you can reset your password clicking on &lsquo;Recover password&rsquo;.</p>
 
-<p>3- To obtain your token, you click in Profile menu item and you will see:
-<img src="images/authentication/profile.png" class="screenshot"/></p>
-
-<p>4- Copy your token clicking in Copy button. Remember to use it, add the header <code class="prettyprint">Authorization: Bearer: &lt;yourToken&gt;</code></p>
+<ol>
+<li><p>After logging in you will be redirected to the Control Tower application and you will see:
+<img src="images/authentication/control-tower.png" alt="Control Tower Dashboard" /></p></li>
+<li><p>To obtain your token, click in the Profile menu item and you will see:
+<img src="images/authentication/profile.png" alt="Control Tower Profile" /></p></li>
+<li><p>Copy your token clicking the Copy button. Remember to add the header <code class="prettyprint">Authorization: Bearer: &lt;yourToken&gt;</code> in order to use it.</p></li>
+</ol>
 
           <h1 id="dataset">Dataset</h1>
 
@@ -188,11 +189,11 @@ Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, c
 <p><a href="https://earthengine.google.com/" target="_blank"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
 Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit…” “There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain…”</p>
 
-<h2 id="how-create-a-dataset">How create a Dataset?</h2>
+<h2 id="how-to-create-a-dataset">How to create a Dataset?</h2>
 
-<p>Important!! To create a dataset, you need a authorization token. To create one you follow the steps of this <a href="#generate-your-own-oauth-token">guide</a>. </p>
+<p>Important things first! In order to create a dataset, you need an authorization token. Follow the steps of this <a href="#generate-your-own-oauth-token">guide</a> to generate it. </p>
 
-<p>To create a dataset, you need define any required fields. The fields that compose the dataset are:</p>
+<p>To create a dataset, you need to define all of the required fields in the request body. The fields that compose a dataset are:</p>
 
 <table><thead>
 <tr>
@@ -212,15 +213,15 @@ Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, c
 </tr>
 <tr>
 <td>connectorType</td>
-<td style="text-align: center">Type of connector.</td>
+<td style="text-align: center">Connector type</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">rest, json, document</td>
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
 <td>connectorProvider</td>
-<td style="text-align: center">Provider of connector</td>
-<td style="text-align: right">text</td>
+<td style="text-align: center">The provider of the connector</td>
+<td style="text-align: right">Text</td>
 <td style="text-align: right">rwjson, csv, carto, featureservice, wms</td>
 <td style="text-align: right">Yes</td>
 </tr>
@@ -240,13 +241,17 @@ Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, c
 </tr>
 </tbody></table>
 
-<h3 id="carto">Carto</h3>
+<p>There are some differences between datasets types.</p>
 
-<p>To create a Carto dataset, you have to do a POST with the following body</p>
+<h3 id="carto-datasets">Carto datasets</h3>
+
+<blockquote>
+<p>To create a Carto dataset, you have to do a POST with the following body:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{  
+ <span class="s1">'{  
    "dataset": {  
       "connectorType":"rest", 
       "connectorProvider":"cartodb", 
@@ -259,7 +264,7 @@ Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, c
 }'</span>
 </code></pre>
 <blockquote>
-<p>Real example:</p>
+<p>A real example:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -276,30 +281,16 @@ Lorem Ipsum “Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, c
    }
 }'</span>
 </code></pre>
-<aside class="success">
-Remember — create dataset is an authenticated endpoint!
+<aside class="notice">
+    Remember that create dataset is an authenticated endpoint!
 </aside>
 
 <h3 id="arcgis">ArcGIS</h3>
 
-<p>To create a ArcGIS dataset, you have to do a POST with the following body</p>
-<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{  
-   "dataset": {  
-      "connectorType":"rest", 
-      "connectorProvider":"featureservice", 
-      "connectorUrl":"&lt;arcgisUrl&gt;", 
-      "application":[  
-         "your", "apps" 
-      ], 
-      "name":"Example ArcGIS Dataset" 
-   } 
-}'</span>
-</code></pre>
+<p>Both Carto and ArcGIS are REST information providers, but ArcGIS datasets have a different <em>connectorProvider</em>: <em>featureservice</em>. </p>
+
 <blockquote>
-<p>Real example:</p>
+<p>An example query to register an ArcGIS dataset would look like this:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -316,17 +307,13 @@ Remember — create dataset is an authenticated endpoint!
    }
 }'</span>
 </code></pre>
-<aside class="success">
-Remember — create dataset is an authenticated endpoint!
-</aside>
-
 <h3 id="csv">CSV</h3>
 
-<p>Now, CSV Dataset only support files separated by semicolon. TSV not supported.</p>
+<p>At the current moment the CSV dataset service only supports semicolon-delimited files &ndash; TSV files are not supported.</p>
 
-<p>The <code class="prettyprint">connectorUrl</code> must be a accessible csv file. Zip, tar, tar.zip, tsv not supported.</p>
+<p>The <code class="prettyprint">connectorUrl</code> must be an accessible CSV file, non-compressed - zip, tar, tar.gz, etc are not supported.</p>
 
-<p>CSV Dataset has some optional fields in the creation process, that they are:</p>
+<p>CSV datasets support some optional fields in the creation process. They are:</p>
 
 <table><thead>
 <tr>
@@ -416,10 +403,46 @@ Remember — create dataset is an authenticated endpoint!
    }
 }'</span>
 </code></pre>
-<aside class="success">
+<h3 id="json">JSON</h3>
+
+<aside class="notice">
 Remember — create dataset is an authenticated endpoint!
 </aside>
 
+<h2 id="checking-the-dataset">Checking the dataset</h2>
+
+<p>To check the just created dataset, you can perform a GET request for the dataset with its id.
+This is not an authenticated endpoint.</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{  
+}'</span>
+
+</code></pre>
+<h2 id="updating-the-dataset">Updating the dataset</h2>
+
+<p>In order to modify the dataset, you can PUT a request.
+It accepts the same parameters as the <em>create dataset</em> endpoint, and you will need an authentication token.</p>
+
+<blockquote>
+<p>An example update request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PUT http://api.resourcewatch.org/dataset/&lt;dataset-id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
+<span class="s1">'{__
+    "dataset": {__
+        "name": "Another name for the dataset"
+    }
+}'</span>
+</code></pre>
+<h2 id="deleting-a-dataset">Deleting a dataset</h2>
+
+<p>You can delete a dataset! Just send a DELETE request to the endpoint:</p>
+<pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
           <h1 id="widget">Widget</h1>
 
 <h2 id="what-is-a-widget">What is a Widget?</h2>
@@ -645,6 +668,550 @@ Remember — the response is jsonapi format
 
           <h1 id="geostore">Geostore</h1>
 
+<h2 id="what-is-geostore">What is Geostore?</h2>
+
+<p>Geostore is a geojson database. You can save your geojson or obtain geojson from country, region, Protected areas, etc.</p>
+
+<p>Geostore object contains the next fields:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td style="text-align: center">Id of the geostore</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>geojson</td>
+<td style="text-align: center">Geojson with the geometry</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>hash</td>
+<td style="text-align: center">MD5 hash generated from geojson. Is the same that the id</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>provider</td>
+<td style="text-align: center">This field is completed, if the geostore was created from a provider</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; type</td>
+<td style="text-align: center">Provider type</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>&ndash; table</td>
+<td style="text-align: center">Table name</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>&ndash; user</td>
+<td style="text-align: center">User of the account</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>&ndash; filter</td>
+<td style="text-align: center">Conditions to obtain the geojson. Is possible put and and or conditions. This conditions must only return one row.</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>areaHa</td>
+<td style="text-align: center">Area in Hectares of the geojson</td>
+<td style="text-align: right">Number</td>
+</tr>
+<tr>
+<td>bbox</td>
+<td style="text-align: center">Bounding box of the geojson</td>
+<td style="text-align: right">Array</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Remember — All endpoint of geostore don&rsquo;t need that you are authenticated.
+</aside>
+
+<h2 id="create-geostore">Create Geostore</h2>
+
+<p>You can create a geostore from 4 different ways:</p>
+
+<h3 id="with-a-geojson">With a Geojson</h3>
+
+<p>If you have your own geojson, you can save it in geostore. To create the geostore, you need to define all the required fields in the request body. The fields that compose a geostore are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th>Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>geojson</td>
+<td style="text-align: center">Geojson with your geometry</td>
+<td style="text-align: right">Object</td>
+<td></td>
+<td style="text-align: right">Yes</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a Geostore, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/geostore <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "geojson": &lt;yourGeoJSONObject&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/geostore <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "geojson":{
+      "type":"FeatureCollection",
+      "features":[
+         {
+            "type":"Feature",
+            "properties":{
+
+            },
+            "geometry":{
+               "type":"LineString",
+               "coordinates":[
+                  [
+                     -3.9942169189453125,
+                     41.044922165782175
+                  ],
+                  [
+                     -3.995418548583985,
+                     41.03767166215326
+                  ],
+                  [
+                     -3.9842605590820312,
+                     41.03844854003296
+                  ],
+                  [
+                     -3.9844322204589844,
+                     41.04589315472392
+                  ],
+                  [
+                     -3.9942169189453125,
+                     41.044922165782175
+                  ]
+               ]
+            }
+         },
+         {
+            "type":"Feature",
+            "properties":{
+
+            },
+            "geometry":{
+               "type":"Polygon",
+               "coordinates":[
+                  [
+                     [
+                        -4.4549560546875,
+                        40.84706035607122
+                     ],
+                     [
+                        -4.4549560546875,
+                        41.30257109430557
+                     ],
+                     [
+                        -3.5211181640624996,
+                        41.30257109430557
+                     ],
+                     [
+                        -3.5211181640624996,
+                        40.84706035607122
+                     ],
+                     [
+                        -4.4549560546875,
+                        40.84706035607122
+                     ]
+                  ]
+               ]
+            }
+         }
+      ]
+   }
+}'</span>
+</code></pre>
+<p>The response will be 200 if the geostore will save correctly and return the geostore object with all information:</p>
+
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nt">"data"</span><span class="p">:{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"c9bacccfb9c3fe225dc67545bb93a5cb"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:{</span><span class="w">
+         </span><span class="nt">"geojson"</span><span class="p">:{</span><span class="w">
+            </span><span class="nt">"features"</span><span class="p">:[</span><span class="w">
+               </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"geometry"</span><span class="p">:{</span><span class="w">
+                     </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"Polygon"</span><span class="p">,</span><span class="w">
+                     </span><span class="nt">"coordinates"</span><span class="p">:[</span><span class="w">
+                        </span><span class="p">[</span><span class="w">
+                           </span><span class="p">[</span><span class="w">
+                              </span><span class="mf">-4.4549560546875</span><span class="p">,</span><span class="w">
+                              </span><span class="mf">40.84706035607122</span><span class="w">
+                           </span><span class="p">],</span><span class="w">
+                           </span><span class="p">[</span><span class="w">
+                              </span><span class="mf">-4.4549560546875</span><span class="p">,</span><span class="w">
+                              </span><span class="mf">41.30257109430557</span><span class="w">
+                           </span><span class="p">],</span><span class="w">
+                           </span><span class="p">[</span><span class="w">
+                              </span><span class="mf">-3.5211181640624996</span><span class="p">,</span><span class="w">
+                              </span><span class="mf">41.30257109430557</span><span class="w">
+                           </span><span class="p">],</span><span class="w">
+                           </span><span class="p">[</span><span class="w">
+                              </span><span class="mf">-3.5211181640624996</span><span class="p">,</span><span class="w">
+                              </span><span class="mf">40.84706035607122</span><span class="w">
+                           </span><span class="p">],</span><span class="w">
+                           </span><span class="p">[</span><span class="w">
+                              </span><span class="mf">-4.4549560546875</span><span class="p">,</span><span class="w">
+                              </span><span class="mf">40.84706035607122</span><span class="w">
+                           </span><span class="p">]</span><span class="w">
+                        </span><span class="p">]</span><span class="w">
+                     </span><span class="p">]</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+               </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"crs"</span><span class="p">:{</span><span class="w">
+
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"FeatureCollection"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="nt">"hash"</span><span class="p">:</span><span class="s2">"c9bacccfb9c3fe225dc67545bb93a5cb"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"provider"</span><span class="p">:{</span><span class="w">
+
+         </span><span class="p">},</span><span class="w">
+         </span><span class="nt">"areaHa"</span><span class="p">:</span><span class="mf">397372.34122605197</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"bbox"</span><span class="p">:[</span><span class="w">
+            </span><span class="mf">-4.4549560546875</span><span class="p">,</span><span class="w">
+            </span><span class="mf">40.84706035607122</span><span class="p">,</span><span class="w">
+            </span><span class="mf">-3.5211181640624996</span><span class="p">,</span><span class="w">
+            </span><span class="mf">41.30257109430557</span><span class="w">
+         </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="from-country">From country</h3>
+
+<p>If you need obtain the geostore of a country, you can obtain it with the ISO3 code in the Geostore API.</p>
+
+<p><code class="prettyprint">GET http://api.resourcewatch.org/geostore/admin/&lt;ISO3&gt;</code></p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/admin/&lt;ISO3&gt;
+</code></pre>
+<blockquote>
+<p>Real example obtaining the geostore of Spain
+<code class="prettyprint">shell
+curl -X GET http://api.resourcewatch.org/geostore/admin/ESP
+</code></p>
+</blockquote>
+
+<h3 id="from-country-and-region">From country and region</h3>
+
+<p>If you need obtain the geostore of a region in a country, you can obtain it with the ISO3 and region code:</p>
+
+<p><code class="prettyprint">GET http://api.resourcewatch.org/geostore/admin/&lt;ISO3&gt;/&lt;regionCode&gt;</code></p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/admin/&lt;ISO3&gt;/&lt;regionCode&gt;
+</code></pre>
+<blockquote>
+<p>Real example obtaining the geostore of Madrid&rsquo;s Comunity in Spain</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/admin/ESP/8
+</code></pre>
+<h3 id="from-world-database-on-protected-areas-wdpa">From World Database on Protected Areas (wdpa)</h3>
+
+<p>Is possible obtain the geostore of a World Database on Protected Areas of the world. You only need the id of the protected area (WDPA).
+<a href="https://www.protectedplanet.net/">World Database on Protected Areas web</a></p>
+
+<p><code class="prettyprint">GET http://api.resourcewatch.org/geostore/wdpa/&lt;wdpaId&gt;</code></p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/wdpa/&lt;wdpaId&gt;
+</code></pre>
+<blockquote>
+<p>Real example obtaining the geostore of &lsquo;Sierra de Guadarrama&rsquo; protected area</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/wdpa/555538160
+</code></pre>
+<h3 id="from-land-use-areas">From land use areas</h3>
+
+<p>Geostore has the geojson of 4 differents lands use:</p>
+
+<h4 id="oil-palm">Oil palm</h4>
+
+<p><code class="prettyprint">GET http://api.resourcewatch.org/geostore/use/oilpalm/&lt;id&gt;</code></p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/oilpalm/&lt;id&gt;
+</code></pre>
+<blockquote>
+<p>Real example obtaining the geostore of one Oil palm area</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/oilpalm/556
+</code></pre>
+<h4 id="mining">Mining</h4>
+
+<p><code class="prettyprint">GET http://api.resourcewatch.org/geostore/use/mining/&lt;id&gt;</code></p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/mining/&lt;id&gt;
+</code></pre>
+<blockquote>
+<p>Real example obtaining the geostore of one mining area</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/mining/573
+</code></pre>
+<h4 id="wood-fiber">Wood fiber</h4>
+
+<p><code class="prettyprint">GET http://api.resourcewatch.org/geostore/use/fiber/&lt;id&gt;</code></p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/fiber/&lt;id&gt;
+</code></pre>
+<blockquote>
+<p>Real example obtaining the geostore of one Wood fiber area</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/fiber/346
+</code></pre>
+<h4 id="congo-basin-logging-roads">Congo Basin logging roads</h4>
+
+<p><code class="prettyprint">GET http://api.resourcewatch.org/geostore/use/logging/&lt;id&gt;</code></p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/logging/&lt;id&gt;
+</code></pre>
+<blockquote>
+<p>Real example obtaining the geostore of Oil palm area</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/logging/102
+</code></pre>
+<h3 id="from-carto">From Carto</h3>
+
+<p>If your geojson is in carto table, is possible import this geojson in geostore. 
+To import the geojson in geostore, you need to define all of the required fields in the request body. The fields that compose a import are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th>Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>provider</td>
+<td style="text-align: center">Provider of data</td>
+<td style="text-align: right">Object</td>
+<td></td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>&ndash; type</td>
+<td style="text-align: center">Provider type</td>
+<td style="text-align: right">Text</td>
+<td>carto</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>&ndash; table</td>
+<td style="text-align: center">Table name</td>
+<td style="text-align: right">Text</td>
+<td></td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>&ndash; user</td>
+<td style="text-align: center">User of the account</td>
+<td style="text-align: right">Text</td>
+<td></td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>&ndash; filter</td>
+<td style="text-align: center">Conditions to obtain the geojson. Is possible put and and or conditions. This conditions must only return one row.</td>
+<td style="text-align: right">Text</td>
+<td></td>
+<td style="text-align: right">Yes</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To import a Geostore, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/geostore <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "provider":{
+        "type": "carto",
+        "table": &lt;tableName&gt;,
+        "user": &lt;userName&gt;,
+        "filter": &lt;conditions&gt;
+    }
+}'</span>
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/geostore <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "provider":{
+        "type": "carto",
+        "table": "gfw_mining",
+        "user": "wri-01",
+        "filter": "cartodb_id=573"
+    }
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"26f8975c4c647c19a2edaa11f23880a2"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">[</span><span class="w">
+                  </span><span class="p">[</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.0957370284411</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.6814701233475</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.0957357154309</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.654348341203</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.1100850695703</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.6543473339623</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.1100876551212</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.6814691125096</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.0957370284411</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.6814701233475</span><span class="w">
+                    </span><span class="p">]</span><span class="w">
+                  </span><span class="p">]</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"26f8975c4c647c19a2edaa11f23880a2"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb_id=573"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wri-01"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw_mining"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"carto"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">471.001953054716</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mf">-74.1100876551212</span><span class="p">,</span><span class="w">
+        </span><span class="mf">10.6543473339623</span><span class="p">,</span><span class="w">
+        </span><span class="mf">-74.0957357154309</span><span class="p">,</span><span class="w">
+        </span><span class="mf">10.6814701233475</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="obtain-a-geostore">Obtain a Geostore</h2>
+
+<p>To obtain a geostore, you only need the id of the Geostore. You can perform a GET request for the geostore with its id.</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/&lt;geostoreId&gt;
+</code></pre>
+<blockquote>
+<p>Real example obtaining one geostore</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/geostore/use/logging/26f8975c4c647c19a2edaa11f23880a2
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"26f8975c4c647c19a2edaa11f23880a2"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">[</span><span class="w">
+                  </span><span class="p">[</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.0957370284411</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.6814701233475</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.0957357154309</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.654348341203</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.1100850695703</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.6543473339623</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.1100876551212</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.6814691125096</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                      </span><span class="mf">-74.0957370284411</span><span class="p">,</span><span class="w">
+                      </span><span class="mf">10.6814701233475</span><span class="w">
+                    </span><span class="p">]</span><span class="w">
+                  </span><span class="p">]</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"26f8975c4c647c19a2edaa11f23880a2"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb_id=573"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wri-01"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw_mining"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"carto"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">471.001953054716</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mf">-74.1100876551212</span><span class="p">,</span><span class="w">
+        </span><span class="mf">10.6543473339623</span><span class="p">,</span><span class="w">
+        </span><span class="mf">-74.0957357154309</span><span class="p">,</span><span class="w">
+        </span><span class="mf">10.6814701233475</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
           <h1 id="errors">Errors</h1>
 
 <p>The Resource Watch API uses the following error codes:</p>
