@@ -664,6 +664,481 @@ Remember — the response is jsonapi format
 
           <h1 id="metadata">Metadata</h1>
 
+<h2 id="metadata-definition">Metadata definition</h2>
+
+<p>A Metadata can be any kind of data associated to a existing resource (i.e. Dataset, Layer or Widget)</p>
+
+<p>Some fields are important for identifying the entity properly, other ones are just optional and give extra information about it.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td style="text-align: center">The id of the metadata</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The metadata application</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>language</td>
+<td style="text-align: center">The metadata language</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">The associated dataset id to the metadata</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>resource</td>
+<td style="text-align: center">The resource associated to the metadata</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; id</td>
+<td style="text-align: center">Resource id</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>&ndash; type</td>
+<td style="text-align: center">Resource type</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>name</td>
+<td style="text-align: center">The metadata name</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>description</td>
+<td style="text-align: center">The metadata description</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>source</td>
+<td style="text-align: center">The metadata source</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>citation</td>
+<td style="text-align: center">The metadata citation</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>license</td>
+<td style="text-align: center">The metadata license type</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>info</td>
+<td style="text-align: center">Some info about the metadata</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>units</td>
+<td style="text-align: center">Measurement units</td>
+<td style="text-align: right">Object</td>
+</tr>
+</tbody></table>
+
+<h2 id="endpoints">Endpoints</h2>
+
+<table><thead>
+<tr>
+<th>Method</th>
+<th style="text-align: center">Path</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>GET</td>
+<td style="text-align: center">/dataset/:dataset/metadata</td>
+</tr>
+<tr>
+<td>POST</td>
+<td style="text-align: center">/dataset/:dataset/metadata</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td style="text-align: center">/dataset/:dataset/metadata</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td style="text-align: center">/dataset/:dataset/metadata</td>
+</tr>
+<tr>
+<td>GET</td>
+<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
+</tr>
+<tr>
+<td>POST</td>
+<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
+</tr>
+<tr>
+<td>GET</td>
+<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
+</tr>
+<tr>
+<td>POST</td>
+<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
+</tr>
+<tr>
+<td>GET</td>
+<td style="text-align: center">/metadata</td>
+</tr>
+<tr>
+<td>POST</td>
+<td style="text-align: center">/dataset/metadata/find-by-ids</td>
+</tr>
+<tr>
+<td>POST</td>
+<td style="text-align: center">/dataset/:dataset/widget/metadata/find-by-ids</td>
+</tr>
+<tr>
+<td>POST</td>
+<td style="text-align: center">/dataset/:dataset/layer/metadata/find-by-ids</td>
+</tr>
+</tbody></table>
+
+<h3 id="post-patch-delete">POST, PATCH, DELETE</h3>
+
+<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload (when doing CRUD requests).
+<strong>This doesn&rsquo;t apply to the FindByIds Endpoints</strong></p>
+
+<h3 id="get-queryparam-filters">GET Queryparam Filters:</h3>
+
+<p>application filter:
+<code class="prettyprint">
+application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
+</code></p>
+
+<p>language filter:
+<code class="prettyprint">
+language: select between available languages (select one or some of them)
+</code></p>
+
+<p>limit filter:
+<code class="prettyprint">
+limit: the desired number
+</code></p>
+
+<p>Custom param for /metadata endpoint
+<code class="prettyprint">
+type: [dataset, widget, layer]
+</code></p>
+
+<h2 id="crud-examples">CRUD Examples</h2>
+
+<h3 id="creating">Creating</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Required/Optional</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td style="text-align: center">required</td>
+</tr>
+<tr>
+<td>language</td>
+<td style="text-align: center">required</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">required</td>
+</tr>
+<tr>
+<td>name</td>
+<td style="text-align: center">optional</td>
+</tr>
+<tr>
+<td>description</td>
+<td style="text-align: center">optional</td>
+</tr>
+<tr>
+<td>source</td>
+<td style="text-align: center">optional</td>
+</tr>
+<tr>
+<td>citation</td>
+<td style="text-align: center">optional</td>
+</tr>
+<tr>
+<td>license</td>
+<td style="text-align: center">optional</td>
+</tr>
+<tr>
+<td>info</td>
+<td style="text-align: center">optional</td>
+</tr>
+<tr>
+<td>units</td>
+<td style="text-align: center">optional</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Please, be sure that the request is properly authenticated and the current user has permission to the resource.
+If you don&rsquo;t know how to do this, please go to the <a href="#authentication">Authentication section</a>
+</aside>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": "rw",
+   "language": "en"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Response: 200 OK HTTP RESPONSE + JSON-API-LIKE BODY</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86-dataset-942b3f38-9504-4273-af51-0440170ffc86-rw-en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:07:53.272Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:07:53.272Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>It could response a <strong>401</strong> status code if the request is not authenticated, <strong>403</strong> if the request is not allowed to do that operation,
+<strong>400</strong> if the request is not well formatted or <strong>5XX</strong> HTTP codes in other cases</p>
+
+<p>The same operation applies to Widget and Layer just changing the endpoint for the appropriate one.</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<h3 id="getting">Getting</h3>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata
+</code></pre>
+<h3 id="updating-partial">Updating (partial)</h3>
+<pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": "rw",
+   "language": "en",
+   "name": "Cloud Computing Market - USA - 2016",
+   "source": "http://www.forbes.com/",
+   "info": {
+       "summary": "These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales).",
+       "author": "Louis Columbus",
+       "date": "MAR 13, 2016 @ 10:42 PM",
+       "link": "http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"
+   }
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86-dataset-942b3f38-9504-4273-af51-0440170ffc86-rw-en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cloud Computing Market - USA - 2016"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales)."</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Louis Columbus"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MAR 13, 2016 @ 10:42 PM"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:07:53.272Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:40:30.190Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="deleting">Deleting</h3>
+<pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata?application<span class="o">=</span>rw&amp;language<span class="o">=</span>en <span class="se">\</span>
+</code></pre>
+<h3 id="getting-all">Getting All</h3>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata
+</code></pre>
+<blockquote>
+<p>Real examples</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?type<span class="o">=</span>dataset
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?type<span class="o">=</span>widget
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?application<span class="o">=</span>rw&amp;language<span class="o">=</span>es,en&amp;limit<span class="o">=</span>20
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?application<span class="o">=</span>rw,gfw&amp;language<span class="o">=</span>en&amp;type<span class="o">=</span>dataset
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?language<span class="o">=</span>en
+</code></pre>
+<h3 id="finding-by-ids">Finding By Ids</h3>
+
+<p>&ldquo;ids&rdquo; property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
+This property can be an Array or a String (comma-separated)
+payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
+payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/metadata/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/metadata/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+     "ids": "b000288d-7037-43ba-aa34-165eab549613, 942b3f38-9504-4273-af51-0440170ffc86"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b000288d-7037-43ba-aa34-165eab549613-dataset-b000288d-7037-43ba-aa34-165eab549613-prep-en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b000288d-7037-43ba-aa34-165eab549613"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prep"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b000288d-7037-43ba-aa34-165eab549613"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Projected temperature change"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Puget Sound region is projected to warm rapidly during the 21st century. Prior to mid-century, the projected increase in air temperatures is about the same for all greenhouse gas scenarios, a result of the fact that a certain amount of warming is already “locked in” due to past emissions. After about 2050, projected warming depends on the amount of greenhouse gases emitted globally in the coming decades. For the 2050s (2040-2069, relative to 1970-1999), annual average air temperature is projected to rise +4.2°F to +5.9°F, on average, for a low (RCP 4.5) and a high (RCP 8.5) greenhouse gas scenario. These indicators are derived from the Multivariate Adaptive Constructed Analogs (MACA) CMIP5 Future Climate Dataset from the University of Idaho. For more information about this analysis, please see http://cses.washington.edu/picea/mauger/ps-sok/ps-sok_sec12_builtenvironment_2015.pdf. For more information about the MACA CMIP5 Future Climate Dataset please see http://maca.northwestknowledge.net/index.php"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://maca.northwestknowledge.net"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"citation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Abatzoglou, J. T.,   Brown, T. J. 2012. A comparison of statistical downscaling methods suited for wildfire applications. International Journal of Climatology, 32(5), 772-780. doi: http://dx.doi.org/10.1002/joc.2312 "</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Public domain"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Casola, University of Washington"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Public domain"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://maca.northwestknowledge.net"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"citation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Abatzoglou, J. T.,   Brown, T. J. 2012. A comparison of statistical downscaling methods suited for wildfire applications. International Journal of Climatology, 32(5), 772-780. doi: http://dx.doi.org/10.1002/joc.2312 "</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Puget Sound region is projected to warm rapidly during the 21st century. Prior to mid-century, the projected increase in air temperatures is about the same for all greenhouse gas scenarios, a result of the fact that a certain amount of warming is already “locked in” due to past emissions. After about 2050, projected warming depends on the amount of greenhouse gases emitted globally in the coming decades. For the 2050s (2040-2069, relative to 1970-1999), annual average air temperature is projected to rise +4.2°F to +5.9°F, on average, for a low (RCP 4.5) and a high (RCP 8.5) greenhouse gas scenario. These indicators are derived from the Multivariate Adaptive Constructed Analogs (MACA) CMIP5 Future Climate Dataset from the University of Idaho. For more information about this analysis, please see http://cses.washington.edu/picea/mauger/ps-sok/ps-sok_sec12_builtenvironment_2015.pdf. For more information about the MACA CMIP5 Future Climate Dataset please see http://maca.northwestknowledge.net/index.php"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"short-description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Projected temperature change in the Puget Sound Lowlands relative to average temperature between 1950-2005. Light colored lines in the background show the range of projections. All climate scenarios project warming for the Puget Sound region during the 21st century."</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Projected temperature change"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-12-13T10:02:28.337Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-12-13T10:03:02.445Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86-dataset-942b3f38-9504-4273-af51-0440170ffc86-rw-en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cloud Computing Market - USA - 2016"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MAR 13, 2016 @ 10:42 PM"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Louis Columbus"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales)."</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:07:53.272Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:40:30.190Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
           <h1 id="vocabulary">Vocabulary</h1>
 
           <h1 id="geostore">Geostore</h1>
