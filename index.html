@@ -1084,7 +1084,528 @@ type: [dataset, widget, layer]
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-          <h1 id="vocabulary">Vocabulary</h1>
+          <h1 id="vocabulary-and-tags">Vocabulary (and Tags)</h1>
+
+<h2 id="tags-definition">Tags definition</h2>
+
+<p>A Tag is defined as a resource feature, or a value of a particular filter.</p>
+
+<h2 id="vocabulary-definition">Vocabulary definition</h2>
+
+<p>The Vocabulary can be described as a cluster of tags.</p>
+
+<p>It is currently possible to just create a Vocabulary without any tags or relationships.
+To do it, the only parameter that is required is the name of the Vocabulary.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">The name of the Vocabulary (<strong>it has to be unique and it represents the &ldquo;primaryKey&rdquo;</strong>)</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
+<p>However, the most common use case relies on the relationships creation</p>
+
+<h2 id="relationships">Relationships</h2>
+
+<p>This section describes how to associate an existing or a new Vocabulary to a resource.</p>
+
+<p>Some important points:</p>
+
+<ul>
+<li>A <strong>Vocabulary</strong> can have <strong>N</strong> associated <strong>Resources</strong>.</li>
+<li>A <strong>Resource</strong> can have <strong>M</strong> associated <strong>Vocabularies</strong>.</li>
+<li>The way of building these <strong>relationships</strong> is creating <strong>Tags</strong>.</li>
+</ul>
+
+<h2 id="assign-a-vocabulary-to-an-existing-resource">Assign a Vocabulary to an existing Resource</h2>
+
+<p>To create a relationship between a resource and a Vocabulary (even if the vocabulary doesn&rsquo;t exist yet) it&rsquo;s just required to set the tags that define the relationship.</p>
+
+<p>Some writing operations can take a little more time than the reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.</p>
+
+<aside class="notice">
+Please, be sure that the request is properly authenticated and the current user has permission to the resource.
+If you don&rsquo;t know how to do this, please go to the <a href="#authentication">Authentication section</a>
+</aside>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": ["biology", "chemistry"]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>real Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"science"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"chemistry"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"chemistry"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="updating-tags-of-an-existing-relationship">Updating Tags of an existing relationship</h2>
+
+<p>If a relationship has to be updated, it&rsquo;s necessary to define the new tags of it.
+The previous tags will be deleted in benefit of the new ones.</p>
+<pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": ["maths", "astronomy"]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"science"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"maths"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"astronomy"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"chemistry"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="creating-several-relationships">Creating several relationships</h2>
+
+<p>There is also an endpoint that allows to create some relationships in the same request.</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "vocabularyOne": {
+       "tags": [&lt;tags&gt;]
+   },
+   "vocabularyTwo": {
+       "tags": [&lt;tags&gt;]
+   }
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary<span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+  "vocabularyOne": {
+      "tags": [&lt;tags&gt;]
+  },
+  "vocabularyTwo": {
+      "tags": [&lt;tags&gt;]
+  }
+ }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+  "vocabularyOne": {
+      "tags": [&lt;tags&gt;]
+  },
+  "vocabularyTwo": {
+      "tags": [&lt;tags&gt;]
+  }
+ }'</span>
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+     "country": {
+         "tags": ["Spain", "Italy", "Portugal"]
+     },
+     "sport": {
+         "tags": ["football", "basketball", "voleyball"]
+     },
+     "color": {
+         "tags": ["red", "green", "blue"]
+     }
+  }'</span>
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameTwo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newV"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"test2"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Portugal"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sport"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"football"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"basketball"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"voleyball"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"blue"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="deleting-relationships">Deleting relationships</h2>
+<pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre><pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre><pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Portugal"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"blue"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="getting-vocabularies-associated-to-a-resource">Getting vocabularies associated to a resource</h2>
+
+<p>It can be requested all the vocabularies associated to a particular resource.</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Portugal"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"blue"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="getting-a-single-relationship-broken-now">Getting a single relationship (broken now)</h2>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre>
+<h2 id="getting-resources-common-use-case">Getting resources (COMMON USE CASE)</h2>
+
+<p>There is also available a endpoint that accepts requests just pointing the resource type and
+the desired vocabulary-tag matching.</p>
+
+<p>It&rsquo;s currently supported a DOUBLE-OR pattern matching. This means that the API will return
+all resources that at least have one (or more) tags in a particular vocabulary. At the same time it will also apply an OR to the entities of other vocabulary-tag matchings.</p>
+
+<p>The query has to be set in the url by the Queryparams</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/vocabulary/find
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/vocabulary/find
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/vocabulary/find
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://staging-api.globalforestwatch.org/dataset/vocabulary/find?legacy<span class="o">=</span>cdi,coasts
+</code></pre>
+<h2 id="getting-all-vocabularies">Getting all vocabularies</h2>
+
+<p>This endpoints is quite useful to have a quick overview of all existing vocabularies and resources.</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/vocabulary
+</code></pre>
+<h2 id="finding-getting-by-ids">Finding (getting) by ids</h2>
+
+<p>&ldquo;ids&rdquo; property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
+This property can be an Array or a String (comma-separated)
+payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
+payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "ids": "942b3f38-9504-4273-af51-0440170ffc86, 08ff8183-48dc-457a-8924-bb4e7a87b8a8"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"08ff8183-48dc-457a-8924-bb4e7a87b8a8"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"legacy"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"cdi"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"inundation"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"national"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"united states"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"coasts"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"flooding"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"health"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Portugal"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"blue"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="vocabulary-creation">Vocabulary Creation</h2>
+
+<p>As it was mentioned before, it is possible to just create a new and empty vocabulary</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/vocabulary/vocabularyName <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": &lt;vocabularyName&gt;
+  }'</span>
+</code></pre>
+<p>It is also possible to update and delete an entire vocabulary. Said that, and because of
+it&rsquo;s necessary to keep consistency between entities with weak relationship, these
+operations are only allowed to SUPERADMINS.</p>
 
           <h1 id="geostore">Geostore</h1>
 
