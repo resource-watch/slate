@@ -666,9 +666,9 @@ Remember — the response is jsonapi format
 
 <h2 id="metadata-definition">Metadata definition</h2>
 
-<p>A Metadata can be any kind of data associated to a existing resource (i.e. Dataset, Layer or Widget)</p>
+<p>A Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget)</p>
 
-<p>Some fields are important for identifying the entity properly, other ones are just optional and give extra information about it.</p>
+<p>Some fields are important to identify the entity properly, others are just optional and give extra information about it.</p>
 
 <table><thead>
 <tr>
@@ -749,110 +749,7 @@ Remember — the response is jsonapi format
 </tr>
 </tbody></table>
 
-<h2 id="endpoints">Endpoints</h2>
-
-<table><thead>
-<tr>
-<th>Method</th>
-<th style="text-align: center">Path</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>GET</td>
-<td style="text-align: center">/dataset/:dataset/metadata</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/metadata</td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td style="text-align: center">/dataset/:dataset/metadata</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td style="text-align: center">/dataset/:dataset/metadata</td>
-</tr>
-<tr>
-<td>GET</td>
-<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
-</tr>
-<tr>
-<td>GET</td>
-<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
-</tr>
-<tr>
-<td>GET</td>
-<td style="text-align: center">/metadata</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/metadata/find-by-ids</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/widget/metadata/find-by-ids</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/layer/metadata/find-by-ids</td>
-</tr>
-</tbody></table>
-
-<h3 id="post-patch-delete">POST, PATCH, DELETE</h3>
-
-<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload (when doing CRUD requests).
-<strong>This doesn&rsquo;t apply to the FindByIds Endpoints</strong></p>
-
-<h3 id="get-queryparam-filters">GET Queryparam Filters:</h3>
-
-<p>application filter:
-<code class="prettyprint">
-application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
-</code></p>
-
-<p>language filter:
-<code class="prettyprint">
-language: select between available languages (select one or some of them)
-</code></p>
-
-<p>limit filter:
-<code class="prettyprint">
-limit: the desired number
-</code></p>
-
-<p>Custom param for /metadata endpoint
-<code class="prettyprint">
-type: [dataset, widget, layer]
-</code></p>
-
-<h2 id="crud-examples">CRUD Examples</h2>
-
-<h3 id="creating">Creating</h3>
+<h2 id="creating-a-metadata-object">Creating a metadata object</h2>
 
 <table><thead>
 <tr>
@@ -901,6 +798,8 @@ type: [dataset, widget, layer]
 <td style="text-align: center">optional</td>
 </tr>
 </tbody></table>
+
+<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
 
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
@@ -966,7 +865,27 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
    "language": &lt;language&gt;
   }'</span>
 </code></pre>
-<h3 id="getting">Getting</h3>
+<h2 id="getting-metadata">Getting metadata</h2>
+
+<p>application filter:
+<code class="prettyprint">
+application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
+</code></p>
+
+<p>language filter:
+<code class="prettyprint">
+language: select between available languages (select one or some of them)
+</code></p>
+
+<p>limit filter:
+<code class="prettyprint">
+limit: the desired number
+</code></p>
+
+<p>Custom param for /metadata endpoint
+<code class="prettyprint">
+type: [dataset, widget, layer]
+</code></p>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata
 </code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata
 </code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata
@@ -976,7 +895,11 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata
 </code></pre>
-<h3 id="updating-partial">Updating (partial)</h3>
+<h2 id="updating-a-metadata">Updating a metadata</h2>
+
+<p>Partial update</p>
+
+<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
 <pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -1034,7 +957,9 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="deleting">Deleting</h3>
+<h2 id="deleting-a-metadata">Deleting a metadata</h2>
+
+<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the Queryparams</p>
 <pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
 </code></pre>
 <blockquote>
@@ -1042,7 +967,7 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 </blockquote>
 <pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata?application<span class="o">=</span>rw&amp;language<span class="o">=</span>en <span class="se">\</span>
 </code></pre>
-<h3 id="getting-all">Getting All</h3>
+<h2 id="getting-all">Getting all</h2>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata
 </code></pre>
 <blockquote>
@@ -1055,12 +980,32 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 </code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?application<span class="o">=</span>rw,gfw&amp;language<span class="o">=</span>en&amp;type<span class="o">=</span>dataset
 </code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?language<span class="o">=</span>en
 </code></pre>
-<h3 id="finding-by-ids">Finding By Ids</h3>
+<h2 id="finding-getting-by-ids">Finding (getting) by ids</h2>
 
 <p>&ldquo;ids&rdquo; property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
 This property can be an Array or a String (comma-separated)
 payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
 payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
+
+<p>application filter:
+<code class="prettyprint">
+application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
+</code></p>
+
+<p>language filter:
+<code class="prettyprint">
+language: select between available languages (select one or some of them)
+</code></p>
+
+<p>limit filter:
+<code class="prettyprint">
+limit: the desired number
+</code></p>
+
+<p>Custom param for /metadata endpoint
+<code class="prettyprint">
+type: [dataset, widget, layer]
+</code></p>
 <pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/metadata/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
