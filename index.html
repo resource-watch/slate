@@ -485,22 +485,22 @@ It accepts the same parameters as the <em>create dataset</em> endpoint, and you 
 </tr>
 <tr>
 <td>source</td>
-<td style="text-align: center">TODO</td>
+<td style="text-align: center">Publisher of the original code</td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
 <td>sourceUrl</td>
-<td style="text-align: center">TODO</td>
+<td style="text-align: center">Link to publisher page</td>
 <td style="text-align: right">Url</td>
 </tr>
 <tr>
 <td>layerId</td>
-<td style="text-align: center">Id of the relationship with layer</td>
-<td style="text-align: right">Array</td>
+<td style="text-align: center">UuId of the relationship with layer</td>
+<td style="text-align: right">String</td>
 </tr>
 <tr>
 <td>dataset</td>
-<td style="text-align: center">Id of the dataset that the widget belongs</td>
+<td style="text-align: center">UuId of the dataset that the widget belongs</td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
@@ -562,14 +562,14 @@ Remember — the response is jsonapi format
 <blockquote>
 <p>Example response:</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">  
-   </span><span class="nt">"data"</span><span class="p">:[</span><span class="w">  
-      </span><span class="p">{</span><span class="w">  
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nt">"data"</span><span class="p">:[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
          </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"8f67fadd-d8df-4a28-82dd-a22a337d71b9"</span><span class="p">,</span><span class="w">
          </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
-         </span><span class="nt">"attributes"</span><span class="p">:{</span><span class="w">  
+         </span><span class="nt">"attributes"</span><span class="p">:{</span><span class="w">
             </span><span class="nt">"userId"</span><span class="p">:</span><span class="s2">"5858f37140621f11066fb2f7"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"application"</span><span class="p">:[</span><span class="w">  
+            </span><span class="nt">"application"</span><span class="p">:[</span><span class="w">
                </span><span class="s2">"aqueduct"</span><span class="w">
             </span><span class="p">],</span><span class="w">
             </span><span class="nt">"slug"</span><span class="p">:</span><span class="s2">"ercentage-of-country-s-population-is-at-high-risk-of-hunger"</span><span class="p">,</span><span class="w">
@@ -581,7 +581,7 @@ Remember — the response is jsonapi format
             </span><span class="nt">"dataset"</span><span class="p">:</span><span class="s2">"f1d24950-c764-4f90-950a-4541f798eb95"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"authors"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
             </span><span class="nt">"queryUrl"</span><span class="p">:</span><span class="s2">"query/f1d24950-c764-4f90-950a-4541f798eb95?sql=select * from crops"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"widgetConfig"</span><span class="p">:{</span><span class="w">  
+            </span><span class="nt">"widgetConfig"</span><span class="p">:{</span><span class="w">
                 </span><span class="err">...</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="nt">"template"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
@@ -592,7 +592,7 @@ Remember — the response is jsonapi format
          </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
    </span><span class="p">],</span><span class="w">
-   </span><span class="nt">"links"</span><span class="p">:{</span><span class="w">  
+   </span><span class="nt">"links"</span><span class="p">:{</span><span class="w">
       </span><span class="nt">"first"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/widget?page%5Bnumber%5D=1"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"prev"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/widget?page%5Bnumber%5D=1"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"next"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/widget?page%5Bnumber%5D=2&amp;page%5Bsize%5D=10"</span><span class="p">,</span><span class="w">
@@ -617,12 +617,93 @@ Remember — the response is jsonapi format
 <td style="text-align: center">Filter the widgets whose name contains the filter text</td>
 <td style="text-align: right">Text</td>
 </tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">Filter the widgets by dataset uuid</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>sort</td>
+<td style="text-align: center">Sort json response by specific attribute</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Filter widgets on status (pending, active, disabled, all)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>published</td>
+<td style="text-align: center">Filter widgets on published status (true, false)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>verified</td>
+<td style="text-align: center">Filter by verified status (true,false)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>template</td>
+<td style="text-align: center">Filter by template status (true,false)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>default</td>
+<td style="text-align: center">Filter by default status (true,false)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>app</td>
+<td style="text-align: center">Filter widgets on application (prep, gfw, etc..)</td>
+<td style="text-align: right">Array</td>
+</tr>
 </tbody></table>
 
 <blockquote>
 <p>Return the widgets filtered whose name contains glad</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?name<span class="o">=</span>glad
+</code></pre>
+<blockquote>
+<p>Return the widgets filtered by dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?dataset<span class="o">=</span>d02df2f6-d80c-4274-bb6f-f062061655c4
+curl -X GET http://api.resourcewatch.org/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget
+</code></pre>
+<blockquote>
+<p>Sort by name</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?sort<span class="o">=</span>name
+</code></pre>
+<blockquote>
+<p>Filter widgets by status</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?status<span class="o">=</span>failed
+</code></pre>
+<blockquote>
+<p>Filter widgets by published status</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?published<span class="o">=</span><span class="nb">false</span>
+</code></pre>
+<blockquote>
+<p>Filter widgets by verified status</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?verified<span class="o">=</span><span class="nb">false</span>
+</code></pre>
+<blockquote>
+<p>Return the widgets filtered by template</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?template<span class="o">=</span><span class="nb">true</span>
+</code></pre>
+<blockquote>
+<p>Filter widgets by default option</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?default<span class="o">=</span><span class="nb">true</span>
+</code></pre>
+<blockquote>
+<p>Return the widgets filtered whose applications contain rw</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?app<span class="o">=</span>rw
 </code></pre>
 <h3 id="pagination-params">Pagination params</h3>
 
@@ -650,14 +731,1644 @@ Remember — the response is jsonapi format
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/widget?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
 </code></pre>
+<h2 id="how-obtain-a-widget-for-specific-dataset">How obtain a widget for specific dataset</h2>
+
+<p>To obtain the widget:</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3
+curl -X GET http://api.resourcewatch.org/widget/20ec7861-5251-40a7-9503-5ee3686a66a3
+</code></pre>
+<aside class="success">
+Remember — the response is jsonapi format
+</aside>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20ec7861-5251-40a7-9503-5ee3686a66a3"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57a0693b49c36b265ba3bec8"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"rw"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"estimated-c02-emission"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Estimated C02 emission"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"sourceUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"layerId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d02df2f6-d80c-4274-bb6f-f062061655c4"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"query/d02df2f6-d80c-4274-bb6f-f062061655c4?sql=select country, rank, iso3, total from estimated_co2_emission_filtered"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="nt">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"by"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rank"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sort"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.iso3 === 'CHN'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filter"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.rank"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current_rank"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"max"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"summarize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"max"</span><span class="w">
+                  </span><span class="p">]</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.b.current_rank &lt;= 5 ? datum.a.rank &lt;= 5 : datum.a.rank === 1"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filter"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.rank === datum.b.current_rank ? '#5BB1D2' : '#9aa2a9'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.rank === datum.b.current_rank ? '500' : '300'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head_count"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"summarize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"*"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"max"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.b.current_rank &gt; 5 &amp;&amp; datum.a.b.current_rank &lt; datum.b.max_rank - 5 ? datum.a.a.rank &gt;= datum.a.b.current_rank - 2 &amp;&amp; datum.a.a.rank &lt;= datum.a.b.current_rank + 2  : false"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filter"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.a.rank === datum.a.b.current_rank ? '#5BB1D2' : '#9aa2a9'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.a.rank === datum.a.b.current_rank ? '500' : '300'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center_count"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"summarize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"*"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"max"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.b.current_rank &gt;= datum.b.max_rank - 4 ? datum.a.a.rank &gt;= datum.b.max_rank - 4 : datum.a.a.rank === datum.b.max_rank"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filter"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.a.rank === datum.a.b.current_rank ? '#5BB1D2' : '#9aa2a9'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.b.current_rank &lt;= 5 || datum.a.b.current_rank &gt;= datum.b.max_rank - 4 ? datum.color : 'transparent'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trick_color"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.b.current_rank &lt;= 5 || datum.a.b.current_rank &gt;= datum.b.max_rank - 4 ? '#9aa2a9' : 'transparent'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule_trick_color"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.a.rank === datum.a.b.current_rank ? '500' : '300'"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_head"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.rank}}"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"right"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_head"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.country | truncate:10}}"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"left"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_head"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-6</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.total"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head_count"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"group"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-15</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"x2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"stroke"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#9aa2a9"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"strokeWidth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_center"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"fimeld"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.rank}}"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"right"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_center"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.country | truncate:20}}"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"left"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_center"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-6</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.total"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center_count"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"group"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-15</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"x2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                          </span><span class="p">}</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"stroke"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#9aa2a9"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"strokeWidth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.rank}}"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"right"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.country | truncate:20}}"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"left"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                          </span><span class="p">}</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-6</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.total"</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head_count"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"group"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-15</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"x2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"stroke"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule_trick_color"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"strokeWidth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trick_color"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.rank}}"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"right"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trick_color"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.country | truncate:20}}"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"left"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-6</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trick_color"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.total"</span><span class="p">,</span><span class="w">
+                      </span><span class="nt">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"scales"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_head"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ordinal"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="mi">20</span><span class="p">,</span><span class="w">
+              </span><span class="mi">40</span><span class="p">,</span><span class="w">
+              </span><span class="mi">60</span><span class="p">,</span><span class="w">
+              </span><span class="mi">80</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"domain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"sort"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"min"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_center"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ordinal"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="mi">20</span><span class="p">,</span><span class="w">
+              </span><span class="mi">40</span><span class="p">,</span><span class="w">
+              </span><span class="mi">60</span><span class="p">,</span><span class="w">
+              </span><span class="mi">80</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"domain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"sort"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"min"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ordinal"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="mi">20</span><span class="p">,</span><span class="w">
+              </span><span class="mi">40</span><span class="p">,</span><span class="w">
+              </span><span class="mi">60</span><span class="p">,</span><span class="w">
+              </span><span class="mi">80</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"domain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"sort"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"min"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"linear"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"range"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"domain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"total"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"padding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"top"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"left"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"right"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"bottom"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-17T17:50:45.655Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-06-06T15:12:38.749Z"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h2 id="create-a-widget">Create a Widget</h2>
 
+<p>To create a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of the widget</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>slug</td>
+<td style="text-align: center">Slug of the widget</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Text without special characters(aaa-bbb)</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>description</td>
+<td style="text-align: center">Description of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>source</td>
+<td style="text-align: center">Publisher of the original code</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>sourceUrl</td>
+<td style="text-align: center">Link to publisher page</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any url</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the widget belongs</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">gfw, forest-atlas, rw, prep, aqueduct, data4sdg</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>authors</td>
+<td style="text-align: center">Name of the authors</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>queryUrl</td>
+<td style="text-align: center">Url with the data of the chart shows</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any valid query</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>widgetConfig</td>
+<td style="text-align: center">Vega configuration</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Valid object</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Status of the Widget</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>published</td>
+<td style="text-align: center">If it&rsquo;s available to use</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>verified</td>
+<td style="text-align: center">If it&rsquo;s verified by other user</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>template</td>
+<td style="text-align: center">If it&rsquo;s a template</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>default</td>
+<td style="text-align: center">If it&rsquo;s default for dataset</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>layerId</td>
+<td style="text-align: center">UuId of the relationship with layer</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Uuid of layer</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">UuId of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Uuid of Dataset</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a widget, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset_id&gt;/widget <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "widget": {
+      "application":[
+         "your", "apps"
+      ],
+      "name":"Example Carto Dataset"
+   }
+}'</span>
+</code></pre>
 <h2 id="update-a-widget">Update a Widget</h2>
 
-<h2 id="delete-a-widget">Delete a Widget</h2>
+<p>To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:</p>
 
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of the widget</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>slug</td>
+<td style="text-align: center">Slug of the widget</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Text without special characters(aaa-bbb)</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>description</td>
+<td style="text-align: center">Description of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>source</td>
+<td style="text-align: center">Publisher of the original code</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>sourceUrl</td>
+<td style="text-align: center">Link to publisher page</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any url</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the widget belongs</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">gfw, forest-atlas, rw, prep, aqueduct, data4sdg</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>authors</td>
+<td style="text-align: center">Name of the authors</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>queryUrl</td>
+<td style="text-align: center">Url with the data of the chart shows</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any valid query</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>widgetConfig</td>
+<td style="text-align: center">Vega configuration</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Valid object</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Status of the Widget</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>published</td>
+<td style="text-align: center">If it&rsquo;s available to use</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>verified</td>
+<td style="text-align: center">If it&rsquo;s verified by other user</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>template</td>
+<td style="text-align: center">If it&rsquo;s a template</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>default</td>
+<td style="text-align: center">If it&rsquo;s default for dataset</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>layerId</td>
+<td style="text-align: center">UuId of the relationship with layer</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Uuid of layer</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">UuId of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Uuid of Dataset</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a widget, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "widget": {
+      "application":[
+         "your", "apps"
+      ],
+      "name":"Example Carto Dataset"
+   }
+}'</span>
+</code></pre>
+<h2 id="delete-a-widget">Delete a Widget</h2>
+<pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
           <h1 id="layer">Layer</h1>
 
+<h2 id="what-is-a-layer">What is a Layer?</h2>
+
+<p>Is a graphic representation of a Dataset&rsquo;s data.</p>
+
+<p>Layer contains the next fields:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>userId</td>
+<td style="text-align: center">Id of the owner</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the dataset belongs</td>
+<td style="text-align: right">Array</td>
+</tr>
+<tr>
+<td>iso</td>
+<td style="text-align: center">Isos to which the dataset belongs</td>
+<td style="text-align: right">Array</td>
+</tr>
+<tr>
+<td>slug</td>
+<td style="text-align: center">Unique identifier of the layer</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of the layer</td>
+<td style="text-align: right">Url</td>
+</tr>
+<tr>
+<td>description</td>
+<td style="text-align: center">Description of the layer</td>
+<td style="text-align: right">Array</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">UuId of the dataset that the layer belongs</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>layerConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>legendConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>applicationConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>default</td>
+<td style="text-align: center">If it&rsquo;s a default layer for the dataset that it belongs</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>published</td>
+<td style="text-align: center">Is the layer published?</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+</tbody></table>
+
+<h2 id="how-obtain-all-layers">How obtain all layers</h2>
+
+<p>To obtain all layers:</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/layer
+</code></pre>
+<aside class="success">
+Remember — the response is jsonapi format
+</aside>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nt">"data"</span><span class="p">:[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e5c3e7c5-19ae-4ca0-a461-71f1f67aa553"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"total-co2-emissions-by-year"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5858f37140621f11066fb2f7"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"rw"</span><span class="w">
+          </span><span class="p">],</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Total CO2 emissions by year"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"11de2bc1-368b-42ed-a207-aaff8ece752b"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"layerConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"account"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"maxzoom"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"minzoom"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"layers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mapnik"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT * cait_2_0_country_ghg_emissions_filtered"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"cartocss"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"cartocss_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.3.0"</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nt">"legendConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nt">"applicationConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">],</span><span class="w">
+   </span><span class="nt">"links"</span><span class="p">:{</span><span class="w">
+      </span><span class="nt">"first"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/layer?page%5Bnumber%5D=1"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"prev"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/layer?page%5Bnumber%5D=1"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"next"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/layer?page%5Bnumber%5D=2&amp;page%5Bsize%5D=10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/layer?page%5Bnumber%5D=64&amp;page%5Bsize%5D=10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"self"</span><span class="p">:</span><span class="s2">"http://api.resourcewatch.org/layer?page%5Bnumber%5D=1&amp;page%5Bsize%5D=10"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="filter-params">Filter params</h3>
+
+<p>The filters available are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Filter the layers whose name contains the filter text</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">Filter the layers by dataset uuid</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>sort</td>
+<td style="text-align: center">Sort json response by specific attribute</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Filter layers on status (pending, active, disabled, all)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>published</td>
+<td style="text-align: center">Filter layers on published status (true, false)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>app</td>
+<td style="text-align: center">Filter layers on application (prep, gfw, etc..)</td>
+<td style="text-align: right">Array</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>Return the layers filtered whose name contains emissions</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/layer?name<span class="o">=</span>emissions
+</code></pre>
+<blockquote>
+<p>Return the layers filtered by dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/layer?dataset<span class="o">=</span>11de2bc1-368b-42ed-a207-aaff8ece752b
+curl -X GET http://api.resourcewatch.org/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer
+</code></pre>
+<blockquote>
+<p>Sort by name</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/layer?sort<span class="o">=</span>name
+</code></pre>
+<blockquote>
+<p>Filter layers by status</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/layer?status<span class="o">=</span>failed
+</code></pre>
+<blockquote>
+<p>Filter layers by published status</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/layer?published<span class="o">=</span><span class="nb">false</span>
+</code></pre>
+<blockquote>
+<p>Return the layers filtered whose applications contain rw</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/layer?app<span class="o">=</span>rw
+</code></pre>
+<h3 id="pagination-params">Pagination params</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">Number elements per page</td>
+<td style="text-align: right">Number</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">Number of page</td>
+<td style="text-align: right">Number</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>Return the layers of the page 2 with 5 elements per page</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/layer?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
+</code></pre>
+<h2 id="how-obtain-a-layer-for-specific-dataset">How obtain a layer for specific dataset</h2>
+
+<p>To obtain the layer:</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553
+curl -X GET http://api.resourcewatch.org/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553
+</code></pre>
+<aside class="success">
+Remember — the response is jsonapi format
+</aside>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e5c3e7c5-19ae-4ca0-a461-71f1f67aa553"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"total-co2-emissions-by-year"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5858f37140621f11066fb2f7"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"rw"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Total CO2 emissions by year"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"11de2bc1-368b-42ed-a207-aaff8ece752b"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"layerConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"account"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"maxzoom"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"minzoom"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"layers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mapnik"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"sql"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT * cait_2_0_country_ghg_emissions_filtered"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"cartocss"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"cartocss_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.3.0"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"legendConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"applicationConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-23T16:51:42.571Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-23T16:51:42.571Z"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="create-a-layer">Create a Layer</h2>
+
+<p>To create a layer, you need to define all of the required fields in the request body. The fields that compose a layer are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of the layer</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>slug</td>
+<td style="text-align: center">Slug of the layer</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Text without special characters(aaa-bbb)</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>description</td>
+<td style="text-align: center">Description of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the layer belongs</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">gfw, forest-atlas, rw, prep, aqueduct, data4sdg</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>layerConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Valid object</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>legendConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Valid object</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>applicationConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Valid object</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>iso</td>
+<td style="text-align: center">Isos to which the layer belongs</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">BRA, ES</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Status of the Layer</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">UuId of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Uuid of Dataset</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a layer, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset_id&gt;/layer <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "layer": {
+      "application":[
+         "your", "apps"
+      ],
+      "name":"Example layer"
+   }
+}'</span>
+</code></pre>
+<h2 id="update-a-layer">Update a Layer</h2>
+
+<p>To update a layer, you need to define all of the required fields in the request body. The fields that compose a layer are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of the layer</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>slug</td>
+<td style="text-align: center">Slug of the layer</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Text without special characters(aaa-bbb)</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>description</td>
+<td style="text-align: center">Description of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the layer belongs</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">gfw, forest-atlas, rw, prep, aqueduct, data4sdg</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>layerConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Valid object</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>legendConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Valid object</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>applicationConfig</td>
+<td style="text-align: center">Custom configuration</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Valid object</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>iso</td>
+<td style="text-align: center">Isos to which the layer belongs</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">BRA, ES</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Status of the Layer</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true - false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td style="text-align: center">UuId of the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Uuid of Dataset</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a layer, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "layer": {
+      "application":[
+         "your", "apps"
+      ],
+      "name":"Example layer"
+   }
+}'</span>
+</code></pre>
+<h2 id="delete-a-layer">Delete a Layer</h2>
+<pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
           <h1 id="query">Query</h1>
 
           <h1 id="fields">Fields</h1>
@@ -666,9 +2377,9 @@ Remember — the response is jsonapi format
 
 <h2 id="metadata-definition">Metadata definition</h2>
 
-<p>A Metadata can be any kind of data associated to a existing resource (i.e. Dataset, Layer or Widget)</p>
+<p>A Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget)</p>
 
-<p>Some fields are important for identifying the entity properly, other ones are just optional and give extra information about it.</p>
+<p>Some fields are important to identify the entity properly, others are just optional and give extra information about it.</p>
 
 <table><thead>
 <tr>
@@ -749,110 +2460,7 @@ Remember — the response is jsonapi format
 </tr>
 </tbody></table>
 
-<h2 id="endpoints">Endpoints</h2>
-
-<table><thead>
-<tr>
-<th>Method</th>
-<th style="text-align: center">Path</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>GET</td>
-<td style="text-align: center">/dataset/:dataset/metadata</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/metadata</td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td style="text-align: center">/dataset/:dataset/metadata</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td style="text-align: center">/dataset/:dataset/metadata</td>
-</tr>
-<tr>
-<td>GET</td>
-<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td style="text-align: center">/dataset/:dataset/widget/:widget/metadata</td>
-</tr>
-<tr>
-<td>GET</td>
-<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
-</tr>
-<tr>
-<td>DELETE</td>
-<td style="text-align: center">/dataset/:dataset/layer/:layer/metadata</td>
-</tr>
-<tr>
-<td>GET</td>
-<td style="text-align: center">/metadata</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/metadata/find-by-ids</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/widget/metadata/find-by-ids</td>
-</tr>
-<tr>
-<td>POST</td>
-<td style="text-align: center">/dataset/:dataset/layer/metadata/find-by-ids</td>
-</tr>
-</tbody></table>
-
-<h3 id="post-patch-delete">POST, PATCH, DELETE</h3>
-
-<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload (when doing CRUD requests).
-<strong>This doesn&rsquo;t apply to the FindByIds Endpoints</strong></p>
-
-<h3 id="get-queryparam-filters">GET Queryparam Filters:</h3>
-
-<p>application filter:
-<code class="prettyprint">
-application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
-</code></p>
-
-<p>language filter:
-<code class="prettyprint">
-language: select between available languages (select one or some of them)
-</code></p>
-
-<p>limit filter:
-<code class="prettyprint">
-limit: the desired number
-</code></p>
-
-<p>Custom param for /metadata endpoint
-<code class="prettyprint">
-type: [dataset, widget, layer]
-</code></p>
-
-<h2 id="crud-examples">CRUD Examples</h2>
-
-<h3 id="creating">Creating</h3>
+<h2 id="creating-a-metadata-object">Creating a metadata object</h2>
 
 <table><thead>
 <tr>
@@ -901,6 +2509,8 @@ type: [dataset, widget, layer]
 <td style="text-align: center">optional</td>
 </tr>
 </tbody></table>
+
+<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
 
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
@@ -966,7 +2576,27 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
    "language": &lt;language&gt;
   }'</span>
 </code></pre>
-<h3 id="getting">Getting</h3>
+<h2 id="getting-metadata">Getting metadata</h2>
+
+<p>application filter:
+<code class="prettyprint">
+application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
+</code></p>
+
+<p>language filter:
+<code class="prettyprint">
+language: select between available languages (select one or some of them)
+</code></p>
+
+<p>limit filter:
+<code class="prettyprint">
+limit: the desired number
+</code></p>
+
+<p>Custom param for /metadata endpoint
+<code class="prettyprint">
+type: [dataset, widget, layer]
+</code></p>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata
 </code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata
 </code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata
@@ -976,7 +2606,11 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata
 </code></pre>
-<h3 id="updating-partial">Updating (partial)</h3>
+<h2 id="updating-a-metadata">Updating a metadata</h2>
+
+<p>Partial update</p>
+
+<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
 <pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -1034,7 +2668,9 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="deleting">Deleting</h3>
+<h2 id="deleting-a-metadata">Deleting a metadata</h2>
+
+<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the Queryparams</p>
 <pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
 </code></pre>
 <blockquote>
@@ -1042,7 +2678,7 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 </blockquote>
 <pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata?application<span class="o">=</span>rw&amp;language<span class="o">=</span>en <span class="se">\</span>
 </code></pre>
-<h3 id="getting-all">Getting All</h3>
+<h2 id="getting-all">Getting all</h2>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata
 </code></pre>
 <blockquote>
@@ -1055,12 +2691,32 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 </code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?application<span class="o">=</span>rw,gfw&amp;language<span class="o">=</span>en&amp;type<span class="o">=</span>dataset
 </code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/metadata?language<span class="o">=</span>en
 </code></pre>
-<h3 id="finding-by-ids">Finding By Ids</h3>
+<h2 id="finding-getting-by-ids">Finding (getting) by ids</h2>
 
 <p>&ldquo;ids&rdquo; property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
 This property can be an Array or a String (comma-separated)
 payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
 payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
+
+<p>application filter:
+<code class="prettyprint">
+application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
+</code></p>
+
+<p>language filter:
+<code class="prettyprint">
+language: select between available languages (select one or some of them)
+</code></p>
+
+<p>limit filter:
+<code class="prettyprint">
+limit: the desired number
+</code></p>
+
+<p>Custom param for /metadata endpoint
+<code class="prettyprint">
+type: [dataset, widget, layer]
+</code></p>
 <pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/metadata/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -1139,7 +2795,528 @@ payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-          <h1 id="vocabulary">Vocabulary</h1>
+          <h1 id="vocabulary-and-tags">Vocabulary (and Tags)</h1>
+
+<h2 id="tags-definition">Tags definition</h2>
+
+<p>A Tag is defined as a resource feature, or a value of a particular filter.</p>
+
+<h2 id="vocabulary-definition">Vocabulary definition</h2>
+
+<p>The Vocabulary can be described as a cluster of tags.</p>
+
+<p>It is currently possible to just create a Vocabulary without any tags or relationships.
+To do it, the only parameter that is required is the name of the Vocabulary.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">The name of the Vocabulary (<strong>it has to be unique and it represents the &ldquo;primaryKey&rdquo;</strong>)</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
+<p>However, the most common use case relies on the relationships creation</p>
+
+<h2 id="relationships">Relationships</h2>
+
+<p>This section describes how to associate an existing or a new Vocabulary to a resource.</p>
+
+<p>Some important points:</p>
+
+<ul>
+<li>A <strong>Vocabulary</strong> can have <strong>N</strong> associated <strong>Resources</strong>.</li>
+<li>A <strong>Resource</strong> can have <strong>M</strong> associated <strong>Vocabularies</strong>.</li>
+<li>The way of building these <strong>relationships</strong> is creating <strong>Tags</strong>.</li>
+</ul>
+
+<h2 id="assign-a-vocabulary-to-an-existing-resource">Assign a Vocabulary to an existing Resource</h2>
+
+<p>To create a relationship between a resource and a Vocabulary (even if the vocabulary doesn&rsquo;t exist yet) it&rsquo;s just required to set the tags that define the relationship.</p>
+
+<p>Some writing operations can take a little more time than the reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.</p>
+
+<aside class="notice">
+Please, be sure that the request is properly authenticated and the current user has permission to the resource.
+If you don&rsquo;t know how to do this, please go to the <a href="#authentication">Authentication section</a>
+</aside>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": ["biology", "chemistry"]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>real Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"science"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"chemistry"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"chemistry"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="updating-tags-of-an-existing-relationship">Updating Tags of an existing relationship</h2>
+
+<p>If a relationship has to be updated, it&rsquo;s necessary to define the new tags of it.
+The previous tags will be deleted in benefit of the new ones.</p>
+<pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "tags": ["maths", "astronomy"]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"science"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"maths"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"astronomy"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"chemistry"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="creating-several-relationships">Creating several relationships</h2>
+
+<p>There is also an endpoint that allows to create some relationships in the same request.</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "vocabularyOne": {
+       "tags": [&lt;tags&gt;]
+   },
+   "vocabularyTwo": {
+       "tags": [&lt;tags&gt;]
+   }
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary<span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+  "vocabularyOne": {
+      "tags": [&lt;tags&gt;]
+  },
+  "vocabularyTwo": {
+      "tags": [&lt;tags&gt;]
+  }
+ }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+  "vocabularyOne": {
+      "tags": [&lt;tags&gt;]
+  },
+  "vocabularyTwo": {
+      "tags": [&lt;tags&gt;]
+  }
+ }'</span>
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+     "country": {
+         "tags": ["Spain", "Italy", "Portugal"]
+     },
+     "sport": {
+         "tags": ["football", "basketball", "voleyball"]
+     },
+     "color": {
+         "tags": ["red", "green", "blue"]
+     }
+  }'</span>
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameTwo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tag3"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newV"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"test2"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Portugal"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sport"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"football"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"basketball"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"voleyball"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"blue"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="deleting-relationships">Deleting relationships</h2>
+<pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre><pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre><pre class="highlight shell"><code>curl -X DELETE http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Portugal"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"blue"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="getting-vocabularies-associated-to-a-resource">Getting vocabularies associated to a resource</h2>
+
+<p>It can be requested all the vocabularies associated to a particular resource.</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://staging-api.globalforestwatch.org/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Portugal"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"blue"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="getting-a-single-relationship-broken-now">Getting a single relationship (broken now)</h2>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre>
+<h2 id="getting-resources-common-use-case">Getting resources (COMMON USE CASE)</h2>
+
+<p>There is also available a endpoint that accepts requests just pointing the resource type and
+the desired vocabulary-tag matching.</p>
+
+<p>It&rsquo;s currently supported a DOUBLE-OR pattern matching. This means that the API will return
+all resources that at least have one (or more) tags in a particular vocabulary. At the same time it will also apply an OR to the entities of other vocabulary-tag matchings.</p>
+
+<p>The query has to be set in the url by the Queryparams</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/vocabulary/find
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/vocabulary/find
+</code></pre><pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/vocabulary/find
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://staging-api.globalforestwatch.org/dataset/vocabulary/find?legacy<span class="o">=</span>cdi,coasts
+</code></pre>
+<h2 id="getting-all-vocabularies">Getting all vocabularies</h2>
+
+<p>This endpoints is quite useful to have a quick overview of all existing vocabularies and resources.</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/vocabulary
+</code></pre>
+<h2 id="finding-getting-by-ids">Finding (getting) by ids</h2>
+
+<p>&ldquo;ids&rdquo; property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
+This property can be an Array or a String (comma-separated)
+payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
+payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/widget/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/layer/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "ids": "942b3f38-9504-4273-af51-0440170ffc86, 08ff8183-48dc-457a-8924-bb4e7a87b8a8"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"08ff8183-48dc-457a-8924-bb4e7a87b8a8"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"legacy"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"cdi"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"inundation"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"national"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"united states"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"coasts"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"flooding"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"health"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"Portugal"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"blue"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="vocabulary-creation">Vocabulary Creation</h2>
+
+<p>As it was mentioned before, it is possible to just create a new and empty vocabulary</p>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/vocabulary/vocabularyName <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": &lt;vocabularyName&gt;
+  }'</span>
+</code></pre>
+<p>It is also possible to update and delete an entire vocabulary. Said that, and because of
+it&rsquo;s necessary to keep consistency between entities with weak relationship, these
+operations are only allowed to SUPERADMINS.</p>
 
           <h1 id="geostore">Geostore</h1>
 
