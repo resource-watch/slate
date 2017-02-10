@@ -156,33 +156,33 @@ You will see:
 
 <h3 id="carto">Carto</h3>
 
-<p>(connectorType: &lsquo;rest&rsquo;, provider: &#39;cartodb&rsquo;)
+<p><strong><em>(connectorType: &lsquo;rest&rsquo;, provider: &#39;cartodb&rsquo;)</em></strong>
 <a href="https://www.carto.com" target="_blank"><img src="images/dataset/carto.png" class="logo-third"/></a>
 CARTO is an open, powerful, and intuitive platform for discovering and predicting the key insights underlying the location data in our world.</p>
 
 <h3 id="arcgis">ArcGIS</h3>
 
-<p>(connectorType: &#39;rest&rsquo;, provider: &#39;featureservice&rsquo;)
+<p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;featureservice&rsquo;)</strong>
 <a href="https://www.arcgis.com/features/index.html" target="_blank"><img src="https://www.arcgis.com/features/img/logo-esri.png" class="logo-third"/></a>
 ArcGIS Online is a Complete, Cloud-Based Mapping Platform</p>
 
-<h3 id="google-earth-engine-coming-soon">Google Earth Engine (Coming soon&hellip;)</h3>
+<h3 id="google-earth-engine">Google Earth Engine</h3>
 
-<p>(connectorType: &#39;rest&rsquo;, provider: &#39;gee&rsquo;)
+<p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;gee&rsquo;)</strong>
 <a href="https://earthengine.google.com/" target="_blank"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
 Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth&rsquo;s surface.</p>
 
 <h3 id="csv">CSV</h3>
 
-<p>(connectorType: &#39;document&rsquo;, provider: &#39;csv&rsquo;)</p>
+<p><strong>(connectorType: &#39;document&rsquo;, provider: &#39;csv&rsquo;)</strong></p>
 
 <h3 id="json">JSON</h3>
 
-<p>(connectorType: &#39;json&rsquo;, provider: &#39;rwjson&rsquo;)</p>
+<p><strong>(connectorType: &#39;json&rsquo;, provider: &#39;rwjson&rsquo;)</strong></p>
 
 <h3 id="wms">WMS</h3>
 
-<p>(connectorType: &#39;wms&rsquo;, provider: &#39;wms&rsquo;)</p>
+<p><strong>(connectorType: &#39;wms&rsquo;, provider: &#39;wms&rsquo;)</strong></p>
 
 <h2 id="how-obtain-all-datasets">How obtain all datasets</h2>
 
@@ -2891,6 +2891,49 @@ Remember — the response is jsonapi format
 
           <h1 id="fields">Fields</h1>
 
+<h2 id="what-are-fields">What are fields?</h2>
+
+<p>Fields can be defined as the dataset properties. These fields are automatically generated when a dataset is created.</p>
+
+<h2 id="how-the-get-the-dataset-fields">How the get the dataset fields</h2>
+
+<p>Once the dataset is properly created and saved, it is possible to access to its fields getting also some information about them.</p>
+
+<p>To do that, it is just necessary to make use of the following endpoint:</p>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/fields/&lt;dataset-id&gt;
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/fields/1170030b-9725-4bfe-8fb4-1b0eb81020d2
+</code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.cait_2_0_country_ghg_emissions_toplow2011"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"cartodb_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"the_geom"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"the_geom_webmercator"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"z"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
           <h1 id="metadata">Metadata</h1>
 
 <h2 id="metadata-definition">Metadata definition</h2>
@@ -2906,11 +2949,6 @@ Remember — the response is jsonapi format
 <th style="text-align: right">Type</th>
 </tr>
 </thead><tbody>
-<tr>
-<td>id</td>
-<td style="text-align: center">The id of the metadata</td>
-<td style="text-align: right">String</td>
-</tr>
 <tr>
 <td>application</td>
 <td style="text-align: center">The metadata application</td>
