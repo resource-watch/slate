@@ -264,7 +264,12 @@ Remember — the response is jsonapi format
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
-<td>connector_type</td>
+<td>name</td>
+<td style="text-align: center">Filter the datasets by dataset name</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>connectorType</td>
 <td style="text-align: center">Filter the datasets by dataset type (rest,json,wms,document)</td>
 <td style="text-align: right">Text</td>
 </tr>
@@ -281,7 +286,7 @@ Remember — the response is jsonapi format
 <tr>
 <td>provider</td>
 <td style="text-align: center">Filter datasets on provider (cartodb, json, etc..)</td>
-<td style="text-align: right">Boolean</td>
+<td style="text-align: right">Text</td>
 </tr>
 <tr>
 <td>app</td>
@@ -294,8 +299,6 @@ Remember — the response is jsonapi format
 <td style="text-align: right">Text</td>
 </tr>
 </tbody></table>
-
-<p>includes for vocabulary: Coming soon..</p>
 
 <blockquote>
 <p>Return the datasets filtered whose id contains d02df2f6-d80c-4274-bb6f-f062061655c4</p>
@@ -550,13 +553,6 @@ Remember — the response is jsonapi format
 <td style="text-align: right">No</td>
 </tr>
 <tr>
-<td>vacabularies</td>
-<td style="text-align: center">Relationship between a dataset and a Vocabulary</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right">Example: &ldquo;vocabularies&rdquo;: { &ldquo;voc one&rdquo;: {&ldquo;tags&rdquo;: [&ldquo;tag one&rdquo;, &ldquo;tag two&rdquo;]} }</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
 <td>dataOverwrite</td>
 <td style="text-align: center">Allows to overwrite dataset&rsquo;s data</td>
 <td style="text-align: right">Boolean</td>
@@ -564,15 +560,8 @@ Remember — the response is jsonapi format
 <td style="text-align: right">No</td>
 </tr>
 <tr>
-<td>tags</td>
-<td style="text-align: center">Tags for dataset</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any list text</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
 <td>vocabularies</td>
-<td style="text-align: center">Cluster of tags COMING SOON!</td>
+<td style="text-align: center">Cluster of tags</td>
 <td style="text-align: right">Object</td>
 <td style="text-align: right">{&ldquo;vocabularyOne&rdquo;: {&ldquo;tags&rdquo;: [<tags>]},&ldquo;vocabularyTwo&rdquo;: {&ldquo;tags&rdquo;: [<tags>]}}</td>
 <td style="text-align: right">No</td>
@@ -594,7 +583,6 @@ Remember — the response is jsonapi format
       "connectorType":"rest",
       "provider":"cartodb",
       "connectorUrl":"&lt;cartoUrl&gt;",
-      "dataPath": "&lt;path to access data&gt; default rows",
       "application":[
          "your", "apps"
       ],
@@ -614,7 +602,6 @@ Remember — the response is jsonapi format
       "connectorType":"rest",
       "provider":"cartodb",
       "connectorUrl":"https://wri-01.carto.com/tables/wdpa_protected_areas/table",
-      "dataPath": "rows",
       "application":[
          "gfw", "forest-atlas"
       ],
@@ -639,7 +626,6 @@ Remember — the response is jsonapi format
       "connectorType":"rest",
       "provider":"featureservice",
       "connectorUrl":"https://services.arcgis.com/uDTUpUPbk8X8mXwl/arcgis/rest/services/Public_Schools_in_Onondaga_County/FeatureServer/0?f=json",
-      "dataPath":"features",
       "application":[
          "prep"
       ],
@@ -835,23 +821,23 @@ Remember — create dataset is an authenticated endpoint!
 
 <h2 id="updating-a-dataset">Updating a Dataset</h2>
 
-<p>In order to modify the dataset, you can PUT/PATCH a request.
+<p>In order to modify the dataset, you can PATCH a request.
 It accepts the same parameters as the <em>create dataset</em> endpoint, and you will need an authentication token.</p>
 
 <blockquote>
 <p>An example update request:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X PUT http://api.resourcewatch.org/dataset/&lt;dataset-id&gt; <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X PATCH http://api.resourcewatch.org/dataset/&lt;dataset-id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
-<span class="s1">'{__
-    "dataset": {__
+<span class="s1">'{
+    "dataset": {
         "name": "Another name for the dataset"
     }
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — create dataset is an authenticated endpoint!
+Remember — update dataset is an authenticated endpoint!
 </aside>
 
 <h2 id="deleting-a-dataset">Deleting a Dataset</h2>
@@ -862,7 +848,7 @@ Remember — create dataset is an authenticated endpoint!
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
 <aside class="notice">
-Remember — create dataset is an authenticated endpoint!
+Remember — delete dataset is an authenticated endpoint!
 </aside>
 
 <h2 id="cloning-a-dataset">Cloning a Dataset</h2>
@@ -871,7 +857,7 @@ Remember — create dataset is an authenticated endpoint!
 <pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/dataset/5306fd54-df71-4e20-8b34-2ff464ab28be/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 -H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
-<span class="s1">'{__
+<span class="s1">'{
   "dataset": {
     "dataset_url": "/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010",
     "application": [
@@ -882,7 +868,7 @@ Remember — create dataset is an authenticated endpoint!
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — create dataset is an authenticated endpoint!
+Remember — clone dataset is an authenticated endpoint!
 </aside>
 
 <h2 id="concatenate-data">Concatenate Data</h2>
@@ -913,7 +899,7 @@ Remember — create dataset is an authenticated endpoint!
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — create dataset is an authenticated endpoint!
+Remember — concatenate dataset is an authenticated endpoint!
 </aside>
 
 <h2 id="overwrite-data">Overwrite Data</h2>
@@ -929,8 +915,8 @@ Remember — create dataset is an authenticated endpoint!
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "connectorUrl":"&lt;csvUrl&gt;",
-   "dataPath": "data... etc"
+   "connectorUrl":"&lt;url&gt;",
+   "dataPath": "data"
 }'</span>
 </code></pre>
 <blockquote>
@@ -944,7 +930,7 @@ Remember — create dataset is an authenticated endpoint!
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — create dataset is an authenticated endpoint!
+Remember — overwrite dataset is an authenticated endpoint!
 </aside>
 
 <h2 id="overwrite-specific-data">Overwrite specific Data</h2>
@@ -961,7 +947,7 @@ Remember — create dataset is an authenticated endpoint!
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — create dataset is an authenticated endpoint!
+Remember — overwrite dataset is an authenticated endpoint!
 </aside>
 
 <h2 id="delete-specific-data">Delete specific Data</h2>
@@ -974,7 +960,7 @@ Remember — create dataset is an authenticated endpoint!
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
 <aside class="notice">
-Remember — create dataset is an authenticated endpoint!
+Remember — delete dataset is an authenticated endpoint!
 </aside>
 
           <h1 id="widget">Widget</h1>
@@ -998,7 +984,7 @@ Remember — create dataset is an authenticated endpoint!
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
-<td>Application</td>
+<td>application</td>
 <td style="text-align: center">Application to which the dataset belongs</td>
 <td style="text-align: right">Array</td>
 </tr>
@@ -1106,7 +1092,7 @@ Remember — the response is jsonapi format
             </span><span class="nt">"application"</span><span class="p">:[</span><span class="w">
                </span><span class="s2">"aqueduct"</span><span class="w">
             </span><span class="p">],</span><span class="w">
-            </span><span class="nt">"slug"</span><span class="p">:</span><span class="s2">"ercentage-of-country-s-population-is-at-high-risk-of-hunger"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"slug"</span><span class="p">:</span><span class="s2">"percentage-of-country-s-population-is-at-high-risk-of-hunger"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"Percentage of country's population at high risk of hunger."</span><span class="p">,</span><span class="w">
             </span><span class="nt">"description"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
             </span><span class="nt">"source"</span><span class="p">:</span><span class="s2">""</span><span class="p">,</span><span class="w">
@@ -1163,7 +1149,7 @@ Remember — the response is jsonapi format
 </tr>
 <tr>
 <td>status</td>
-<td style="text-align: center">Filter widgets on status (pending, active, disabled, all)</td>
+<td style="text-align: center">Filter widgets on status (pending, saved, failed, all)</td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
@@ -1173,17 +1159,17 @@ Remember — the response is jsonapi format
 </tr>
 <tr>
 <td>verified</td>
-<td style="text-align: center">Filter by verified status (true,false)</td>
+<td style="text-align: center">Filter by verified status (true, false)</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
 <td>template</td>
-<td style="text-align: center">Filter by template status (true,false)</td>
+<td style="text-align: center">Filter by template status (true, false)</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
 <td>default</td>
-<td style="text-align: center">Filter by default status (true,false)</td>
+<td style="text-align: center">Filter by default status (true, false)</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
@@ -2121,13 +2107,6 @@ Remember — the response is jsonapi format
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
-<td>slug</td>
-<td style="text-align: center">Slug of the widget</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Text without special characters(aaa-bbb)</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
 <td>description</td>
 <td style="text-align: center">Description of the dataset</td>
 <td style="text-align: right">Text</td>
@@ -2179,8 +2158,8 @@ Remember — the response is jsonapi format
 <tr>
 <td>status</td>
 <td style="text-align: center">Status of the Widget</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true - false</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
 <td style="text-align: right">No</td>
 </tr>
 <tr>
@@ -2239,6 +2218,8 @@ Remember — the response is jsonapi format
          "your", "apps"
       ],
       "name":"Example Carto Dataset"
+      "status": 1,
+      "published": true
    }
 }'</span>
 </code></pre>
@@ -2261,13 +2242,6 @@ Remember — the response is jsonapi format
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Any Text</td>
 <td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>slug</td>
-<td style="text-align: center">Slug of the widget</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Text without special characters(aaa-bbb)</td>
-<td style="text-align: right">No</td>
 </tr>
 <tr>
 <td>description</td>
@@ -2321,8 +2295,8 @@ Remember — the response is jsonapi format
 <tr>
 <td>status</td>
 <td style="text-align: center">Status of the Widget</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true - false</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
 <td style="text-align: right">No</td>
 </tr>
 <tr>
@@ -2380,7 +2354,8 @@ Remember — the response is jsonapi format
       "application":[
          "your", "apps"
       ],
-      "name":"Example Carto Dataset"
+      "name":"New Example Carto Dataset Name",
+      "widgetConfig": {}
    }
 }'</span>
 </code></pre>
@@ -2567,7 +2542,7 @@ Remember — the response is jsonapi format
 </tr>
 <tr>
 <td>status</td>
-<td style="text-align: center">Filter layers on status (pending, active, disabled, all)</td>
+<td style="text-align: center">Filter layers on status (pending, saved, failed, all)</td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
@@ -2726,13 +2701,6 @@ Remember — the response is jsonapi format
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
-<td>slug</td>
-<td style="text-align: center">Slug of the layer</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Text without special characters(aaa-bbb)</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
 <td>description</td>
 <td style="text-align: center">Description of the dataset</td>
 <td style="text-align: right">Text</td>
@@ -2784,8 +2752,8 @@ Remember — the response is jsonapi format
 <tr>
 <td>status</td>
 <td style="text-align: center">Status of the Layer</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true - false</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
 <td style="text-align: right">No</td>
 </tr>
 <tr>
@@ -2808,7 +2776,8 @@ Remember — the response is jsonapi format
       "application":[
          "your", "apps"
       ],
-      "name":"Example layer"
+      "name":"Example layer",
+      "status": 1
    }
 }'</span>
 </code></pre>
@@ -2833,13 +2802,6 @@ Remember — the response is jsonapi format
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
-<td>slug</td>
-<td style="text-align: center">Slug of the layer</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Text without special characters(aaa-bbb)</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
 <td>description</td>
 <td style="text-align: center">Description of the dataset</td>
 <td style="text-align: right">Text</td>
@@ -2891,8 +2853,8 @@ Remember — the response is jsonapi format
 <tr>
 <td>status</td>
 <td style="text-align: center">Status of the Layer</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true - false</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
 <td style="text-align: right">No</td>
 </tr>
 <tr>
@@ -2915,7 +2877,8 @@ Remember — the response is jsonapi format
       "application":[
          "your", "apps"
       ],
-      "name":"Example layer"
+      "name":"New Example layer Name",
+      "layerConfig": {}
    }
 }'</span>
 </code></pre>
