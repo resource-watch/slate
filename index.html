@@ -2889,13 +2889,52 @@ Remember — the response is jsonapi format
 </code></pre>
           <h1 id="query">Query</h1>
 
+<p>In order to retrieve data from the created datasets it is possible to do queries in SQL or Feature Service languages to the API.</p>
+
+<p>Thanks to <code class="prettyprint">/query</code> endpoint, the final user can get the desired information just sending a valid sql query.</p>
+
+<h2 id="query-examples">Query examples</h2>
+<pre class="highlight plaintext"><code># Select and aggregations
+
+select * from table
+select count(*) from table
+select a, b from table
+select a, count(*) from table
+
+# Functions and alias
+
+select sum(int) from table
+select avg(int) from table
+select max(int) from table
+select min(int) from table
+select min(int) as minimun from table
+
+select * from table limit=20
+select a as b from table limit=20
+
+# Where conditionals
+
+select * from table where a &gt; 2
+select * from table where a = 2
+select * from table where a &lt; 2
+select * from table where a &gt;= 2
+select * from table where a = 2 and b &lt; 2
+select * from table where text like ‘a%’
+Select * from table where st_intersects(st_setsrid(st_geomfromgeojson(‘{}’), 4326), the_geom)
+
+# Group by
+
+select a, count(int) from table group by a
+select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
+
+</code></pre>
           <h1 id="fields">Fields</h1>
 
 <h2 id="what-are-fields">What are fields?</h2>
 
 <p>Fields can be defined as the dataset properties. These fields are automatically generated when a dataset is created.</p>
 
-<h2 id="how-the-get-the-dataset-fields">How the get the dataset fields</h2>
+<h2 id="how-to-get-the-dataset-fields">How to get the dataset fields</h2>
 
 <p>Once the dataset is properly created and saved, it is possible to access to its fields getting also some information about them.</p>
 
