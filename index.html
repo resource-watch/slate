@@ -156,20 +156,20 @@ You will see:
 
 <h3 id="carto">Carto</h3>
 
-<p><strong><em>(connectorType: &lsquo;rest&rsquo;, provider: &#39;cartodb&rsquo;)</em></strong>
-<a href="https://www.carto.com" target="_blank"><img src="images/dataset/carto.png" class="logo-third"/></a>
+<p><strong>(connectorType: &lsquo;rest&rsquo;, provider: &#39;cartodb&rsquo;)</strong>
+<a href="https://www.carto.com"><img src="images/dataset/carto.png" class="logo-third"/></a>
 CARTO is an open, powerful, and intuitive platform for discovering and predicting the key insights underlying the location data in our world.</p>
 
 <h3 id="arcgis">ArcGIS</h3>
 
 <p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;featureservice&rsquo;)</strong>
-<a href="https://www.arcgis.com/features/index.html" target="_blank"><img src="https://www.arcgis.com/features/img/logo-esri.png" class="logo-third"/></a>
+<a href="https://www.arcgis.com/features/index.html"><img src="https://www.arcgis.com/features/img/logo-esri.png" class="logo-third"/></a>
 ArcGIS Online is a Complete, Cloud-Based Mapping Platform</p>
 
 <h3 id="google-earth-engine">Google Earth Engine</h3>
 
 <p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;gee&rsquo;)</strong>
-<a href="https://earthengine.google.com/" target="_blank"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
+<a href="https://earthengine.google.com/"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
 Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth&rsquo;s surface.</p>
 
 <h3 id="csv">CSV</h3>
@@ -178,169 +178,95 @@ Google Earth Engine combines a multi-petabyte catalog of satellite imagery and g
 
 <h3 id="json">JSON</h3>
 
-<p><strong>(connectorType: &#39;json&rsquo;, provider: &#39;rwjson&rsquo;)</strong></p>
+<p><strong>(connectorType: &#39;document&rsquo;, provider: &#39;json&rsquo;)</strong></p>
+
+<h3 id="tsv">TSV</h3>
+
+<p><strong>(connectorType: &#39;document&rsquo;, provider: &#39;tsv&rsquo;)</strong></p>
+
+<h3 id="xml">XML</h3>
+
+<p><strong>(connectorType: &#39;document&rsquo;, provider: &#39;xml&rsquo;)</strong></p>
 
 <h3 id="wms">WMS</h3>
 
 <p><strong>(connectorType: &#39;wms&rsquo;, provider: &#39;wms&rsquo;)</strong></p>
 
-<h2 id="how-obtain-all-datasets">How obtain all datasets</h2>
+<h2 id="getting-all-datasets">Getting all datasets</h2>
 
-<p>To obtain all datasets:</p>
+<p>To get all datasets:</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset
 </code></pre>
 <aside class="success">
-Remember — the response is jsonapi format
+Remember — the response is in JSONApi format
 </aside>
 
 <blockquote>
-<p>Example response:</p>
+<p>Response:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-   </span><span class="nt">"data"</span><span class="p">:[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06c44f9a-aae7-401e-874c-de13b7764959"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c4ee894f-2a9f-4681-9c3d-d94cf106f796"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="s2">"prep"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"rw"</span><span class="w">
-          </span><span class="p">],</span><span class="w">
-          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Historical Precipitation -- U.S. (Puget Sound Lowlands)"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"attributesPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"connectorType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"csv"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://raw.githubusercontent.com/fgassert/PREP-washington-observed-data/master/observed_precip.csv"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_06c44f9aaae7401e874cde13b7764959"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="s2">""</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"observed"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"washington"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"puget sound"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"climate-weather"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"precipitation"</span><span class="w">
-          </span><span class="p">],</span><span class="w">
-          </span><span class="nt">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-          </span><span class="nt">"clonedHost"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"hostProvider"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"hostUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"hostId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"hostType"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"World Price"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"World-Price-1490086842551"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"aqueduct"</span><span class="p">],</span><span class="w">
+            </span><span class="nt">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"attributesPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"connectorType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rest"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58333dcfd9f39b189ca44c75"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://wri-01.carto.com/tables/combined01_prepared"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"combined01_prepared"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="nt">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"clonedHost"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="nt">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-31T11:47:27.811Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-31T13:05:17.359Z"</span><span class="w">
         </span><span class="p">}</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-   </span><span class="p">],</span><span class="w">
-   </span><span class="nt">"links"</span><span class="p">:{</span><span class="w">
-      </span><span class="nt">"first"</span><span class="p">:</span><span class="s2">"https://api.resourcewatch.org/v1/dataset?page%5Bnumber%5D=1"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"prev"</span><span class="p">:</span><span class="s2">"https://api.resourcewatch.org/v1/dsataset?page%5Bnumber%5D=1"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"next"</span><span class="p">:</span><span class="s2">"https://api.resourcewatch.org/v1/dsataset?page%5Bnumber%5D=2&amp;page%5Bsize%5D=10"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"last"</span><span class="p">:</span><span class="s2">"https://api.resourcewatch.org/v1/dsataset?page%5Bnumber%5D=64&amp;page%5Bsize%5D=10"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"self"</span><span class="p">:</span><span class="s2">"https://api.resourcewatch.org/v1/dsataset?page%5Bnumber%5D=1&amp;page%5Bsize%5D=10"</span><span class="w">
-   </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="filter-params">Filter params</h3>
+<h3 id="slug">Slug</h3>
 
-<p>Available filters:</p>
+<p>Datasets have an auto-generated and unique slug that allows the user to get, create, update or clone a dataset.
+The dataset slug cannot be updated even if the name changes.</p>
 
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ids</td>
-<td style="text-align: center">Filter the datasets by dataset ids</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>name</td>
-<td style="text-align: center">Filter the datasets by dataset name</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>connectorType</td>
-<td style="text-align: center">Filter the datasets by dataset type (rest,json,wms,document)</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>sort</td>
-<td style="text-align: center">Sort json response by specific attributes</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>status</td>
-<td style="text-align: center">Filter datasets on status (pending, active, disabled, all)</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>provider</td>
-<td style="text-align: center">Filter datasets on provider (cartodb, json, etc..)</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>app</td>
-<td style="text-align: center">Filter datasets on application (For filter or &ndash; prep,gfw,etc.. &ndash; for filter and prep@gfw@prep@etc..)</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>includes</td>
-<td style="text-align: center">Include relational resources (metadata,layer,widget,vocabulary)</td>
-<td style="text-align: right">Text</td>
-</tr>
-</tbody></table>
+<h3 id="error-message">Error Message</h3>
 
-<blockquote>
-<p>Return the datasets filtered whose id contains d02df2f6-d80c-4274-bb6f-f062061655c4</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?ids<span class="o">=</span>d02df2f6-d80c-4274-bb6f-f062061655c4
+<p>When a dataset is created the status is set to “pending” by default. Once the adapter validates the dataset, the status is changed to “saved”. If the validation fails, the status will be set to “failed” and the adapter will also set an error message indicating the reason.</p>
+
+<h3 id="filters">Filters</h3>
+
+<p>Available filters: Any dataset property</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>birds&amp;provider<span class="o">=</span>cartodb
 </code></pre>
-<blockquote>
-<p>Return the datasets filtered by connector_type</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?connector_type<span class="o">=</span>wms
+<h3 id="sorting">Sorting</h3>
+
+<p>Available sorting: Any dataset property (desc: -)</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-provider,slug
+</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved
 </code></pre>
-<blockquote>
-<p>Sort by name</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name
+<h3 id="relationships">Relationships</h3>
+
+<p>Available relationships: Any dataset relationship [&#39;widget&rsquo;, &#39;layer&rsquo;, &#39;vocabulary&rsquo;, &#39;metadata&rsquo;]</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer
 </code></pre>
-<blockquote>
-<p>Filter datasets by status</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?status<span class="o">=</span>failed
+<h3 id="advanced-filters">Advanced filters</h3>
+
+<p>By vocabulary-tag matching</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>umd
 </code></pre>
-<blockquote>
-<p>Return the datasets filtered whose applications contain prep</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?app<span class="o">=</span>prep
-</code></pre>
-<blockquote>
-<p>Return the datasets filtered whose provider contain rwjson</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?provider<span class="o">=</span>rwjson
-</code></pre>
-<blockquote>
-<p>Return the datasets including layer</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?includes<span class="o">=</span>layer
-</code></pre>
-<blockquote>
-<p>Return the datasets including all available relational resources</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?includes<span class="o">=</span>layer,widget,metadata,vocabulary
-</code></pre>
-<h3 id="pagination-params">Pagination params</h3>
+<h3 id="pagination">Pagination</h3>
 
 <table><thead>
 <tr>
@@ -351,118 +277,74 @@ Remember — the response is jsonapi format
 </thead><tbody>
 <tr>
 <td>page[size]</td>
-<td style="text-align: center">Number elements per page</td>
+<td style="text-align: center">The number elements per page</td>
 <td style="text-align: right">Number</td>
 </tr>
 <tr>
 <td>page[number]</td>
-<td style="text-align: center">Number of page</td>
+<td style="text-align: center">The page number</td>
 <td style="text-align: right">Number</td>
 </tr>
 </tbody></table>
-
-<blockquote>
-<p>Return the datasets of the page 2 with 5 elements per page</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>1
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>2
 </code></pre>
-<h2 id="how-obtain-a-specific-dataset">How obtain a specific dataset</h2>
-
-<h3 id="filter-params">Filter params</h3>
-
-<p>Available filters:</p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>app</td>
-<td style="text-align: center">Filter datasets on application (For filter or &ndash; prep,gfw,etc.. &ndash; for filter and prep@gfw@prep@etc..)</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>includes</td>
-<td style="text-align: center">Include relational resources (metadata,layer,widget,vocabulary)</td>
-<td style="text-align: right">Text</td>
-</tr>
-</tbody></table>
+<h2 id="how-to-get-a-specific-dataset">How to get a specific dataset</h2>
 
 <blockquote>
-<p>To obtain the dataset:</p>
+<p>To get a dataset:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057ad4fc2145
 </code></pre>
 <blockquote>
-<p>Example response:</p>
+<p>Response:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51943691-eebc-4cb4-bdfb-057ad4fc2145"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"forest-atlas"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Timber Production RDC (test)"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"attributesPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"connectorType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"csv"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58750a56dfc643722bdd02ab"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://wri-forest-atlas.s3.amazonaws.com/COD/temp/annual%20timber%20production%20DRC%20%28test%29%20-%20Sheet1.csv"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_51943691eebc4cb4bdfb057ad4fc2145"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-      </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-      </span><span class="nt">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"lat"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"year"</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="nt">"long"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="nt">"clonedHost"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"hostProvider"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"hostUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"hostId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"hostType"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"hostPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51943691-eebc-4cb4-bdfb-057ad4fc2145"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Timber Production RDC (test)"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Timber-Production-RDC-test-1490086842132"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"forest-atlas"</span><span class="p">],</span><span class="w">
+            </span><span class="nt">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"attributesPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"connectorType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"csv"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58750a56dfc643722bdd02ab"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://wri-forest-atlas.s3.amazonaws.com/COD/temp/annual%20timber%20production%20DRC%20%28test%29%20-%20Sheet1.csv"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_51943691eebc4cb4bdfb057ad4fc2145"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"year"</span><span class="p">],</span><span class="w">
+                </span><span class="nt">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="nt">"long"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"lat"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"clonedHost"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="nt">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-25T21:48:27.535Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-25T21:48:28.675Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-25T21:48:28.675Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-25T21:48:27.535Z"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
-<p>To obtain the dataset including specific relational resource:</p>
+<p>To get the dataset including its relationships:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes<span class="o">=</span>metadata
-</code></pre>
-<blockquote>
-<p>To obtain the dataset including specific relational resource on specific application:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes<span class="o">=</span>metadata&amp;app<span class="o">=</span>rw
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes<span class="o">=</span>metadata,vocabulary,widget,layer
 </code></pre>
 <aside class="success">
-Remember — the response is jsonapi format
+Remember — the response is in JSONApi format
 </aside>
 
 <h2 id="creating-a-dataset">Creating a Dataset</h2>
 
-<p>Important things first! In order to create a dataset, you need an authorization token. Follow the steps of this <a href="#generate-your-own-oauth-token">guide</a> to generate it.</p>
+<p>To create a dataset, you will need an authorization token. Follow the steps of this <a href="#generate-your-own-oauth-token">guide</a> to get yours.</p>
 
 <p>To create a dataset, you need to define all of the required fields in the request body. The fields that compose a dataset are:</p>
 
@@ -477,86 +359,93 @@ Remember — the response is jsonapi format
 </thead><tbody>
 <tr>
 <td>name</td>
-<td style="text-align: center">Name of the dataset</td>
+<td style="text-align: center">Dataset name</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Any Text</td>
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
-<td>subtitle</td>
-<td style="text-align: center">Subtitle of the dataset</td>
+<td>type</td>
+<td style="text-align: center">Dataset type</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Any Text</td>
 <td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td style="text-align: center">Dataset subtitle</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Applications the dataset belongs to</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Any valid application name(s)</td>
+<td style="text-align: right">Yes</td>
 </tr>
 <tr>
 <td>connectorType</td>
 <td style="text-align: center">Connector type</td>
 <td style="text-align: right">Text</td>
-<td style="text-align: right">rest, json, document, wms</td>
+<td style="text-align: right">rest, document, wms</td>
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
 <td>provider</td>
-<td style="text-align: center">The provider of the connector</td>
+<td style="text-align: center">The connectorType provider</td>
 <td style="text-align: right">Text</td>
-<td style="text-align: right">rwjson, csv, cartodb, featureservice, gee, wms</td>
+<td style="text-align: right">cartodb, featureservice, gee, csv, tsv, xml, json</td>
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
 <td>connectorUrl</td>
-<td style="text-align: center">Url of the data</td>
+<td style="text-align: center">Url of the data source</td>
 <td style="text-align: right">Url</td>
 <td style="text-align: right">Any url</td>
-<td style="text-align: right">Yes for rest - Yes for json if data not present</td>
-</tr>
-<tr>
-<td>dataPath</td>
-<td style="text-align: center">Path to access data (In case that the data is not the root object, this param specifies with attribute contain the data in the source data)</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any valid JSON key</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>application</td>
-<td style="text-align: center">Application to which the dataset belongs</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">gfw, forest-atlas, rw, prep, aqueduct, data4sdg</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>data</td>
-<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">[{},{},{}]</td>
-<td style="text-align: right">Yes for json if connectorUrl not present</td>
-</tr>
-<tr>
-<td>dataAttributes</td>
-<td style="text-align: center">Data fields - for json connector if data present</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right">{&ldquo;key1&rdquo;: {&ldquo;type&rdquo;: &ldquo;string&rdquo;},&hellip; }</td>
-<td style="text-align: right">No</td>
+<td style="text-align: right">Yes (except for gee and json formats)</td>
 </tr>
 <tr>
 <td>tableName</td>
 <td style="text-align: center">Table name</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Any valid table name</td>
-<td style="text-align: right">Yes for GEE</td>
+<td style="text-align: right">No (just for GEE dataset)</td>
+</tr>
+<tr>
+<td>data</td>
+<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
+<td style="text-align: right">JSON</td>
+<td style="text-align: right">[{},{},{}]</td>
+<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
+</tr>
+<tr>
+<td>dataPath</td>
+<td style="text-align: center">Path to the data in a json dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any valid JSON key</td>
+<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
+</tr>
+<tr>
+<td>dataAttributes</td>
+<td style="text-align: center">Data fields - for json connector if data present</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">{&ldquo;key1&rdquo;: {&ldquo;type&rdquo;: &ldquo;string&rdquo;},&hellip; }</td>
+<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
 </tr>
 <tr>
 <td>legend</td>
 <td style="text-align: center">Legend for dataset. Keys for special fields</td>
 <td style="text-align: right">Object</td>
-<td style="text-align: right">Example: &ldquo;legend&rdquo;: {&ldquo;long&rdquo;: &ldquo;123&rdquo;, &ldquo;lat&rdquo;: &ldquo;123&rdquo;, &ldquo;country&rdquo;: [&ldquo;pais&rdquo;], &ldquo;region&rdquo;: [&ldquo;barrio&rdquo;], &ldquo;date&rdquo;: [&ldquo;startDate&rdquo;, &ldquo;endDate&rdquo;]}}</td>
+<td style="text-align: right">&ldquo;legend&rdquo;: {&ldquo;long&rdquo;: &ldquo;123&rdquo;, &ldquo;lat&rdquo;: &ldquo;123&rdquo;, &ldquo;country&rdquo;: [&ldquo;pais&rdquo;], &ldquo;region&rdquo;: [&ldquo;barrio&rdquo;], &ldquo;date&rdquo;: [&ldquo;startDate&rdquo;, &ldquo;endDate&rdquo;]}}</td>
 <td style="text-align: right">No</td>
 </tr>
 <tr>
-<td>dataOverwrite</td>
-<td style="text-align: center">Allows to overwrite dataset&rsquo;s data</td>
+<td>overwrite</td>
+<td style="text-align: center">It allows to overwrite dataset data</td>
 <td style="text-align: right">Boolean</td>
-<td style="text-align: right">default false</td>
+<td style="text-align: right">true/false</td>
 <td style="text-align: right">No</td>
 </tr>
 <tr>
@@ -570,25 +459,18 @@ Remember — the response is jsonapi format
 
 <p>There are some differences between datasets types.</p>
 
-<h3 id="carto-datasets">Carto datasets</h3>
-
-<blockquote>
-<p>To create a Carto dataset, you have to do a POST with the following body:</p>
-</blockquote>
+<h3 id="rest-carto-datasets">Rest-Carto datasets</h3>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "dataset": {
-      "connectorType":"rest",
-      "provider":"cartodb",
-      "connectorUrl":"&lt;cartoUrl&gt;",
-      "application":[
-         "your", "apps"
-      ],
-      "name":"Example Carto Dataset",
-      more attributes...
-   }
+    "connectorType":"rest",
+    "provider":"cartodb",
+    "connectorUrl":"&lt;cartoUrl&gt;",
+    "application":[
+     "your", "apps"
+    ],
+    "name":"Example Carto Dataset"
 }'</span>
 </code></pre>
 <blockquote>
@@ -598,51 +480,54 @@ Remember — the response is jsonapi format
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "dataset": {
-      "connectorType":"rest",
-      "provider":"cartodb",
-      "connectorUrl":"https://wri-01.carto.com/tables/wdpa_protected_areas/table",
-      "application":[
-         "gfw", "forest-atlas"
-      ],
-      "name":"World Database on Protected Areas -- Global"
-   }
+    "connectorType":"rest",
+    "provider":"cartodb",
+    "connectorUrl":"https://wri-01.carto.com/tables/wdpa_protected_areas/table",
+    "application":[
+     "gfw", "forest-atlas"
+    ],
+    "name":"World Database on Protected Areas -- Global"
 }'</span>
 </code></pre>
 <aside class="notice">
-    Remember that create dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
-<h3 id="arcgis">ArcGIS</h3>
-
-<blockquote>
-<p>To create a ArcGIS dataset, you have to do a POST with the following body:</p>
-</blockquote>
+<h3 id="rest-arcgis">Rest-ArcGIS</h3>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "dataset": {
-      "connectorType":"rest",
-      "provider":"featureservice",
-      "connectorUrl":"https://services.arcgis.com/uDTUpUPbk8X8mXwl/arcgis/rest/services/Public_Schools_in_Onondaga_County/FeatureServer/0?f=json",
-      "application":[
-         "prep"
-      ],
-      "name":"Uncontrolled Public-Use Airports -- U.S.",
-      more attributes...
-   }
+    "connectorType":"rest",
+    "provider":"featureservice",
+    "connectorUrl":"https://services.arcgis.com/uDTUpUPbk8X8mXwl/arcgis/rest/services/Public_Schools_in_Onondaga_County/FeatureServer/0?f=json",
+    "application":[
+     "prep"
+    ],
+    "name":"Uncontrolled Public-Use Airports -- U.S."
 }'</span>
 </code></pre>
 <aside class="notice">
-  Remember that create dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
-<h3 id="csv">CSV</h3>
+<h3 id="rest-gee">Rest-GEE</h3>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+    "connectorType":"rest",
+    "provider":"gee",
+    "tableName": "JRC/GSW1_0/GlobalSurfaceWater"
+    "application":[
+     "rw"
+    ],
+    "name":"Water occurrence"
+}'</span>
+</code></pre>
+<h3 id="document-csv-document-tsv-document-xml">Document-CSV, Document-TSV, Document-XML</h3>
 
-<p>At the moment the CSV dataset service supports only semicolon-delimited files &ndash; TSV files are not supported.</p>
-
-<p>The <code class="prettyprint">connectorUrl</code> must be an accessible CSV file, non-compressed - zip, tar, tar.gz, etc are not supported.</p>
+<p>The <code class="prettyprint">connectorUrl</code> must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported.</p>
 
 <p>CSV datasets support some optional fields on the creation process. They are:</p>
 
@@ -702,23 +587,20 @@ Remember — the response is jsonapi format
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "dataset": {
-      "connectorType":"document",
-      "provider":"csv",
-      "connectorUrl":"&lt;csvUrl&gt;",
-      "application":[
-         "your", "apps"
-      ],
-      "legend": {
-          "lat": "lat-column",
-          "long": "long-column",
-          "date": ["date1Column", "date2Column"],
-          "region": ["region1Column", "region2Column"],
-          "country": ["country1Column", "country2Column"]
-      }
-      "name":"Example CSV Dataset",
-      more attributes...
-   }
+    "connectorType":"document",
+    "provider":"csv",
+    "connectorUrl":"&lt;csvUrl&gt;",
+    "application":[
+     "your", "apps"
+    ],
+    "legend": {
+      "lat": "lat-column",
+      "long": "long-column",
+      "date": ["date1Column", "date2Column"],
+      "region": ["region1Column", "region2Column"],
+      "country": ["country1Column", "country2Column"]
+    },
+    "name":"Example CSV Dataset"
 }'</span>
 </code></pre>
 <blockquote>
@@ -728,26 +610,24 @@ Remember — the response is jsonapi format
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "dataset": {
-      "connectorType":"document",
-      "provider":"csv",
-      "connectorUrl":"http://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv",
-      "application":[
-         "gfw"
-      ],
-      "legend": {
-          "lat": "lat",
-          "long": "lon"
-      },
-      "name":"Glad points"
-   }
+    "connectorType":"document",
+    "provider":"csv",
+    "connectorUrl":"https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv",
+    "application":[
+     "gfw"
+    ],
+    "legend": {
+      "lat": "lat",
+      "long": "lon"
+    },
+    "name":"Glad points"
 }'</span>
 </code></pre>
 <aside class="notice">
-  Remember that create dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
-<h3 id="json">JSON</h3>
+<h3 id="document-json">Document-JSON</h3>
 
 <p>The JSON dataset service supports data from external json file or data as json array send in request body</p>
 
@@ -816,9 +696,53 @@ Remember — the response is jsonapi format
 </tbody></table>
 
 <aside class="notice">
-Remember — create dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
-
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+    "connectorType":"document",
+    "provider":"json",
+    "connectorUrl":"&lt;jsonURL&gt;",
+    "application":[
+     "your", "apps"
+    ],
+    "legend": {
+      "lat": "lat-column",
+      "long": "long-column",
+      "date": ["date1Column", "date2Column"],
+      "region": ["region1Column", "region2Column"],
+      "country": ["country1Column", "country2Column"]
+    },
+    "name":"Example JSON Dataset",
+}'</span>
+</code></pre>
+<p>Or it is also possible to create a JSON dataset setting the data directly in the request:</p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+    "connectorType":"document",
+    "provider":"json",
+    "connectorUrl":"",
+    "application":[
+     "your", "apps"
+    ],
+    "data": {"myData":[
+            {"name":"nameOne", "id":"random1"},
+            {"name":"nameTow", "id":"random2"}
+          ]},
+    "legend": {
+      "lat": "lat-column",
+      "long": "long-column",
+      "date": ["date1Column", "date2Column"],
+      "region": ["region1Column", "region2Column"],
+      "country": ["country1Column", "country2Column"]
+    },
+    "name":"Example JSON Dataset"
+}'</span>
+</code></pre>
 <h2 id="updating-a-dataset">Updating a Dataset</h2>
 
 <p>In order to modify the dataset, you can PATCH a request.
@@ -831,29 +755,23 @@ It accepts the same parameters as the <em>create dataset</em> endpoint, and you 
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
 <span class="s1">'{
-    "dataset": {
-        "name": "Another name for the dataset"
-    }
+    "name": "Another name for the dataset"
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — update dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
 <h2 id="deleting-a-dataset">Deleting a Dataset</h2>
-
-<p>You can delete a dataset! Just send a DELETE request to the endpoint:</p>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
 <aside class="notice">
-Remember — delete dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
 <h2 id="cloning-a-dataset">Cloning a Dataset</h2>
-
-<p>You can clone a dataset! Just send a POST request to the endpoint:</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2ff464ab28be/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 -H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
@@ -868,14 +786,12 @@ Remember — delete dataset is an authenticated endpoint!
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — clone dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
 <h2 id="concatenate-data">Concatenate Data</h2>
 
-<p>You can add more data to a dataset only if the dataset option overwrite (data_overwrite) is set to true.</p>
-
-<p>Just send a POST request to the endpoint:</p>
+<p>You can add more data to a dataset only if the overwrite dataset property has been set to true.</p>
 
 <blockquote>
 <p>Concatenate data using external data source:</p>
@@ -899,14 +815,12 @@ Remember — clone dataset is an authenticated endpoint!
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — concatenate dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
 <h2 id="overwrite-data">Overwrite Data</h2>
 
-<p>You can overwrite data in a dataset only if the dataset option overwrite (data_overwrite) is set to true.</p>
-
-<p>Just send a POST request to the endpoint:</p>
+<p>You can overwrite the data if the overwrite dataset property has been set to true.</p>
 
 <blockquote>
 <p>Overwrite data using external data source:</p>
@@ -930,14 +844,12 @@ Remember — concatenate dataset is an authenticated endpoint!
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — overwrite dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
 <h2 id="overwrite-specific-data">Overwrite specific Data</h2>
 
-<p>You can update data in a dataset only if the dataset option overwrite (data_overwrite) is set to true.</p>
-
-<p>Just send a POST request to the endpoint:</p>
+<p>You can overwrite specific data if the overwrite dataset property has been set to true.</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data/:data_id <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -947,20 +859,18 @@ Remember — overwrite dataset is an authenticated endpoint!
 }'</span>
 </code></pre>
 <aside class="notice">
-Remember — overwrite dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
 <h2 id="delete-specific-data">Delete specific Data</h2>
 
-<p>You can delete data in a dataset only if the dataset option overwrite (data_overwrite) is set to true.</p>
-
-<p>Just send a DELETE request to the endpoint:</p>
+<p>You can delete specific data if the overwrite dataset property has been set to true.</p>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/:dataset_id/data/:data_id <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
 <aside class="notice">
-Remember — delete dataset is an authenticated endpoint!
+    This is an authenticated endpoint!
 </aside>
 
           <h1 id="widget">Widget</h1>
@@ -2889,9 +2799,12 @@ Remember — the response is jsonapi format
 </code></pre>
           <h1 id="query">Query</h1>
 
-<p>In order to retrieve data from the created datasets it is possible to do queries in SQL or Feature Service languages to the API.</p>
+<p>In order to retrieve data from the datasets it is possible query in SQL or Feature Service languages to the API.</p>
 
-<p>Thanks to <code class="prettyprint">/query</code> endpoint, the final user can get the desired information just sending a valid sql query.</p>
+<p>It is possible to query the dataset using the table name of the dataset or just the id or slug of it.</p>
+
+<p><strong>/query/<dataset.id>?sql=select * from <dataset.tableName></strong>
+<strong>/query?sql=select * from <dataset.slug or dataset.id></strong></p>
 
 <h2 id="query-examples">Query examples</h2>
 <pre class="highlight plaintext"><code># Select and aggregations
@@ -3394,7 +3307,7 @@ type: [dataset, widget, layer]
 
 <h2 id="tags-definition">Tags definition</h2>
 
-<p>A Tag is defined as a resource feature, or a value of a particular filter.</p>
+<p>A way to categorize a resource within a vocabulary context.</p>
 
 <h2 id="vocabulary-definition">Vocabulary definition</h2>
 
