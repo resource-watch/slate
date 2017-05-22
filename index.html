@@ -743,6 +743,37 @@ Remember — the response is in JSONApi format
     "name":"Example JSON Dataset"
 }'</span>
 </code></pre>
+<h2 id="uploading-a-dataset-binary">Uploading a Dataset (Binary)</h2>
+
+<p>You can upload your raw data directly to S3 making use of the &ldquo;upload&rdquo; endpoint.
+This endpoint accepts a file in the property &ldquo;dataset&rdquo; and returns a valid
+connectorUrl. With this connectorUrl you can create or update a &ldquo;document&rdquo; dataset.</p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/upload <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: multipart/form-data"</span> <span class="se">\</span>
+-F <span class="s2">"dataset=@&lt;your-file&gt;"</span>
+</code></pre>
+<p>It returns the following:</p>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw.dataset.raw/tmp/upload_75755182b1ceda30abed717f655c077d-observed_temp.csv"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+<span class="s1">'{
+    "connectorType":"document",
+    "provider":"csv",
+    "connectorUrl":"rw.dataset.raw/tmp/upload_75755182b1ceda30abed717f655c077d-observed_temp.csv",
+    "application":[
+     "your", "apps"
+    ],
+    "name":"Example RAW Data Dataset"
+}'</span>
+</code></pre>
 <h2 id="updating-a-dataset">Updating a Dataset</h2>
 
 <p>In order to modify the dataset, you can PATCH a request.
@@ -873,6 +904,30 @@ It accepts the same parameters as the <em>create dataset</em> endpoint, and you 
     This is an authenticated endpoint!
 </aside>
 
+<h2 id="dataset-data-sync">Dataset data sync</h2>
+
+<p>To sync the data of a dataset, you need to choose the action type (concat or overwrite), a cron pattern and a valid url. This configuration should be set in the &#39;sync&rsquo; property when creating or updating a document dataset.</p>
+
+<p>Please be sure that the &#39;overwrite&rsquo; property is set to true. This could be used as a lock in order to not allow new updates even if the sync task is actually created.</p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+<span class="s1">'{
+    "connectorType":"document",
+    "provider":"csv",
+    "connectorUrl":"&lt;csvUrl&gt;",
+    "application":[
+     "your", "apps"
+    ],
+    "name":"Example SYNC Dataset",
+    "overwrite": true,
+    "sync": {
+        "action":"concat",
+        "cronPattern":"0 * * * * *",
+        "url":"&lt;updateCsvUrl&gt;"
+    }
+}'</span>
+</code></pre>
           <h1 id="widget">Widget</h1>
 
 <h2 id="what-is-a-widget">What is a Widget?</h2>
