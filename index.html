@@ -2896,6 +2896,109 @@ select a, count(int) from table group by a
 select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
 
 </code></pre>
+          <h1 id="jiminy">Jiminy</h1>
+
+<p>To get the jiminy information from a query, you can do request the following data:</p>
+
+<p><strong>/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number></strong></p>
+
+<p>In order to retrieve the mentioned information, the name of columns that you want obtain jiminy information are required.</p>
+
+<aside class="notice">
+Remember — It is mandatory to set a limit value. If you don&rsquo;t set it and the dataset contains a lot of data, jiminy tries to obtain all data which can produce performance issues.
+</aside>
+
+<blockquote>
+<p>To obtain jiminy information, you have to do a GET with the following query params:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/jiminy?sql<span class="o">=</span><span class="k">select</span> &lt;columns&gt; from &lt;dataset.slug or dataset.id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>It is possible do a POST too:</p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/jiminy <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "sql": "select &lt;columns&gt; from &lt;dataset.slug or dataset.id&gt;"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Real example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/jiminy?sql<span class="o">=</span><span class="k">select </span>satellite, confidence, track, acq_date from VIIRS-Active-Fire-Global-1490086842549 limit 1000 <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>The response will be 200 if the query is correct:</p>
+<pre class="highlight json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"line"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pie"</span><span class="p">,</span><span class="w"> </span><span class="s2">"scatter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1d_scatter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1d_tick"</span><span class="p">],</span><span class="w">
+    </span><span class="nt">"byColumns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pie"</span><span class="p">],</span><span class="w">
+      </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pie"</span><span class="p">],</span><span class="w">
+      </span><span class="nt">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"1d_scatter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1d_tick"</span><span class="p">],</span><span class="w">
+      </span><span class="nt">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"1d_scatter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1d_tick"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"byType"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"bar"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">,</span><span class="w"> </span><span class="s2">"track"</span><span class="p">],</span><span class="w">
+        </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">],</span><span class="w">
+          </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">],</span><span class="w">
+          </span><span class="nt">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">,</span><span class="w"> </span><span class="s2">"acq_date"</span><span class="p">],</span><span class="w">
+          </span><span class="nt">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"line"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">],</span><span class="w">
+        </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"acq_date"</span><span class="p">],</span><span class="w">
+          </span><span class="nt">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"pie"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">],</span><span class="w">
+        </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"scatter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">],</span><span class="w">
+        </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"confidence"</span><span class="p">],</span><span class="w">
+          </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">],</span><span class="w">
+          </span><span class="nt">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">],</span><span class="w">
+          </span><span class="nt">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"1d_scatter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">,</span><span class="w"> </span><span class="s2">"acq_date"</span><span class="p">],</span><span class="w">
+        </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"1d_tick"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">,</span><span class="w"> </span><span class="s2">"acq_date"</span><span class="p">],</span><span class="w">
+        </span><span class="nt">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+          </span><span class="nt">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+
+</span></code></pre>
           <h1 id="fields">Fields</h1>
 
 <h2 id="what-are-fields">What are fields?</h2>
