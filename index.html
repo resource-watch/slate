@@ -2898,14 +2898,14 @@ select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
 </code></pre>
           <h1 id="jiminy">Jiminy</h1>
 
-<p>To get the jiminy information from a query, you can do request the following data:</p>
+<p>To get the jiminy information from a query, you can do the following request:</p>
 
 <p><strong>/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number></strong></p>
 
-<p>In order to retrieve the mentioned information, the name of columns that you want obtain jiminy information are required.</p>
+<p>In order to retrieve the mentioned information, the name of the columns that you want obtain the data from, are required.</p>
 
 <aside class="notice">
-Remember — It is mandatory to set a limit value. If you don&rsquo;t set it and the dataset contains a lot of data, jiminy tries to obtain all data which can produce performance issues.
+Remember — It is mandatory to set a limit value. If you don&rsquo;t set it, and the dataset contains a lot of data, jiminy will try to obtain all data at once, which can produce performance issues.
 </aside>
 
 <blockquote>
