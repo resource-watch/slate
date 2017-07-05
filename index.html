@@ -222,6 +222,7 @@ Remember — the response is in JSONApi format
             </span><span class="nt">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://wri-01.carto.com/tables/combined01_prepared"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"combined01_prepared"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="nt">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="nt">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
                 </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
@@ -453,6 +454,20 @@ Remember — the response is in JSONApi format
 <td style="text-align: center">Cluster of tags</td>
 <td style="text-align: right">Object</td>
 <td style="text-align: right">{&ldquo;vocabularyOne&rdquo;: {&ldquo;tags&rdquo;: [<tags>]},&ldquo;vocabularyTwo&rdquo;: {&ldquo;tags&rdquo;: [<tags>]}}</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>widgetRelevantProps</td>
+<td style="text-align: center">Group of relevant props of a widget</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>layerRelevantProps</td>
+<td style="text-align: center">Group of relevant props of a layer</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Any Text</td>
 <td style="text-align: right">No</td>
 </tr>
 </tbody></table>
@@ -2902,7 +2917,7 @@ select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
 
 <p><strong>/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number></strong></p>
 
-<p>In order to retrieve the mentioned information, the name of the columns that you want obtain the data from, are required.</p>
+<p>In order to retrieve the mentioned information, the name of the columns that you want to obtain the data from, are required.</p>
 
 <aside class="notice">
 Remember — It is mandatory to set a limit value. If you don&rsquo;t set it, and the dataset contains a lot of data, jiminy will try to obtain all data at once, which can produce performance issues.
@@ -4530,6 +4545,519 @@ To import the geojson in geostore, you need to define all of the required fields
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+          <h1 id="subscriptions">Subscriptions</h1>
+
+<aside class="notice">
+Remember — All subscription endpoints need to be authenticated.
+</aside>
+
+<h2 id="create-subscription">Create Subscription</h2>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application of the subscription</td>
+<td style="text-align: right">gfw, rw, prep</td>
+</tr>
+<tr>
+<td>language</td>
+<td style="text-align: center">Language of the subscriptions (it&rsquo;s used to select the email template)</td>
+<td style="text-align: right">en, es, fr, pt, zh</td>
+</tr>
+<tr>
+<td>resource</td>
+<td style="text-align: center">This field contains if the subscription is of type email or hook</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; type</td>
+<td style="text-align: center">Type</td>
+<td style="text-align: right">EMAIL or URL</td>
+</tr>
+<tr>
+<td>&ndash; content</td>
+<td style="text-align: center">Email or url</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>datasets</td>
+<td style="text-align: center">Array of datasets of the subscription</td>
+<td style="text-align: right">Array<Text></td>
+</tr>
+<tr>
+<td>datasetsQuery</td>
+<td style="text-align: center">Subscriptions to datasets subscribibles</td>
+<td style="text-align: right">Array<Object></td>
+</tr>
+<tr>
+<td>&ndash; id</td>
+<td style="text-align: center">Id of dataset</td>
+<td style="text-align: right">ObjectId</td>
+</tr>
+<tr>
+<td>&ndash; type</td>
+<td style="text-align: center">Type of subscription defined in the dataset</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>&ndash; params</td>
+<td style="text-align: center">Geographic area of the subscription</td>
+<td style="text-align: right">Object</td>
+</tr>
+</tbody></table>
+
+<p>It&rsquo;s only required datasets or datasetsQuery, not both.</p>
+
+<aside class="notice">
+Remember — All subscriptions are created unconfirmed and the process sends a email to the email of the subscription to confirm it.
+</aside>
+
+<p>You can create a subscription with 6 different params:</p>
+
+<h3 id="with-a-area">With a area</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>params</td>
+<td style="text-align: center">Geographic area of the subscription</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; area</td>
+<td style="text-align: center">Id of area object</td>
+<td style="text-align: right">Text (ObjectId)</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a Subscription, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "area": "&lt;idArea&gt;"
+   }
+  }'</span>
+</code></pre>
+<h3 id="from-country">From country</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>params</td>
+<td style="text-align: center">Geographic area of the subscription</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; iso</td>
+<td style="text-align: center">Country or region information</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&mdash;- country</td>
+<td style="text-align: center">Iso code</td>
+<td style="text-align: right">Text</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a Subscription, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "iso": {
+           "country": "&lt;iso&gt;"
+       }
+   }
+  }'</span>
+</code></pre>
+<h3 id="from-country-and-region">From country and region</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>params</td>
+<td style="text-align: center">Geographic area of the subscription</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; iso</td>
+<td style="text-align: center">Country or region information</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&mdash;- country</td>
+<td style="text-align: center">Iso code</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>&mdash;- region</td>
+<td style="text-align: center">Region code</td>
+<td style="text-align: right">Number</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a Subscription, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "iso": {
+           "country": "&lt;iso&gt;",
+           "region": "&lt;region&gt;"
+       }
+    }
+  }'</span>
+</code></pre>
+<h3 id="from-world-database-on-protected-areas-wdpa">From World Database on Protected Areas (wdpa)</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>params</td>
+<td style="text-align: center">Geographic area of the subscription</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; wdpaid</td>
+<td style="text-align: center">id of protected area</td>
+<td style="text-align: right">Number</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a Subscription, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "wdpaid": &lt;idWdpa&gt;
+    }
+  }'</span>
+</code></pre>
+<h3 id="from-land-use-areas">From land use areas</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>params</td>
+<td style="text-align: center">Geographic area of the subscription</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; use</td>
+<td style="text-align: center">Use name</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>&ndash; useid</td>
+<td style="text-align: center">Id use</td>
+<td style="text-align: right">Number</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a Subscription, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "use": "&lt;useName&gt;",
+       "useid": &lt;id&gt;
+    }
+  }'</span>
+</code></pre>
+<p>Subscription has 4 differents lands use:</p>
+
+<h4 id="oil-palm">Oil palm</h4>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "use": "oilpalm",
+       "useid": &lt;id&gt;
+    }
+  }'</span>
+</code></pre>
+<h4 id="mining">Mining</h4>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "use": "mining",
+       "useid": &lt;id&gt;
+    }
+  }'</span>
+</code></pre>
+<h4 id="wood-fiber">Wood fiber</h4>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "use": "fiber",
+       "useid": &lt;id&gt;
+    }
+  }'</span>
+</code></pre>
+<h4 id="congo-basin-logging-roads">Congo Basin logging roads</h4>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "use": "logging",
+       "useid": &lt;id&gt;
+    }
+  }'</span>
+</code></pre>
+<h3 id="from-geostore">From geostore</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>params</td>
+<td style="text-align: center">Geographic area of the subscription</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>&ndash; geostore</td>
+<td style="text-align: center">Id of geostore</td>
+<td style="text-align: right">Text</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a Subscription, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "application": "&lt;application&gt;",
+   "language": "&lt;language&gt;",
+   "resource": {
+       "type": "&lt;type&gt;",
+       "content": "&lt;content&gt;"
+   },
+   "datasets" : ["&lt;dataset&gt;"],
+   "params": {
+       "geostore": "&lt;idGeostore&gt;"
+    }
+  }'</span>
+</code></pre>
+<h2 id="confirm-subscription">Confirm subscription</h2>
+
+<p>All subscriptions are created unconfirmed. The user needs confirm his subscription with this endpoint.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
+</code></pre>
+<h2 id="obtain-the-subscriptions-of-a-user">Obtain the subscriptions of a user</h2>
+
+<p>To get the user subscriptions:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<aside class="success">
+Remember — the response is in JSONApi format
+</aside>
+
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+   </span><span class="nt">"data"</span><span class="p">:[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+         </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"587cc014f3b3f6280058e478"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"attributes"</span><span class="p">:{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"test"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="s2">"2017-01-16T12:45:08.434Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"userId"</span><span class="p">:</span><span class="s2">"57a063da096c4eda523e99ae"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"resource"</span><span class="p">:{</span><span class="w">
+               </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"content"</span><span class="p">:</span><span class="s2">"pepe@gmail.com"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"datasets"</span><span class="p">:[</span><span class="w">
+               </span><span class="s2">"viirs-active-fires"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"params"</span><span class="p">:{</span><span class="w">
+               </span><span class="nt">"iso"</span><span class="p">:{</span><span class="w">
+                  </span><span class="nt">"region"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"country"</span><span class="p">:</span><span class="kc">null</span><span class="w">
+               </span><span class="p">},</span><span class="w">
+               </span><span class="nt">"wdpaid"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"use"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"useid"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"geostore"</span><span class="p">:</span><span class="s2">"50601ff9257df221e808af427cb47701"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"confirmed"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"language"</span><span class="p">:</span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"datasetsQuery"</span><span class="p">:[</span><span class="w">
+
+            </span><span class="p">]</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+<h2 id="resend-confirmation">Resend confirmation</h2>
+
+<p>To resend the confirmation</p>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmation <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="modify-subscription">Modify subscription</h2>
+
+<p>To modify a subscription</p>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+
+</code></pre>
+<p>With the same body that create subscription.</p>
+
+<h2 id="unsubscribe">Unsubscribe</h2>
+
+<p>To unsubscribe a subscription</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="delete-subscription">Delete subscription</h2>
+
+<p>To delete a subscription (same that unsubscribe)</p>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
           <h1 id="errors">Errors</h1>
 
 <p>The Resource Watch API uses the following error codes:</p>
