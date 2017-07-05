@@ -5058,6 +5058,112 @@ Remember — the response is in JSONApi format
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
+          <h1 id="favourites">Favourites</h1>
+
+<p>The users can save their own favourites resources of the API</p>
+
+<aside class="notice">
+Remember — All favourite endpoints need to be authenticated.
+</aside>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td style="text-align: center">Name</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>resourceId</td>
+<td style="text-align: center">Id of the resource</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>resourceType</td>
+<td style="text-align: center">Type of resource</td>
+<td style="text-align: right">Text (dataset, layer, widget)</td>
+</tr>
+<tr>
+<td>userId</td>
+<td style="text-align: center">Id of the owner user</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td style="text-align: center">Creation date</td>
+<td style="text-align: right">Date</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-favourite">Create Favourite</h2>
+
+<p>To create a favourite, you need to define all next fields in the request body. The required fields that compose a favourite are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>resourceId</td>
+<td style="text-align: center">Id of the resource</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>resourceType</td>
+<td style="text-align: center">Type of resource</td>
+<td style="text-align: right">Text (dataset, layer, widget)</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create a favourite, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/favourite <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "resourceType":"&lt;resourceType&gt;",
+   "resourceId": "&lt;resourceId&gt;"
+  }'</span>
+</code></pre>
+<h2 id="get-favourites">Get favourites</h2>
+
+<p>This endpoint returns the favourites of the logged user.</p>
+
+<blockquote>
+<p>To get all favourite of the logged user, you have to do a GET:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/favourite <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="get-favourite-by-id">Get favourite by id</h2>
+
+<p>This endpoint returns the favourite with id of the param. If the favourite belongs to other user or not exist, the endpoint returns 400.</p>
+
+<blockquote>
+<p>To get the favourite by id, you have to do a GET:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/favourite/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="delete-favourite">Delete favourite</h2>
+
+<p>This endpoint deletes the favourite with id of the param. If the favourite belongs to other user or not exist, the endpoint returns 400.</p>
+
+<blockquote>
+<p>To delete the favourite by id, you have to do a DELETE:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/favourite/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
           <h1 id="errors">Errors</h1>
 
 <p>The Resource Watch API uses the following error codes:</p>
