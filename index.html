@@ -251,6 +251,9 @@ The dataset slug cannot be updated even if the name changes.</p>
 <p>Available filters: Any dataset property</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>birds&amp;provider<span class="o">=</span>cartodb
 </code></pre>
+<p>Inclusive filtering with array props using &rsquo;@&rsquo;</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?app<span class="o">=</span>gfw@rw@prep
+</code></pre>
 <h3 id="sorting">Sorting</h3>
 
 <p>Available sorting: Any dataset property (desc: -)</p>
@@ -265,7 +268,7 @@ The dataset slug cannot be updated even if the name changes.</p>
 <h3 id="advanced-filters">Advanced filters</h3>
 
 <p>By vocabulary-tag matching</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>umd
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>umd
 </code></pre>
 <h3 id="pagination">Pagination</h3>
 
@@ -450,6 +453,20 @@ Remember — the response is in JSONApi format
 <td style="text-align: right">No</td>
 </tr>
 <tr>
+<td>published</td>
+<td style="text-align: center">To set a public or private dataset</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true/false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>verified</td>
+<td style="text-align: center">To generate a verified blockchain of the dataset</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true/false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
 <td>vocabularies</td>
 <td style="text-align: center">Cluster of tags</td>
 <td style="text-align: right">Object</td>
@@ -469,6 +486,13 @@ Remember — the response is in JSONApi format
 <td style="text-align: right">Array</td>
 <td style="text-align: right">Any Text</td>
 <td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>subscribable</td>
+<td style="text-align: center">Available dataset queries</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">{&ldquo;<queryName>&rdquo;: &ldquo;<queryBodyTemplate>&rdquo;}</td>
+<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
 </tr>
 </tbody></table>
 
@@ -765,7 +789,6 @@ This endpoint accepts a file in the property &ldquo;dataset&rdquo; and returns a
 connectorUrl. With this connectorUrl you can create or update a &ldquo;document&rdquo; dataset.</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/upload <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: multipart/form-data"</span> <span class="se">\</span>
 -F <span class="s2">"dataset=@&lt;your-file&gt;"</span>
 </code></pre>
 <p>It returns the following:</p>
