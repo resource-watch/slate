@@ -130,7 +130,7 @@
 <p>To generate your own token, follow the next steps:</p>
 
 <ol>
-<li>Navigate to <a href="https://api.resourcewatch.org:82">https://api.resourcewatch.org:82</a>
+<li>Navigate to <a href="http://api.resourcewatch.org:82">http://api.resourcewatch.org:82</a>
 If you aren&rsquo;t logged in yet, the application will redirect you to the login page.
 You will see:
 <img src="images/authentication/login.png" alt="Control Tower login page" /></li>
@@ -146,6 +146,27 @@ You will see:
 <li><p>Copy your token clicking the Copy button. Remember to add the header <code class="prettyprint">Authorization: Bearer: &lt;yourToken&gt;</code> in order to use it.</p></li>
 </ol>
 
+<h2 id="create-a-new-user">Create a new user</h2>
+
+<p>To create a new user do the following:</p>
+
+<ul>
+<li>Allowed role values: USER, MANAGER, ADMIN</li>
+<li>Apps: rw, gfw, prep, etc&hellip;</li>
+</ul>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/auth/user <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "email":"&lt;email&gt;",
+    "role":"&lt;role&gt;",
+    "extraUserData": {
+      "apps": [
+        "&lt;apps&gt;"
+      ]
+    }
+}'</span>
+</code></pre>
           <h1 id="dataset">Dataset</h1>
 
 <h2 id="what-is-a-dataset">What is a Dataset?</h2>
