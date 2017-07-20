@@ -5188,6 +5188,10 @@ Remember — All favourite endpoints need to be authenticated.
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/favourite <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
+<p>You can also retrieve all data about the resources just including the query parameter &ldquo;include=true&rdquo; in the request.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/favourite?include<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
 <h2 id="get-favourite-by-id">Get favourite by id</h2>
 
 <p>This endpoint returns the favourite with id of the param. If the favourite belongs to other user or not exist, the endpoint returns 400.</p>
