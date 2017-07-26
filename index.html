@@ -193,6 +193,11 @@ ArcGIS Online is a Complete, Cloud-Based Mapping Platform</p>
 <a href="https://earthengine.google.com/"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
 Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth&rsquo;s surface.</p>
 
+<h3 id="rasdaman">Rasdaman</h3>
+
+<p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;rasdaman&rsquo;)</strong>
+Rasdaman (&#39;raster data manager&rsquo;) is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.</p>
+
 <h3 id="csv">CSV</h3>
 
 <p><strong>(connectorType: &#39;document&rsquo;, provider: &#39;csv&rsquo;)</strong></p>
@@ -585,6 +590,19 @@ Remember — the response is in JSONApi format
     "name":"Water occurrence"
 }'</span>
 </code></pre>
+<h3 id="rasdaman">Rasdaman</h3>
+
+<p>The <code class="prettyprint">connectorUrl</code> must be a valid url that responds to a Web Coverage Service (WCS Core) DescribeCoverage call with a valid XML document.</p>
+<pre class="highlight shell"><code>curl -H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>  -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'https://api.resourcewatch.org/v1/dataset'</span> -d <span class="s1">'{
+    "connectorType":"rest",
+    "provider":"rasdaman",
+    "connectorUrl":"http://54.146.170.2:8080/rasdaman/ows?&amp;SERVICE=WCS&amp;VERSION=2.0.1&amp;REQUEST=DescribeCoverage&amp;COVERAGEID=nightlights",
+    "application":[
+     "rw"
+    ],
+    "name":"nightlights"
+}'</span>
+</code></pre>
 <h3 id="document-csv-document-tsv-document-xml">Document-CSV, Document-TSV, Document-XML</h3>
 
 <p>The <code class="prettyprint">connectorUrl</code> must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported.</p>
@@ -643,6 +661,8 @@ Remember — the response is in JSONApi format
 <td style="text-align: right">No</td>
 </tr>
 </tbody></table>
+
+<p>z</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -2955,6 +2975,45 @@ select a, count(int) from table group by a
 select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
 
 </code></pre>
+<h2 id="raster-queries">Raster queries</h2>
+
+<p>Rasdaman datasets do not expose a SQL interface from where to query the data – instead it offers interfaces to WCPS (the OGC Web Coverage Processing Service) and RasQL (a superset of SQL dealing with coverages). So far only WCPS is supported in the RW API. Two different endpoints are offered: one to directly run WCPS queries against the database, and one that abstracts the calculation of (2D) zonal statistics on rasdaman coverages with vector masks. For more information on the WCPS standard, consult the <a href="http://www.opengeospatial.org/standards/wcp">OGC page</a> about it</p>
+
+<p>In order to run a query directly, POST your query in the wcps attribute to the endpoint:</p>
+<pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/'</span> -d <span class="s1">'{
+    "wcps": "FOR c in (nightlights) return 1"
+}
+'</span>
+</code></pre>
+<p>The result of a WCPS query can have varying dimensionality, depending of the axes of the original dataset. The result must be encoded in an appropriate file format, which is done with the <code class="prettyprint">encode</code> WCPS function. A large variety of formats is supported (as the underlying implementation depends on GDAL), but some care has to be taken to match the dimensionality of the query output with one that the desired format supports. For subsetting the domain of the original coverage, trimming and slicing can be used too:</p>
+<pre class="highlight plaintext"><code>curl -i -H 'Authorization: Bearer &lt;your-token&gt;' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/' -d '{
+    "wcps":  "for cov in (nightlights) return encode( cov[ Long(-1:1), Lat(-1:1)], \"CSV\")"
+}
+'
+</code></pre>
+<p>For zonal stats, use the &lsquo;stats&rsquo; endpoint. The geostore will be used to generate spatial masks. If the original coverage is not 2-dimensional, additional subsettings have to be specified in the requests as &#39;additionalAxes&rsquo; to reduce the coverage dimensionality. The most usual subsetting will be a time slice that has to be specified as an ANSI (ISO 8601) date –with the appropriate level of granularity.</p>
+<pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/stats/e9c3a94d-6b1c-4513-a745-6acdff53cfc9'</span> -d <span class="s1">'{
+    "geostore": "70ba01daaa803aea2eeff502c845bcef",
+    "additionalAxes": {
+        "ansi": "1950-03-03"
+    }
+}
+'</span>
+</code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"min"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"max"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00016111972217913717</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"mean"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.019295106901743e-05</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">993</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
           <h1 id="jiminy">Jiminy</h1>
 
 <p>To get the jiminy information from a query, you can do the following request:</p>
@@ -3101,6 +3160,53 @@ Remember — It is mandatory to set a limit value. If you don&rsquo;t set it, an
             </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="rasdaman">Rasdaman</h3>
+
+<p>The structure of datacubes needs of a more verbose fields specification. The fields endpoint for rasdaman-backed datasets includes information on the spatial reference system, nodata values, axes, units, and bands. It looks like so:</p>
+
+<blockquote>
+<p>Example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i  -XGET <span class="s1">'http://api.resourcewatch.org/v1/fields/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a'</span> 
+</code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"coverageId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nightlights"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"srs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"srsDimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"srs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"crs/EPSG/0/4326"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"axisLabels"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Lat Long"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"uomLabels"</span><span class="p">:</span><span class="w"> </span><span class="s2">"degree degree"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"undefined"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"swe:nilValues"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"swe:NilValues"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"swe:nilValue"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"$t"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"$t"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"swe:uom"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10^0"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"coverageBounds"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"upperCorner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"89.999999999966665 180.000000000189335"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lowerCorner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-89.999999999961335 -179.999999999666665"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
           <h1 id="metadata">Metadata</h1>
