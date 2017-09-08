@@ -193,6 +193,11 @@ ArcGIS Online is a Complete, Cloud-Based Mapping Platform</p>
 <a href="https://earthengine.google.com/"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
 Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth&rsquo;s surface.</p>
 
+<h3 id="nexgddp">NexGDDP</h3>
+
+<p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;nexgddp&rsquo;)</strong>
+The NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).</p>
+
 <h3 id="rasdaman">Rasdaman</h3>
 
 <p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;rasdaman&rsquo;)</strong>
@@ -426,7 +431,7 @@ Remember — the response is in JSONApi format
 <td>provider</td>
 <td style="text-align: center">The connectorType provider</td>
 <td style="text-align: right">Text</td>
-<td style="text-align: right">cartodb, featureservice, gee, csv, tsv, xml, json</td>
+<td style="text-align: right">cartodb, featureservice, gee, csv, tsv, xml, json, nexgddp</td>
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
@@ -434,14 +439,14 @@ Remember — the response is in JSONApi format
 <td style="text-align: center">Url of the data source</td>
 <td style="text-align: right">Url</td>
 <td style="text-align: right">Any url</td>
-<td style="text-align: right">Yes (except for gee and json formats)</td>
+<td style="text-align: right">Yes (except for gee, nexgddp and json formats)</td>
 </tr>
 <tr>
 <td>tableName</td>
 <td style="text-align: center">Table name</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Any valid table name</td>
-<td style="text-align: right">No (just for GEE dataset)</td>
+<td style="text-align: right">No (just for GEE and nexgddp datasets)</td>
 </tr>
 <tr>
 <td>data</td>
@@ -588,6 +593,20 @@ Remember — the response is in JSONApi format
      "rw"
     ],
     "name":"Water occurrence"
+}'</span>
+</code></pre>
+<h3 id="rest-nexgddp">Rest-NEXGDDP</h3>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+    "connectorType":"rest",
+    "provider":"nexgddp",
+    "tableName": "historical/ACCESS1_0/prmaxday"
+    "application":[
+     "rw"
+    ],
+    "name":"Nexgddp"
 }'</span>
 </code></pre>
 <h3 id="rasdaman">Rasdaman</h3>
