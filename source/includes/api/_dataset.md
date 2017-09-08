@@ -21,6 +21,10 @@ ArcGIS Online is a Complete, Cloud-Based Mapping Platform
 <a href="https://earthengine.google.com/"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
 Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth's surface.
 
+### NexGDDP
+**(connectorType: 'rest', provider: 'nexgddp')**
+The NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).
+
 ### Rasdaman
 **(connectorType: 'rest', provider: 'rasdaman')**
 Rasdaman ('raster data manager') is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.
@@ -220,9 +224,9 @@ To create a dataset, you need to define all of the required fields in the reques
 | subtitle          | Dataset subtitle                                              | Text   | Any Text                                        | No
 | application       | Applications the dataset belongs to                           | Array  | Any valid application name(s)                   | Yes
 | connectorType     | Connector type                                                | Text   | rest, document, wms                             | Yes
-| provider          | The connectorType provider                                    | Text   | cartodb, featureservice, gee, csv, tsv, xml, json  | Yes
-| connectorUrl      | Url of the data source                                        | Url    | Any url                                         | Yes (except for gee and json formats)
-| tableName         | Table name                                                    | Text   | Any valid table name                            | No (just for GEE dataset)
+| provider          | The connectorType provider                                    | Text   | cartodb, featureservice, gee, csv, tsv, xml, json, nexgddp  | Yes
+| connectorUrl      | Url of the data source                                        | Url    | Any url                                         | Yes (except for gee, nexgddp and json formats)
+| tableName         | Table name                                                    | Text   | Any valid table name                            | No (just for GEE and nexgddp datasets)
 | data              | JSON DATA only for json connector if connectorUrl not present | JSON   | [{},{},{}]                                      | No (just for json if connectorUrl is not present)
 | dataPath          | Path to the data in a json dataset                            | Text   | Any valid JSON key                              | No (just for json if connectorUrl is not present)
 | dataAttributes    | Data fields - for json connector if data present              | Object | {"key1": {"type": "string"},... }               | No (just for json if connectorUrl is not present)
@@ -311,6 +315,23 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
      "rw"
     ],
     "name":"Water occurrence"
+}'
+```
+
+### Rest-NEXGDDP
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+'{
+    "connectorType":"rest",
+    "provider":"nexgddp",
+    "tableName": "historical/ACCESS1_0/prmaxday"
+    "application":[
+     "rw"
+    ],
+    "name":"Nexgddp"
 }'
 ```
 
