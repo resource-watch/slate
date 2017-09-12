@@ -1,23 +1,30 @@
 # Query
 
-In order to retrieve data from the datasets it is possible query in SQL or Feature Service languages to the API.
+In order to retrieve data from the datasets it is possible to query in the SQL or Feature Service languages to the API.
 
-It is possible to query the dataset using the table name of the dataset or just the id or slug of it.
+It is possible to refer to the dataset using its table name, its slug  or just its id. Two different endpoints are provided (under under the dataset path and a generic one) and the sql query can be provided via query parameters or in the body of a POST request.
 
-**/query/<dataset.id>?sql=select * from <dataset.tableName>**
-**/query?sql=select * from <dataset.slug or dataset.id>**
+```shell
+curl -i -H 'Authorization: Bearer your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/<dataset_id>/' -d '{
+	"sql": "select * from <dataset_id> limit 10"
+}
+'
+```
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query\?sql\=select\ \*\ from\ <dataset.slug>
+```
 
 ## Query examples
 
-```
-# Select and aggregations
+### Select and aggregations
 
 select * from table
 select count(*) from table
 select a, b from table
 select a, count(*) from table
 
-# Functions and alias
+### Functions and alias
 
 select sum(int) from table
 select avg(int) from table
@@ -28,7 +35,7 @@ select min(int) as minimun from table
 select * from table limit=20
 select a as b from table limit=20
 
-# Where conditionals
+### Where conditionals
 
 select * from table where a > 2
 select * from table where a = 2
@@ -38,12 +45,10 @@ select * from table where a = 2 and b < 2
 select * from table where text like ‘a%’
 Select * from table where st_intersects(st_setsrid(st_geomfromgeojson(‘{}’), 4326), the_geom)
 
-# Group by
+### Group by
 
 select a, count(int) from table group by a
 select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
-
-```
 
 ## Rasdaman queries
 
@@ -91,4 +96,34 @@ curl -i -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/js
         }
     ]
 }
+```
+
+## NEX-GDDP queries
+
+A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data ara available. These can be accessed in  the following ways:
+
+### Spatial aggregates over a layer
+
+Access spatial aggregates over the data by listing all dataset data for a particular year. 
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=select\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ where\ year\ \=\ 1960
+```
+
+Access only particular aggregates:
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=select\ avg\,\ min\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ where\ year\ \=\ 1960
+```
+
+Calculate statistics for a range of years
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=select\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962
+```
+
+You can delimit an area of interest by providing a geostore id as a parameter:
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=select\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
 ```
