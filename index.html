@@ -2952,48 +2952,50 @@ Remember — the response is jsonapi format
 </code></pre>
           <h1 id="query">Query</h1>
 
-<p>In order to retrieve data from the datasets it is possible query in SQL or Feature Service languages to the API.</p>
+<p>In order to retrieve data from the datasets it is possible to query in the SQL or Feature Service languages to the API.</p>
 
-<p>It is possible to query the dataset using the table name of the dataset or just the id or slug of it.</p>
-
-<p><strong>/query/<dataset.id>?sql=select * from <dataset.tableName></strong>
-<strong>/query?sql=select * from <dataset.slug or dataset.id></strong></p>
-
+<p>It is possible to refer to the dataset using its table name, its slug  or just its id. Two different endpoints are provided (under under the dataset path and a generic one) and the sql query can be provided via query parameters or in the body of a POST request.</p>
+<pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/query/&lt;dataset_id&gt;/'</span> -d <span class="s1">'{
+    "sql": "select * from &lt;dataset_id&gt; limit 10"
+}
+'</span>
+</code></pre><pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ \*\ </span>from<span class="se">\ </span>&lt;dataset.slug&gt;
+</code></pre>
 <h2 id="query-examples">Query examples</h2>
-<pre class="highlight plaintext"><code># Select and aggregations
 
-select * from table
-select count(*) from table
+<h3 id="select-and-aggregations">Select and aggregations</h3>
+
+<p>select * from table
+select count(<em>) from table
 select a, b from table
-select a, count(*) from table
+select a, count(</em>) from table</p>
 
-# Functions and alias
+<h3 id="functions-and-alias">Functions and alias</h3>
 
-select sum(int) from table
+<p>select sum(int) from table
 select avg(int) from table
 select max(int) from table
 select min(int) from table
-select min(int) as minimun from table
+select min(int) as minimun from table</p>
 
-select * from table limit=20
-select a as b from table limit=20
+<p>select * from table limit=20
+select a as b from table limit=20</p>
 
-# Where conditionals
+<h3 id="where-conditionals">Where conditionals</h3>
 
-select * from table where a &gt; 2
+<p>select * from table where a &gt; 2
 select * from table where a = 2
 select * from table where a &lt; 2
 select * from table where a &gt;= 2
 select * from table where a = 2 and b &lt; 2
 select * from table where text like ‘a%’
-Select * from table where st_intersects(st_setsrid(st_geomfromgeojson(‘{}’), 4326), the_geom)
+Select * from table where st_intersects(st_setsrid(st_geomfromgeojson(‘{}’), 4326), the_geom)</p>
 
-# Group by
+<h3 id="group-by">Group by</h3>
 
-select a, count(int) from table group by a
-select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
+<p>select a, count(int) from table group by a
+select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)</p>
 
-</code></pre>
 <h2 id="rasdaman-queries">Rasdaman queries</h2>
 
 <p>Rasdaman datasets do not expose a SQL interface from where to query the data – instead it offers interfaces to WCPS (the OGC Web Coverage Processing Service) and RasQL (a superset of SQL dealing with coverages). So far only WCPS is supported in the RW API. Two different endpoints are offered: one to directly run WCPS queries against the database, and one that abstracts the calculation of (2D) zonal statistics on rasdaman coverages with vector masks. For more information on the WCPS standard, consult the <a href="http://www.opengeospatial.org/standards/wcp">OGC page</a> about it</p>
@@ -3033,6 +3035,24 @@ select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
     </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<h2 id="nex-gddp-queries">NEX-GDDP queries</h2>
+
+<p>A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data ara available. These can be accessed in  the following ways:</p>
+
+<h3 id="spatial-aggregates-over-a-layer">Spatial aggregates over a layer</h3>
+
+<p>Access spatial aggregates over the data by listing all dataset data for a particular year. </p>
+<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ </span>where<span class="se">\ </span>year<span class="se">\ \=\ </span>1960
+</code></pre>
+<p>Access only particular aggregates:</p>
+<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ </span>avg<span class="se">\,\ </span>min<span class="se">\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ </span>where<span class="se">\ </span>year<span class="se">\ \=\ </span>1960
+</code></pre>
+<p>Calculate statistics for a range of years</p>
+<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ \ </span>where<span class="se">\ </span>year<span class="se">\ </span>between<span class="se">\ </span>1960<span class="se">\ </span>and<span class="se">\ </span>1962
+</code></pre>
+<p>You can delimit an area of interest by providing a geostore id as a parameter:</p>
+<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ \ </span>where<span class="se">\ </span>year<span class="se">\ </span>between<span class="se">\ </span>1960<span class="se">\ </span>and<span class="se">\ </span>1962&amp;geostore<span class="se">\=</span>0279093c278a64f4c3348ff63e4cfce0
+</code></pre>
           <h1 id="jiminy">Jiminy</h1>
 
 <p>To get the jiminy information from a query, you can do the following request:</p>
