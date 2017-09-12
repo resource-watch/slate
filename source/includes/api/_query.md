@@ -2,7 +2,7 @@
 
 In order to retrieve data from the datasets it is possible to query in the SQL or Feature Service languages to the API.
 
-It is possible to refer to the dataset using its table name, its slug  or just its id. Two different endpoints are providedand the sql query can be provided via query parameters or in the body of a POST request.
+It is possible to refer to the dataset using its table name, its slug  or just its id. Two different endpoints are provided (under under the dataset path and a generic one) and the sql query can be provided via query parameters or in the body of a POST request.
 
 ```shell
 curl -i -H 'Authorization: Bearer your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/<dataset_id>/' -d '{
@@ -17,15 +17,14 @@ curl -i -XGET http\://api.resourcewatch.org/v1/query\?sql\=select\ \*\ from\ <da
 
 ## Query examples
 
-```
-# Select and aggregations
+### Select and aggregations
 
 select * from table
 select count(*) from table
 select a, b from table
 select a, count(*) from table
 
-# Functions and alias
+### Functions and alias
 
 select sum(int) from table
 select avg(int) from table
@@ -36,7 +35,7 @@ select min(int) as minimun from table
 select * from table limit=20
 select a as b from table limit=20
 
-# Where conditionals
+### Where conditionals
 
 select * from table where a > 2
 select * from table where a = 2
@@ -46,12 +45,10 @@ select * from table where a = 2 and b < 2
 select * from table where text like ‘a%’
 Select * from table where st_intersects(st_setsrid(st_geomfromgeojson(‘{}’), 4326), the_geom)
 
-# Group by
+### Group by
 
 select a, count(int) from table group by a
 select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
-
-```
 
 ## Rasdaman queries
 
