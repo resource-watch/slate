@@ -15,7 +15,8 @@ curl -i -H 'Authorization: Bearer your-token>' -H 'Content-Type: application/jso
 curl -i -XGET http\://api.resourcewatch.org/v1/query\?sql\=select\ \*\ from\ <dataset.slug>
 ```
 
-## Query examples
+```
+## Some query examples
 
 ### Select and aggregations
 
@@ -49,6 +50,7 @@ Select * from table where st_intersects(st_setsrid(st_geomfromgeojson(‘{}’),
 
 select a, count(int) from table group by a
 select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
+```
 
 ## Rasdaman queries
 
