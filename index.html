@@ -136,7 +136,7 @@ You will see:
 <img src="images/authentication/login.png" alt="Control Tower login page" /></li>
 </ol>
 
-<p>You can login with your WRI credentials (email and password) or with other auth providers (a Google, Facebook, or Twitter account). If you don&rsquo;t remember your password (don&rsquo;t worry! it happens to everyone!) you can reset your password clicking on &lsquo;Recover password&rsquo;.</p>
+<p>You can login with your WRI credentials (email and password) or with other auth providers (a Google, Facebook, or Twitter account). If you can&rsquo;t remember your password (don&rsquo;t worry! it happens to everyone!) you can reset your password clicking on &lsquo;Recover password&rsquo;.</p>
 
 <ol>
 <li><p>After logging in you will be redirected to the Control Tower application and you will see:
@@ -182,7 +182,7 @@ CARTO is an open, powerful, and intuitive platform for discovering and predictin
 
 <p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;featureservice&rsquo;)</strong>
 <a href="https://www.arcgis.com/features/index.html"><img src="https://www.arcgis.com/features/img/logo-esri.png" class="logo-third"/></a>
-ArcGIS Online is a Complete, Cloud-Based Mapping Platform</p>
+ArcGIS Online is a Complete, Cloud-Based Mapping Platform.</p>
 
 <h3 id="google-earth-engine">Google Earth Engine</h3>
 
@@ -226,7 +226,7 @@ Rasdaman (&#39;raster data manager&rsquo;) is a database with capabilities for s
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset
 </code></pre>
 <aside class="success">
-Remember — the response is in JSONApi format
+Remember — the response is in JSONApi format.
 </aside>
 
 <blockquote>
@@ -428,7 +428,7 @@ Remember — the response is in JSONApi format
 <td>provider</td>
 <td style="text-align: center">The connectorType provider</td>
 <td style="text-align: right">Text</td>
-<td style="text-align: right">cartodb, featureservice, gee, csv, tsv, xml, json, nexgddp</td>
+<td style="text-align: right">cartodb, feature service, gee, csv, tsv, xml, json, nexgddp</td>
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
@@ -725,7 +725,7 @@ Remember — the response is in JSONApi format
 
 <h3 id="document-json">Document-JSON</h3>
 
-<p>The JSON dataset service supports data from external json file or data as json array send in request body</p>
+<p>The JSON dataset service supports data from external json file or data as json array send in request body.</p>
 
 <p>The <code class="prettyprint">connectorUrl</code> must be an accessible JSON file</p>
 
@@ -1027,9 +1027,9 @@ It accepts the same parameters as the <em>create dataset</em> endpoint, and you 
 
 <h2 id="what-is-a-widget">What is a Widget?</h2>
 
-<p>Is a graphic representation of a Dataset&rsquo;s data. The most of them are defined with <a href="#what-is-vega">Vega grammar</a>.</p>
+<p>It is a graphic representation of a Dataset&rsquo;s data. Most of them are defined with <a href="#what-is-vega">Vega grammar</a>.</p>
 
-<p>Widget contains the next fields:</p>
+<p>Widgets contains the following fields:</p>
 
 <table><thead>
 <tr>
@@ -1281,7 +1281,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f06
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?default<span class="o">=</span><span class="nb">true</span>
 </code></pre>
 <blockquote>
-<p>Return the widgets filtered whose applications contain rw</p>
+<p>Return widgets whose applications contain rw</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?app<span class="o">=</span>rw
 </code></pre>
@@ -1307,11 +1307,11 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f06
 </tbody></table>
 
 <blockquote>
-<p>Return the widgets of the page 2 with 5 elements per page</p>
+<p>Return the widgets from page 2 with 5 elements per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
 </code></pre>
-<h2 id="how-obtain-a-widget-for-specific-dataset">How obtain a widget for specific dataset</h2>
+<h2 id="how-obtain-a-widget-for-a-specific-dataset">How obtain a widget for a specific dataset</h2>
 
 <p>To obtain the widget:</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3
@@ -2267,7 +2267,7 @@ Remember — the response is jsonapi format
 </tbody></table>
 
 <blockquote>
-<p>To create a widget, you have to do a POST with the following body:</p>
+<p>To create a widget, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -2404,7 +2404,7 @@ Remember — the response is jsonapi format
 </tbody></table>
 
 <blockquote>
-<p>To create a widget, you have to do a POST with the following body:</p>
+<p>To create a widget, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -2451,7 +2451,7 @@ Remember — the response is jsonapi format
 </tr>
 <tr>
 <td>iso</td>
-<td style="text-align: center">Isos to which the dataset belongs</td>
+<td style="text-align: center">The isos to which the dataset belongs</td>
 <td style="text-align: right">Array</td>
 </tr>
 <tr>
@@ -2618,7 +2618,7 @@ Remember — the response is jsonapi format
 </tbody></table>
 
 <blockquote>
-<p>Return the layers filtered whose name contains emissions</p>
+<p>Return the layers filtered by those whose name contains emissions</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?name<span class="o">=</span>emissions
 </code></pre>
@@ -2644,7 +2644,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaf
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?published<span class="o">=</span><span class="nb">false</span>
 </code></pre>
 <blockquote>
-<p>Return the layers filtered whose applications contain rw</p>
+<p>Return the layers filtered by those whose applications contain rw</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?app<span class="o">=</span>rw
 </code></pre>
@@ -2670,7 +2670,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaf
 </tbody></table>
 
 <blockquote>
-<p>Return the layers of the page 2 with 5 elements per page</p>
+<p>Return the layers of page 2 with 5 elements per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
 </code></pre>
@@ -2826,7 +2826,7 @@ Remember — the response is jsonapi format
 </tbody></table>
 
 <blockquote>
-<p>To create a layer, you have to do a POST with the following body:</p>
+<p>To create a layer, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -2905,7 +2905,7 @@ Remember — the response is jsonapi format
 </tr>
 <tr>
 <td>iso</td>
-<td style="text-align: center">Isos to which the layer belongs</td>
+<td style="text-align: center">The isos to which the layer belongs</td>
 <td style="text-align: right">Array</td>
 <td style="text-align: right">BRA, ES</td>
 <td style="text-align: right">No</td>
@@ -2927,7 +2927,7 @@ Remember — the response is jsonapi format
 </tbody></table>
 
 <blockquote>
-<p>To create a layer, you have to do a POST with the following body:</p>
+<p>To create a layer, you have to do a POST requestwith the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -2949,9 +2949,9 @@ Remember — the response is jsonapi format
 </code></pre>
           <h1 id="query">Query</h1>
 
-<p>In order to retrieve data from the datasets it is possible to query in the SQL or Feature Service languages to the API.</p>
+<p>In order to retrieve data from the datasets it is possible to send queries to the API using the SQL or Feature Service languages.</p>
 
-<p>It is possible to refer to the dataset using its table name, its slug  or just its id. Two different endpoints are provided (under under the dataset path and a generic one) and the sql query can be provided via query parameters or in the body of a POST request.</p>
+<p>It is possible to refer to the dataset using its table name, its slug or just its id. Two different endpoints are provided (under the dataset path and a generic one) and the sql query can be provided via query parameters or in the body of a POST request.</p>
 <pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/query/&lt;dataset_id&gt;/'</span> -d <span class="s1">'{
     "sql": "select * from &lt;dataset_id&gt; limit 10"
 }
@@ -2972,7 +2972,7 @@ select sum(int) from table
 select avg(int) from table
 select max(int) from table
 select min(int) from table
-select min(int) as minimun from table
+select min(int) as minimum from table
 
 select * from table limit=20
 select a as b from table limit=20
@@ -2994,7 +2994,9 @@ select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
 </code></pre>
 <h2 id="rasdaman-queries">Rasdaman queries</h2>
 
-<p>Rasdaman datasets do not expose a SQL interface from where to query the data – instead it offers interfaces to WCPS (the OGC Web Coverage Processing Service) and RasQL (a superset of SQL dealing with coverages). So far only WCPS is supported in the RW API. Two different endpoints are offered: one to directly run WCPS queries against the database, and one that abstracts the calculation of (2D) zonal statistics on rasdaman coverages with vector masks. For more information on the WCPS standard, consult the <a href="http://www.opengeospatial.org/standards/wcp">OGC page</a> about it</p>
+<p>Rasdaman datasets do not expose an SQL interface from where to query the data – instead it offers interfaces to WCPS (the OGC Web Coverage Processing Service) and RasQL (a superset of SQL dealing with coverages).</p>
+
+<p>So far only WCPS is supported in the RW API. Two different endpoints are offered: one to directly run WCPS queries against the database, and one that abstracts the calculation of (2D) zonal statistics on rasdaman coverages with vector masks. For more information on the WCPS standard, consult the <a href="http://www.opengeospatial.org/standards/wcp">OGC page</a> about it</p>
 
 <p>In order to run a query directly, POST your query in the wcps attribute to the endpoint:</p>
 <pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/'</span> -d <span class="s1">'{
@@ -3002,13 +3004,13 @@ select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
 }
 '</span>
 </code></pre>
-<p>The result of a WCPS query can have varying dimensionality, depending of the axes of the original dataset. The result must be encoded in an appropriate file format, which is done with the <code class="prettyprint">encode</code> WCPS function. A large variety of formats is supported (as the underlying implementation depends on GDAL), but some care has to be taken to match the dimensionality of the query output with one that the desired format supports. For subsetting the domain of the original coverage, trimming and slicing can be used too:</p>
+<p>The result of a WCPS query can have varying dimensionality, depending on the axes of the original dataset. The result must be encoded in an appropriate file format, which is done with the <code class="prettyprint">encode</code> WCPS function. A large variety of formats are supported (as the underlying implementation depends on GDAL), but some care has to be taken to match the dimensionality of the query output with one that the desired format supports. For subsetting the domain of the original coverage, trimming and slicing can be used too:</p>
 <pre class="highlight plaintext"><code>curl -i -H 'Authorization: Bearer &lt;your-token&gt;' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/' -d '{
     "wcps":  "for cov in (nightlights) return encode( cov[ Long(-1:1), Lat(-1:1)], \"CSV\")"
 }
 '
 </code></pre>
-<p>For zonal stats, use the &lsquo;stats&rsquo; endpoint. The geostore will be used to generate spatial masks. If the original coverage is not 2-dimensional, additional subsettings have to be specified in the requests as &#39;additionalAxes&rsquo; to reduce the coverage dimensionality. The most usual subsetting will be a time slice that has to be specified as an ANSI (ISO 8601) date –with the appropriate level of granularity.</p>
+<p>For zonal stats, use the &lsquo;stats&rsquo; endpoint. The geostore will be used to generate spatial masks. If the original coverage is not 2-dimensional, additional subsettings have to be specified in the requests as &#39;additionalAxes&rsquo; to reduce the coverage dimensionality. The most usual subsetting will be a time slice that has to be specified as an ANSI (ISO 8601) date – with the appropriate level of granularity.</p>
 <pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/stats/e9c3a94d-6b1c-4513-a745-6acdff53cfc9'</span> -d <span class="s1">'{
     "geostore": "70ba01daaa803aea2eeff502c845bcef",
     "additionalAxes": {
@@ -3033,17 +3035,17 @@ select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
 </span></code></pre>
 <h2 id="nex-gddp-queries">NEX-GDDP queries</h2>
 
-<p>A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data ara available. These can be accessed in  the following ways:</p>
+<p>A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data are available. These can be accessed in the following ways:</p>
 
 <h3 id="spatial-aggregates-over-a-layer">Spatial aggregates over a layer</h3>
 
-<p>Access spatial aggregates over the data by listing all dataset data for a particular year. </p>
+<p>Access spatial aggregates over the data by listing all dataset data for a particular year:</p>
 <pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ </span>where<span class="se">\ </span>year<span class="se">\ \=\ </span>1960
 </code></pre>
-<p>Access only particular aggregates:</p>
+<p>Access particular aggregates:</p>
 <pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ </span>avg<span class="se">\,\ </span>min<span class="se">\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ </span>where<span class="se">\ </span>year<span class="se">\ \=\ </span>1960
 </code></pre>
-<p>Calculate statistics for a range of years</p>
+<p>Calculate statistics for a range of years:</p>
 <pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ \ </span>where<span class="se">\ </span>year<span class="se">\ </span>between<span class="se">\ </span>1960<span class="se">\ </span>and<span class="se">\ </span>1962
 </code></pre>
 <p>You can delimit an area of interest by providing a geostore id as a parameter:</p>
@@ -3055,10 +3057,10 @@ select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
 
 <p><strong>/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number></strong></p>
 
-<p>In order to retrieve the mentioned information, the name of the columns that you want to obtain the data from, are required.</p>
+<p>In order to retrieve the mentioned information the name of the columns that you want to obtain the data from are required.</p>
 
 <aside class="notice">
-Remember — It is mandatory to set a limit value. If you don&rsquo;t set it, and the dataset contains a lot of data, jiminy will try to obtain all data at once, which can produce performance issues.
+Remember — It is mandatory to set a limit value. If you do not set it and the dataset contains a lot of data, jiminy will try to obtain all data at once! This can produce performance issues.
 </aside>
 
 <blockquote>
@@ -3160,9 +3162,9 @@ Remember — It is mandatory to set a limit value. If you don&rsquo;t set it, an
 
 <h2 id="how-to-get-the-dataset-fields">How to get the dataset fields</h2>
 
-<p>Once the dataset is properly created and saved, it is possible to access to its fields getting also some information about them.</p>
+<p>Once the dataset is properly created and saved, it is possible to access to its fields as well as getting some information about them.</p>
 
-<p>To do that, it is just necessary to make use of the following endpoint:</p>
+<p>To do that, it is necessary to use of the following endpoint:</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/fields/&lt;dataset-id&gt;
 </code></pre>
 <blockquote>
@@ -3199,12 +3201,12 @@ Remember — It is mandatory to set a limit value. If you don&rsquo;t set it, an
 </span></code></pre>
 <h3 id="rasdaman">Rasdaman</h3>
 
-<p>The structure of datacubes needs of a more verbose fields specification. The fields endpoint for rasdaman-backed datasets includes information on the spatial reference system, nodata values, axes, units, and bands. It looks like so:</p>
+<p>The structure of datacubes needs a more verbose field specification. The fields endpoint for rasdaman-backed datasets includes information on the spatial reference system, nodata values, axes, units, and bands. It looks like so:</p>
 
 <blockquote>
 <p>Example</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -i  -XGET <span class="s1">'http://api.resourcewatch.org/v1/fields/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a'</span> 
+<pre class="highlight shell"><code>curl -i  -XGET <span class="s1">'http://api.resourcewatch.org/v1/fields/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a'</span>
 </code></pre>
 <blockquote>
 <p>Response</p>
@@ -3248,9 +3250,9 @@ Remember — It is mandatory to set a limit value. If you don&rsquo;t set it, an
 
 <h2 id="metadata-definition">Metadata definition</h2>
 
-<p>A Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget)</p>
+<p>Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget)</p>
 
-<p>Some fields are important to identify the entity properly, others are just optional and give extra information about it.</p>
+<p>Some fields are important to identify the entity properly; others are just optional and give extra information about it.</p>
 
 <table><thead>
 <tr>
@@ -3376,7 +3378,7 @@ Remember — It is mandatory to set a limit value. If you don&rsquo;t set it, an
 </tr>
 </tbody></table>
 
-<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
+<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
 
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
@@ -3424,8 +3426,8 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
-<p>It could response a <strong>401</strong> status code if the request is not authenticated, <strong>403</strong> if the request is not allowed to do that operation,
-<strong>400</strong> if the request is not well formatted or <strong>5XX</strong> HTTP codes in other cases</p>
+<p>It could respond with a <strong>401</strong> status code if the request is not authenticated, <strong>403</strong> if the request is not allowed to do that operation,
+<strong>400</strong> if the request is not well formatted, or <strong>5XX</strong> HTTP codes in other cases.</p>
 
 <p>The same operation applies to Widget and Layer just changing the endpoint for the appropriate one.</p>
 </blockquote>
@@ -3459,7 +3461,7 @@ language: select between available languages (select one or some of them)
 limit: the desired number
 </code></p>
 
-<p>Custom param for /metadata endpoint
+<p>Custom param for /metadata endpoint:
 <code class="prettyprint">
 type: [dataset, widget, layer]
 </code></p>
@@ -3474,9 +3476,9 @@ type: [dataset, widget, layer]
 </code></pre>
 <h2 id="updating-a-metadata">Updating a metadata</h2>
 
-<p>Partial update</p>
+<p>Partial update:</p>
 
-<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
+<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -3536,7 +3538,7 @@ type: [dataset, widget, layer]
 </span></code></pre>
 <h2 id="deleting-a-metadata">Deleting a metadata</h2>
 
-<p>&ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the Queryparams</p>
+<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the query params.</p>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
 </code></pre>
 <blockquote>
@@ -3559,7 +3561,7 @@ type: [dataset, widget, layer]
 </code></pre>
 <h2 id="finding-getting-by-ids">Finding (getting) by ids</h2>
 
-<p>&ldquo;ids&rdquo; property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
+<p>The &ldquo;ids&rdquo; property is required in the payload, and in other case the endpoint responds with a 400 HTTP ERROR (Bad Request)
 This property can be an Array or a String (comma-separated)
 payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
 payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
@@ -3579,7 +3581,7 @@ language: select between available languages (select one or some of them)
 limit: the desired number
 </code></p>
 
-<p>Custom param for /metadata endpoint
+<p>Custom param for the metadata endpoint:
 <code class="prettyprint">
 type: [dataset, widget, layer]
 </code></p>
@@ -3688,11 +3690,11 @@ To do it, the only parameter that is required is the name of the Vocabulary.</p>
 </tr>
 </tbody></table>
 
-<p>However, the most common use case relies on the relationships creation</p>
+<p>However, the most common use case relies on the relationships creation.</p>
 
 <h2 id="relationships">Relationships</h2>
 
-<p>This section describes how to associate an existing or a new Vocabulary to a resource.</p>
+<p>This section describes how to associate an existing or new Vocabulary to a resource.</p>
 
 <p>Some important points:</p>
 
@@ -3704,9 +3706,9 @@ To do it, the only parameter that is required is the name of the Vocabulary.</p>
 
 <h2 id="assign-a-vocabulary-to-an-existing-resource">Assign a Vocabulary to an existing Resource</h2>
 
-<p>To create a relationship between a resource and a Vocabulary (even if the vocabulary doesn&rsquo;t exist yet) it&rsquo;s just required to set the tags that define the relationship.</p>
+<p>To create a relationship between a resource and a Vocabulary (even if the vocabulary doesn&rsquo;t exist yet) it is only required that you set the tags that define the relationship.</p>
 
-<p>Some writing operations can take a little more time than the reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.</p>
+<p>Some writing operations can take a little more time than reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.</p>
 
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
@@ -3778,7 +3780,7 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 </span></code></pre>
 <h2 id="updating-tags-of-an-existing-relationship">Updating Tags of an existing relationship</h2>
 
-<p>If a relationship has to be updated, it&rsquo;s necessary to define the new tags of it.
+<p>If a relationship has to be updated, it&rsquo;s necessary to define it&rsquo;s new tags.
 The previous tags will be deleted in benefit of the new ones.</p>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -3846,7 +3848,7 @@ The previous tags will be deleted in benefit of the new ones.</p>
 </span></code></pre>
 <h2 id="creating-several-relationships">Creating several relationships</h2>
 
-<p>There is also an endpoint that allows to create some relationships in the same request.</p>
+<p>There is also an endpoint that allows you to create some relationships in the same request.</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -4032,7 +4034,7 @@ The previous tags will be deleted in benefit of the new ones.</p>
 </span></code></pre>
 <h2 id="getting-vocabularies-associated-to-a-resource">Getting vocabularies associated to a resource</h2>
 
-<p>It can be requested all the vocabularies associated to a particular resource.</p>
+<p>You can be request all vocabularies that are associated to a particular resource.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary
@@ -4079,13 +4081,13 @@ The previous tags will be deleted in benefit of the new ones.</p>
 </code></pre>
 <h2 id="getting-resources-common-use-case">Getting resources (COMMON USE CASE)</h2>
 
-<p>There is also available a endpoint that accepts requests just pointing the resource type and
+<p>There is also an endpoint available which accepts requests just indicating resource type and
 the desired vocabulary-tag matching.</p>
 
-<p>It&rsquo;s currently supported a DOUBLE-OR pattern matching. This means that the API will return
+<p>It currently supports DOUBLE-OR pattern matching, meaning the API will return
 all resources that at least have one (or more) tags in a particular vocabulary. At the same time it will also apply an OR to the entities of other vocabulary-tag matchings.</p>
 
-<p>The query has to be set in the url by the Queryparams</p>
+<p>The query has to be set in the url by the query params.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/vocabulary/find
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/vocabulary/find
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/vocabulary/find
@@ -4097,12 +4099,12 @@ all resources that at least have one (or more) tags in a particular vocabulary. 
 </code></pre>
 <h2 id="getting-all-vocabularies">Getting all vocabularies</h2>
 
-<p>This endpoints is quite useful to have a quick overview of all existing vocabularies and resources.</p>
+<p>This endpoint is quite useful to have a quick overview of all existing vocabularies and resources.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/vocabulary
 </code></pre>
 <h2 id="finding-getting-by-ids">Finding (getting) by ids</h2>
 
-<p>&ldquo;ids&rdquo; property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
+<p>The &ldquo;ids&rdquo; property is required in the payload. In other cases the endpoint responds with a 400 HTTP ERROR (Bad Request)
 This property can be an Array or a String (comma-separated)
 payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
 payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
@@ -4173,24 +4175,24 @@ payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
 </span></code></pre>
 <h2 id="vocabulary-creation">Vocabulary Creation</h2>
 
-<p>As it was mentioned before, it is possible to just create a new and empty vocabulary</p>
+<p>As was mentioned before, it is possible to just create a new and empty vocabulary</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/vocabulary/vocabularyName <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
    "name": &lt;vocabularyName&gt;
   }'</span>
 </code></pre>
-<p>It is also possible to update and delete an entire vocabulary. Said that, and because of
+<p>It is also possible to update and delete an entire vocabulary. Said that, because
 it&rsquo;s necessary to keep consistency between entities with weak relationship, these
-operations are only allowed to SUPERADMINS.</p>
+operations are only available to SUPERADMINS.</p>
 
           <h1 id="geostore">Geostore</h1>
 
 <h2 id="what-is-geostore">What is Geostore?</h2>
 
-<p>Geostore is a geojson database. You can save your geojson or obtain geojson from country, region, Protected areas, etc.</p>
+<p>Geostore is a geojson database. You can save your geojson or obtain geojson by country, region, Protected areas, etc.</p>
 
-<p>Geostore object contains the next fields:</p>
+<p>Geostore object contains the following fields:</p>
 
 <table><thead>
 <tr>
@@ -4216,7 +4218,7 @@ operations are only allowed to SUPERADMINS.</p>
 </tr>
 <tr>
 <td>provider</td>
-<td style="text-align: center">This field is completed, if the geostore was created from a provider</td>
+<td style="text-align: center">This field should be completed if the geostore was created from a provider</td>
 <td style="text-align: right">Object</td>
 </tr>
 <tr>
@@ -4236,7 +4238,7 @@ operations are only allowed to SUPERADMINS.</p>
 </tr>
 <tr>
 <td>&ndash; filter</td>
-<td style="text-align: center">Conditions to obtain the geojson. Is possible put and and or conditions. This conditions must only return one row.</td>
+<td style="text-align: center">Conditions to obtain the geojson. It is possible use AND &amp; OR conditions. This conditions must only return one row.</td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
@@ -4257,7 +4259,7 @@ Remember — All endpoint of geostore don&rsquo;t need that you are authenticate
 
 <h2 id="create-geostore">Create Geostore</h2>
 
-<p>You can create a geostore from 4 different ways:</p>
+<p>You can create a geostore in 4 different ways:</p>
 
 <h3 id="with-a-geojson">With a Geojson</h3>
 
@@ -4282,7 +4284,7 @@ Remember — All endpoint of geostore don&rsquo;t need that you are authenticate
 </tbody></table>
 
 <blockquote>
-<p>To create a Geostore, you have to do a POST with the following body:</p>
+<p>To create a Geostore, you have to do a POST query with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/geostore <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -4367,7 +4369,7 @@ Remember — All endpoint of geostore don&rsquo;t need that you are authenticate
    }
 }'</span>
 </code></pre>
-<p>The response will be 200 if the geostore will save correctly and return the geostore object with all information:</p>
+<p>The response will be 200 if the geostore saves correctly and returns the geostore object with all information:</p>
 
 <blockquote>
 <p>Example response</p>
@@ -4515,7 +4517,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
 </code></pre>
 <h3 id="from-carto">From Carto</h3>
 
-<p>If your geojson is in carto table, is possible import this geojson in geostore. 
+<p>If your geojson is in carto table, is possible import this geojson in geostore.
 To import the geojson in geostore, you need to define all of the required fields in the request body. The fields that compose a import are:</p>
 
 <table><thead>
@@ -4757,12 +4759,12 @@ Remember — All subscription endpoints need to be authenticated.
 </tr>
 <tr>
 <td>language</td>
-<td style="text-align: center">Language of the subscriptions (it&rsquo;s used to select the email template)</td>
+<td style="text-align: center">Language of the subscriptions (used to select the email template)</td>
 <td style="text-align: right">en, es, fr, pt, zh</td>
 </tr>
 <tr>
 <td>resource</td>
-<td style="text-align: center">This field contains if the subscription is of type email or hook</td>
+<td style="text-align: center">This field contains the subscription is of type email or hook</td>
 <td style="text-align: right">Object</td>
 </tr>
 <tr>
@@ -4782,7 +4784,7 @@ Remember — All subscription endpoints need to be authenticated.
 </tr>
 <tr>
 <td>datasetsQuery</td>
-<td style="text-align: center">Subscriptions to datasets subscribibles</td>
+<td style="text-align: center">Subscriptions to subscribable datasets</td>
 <td style="text-align: right">Array<Object></td>
 </tr>
 <tr>
@@ -4802,10 +4804,10 @@ Remember — All subscription endpoints need to be authenticated.
 </tr>
 </tbody></table>
 
-<p>It&rsquo;s only required datasets or datasetsQuery, not both.</p>
+<p>You only require datasets or datasetsQuery, not both.</p>
 
 <aside class="notice">
-Remember — All subscriptions are created unconfirmed and the process sends a email to the email of the subscription to confirm it.
+Remember — All subscriptions are created unconfirmed and the process sends a message to the email of the subscription to confirm it.
 </aside>
 
 <p>You can create a subscription with 6 different params:</p>
@@ -4832,7 +4834,7 @@ Remember — All subscriptions are created unconfirmed and the process sends a e
 </tbody></table>
 
 <blockquote>
-<p>To create a Subscription, you have to do a POST with the following body:</p>
+<p>To create a Subscription, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -4931,7 +4933,7 @@ Remember — All subscriptions are created unconfirmed and the process sends a e
 </tbody></table>
 
 <blockquote>
-<p>To create a Subscription, you have to do a POST with the following body:</p>
+<p>To create a Subscription, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -4975,7 +4977,7 @@ Remember — All subscriptions are created unconfirmed and the process sends a e
 </tbody></table>
 
 <blockquote>
-<p>To create a Subscription, you have to do a POST with the following body:</p>
+<p>To create a Subscription, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -5021,7 +5023,7 @@ Remember — All subscriptions are created unconfirmed and the process sends a e
 </tbody></table>
 
 <blockquote>
-<p>To create a Subscription, you have to do a POST with the following body:</p>
+<p>To create a Subscription, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -5041,7 +5043,7 @@ Remember — All subscriptions are created unconfirmed and the process sends a e
     }
   }'</span>
 </code></pre>
-<p>Subscription has 4 differents lands use:</p>
+<p>Subscription has 4 different lands uses:</p>
 
 <h4 id="oil-palm">Oil palm</h4>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
@@ -5141,7 +5143,7 @@ Remember — All subscriptions are created unconfirmed and the process sends a e
 </tbody></table>
 
 <blockquote>
-<p>To create a Subscription, you have to do a POST with the following body:</p>
+<p>To create a Subscription, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -5172,7 +5174,7 @@ Remember — All subscriptions are created unconfirmed and the process sends a e
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
 <aside class="success">
-Remember — the response is in JSONApi format
+Remember — the response is in JSONApi format.
 </aside>
 
 <blockquote>
@@ -5218,37 +5220,37 @@ Remember — the response is in JSONApi format
 </span></code></pre>
 <h2 id="resend-confirmation">Resend confirmation</h2>
 
-<p>To resend the confirmation</p>
+<p>To resend the confirmation:</p>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmation <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
 <h2 id="modify-subscription">Modify subscription</h2>
 
-<p>To modify a subscription</p>
+<p>To modify a subscription:</p>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 
 </code></pre>
-<p>With the same body that create subscription.</p>
+<p>With the same body that creates the subscription.</p>
 
 <h2 id="unsubscribe">Unsubscribe</h2>
 
-<p>To unsubscribe a subscription</p>
+<p>To unsubscribe a subscription:</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
 <h2 id="delete-subscription">Delete subscription</h2>
 
-<p>To delete a subscription (same that unsubscribe)</p>
+<p>To delete a subscription (same that unsubscribe):</p>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-          <h1 id="favourites">Favourites</h1>
+          <h1 id="favorites">Favorites</h1>
 
-<p>The users can save their own favourites resources of the API</p>
+<p>The users can save their own favorites resources of the API.</p>
 
 <aside class="notice">
-Remember — All favourite endpoints need to be authenticated.
+Remember — All favorite endpoints need to be authenticated.
 </aside>
 
 <table><thead>
@@ -5285,9 +5287,9 @@ Remember — All favourite endpoints need to be authenticated.
 </tr>
 </tbody></table>
 
-<h2 id="create-favourite">Create Favourite</h2>
+<h2 id="create-favorite">Create Favorite</h2>
 
-<p>To create a favourite, you need to define all next fields in the request body. The required fields that compose a favourite are:</p>
+<p>To create a favorite, you need to define all next fields in the request body. The required fields that compose a favorite are:</p>
 
 <table><thead>
 <tr>
@@ -5309,7 +5311,7 @@ Remember — All favourite endpoints need to be authenticated.
 </tbody></table>
 
 <blockquote>
-<p>To create a favourite, you have to do a POST with the following body:</p>
+<p>To create a favorite, you have to do a POST with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/favourite <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -5319,39 +5321,39 @@ Remember — All favourite endpoints need to be authenticated.
    "resourceId": "&lt;resourceId&gt;"
   }'</span>
 </code></pre>
-<h2 id="get-favourites">Get favourites</h2>
+<h2 id="get-favorites">Get favorites</h2>
 
-<p>This endpoint returns the favourites of the logged user.</p>
+<p>This endpoint returns the favorites of the logged user.</p>
 
 <blockquote>
-<p>To get all favourite of the logged user, you have to do a GET:</p>
+<p>To get all favorite of the logged user, you have to do a GET request:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/favourite <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<p>You can also retrieve all data about the resources just including the query parameter &ldquo;include=true&rdquo; in the request.</p>
+<p>You can also retrieve all data about the resources by including the query parameter &ldquo;include=true&rdquo; in the request.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/favourite?include<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<h2 id="get-favourite-by-id">Get favourite by id</h2>
+<h2 id="get-favorite-by-id">Get favorite by id</h2>
 
-<p>This endpoint returns the favourite with id of the param. If the favourite belongs to other user or not exist, the endpoint returns 400.</p>
+<p>This endpoint returns the favorite with id of the param. If the favorite belongs to other user or not exist, the endpoint returns 400.</p>
 
 <blockquote>
-<p>To get the favourite by id, you have to do a GET:</p>
+<p>To get the favorite by id, you have to do a GET request:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/favourite/:id <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<h2 id="delete-favourite">Delete favourite</h2>
+<h2 id="delete-favorite">Delete favorite</h2>
 
-<p>This endpoint deletes the favourite with id of the param. If the favourite belongs to other user or not exist, the endpoint returns 400.</p>
+<p>This endpoint deletes the favorite with id of the param. If the favorite belongs to other user or not exist, the endpoint returns 400.</p>
 
 <blockquote>
-<p>To delete the favourite by id, you have to do a DELETE:</p>
+<p>To delete the favorite by id, you have to do a DELETE request:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/favourite/:id <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+<pre class="highlight plaintext"><code>curl -X DELETE https://api.resourcewatch.org/v1/favourite/:id \
+-H "Authorization: Bearer &lt;your-token&gt;"
 </code></pre>
           <h1 id="errors">Errors</h1>
 
@@ -5369,7 +5371,7 @@ Remember — All favourite endpoints need to be authenticated.
 </tr>
 <tr>
 <td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>Unauthorized &ndash; Your API key is incorrect</td>
 </tr>
 <tr>
 <td>403</td>
@@ -5385,7 +5387,7 @@ Remember — All favourite endpoints need to be authenticated.
 </tr>
 <tr>
 <td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+<td>Not Acceptable &ndash; You requested a format that is not json</td>
 </tr>
 <tr>
 <td>410</td>
@@ -5401,7 +5403,7 @@ Remember — All favourite endpoints need to be authenticated.
 </tr>
 <tr>
 <td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarily offline for maintenance. Please try again later.</td>
 </tr>
 </tbody></table>
 
