@@ -2,9 +2,9 @@
 
 ## What is Geostore?
 
-Geostore is a geojson database. You can save your geojson or obtain geojson from country, region, Protected areas, etc.
+Geostore is a geojson database. You can save your geojson or obtain geojson by country, region, Protected areas, etc.
 
-Geostore object contains the next fields:
+Geostore object contains the following fields:
 
 
 | Field             | Description                                                       | Type
@@ -12,11 +12,11 @@ Geostore object contains the next fields:
 | id                | Id of the geostore                                                | Text
 | geojson           | Geojson with the geometry                                         | Object
 | hash              | MD5 hash generated from geojson. Is the same that the id          | Object
-| provider          | This field is completed, if the geostore was created from a provider | Object
+| provider          | This field should be completed if the geostore was created from a provider | Object
 | -- type           | Provider type                             | Text
 | -- table          | Table name                                | Text
 | -- user           | User of the account                       | Text
-| -- filter         | Conditions to obtain the geojson. Is possible put and and or conditions. This conditions must only return one row.   | Text
+| -- filter         | Conditions to obtain the geojson. It is possible use AND & OR conditions. This conditions must only return one row.   | Text
 | areaHa            | Area in Hectares of the geojson                 | Number
 | bbox              | Bounding box of the geojson                 | Array
 
@@ -27,7 +27,7 @@ Remember — All endpoint of geostore don't need that you are authenticated.
 
 ## Create Geostore
 
-You can create a geostore from 4 different ways:
+You can create a geostore in 4 different ways:
 
 ### With a Geojson
 
@@ -37,7 +37,7 @@ If you have your own geojson, you can save it in geostore. To create the geostor
 | ------------------|:-----------------------------------------:| -----:| -----------|  -------:|
 | geojson           | Geojson with your geometry                | Object|            | Yes
 
-> To create a Geostore, you have to do a POST with the following body:
+> To create a Geostore, you have to do a POST query with the following body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/geostore \
@@ -125,7 +125,7 @@ curl -X POST https://api.resourcewatch.org/v1/geostore \
 }'
 ```
 
-The response will be 200 if the geostore will save correctly and return the geostore object with all information:
+The response will be 200 if the geostore saves correctly and returns the geostore object with all information:
 
 > Example response
 
@@ -303,7 +303,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/use/logging/102
 
 ### From Carto
 
-If your geojson is in carto table, is possible import this geojson in geostore. 
+If your geojson is in carto table, is possible import this geojson in geostore.
 To import the geojson in geostore, you need to define all of the required fields in the request body. The fields that compose a import are:
 
 | Field             | Description                               | Type   | Values     | Required |
@@ -489,5 +489,3 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/use/logging/26f8975c4c647c
   }
 }
 ```
-
-

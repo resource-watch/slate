@@ -14,7 +14,7 @@ CARTO is an open, powerful, and intuitive platform for discovering and predictin
 ### ArcGIS
 **(connectorType: 'rest', provider: 'featureservice')**
 <a href="https://www.arcgis.com/features/index.html"><img src="https://www.arcgis.com/features/img/logo-esri.png" class="logo-third"/></a>
-ArcGIS Online is a Complete, Cloud-Based Mapping Platform
+ArcGIS Online is a Complete, Cloud-Based Mapping Platform.
 
 ### Google Earth Engine
 **(connectorType: 'rest', provider: 'gee')**
@@ -54,7 +54,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
 ```
 
 <aside class="success">
-Remember — the response is in JSONApi format
+Remember — the response is in JSONApi format.
 </aside>
 
 > Response:
@@ -224,7 +224,7 @@ To create a dataset, you need to define all of the required fields in the reques
 | subtitle          | Dataset subtitle                                              | Text   | Any Text                                        | No
 | application       | Applications the dataset belongs to                           | Array  | Any valid application name(s)                   | Yes
 | connectorType     | Connector type                                                | Text   | rest, document, wms                             | Yes
-| provider          | The connectorType provider                                    | Text   | cartodb, featureservice, gee, csv, tsv, xml, json, nexgddp  | Yes
+| provider          | The connectorType provider                                    | Text   | cartodb, feature service, gee, csv, tsv, xml, json, nexgddp  | Yes
 | connectorUrl      | Url of the data source                                        | Url    | Any url                                         | Yes (except for gee, nexgddp and json formats)
 | tableName         | Table name                                                    | Text   | Any valid table name                            | No (just for GEE and nexgddp datasets)
 | data              | JSON DATA only for json connector if connectorUrl not present | JSON   | [{},{},{}]                                      | No (just for json if connectorUrl is not present)
@@ -414,7 +414,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 
 ### Document-JSON
 
-The JSON dataset service supports data from external json file or data as json array send in request body
+The JSON dataset service supports data from external json file or data as json array send in request body.
 
 The `connectorUrl` must be an accessible JSON file
 

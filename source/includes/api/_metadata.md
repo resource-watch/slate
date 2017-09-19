@@ -2,9 +2,9 @@
 
 ## Metadata definition
 
-A Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget)
+Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget)
 
-Some fields are important to identify the entity properly, others are just optional and give extra information about it.
+Some fields are important to identify the entity properly; others are just optional and give extra information about it.
 
 | Field             | Description                                                       | Type
 | ------------------|:-----------------------------------------:                        | -----:
@@ -37,7 +37,7 @@ Some fields are important to identify the entity properly, others are just optio
 | info              | optional                                      
 | units             | optional                                             
 
-"application" and "language" attributes are required and it is mandatory to include them in the payload.
+The "application" and "language" attributes are required and it is mandatory to include them in the payload.
 
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
@@ -90,8 +90,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
 }
 ```
 
-> It could response a **401** status code if the request is not authenticated, **403** if the request is not allowed to do that operation,
-**400** if the request is not well formatted or **5XX** HTTP codes in other cases
+> It could respond with a **401** status code if the request is not authenticated, **403** if the request is not allowed to do that operation,
+**400** if the request is not well formatted, or **5XX** HTTP codes in other cases.
 
 > The same operation applies to Widget and Layer just changing the endpoint for the appropriate one.
 
@@ -130,7 +130,7 @@ limit filter:
 limit: the desired number
 ```
 
-Custom param for /metadata endpoint
+Custom param for /metadata endpoint:
 ```
 type: [dataset, widget, layer]
 ```
@@ -155,9 +155,9 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-044
 
 ## Updating a metadata
 
-Partial update
+Partial update:
 
-"application" and "language" attributes are required and it is mandatory to include them in the payload.
+The "application" and "language" attributes are required and it is mandatory to include them in the payload.
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
@@ -222,7 +222,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0
 
 ## Deleting a metadata
 
-"application" and "language" attributes are required and it is mandatory to include them in the Queryparams
+The "application" and "language" attributes are required and it is mandatory to include them in the query params.
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata?application=<app-id>&language=<language>
@@ -269,7 +269,7 @@ curl -X GET https://api.resourcewatch.org/v1/metadata?language=en
 
 ## Finding (getting) by ids
 
-"ids" property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
+The "ids" property is required in the payload, and in other case the endpoint responds with a 400 HTTP ERROR (Bad Request)
 This property can be an Array or a String (comma-separated)
 payload -> {"ids": ["112313", "111123"]}
 payload -> {"ids": "112313, 111123"}
@@ -289,7 +289,7 @@ limit filter:
 limit: the desired number
 ```
 
-Custom param for /metadata endpoint
+Custom param for the metadata endpoint:
 ```
 type: [dataset, widget, layer]
 ```

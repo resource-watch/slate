@@ -6,9 +6,9 @@ Fields can be defined as the dataset properties. These fields are automatically 
 
 ## How to get the dataset fields
 
-Once the dataset is properly created and saved, it is possible to access to its fields getting also some information about them.
+Once the dataset is properly created and saved, it is possible to access to its fields as well as getting some information about them.
 
-To do that, it is just necessary to make use of the following endpoint:
+To do that, it is necessary to use of the following endpoint:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/fields/<dataset-id>
@@ -50,12 +50,12 @@ curl -X GET https://api.resourcewatch.org/v1/fields/1170030b-9725-4bfe-8fb4-1b0e
 
 ### Rasdaman
 
-The structure of datacubes needs of a more verbose fields specification. The fields endpoint for rasdaman-backed datasets includes information on the spatial reference system, nodata values, axes, units, and bands. It looks like so:
+The structure of datacubes needs a more verbose field specification. The fields endpoint for rasdaman-backed datasets includes information on the spatial reference system, nodata values, axes, units, and bands. It looks like so:
 
 > Example
 
 ```shell
-curl -i  -XGET 'http://api.resourcewatch.org/v1/fields/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a' 
+curl -i  -XGET 'http://api.resourcewatch.org/v1/fields/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a'
 ```
 
 > Response

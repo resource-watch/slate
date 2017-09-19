@@ -2,9 +2,9 @@
 
 
 ## What is a Widget?
-Is a graphic representation of a Dataset's data. The most of them are defined with [Vega grammar](#what-is-vega).
+It is a graphic representation of a Dataset's data. Most of them are defined with [Vega grammar](#what-is-vega).
 
-Widget contains the next fields:
+Widgets contains the following fields:
 
 | Field         | Description           | Type
 | ------------- |:-------------:| -----:|
@@ -153,7 +153,7 @@ curl -X GET https://api.resourcewatch.org/v1/widget?template=true
 curl -X GET https://api.resourcewatch.org/v1/widget?default=true
 ```
 
-> Return the widgets filtered whose applications contain rw
+> Return widgets whose applications contain rw
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/widget?app=rw
@@ -166,13 +166,13 @@ curl -X GET https://api.resourcewatch.org/v1/widget?app=rw
 | page[size]      | Number elements per page   | Number
 | page[number]    | Number of page             | Number
 
-> Return the widgets of the page 2 with 5 elements per page
+> Return the widgets from page 2 with 5 elements per page
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2
 ```
 
-## How obtain a widget for specific dataset
+## How obtain a widget for a specific dataset
 
 To obtain the widget:
 
@@ -1034,7 +1034,7 @@ To create a widget, you need to define all of the required fields in the request
 | dataset           | UuId of the dataset                       | Text    | Uuid of Dataset                                 | No
 
 
-> To create a widget, you have to do a POST with the following body:
+> To create a widget, you have to do a POST request with the following body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget \
@@ -1075,7 +1075,7 @@ To update a widget, you need to define all of the required fields in the request
 | dataset           | UuId of the dataset                       | Text    | Uuid of Dataset                                 | No
 
 
-> To create a widget, you have to do a POST with the following body:
+> To create a widget, you have to do a POST request with the following body:
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id> \

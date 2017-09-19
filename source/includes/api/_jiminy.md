@@ -4,10 +4,10 @@ To get the jiminy information from a query, you can do the following request:
 
 **/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number>**
 
-In order to retrieve the mentioned information, the name of the columns that you want to obtain the data from, are required.
+In order to retrieve the mentioned information the name of the columns that you want to obtain the data from are required.
 
 <aside class="notice">
-Remember — It is mandatory to set a limit value. If you don't set it, and the dataset contains a lot of data, jiminy will try to obtain all data at once, which can produce performance issues.
+Remember — It is mandatory to set a limit value. If you do not set it and the dataset contains a lot of data, jiminy will try to obtain all data at once! This can produce performance issues.
 </aside>
 
 > To obtain jiminy information, you have to do a GET with the following query params:

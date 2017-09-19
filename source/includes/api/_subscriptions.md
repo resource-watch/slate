@@ -11,21 +11,21 @@ Remember — All subscription endpoints need to be authenticated.
 | ------------------|:-----------------------------------------:                                      | -----:
 | name              | Name                                                                            | Text
 | application       | Application of the subscription                                                 | gfw, rw, prep
-| language          | Language of the subscriptions (it's used to select the email template)          | en, es, fr, pt, zh
-| resource          | This field contains if the subscription is of type email or hook                | Object
+| language          | Language of the subscriptions (used to select the email template)          | en, es, fr, pt, zh
+| resource          | This field contains the subscription is of type email or hook                | Object
 | -- type           | Type                                                                            | EMAIL or URL
 | -- content        | Email or url                                                                    | Text
 | datasets          | Array of datasets of the subscription                                           | Array<Text>
-| datasetsQuery     | Subscriptions to datasets subscribibles                                         | Array<Object>
+| datasetsQuery     | Subscriptions to subscribable datasets                                         | Array<Object>
 | -- id             | Id of dataset                                                                   | ObjectId
 | -- type           | Type of subscription defined in the dataset                                     | Text
 | -- params         | Geographic area of the subscription                                             | Object
 
-It's only required datasets or datasetsQuery, not both.
+You only require datasets or datasetsQuery, not both.
 
 
 <aside class="notice">
-Remember — All subscriptions are created unconfirmed and the process sends a email to the email of the subscription to confirm it.
+Remember — All subscriptions are created unconfirmed and the process sends a message to the email of the subscription to confirm it.
 </aside>
 
 You can create a subscription with 6 different params:
@@ -38,7 +38,7 @@ You can create a subscription with 6 different params:
 | -- area           | Id of area object                                                               | Text (ObjectId)
 
 
-> To create a Subscription, you have to do a POST with the following body:
+> To create a Subscription, you have to do a POST request with the following body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/subscriptions \
@@ -101,7 +101,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 | ---- region       | Region code                                                                     | Number
 
 
-> To create a Subscription, you have to do a POST with the following body:
+> To create a Subscription, you have to do a POST request with the following body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/subscriptions \
@@ -133,7 +133,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 | -- wdpaid         | id of protected area                                                            | Number
 
 
-> To create a Subscription, you have to do a POST with the following body:
+> To create a Subscription, you have to do a POST request with the following body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/subscriptions \
@@ -163,7 +163,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 | -- use            | Use name                                                                        | Text
 | -- useid          | Id use                                                                          | Number
 
-> To create a Subscription, you have to do a POST with the following body:
+> To create a Subscription, you have to do a POST request with the following body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/subscriptions \
@@ -185,7 +185,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
   }'
 ```
 
-Subscription has 4 differents lands use:
+Subscription has 4 different lands uses:
 
 #### Oil palm
 
@@ -286,7 +286,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 
 
 
-> To create a Subscription, you have to do a POST with the following body:
+> To create a Subscription, you have to do a POST request with the following body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/subscriptions \
@@ -325,7 +325,7 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions \
 ```
 
 <aside class="success">
-Remember — the response is in JSONApi format
+Remember — the response is in JSONApi format.
 </aside>
 
 > Response:
@@ -371,7 +371,7 @@ Remember — the response is in JSONApi format
 ```
 ## Resend confirmation
 
-To resend the confirmation
+To resend the confirmation:
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmation \
@@ -380,7 +380,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmati
 
 ## Modify subscription
 
-To modify a subscription
+To modify a subscription:
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
@@ -388,12 +388,12 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
 
 ```
 
-With the same body that create subscription.
+With the same body that creates the subscription.
 
 
 ## Unsubscribe
 
-To unsubscribe a subscription
+To unsubscribe a subscription:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
@@ -402,7 +402,7 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 
 ## Delete subscription
 
-To delete a subscription (same that unsubscribe)
+To delete a subscription (same that unsubscribe):
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \

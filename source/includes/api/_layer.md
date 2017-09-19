@@ -9,7 +9,7 @@ Layer contains the next fields:
 | -------------     |:-------------:| -----:|
 | userId            | Id of the owner                                         | Text
 | application       | Application to which the dataset belongs                | Array
-| iso               | Isos to which the dataset belongs                       | Array
+| iso               | The isos to which the dataset belongs                       | Array
 | slug              | Unique identifier of the layer                          | Text
 | name              | Name of the layer                                       | Url
 | description       | Description of the layer                                | Array
@@ -108,7 +108,7 @@ Available filters:
 | app           | Filter layers on application (prep, gfw, etc..)          | Text
 
 
-> Return the layers filtered whose name contains emissions
+> Return the layers filtered by those whose name contains emissions
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/layer?name=emissions
@@ -139,7 +139,7 @@ curl -X GET https://api.resourcewatch.org/v1/layer?status=failed
 curl -X GET https://api.resourcewatch.org/v1/layer?published=false
 ```
 
-> Return the layers filtered whose applications contain rw
+> Return the layers filtered by those whose applications contain rw
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/layer?app=rw
@@ -152,7 +152,7 @@ curl -X GET https://api.resourcewatch.org/v1/layer?app=rw
 | page[size]      | Number elements per page   | Number
 | page[number]    | Number of page             | Number
 
-> Return the layers of the page 2 with 5 elements per page
+> Return the layers of page 2 with 5 elements per page
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/layer?page[size]=5&page[number]=2
@@ -246,7 +246,7 @@ To create a layer, you need to define all of the required fields in the request 
 | dataset           | UuId of the dataset                       | Text    | Uuid of Dataset                                 | No
 
 
-> To create a layer, you have to do a POST with the following body:
+> To create a layer, you have to do a POST request with the following body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer \
@@ -276,12 +276,12 @@ To update a layer, you need to define all of the required fields in the request 
 | legendConfig      | Custom configuration                      | Object  | Valid object                                    | No
 | applicationConfig | Custom configuration                      | Object  | Valid object                                    | No
 | staticImageConfig | Custom configuration                      | Object  | Valid object                                    | No
-| iso               | Isos to which the layer belongs           | Array   | BRA, ES                                         | No
+| iso               | The isos to which the layer belongs           | Array   | BRA, ES                                         | No
 | status            | Status of the Layer                       | Number  | 1                                               | No
 | dataset           | UuId of the dataset                       | Text    | Uuid of Dataset                                 | No
 
 
-> To create a layer, you have to do a POST with the following body:
+> To create a layer, you have to do a POST requestwith the following body:
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id> \

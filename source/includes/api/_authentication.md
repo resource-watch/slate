@@ -11,7 +11,7 @@ If you aren't logged in yet, the application will redirect you to the login page
 You will see:
 ![Control Tower login page](images/authentication/login.png)
 
-You can login with your WRI credentials (email and password) or with other auth providers (a Google, Facebook, or Twitter account). If you don't remember your password (don't worry! it happens to everyone!) you can reset your password clicking on 'Recover password'.
+You can login with your WRI credentials (email and password) or with other auth providers (a Google, Facebook, or Twitter account). If you can't remember your password (don't worry! it happens to everyone!) you can reset your password clicking on 'Recover password'.
 
 2. After logging in you will be redirected to the Control Tower application and you will see:
 ![Control Tower Dashboard](images/authentication/control-tower.png)

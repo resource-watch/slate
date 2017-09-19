@@ -1,9 +1,9 @@
-# Favourites
+# Favorites
 
-The users can save their own favourites resources of the API
+The users can save their own favorites resources of the API.
 
 <aside class="notice">
-Remember — All favourite endpoints need to be authenticated.
+Remember — All favorite endpoints need to be authenticated.
 </aside>
 
 
@@ -17,9 +17,9 @@ Remember — All favourite endpoints need to be authenticated.
 
 
 
-## Create Favourite
+## Create Favorite
 
-To create a favourite, you need to define all next fields in the request body. The required fields that compose a favourite are:
+To create a favorite, you need to define all next fields in the request body. The required fields that compose a favorite are:
 
 | Field             | Description                                                                     | Type
 | ------------------|:-----------------------------------------:                                      | -----:
@@ -27,7 +27,7 @@ To create a favourite, you need to define all next fields in the request body. T
 | resourceType      | Type of resource                                                                | Text (dataset, layer, widget)
 
 
-> To create a favourite, you have to do a POST with the following body:
+> To create a favorite, you have to do a POST with the following body:
 
 
 ```shell
@@ -40,11 +40,11 @@ curl -X POST https://api.resourcewatch.org/v1/favourite \
   }'
 ```
 
-## Get favourites
+## Get favorites
 
-This endpoint returns the favourites of the logged user.
+This endpoint returns the favorites of the logged user.
 
-> To get all favourite of the logged user, you have to do a GET:
+> To get all favorite of the logged user, you have to do a GET request:
 
 
 ```shell
@@ -52,18 +52,18 @@ curl -X GET https://api.resourcewatch.org/v1/favourite \
 -H "Authorization: Bearer <your-token>"
 ```
 
-You can also retrieve all data about the resources just including the query parameter "include=true" in the request.
+You can also retrieve all data about the resources by including the query parameter "include=true" in the request.
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/favourite?include=true \
 -H "Authorization: Bearer <your-token>"
 ```
 
-## Get favourite by id
+## Get favorite by id
 
-This endpoint returns the favourite with id of the param. If the favourite belongs to other user or not exist, the endpoint returns 400.
+This endpoint returns the favorite with id of the param. If the favorite belongs to other user or not exist, the endpoint returns 400.
 
-> To get the favourite by id, you have to do a GET:
+> To get the favorite by id, you have to do a GET request:
 
 
 ```shell
@@ -71,14 +71,14 @@ curl -X GET https://api.resourcewatch.org/v1/favourite/:id \
 -H "Authorization: Bearer <your-token>"
 ```
 
-## Delete favourite
+## Delete favorite
 
-This endpoint deletes the favourite with id of the param. If the favourite belongs to other user or not exist, the endpoint returns 400.
+This endpoint deletes the favorite with id of the param. If the favorite belongs to other user or not exist, the endpoint returns 400.
 
-> To delete the favourite by id, you have to do a DELETE:
+> To delete the favorite by id, you have to do a DELETE request:
 
 
-```shell
+```shella
 curl -X DELETE https://api.resourcewatch.org/v1/favourite/:id \
 -H "Authorization: Bearer <your-token>"
 ```

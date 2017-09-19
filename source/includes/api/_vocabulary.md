@@ -15,11 +15,11 @@ To do it, the only parameter that is required is the name of the Vocabulary.
 | ------------------|:-----------------------------------------:                        | -----:
 | name              | The name of the Vocabulary (**it has to be unique and it represents the "primaryKey"**) | String
 
-However, the most common use case relies on the relationships creation
+However, the most common use case relies on the relationships creation.
 
 ## Relationships
 
-This section describes how to associate an existing or a new Vocabulary to a resource.
+This section describes how to associate an existing or new Vocabulary to a resource.
 
 Some important points:
 
@@ -29,9 +29,9 @@ Some important points:
 
 ## Assign a Vocabulary to an existing Resource
 
-To create a relationship between a resource and a Vocabulary (even if the vocabulary doesn't exist yet) it's just required to set the tags that define the relationship.
+To create a relationship between a resource and a Vocabulary (even if the vocabulary doesn't exist yet) it is only required that you set the tags that define the relationship.
 
-Some writing operations can take a little more time than the reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.
+Some writing operations can take a little more time than reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.
 
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
@@ -114,7 +114,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
 
 ## Updating Tags of an existing relationship
 
-If a relationship has to be updated, it's necessary to define the new tags of it.
+If a relationship has to be updated, it's necessary to define it's new tags.
 The previous tags will be deleted in benefit of the new ones.
 
 ```shell
@@ -193,7 +193,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0
 
 ## Creating several relationships
 
-There is also an endpoint that allows to create some relationships in the same request.
+There is also an endpoint that allows you to create some relationships in the same request.
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
@@ -401,7 +401,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-
 
 ## Getting vocabularies associated to a resource
 
-It can be requested all the vocabularies associated to a particular resource.
+You can be request all vocabularies that are associated to a particular resource.
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary
@@ -469,13 +469,13 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-i
 
 ## Getting resources (COMMON USE CASE)
 
-There is also available a endpoint that accepts requests just pointing the resource type and
+There is also an endpoint available which accepts requests just indicating resource type and
 the desired vocabulary-tag matching.
 
-It's currently supported a DOUBLE-OR pattern matching. This means that the API will return
+It currently supports DOUBLE-OR pattern matching, meaning the API will return
 all resources that at least have one (or more) tags in a particular vocabulary. At the same time it will also apply an OR to the entities of other vocabulary-tag matchings.
 
-The query has to be set in the url by the Queryparams
+The query has to be set in the url by the query params.
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/vocabulary/find
@@ -497,7 +497,7 @@ curl -X GET http://api.resourcewatch.org/v1/dataset/vocabulary/find?legacy=cdi,c
 
 ## Getting all vocabularies
 
-This endpoints is quite useful to have a quick overview of all existing vocabularies and resources.
+This endpoint is quite useful to have a quick overview of all existing vocabularies and resources.
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/vocabulary
@@ -505,7 +505,7 @@ curl -X GET https://api.resourcewatch.org/v1/vocabulary
 
 ## Finding (getting) by ids
 
-"ids" property is required in the payload, in other case the endpoint responds a 400 HTTP ERROR (Bad Request)
+The "ids" property is required in the payload. In other cases the endpoint responds with a 400 HTTP ERROR (Bad Request)
 This property can be an Array or a String (comma-separated)
 payload -> {"ids": ["112313", "111123"]}
 payload -> {"ids": "112313, 111123"}
@@ -587,7 +587,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids \
 
 ## Vocabulary Creation
 
-As it was mentioned before, it is possible to just create a new and empty vocabulary
+As was mentioned before, it is possible to just create a new and empty vocabulary
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/vocabulary/vocabularyName \
@@ -597,6 +597,6 @@ curl -X POST https://api.resourcewatch.org/v1/vocabulary/vocabularyName \
   }'
 ```
 
-It is also possible to update and delete an entire vocabulary. Said that, and because of
+It is also possible to update and delete an entire vocabulary. Said that, because
 it's necessary to keep consistency between entities with weak relationship, these
-operations are only allowed to SUPERADMINS.
+operations are only available to SUPERADMINS.
