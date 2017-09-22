@@ -2,10 +2,9 @@
 
 ## What is a Dataset?
 
-A data set represents the raw data. We support four dataset types with different providers. It's also possible to have the same dataset on different applications.
+A dataset abstracts the data that can be obtained from several sources into a common interface. There are several data providers supported in the API, and each of those has a different provider. Datasets can belong to several applications.
 
 ## Supported dataset sources
-
 ### Carto
 **(connectorType: 'rest', provider: 'cartodb')**
 <a href="https://www.carto.com"><img src="images/dataset/carto.png" class="logo-third"/></a>
@@ -21,7 +20,7 @@ ArcGIS Online is a Complete, Cloud-Based Mapping Platform.
 <a href="https://earthengine.google.com/"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
 Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth's surface.
 
-### NexGDDP
+### NEX-GDDP
 **(connectorType: 'rest', provider: 'nexgddp')**
 The NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).
 
@@ -32,6 +31,7 @@ Rasdaman ('raster data manager') is a database with capabilities for storage, ma
 
 ### CSV
 **(connectorType: 'document', provider: 'csv')**
+Arbitrary Comma-Separated Values datasets 
 
 ### JSON
 **(connectorType: 'document', provider: 'json')**
@@ -327,7 +327,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 '{
     "connectorType":"rest",
     "provider":"nexgddp",
-    "tableName": "historical/ACCESS1_0/prmaxday"
+	"tableName": "historical/ACCESS1_0"
     "application":[
      "rw"
     ],
@@ -558,7 +558,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2f
 -H "Content-Type: application/json" -d \
 '{
   "dataset": {
-    "dataset_url": "/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010",
+    "datasetUrl": "/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010",
     "application": [
       "your",
       "apps"
