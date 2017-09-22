@@ -123,32 +123,30 @@
 
           <h1 id="authentication">Authentication</h1>
 
-<p>The RW API uses JWT <a href="https://tools.ietf.org/html/rfc7519">(JSON Web Tokens)</a> to identify and authenticate its users.</p>
+<p>The RW API uses JWT <a href="https://tools.ietf.org/html/rfc7519">(JSON Web Tokens)</a> to identify and authenticate its users. This token must be provided inside an <code class="prettyprint">Authorization</code> header, with the form <code class="prettyprint">Bearer: &lt;token&gt;</code>.</p>
 
-<h2 id="how-to-generate-your-own-token">How to generate your own token</h2>
+<h2 id="how-to-generate-your-private-token">How to generate your private token</h2>
 
-<p>To generate your own token, follow the next steps:</p>
+<p>To generate your own token, perform the following steps:</p>
 
 <ol>
-<li>Navigate to <a href="http://ui.resourcewatch.org/">http://ui.resourcewatch.org/</a>
-If you aren&rsquo;t logged in yet, the application will redirect you to the login page.
-You will see:
+<li>Navigate to <a href="http://ui.resourcewatch.org/">http://ui.resourcewatch.org/</a>. If you aren&rsquo;t logged in yet, the application will redirect you to the login page. You will see the login page:
 <img src="images/authentication/login.png" alt="Control Tower login page" /></li>
 </ol>
 
 <p>You can login with your WRI credentials (email and password) or with other auth providers (a Google, Facebook, or Twitter account). If you can&rsquo;t remember your password (don&rsquo;t worry! it happens to everyone!) you can reset your password clicking on &lsquo;Recover password&rsquo;.</p>
 
 <ol>
-<li><p>After logging in you will be redirected to the Control Tower application and you will see:
+<li><p>After logging in you will be redirected to the Control Tower application and you will see its front page:
 <img src="images/authentication/control-tower.png" alt="Control Tower Dashboard" /></p></li>
-<li><p>To obtain your token, click in the Profile menu item and you will see:
+<li><p>To obtain your token, click in the Profile menu item and you will see the token:
 <img src="images/authentication/profile.png" alt="Control Tower Profile" /></p></li>
 <li><p>Copy your token clicking the Copy button. Remember to add the header <code class="prettyprint">Authorization: Bearer: &lt;yourToken&gt;</code> to any API call to authenticate yourself.</p></li>
 </ol>
 
 <h2 id="how-to-create-a-new-user">How to create a new user</h2>
 
-<p>To create a new user make the request on the right:</p>
+<p>To create a new user make a request like that on the sidebar:</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/auth/user <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -162,13 +160,13 @@ You will see:
     }
 }'</span>
 </code></pre>
-<p>There are three allowed roles: USER, MANAGER and ADMIN. The &#39;apps&rsquo; field only permits applications that are powered by the API: &#39;rw&rsquo;, &#39;gfw&rsquo;, &#39;prep&rsquo;, etc.</p>
+<p>There are three allowed roles: <code class="prettyprint">USER</code>, <code class="prettyprint">MANAGER</code> and <code class="prettyprint">ADMIN</code>. The &#39;apps&rsquo; field only permits applications that are powered by the API: <code class="prettyprint">rw</code>, <code class="prettyprint">gfw</code>, <code class="prettyprint">prep</code>, etc.</p>
 
           <h1 id="dataset">Dataset</h1>
 
 <h2 id="what-is-a-dataset">What is a Dataset?</h2>
 
-<p>A data set represents the raw data. We support four dataset types with different providers. It&rsquo;s also possible to have the same dataset on different applications.</p>
+<p>A dataset abstracts the data that can be obtained from several sources into a common interface. There are several data providers supported in the API, and each of those has a different provider. Datasets can belong to several applications.</p>
 
 <h2 id="supported-dataset-sources">Supported dataset sources</h2>
 
@@ -190,7 +188,7 @@ ArcGIS Online is a Complete, Cloud-Based Mapping Platform.</p>
 <a href="https://earthengine.google.com/"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" class="logo-third"/></a>
 Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth&rsquo;s surface.</p>
 
-<h3 id="nexgddp">NexGDDP</h3>
+<h3 id="nex-gddp">NEX-GDDP</h3>
 
 <p><strong>(connectorType: &#39;rest&rsquo;, provider: &#39;nexgddp&rsquo;)</strong>
 The NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).</p>
@@ -202,7 +200,8 @@ Rasdaman (&#39;raster data manager&rsquo;) is a database with capabilities for s
 
 <h3 id="csv">CSV</h3>
 
-<p><strong>(connectorType: &#39;document&rsquo;, provider: &#39;csv&rsquo;)</strong></p>
+<p><strong>(connectorType: &#39;document&rsquo;, provider: &#39;csv&rsquo;)</strong>
+Arbitrary Comma-Separated Values datasets </p>
 
 <h3 id="json">JSON</h3>
 
@@ -599,7 +598,7 @@ Remember — the response is in JSONApi format
 <span class="s1">'{
     "connectorType":"rest",
     "provider":"nexgddp",
-    "tableName": "historical/ACCESS1_0/prmaxday"
+    "tableName": "historical/ACCESS1_0"
     "application":[
      "rw"
     ],
@@ -903,7 +902,7 @@ It accepts the same parameters as the <em>create dataset</em> endpoint, and you 
 -H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
 <span class="s1">'{
   "dataset": {
-    "dataset_url": "/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010",
+    "datasetUrl": "/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010",
     "application": [
       "your",
       "apps"
@@ -4445,6 +4444,13 @@ Remember — All endpoint of geostore don&rsquo;t need that you are authenticate
 curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
 </code></p>
 </blockquote>
+
+<h3 id="country-list">Country list</h3>
+
+<p>A list of countries can be obtained from this endpoint.
+<code class="prettyprint">shell
+curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
+</code></p>
 
 <h3 id="from-country-and-region">From country and region</h3>
 
