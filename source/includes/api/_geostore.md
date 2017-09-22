@@ -7,7 +7,7 @@ Geostore is a geojson database. You can save your geojson or obtain geojson by c
 Geostore object contains the following fields:
 
 
-| Field             | Description                                                       | Type
+|	 Field             | Description                                                       | Type
 | ------------------|:-----------------------------------------:                        | -----:
 | id                | Id of the geostore                                                | Text
 | geojson           | Geojson with the geometry                                         | Object
@@ -202,6 +202,13 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/<ISO3>
 > Real example obtaining the geostore of Spain
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
+```
+
+### Country list
+
+A list of countries can be obtained from this endpoint.
+```shell
+curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
 ```
 
 ### From country and region
