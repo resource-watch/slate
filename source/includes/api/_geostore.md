@@ -212,6 +212,26 @@ A list of countries can be obtained from this endpoint.
 curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
 ```
 
+> Example response
+
+```json
+{
+	"data": [{
+		"geostoreId": "35a6d982388ee5c4e141c2bceac3fb72",
+		"iso": "ESP",
+		"name": "Spain"
+	}, {
+		"geostoreId": "8f77fe62cf15d5098ba0ee11c5126aa6",
+		"iso": "FRA",
+		"name": "France"
+	}, {
+		"geostoreId": "1d568c183033da6c17cc28c4aecf1bcf",
+		"iso": "cod",
+		"name": "Democratic Republic of the Congo"
+	}]
+}
+```
+
 ### From country and region
 
 If you need obtain the geostore of a region in a country, you can obtain it with the ISO3 and region code:
