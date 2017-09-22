@@ -207,6 +207,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
 ### Country list
 
 A list of countries can be obtained from this endpoint.
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
 ```
