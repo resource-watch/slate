@@ -4450,6 +4450,25 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
 <p>A list of countries can be obtained from this endpoint.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
 </code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+        </span><span class="nt">"geostoreId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"35a6d982388ee5c4e141c2bceac3fb72"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ESP"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Spain"</span><span class="w">
+    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"geostoreId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8f77fe62cf15d5098ba0ee11c5126aa6"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FRA"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"France"</span><span class="w">
+    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"geostoreId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1d568c183033da6c17cc28c4aecf1bcf"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cod"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Democratic Republic of the Congo"</span><span class="w">
+    </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h3 id="from-country-and-region">From country and region</h3>
 
 <p>If you need obtain the geostore of a region in a country, you can obtain it with the ISO3 and region code:</p>
