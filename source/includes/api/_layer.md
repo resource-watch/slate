@@ -1,26 +1,27 @@
 # Layer
 
 ## What is a Layer?
-Is a graphic representation of a Dataset's data.
+
+Is a geographical representation of a Dataset's data.
 
 Layer contains the next fields:
 
-| Field             | Description           | Type
-| -------------     |:-------------:| -----:|
-| userId            | Id of the owner                                         | Text
-| application       | Application to which the dataset belongs                | Array
-| iso               | The isos to which the dataset belongs                       | Array
-| slug              | Unique identifier of the layer                          | Text
-| name              | Name of the layer                                       | Url
-| description       | Description of the layer                                | Array
-| dataset           | UuId of the dataset that the layer belongs              | Text
-| layerConfig       | Custom configuration                                    | Object
-| legendConfig      | Custom configuration                                    | Object
-| applicationConfig | Custom configuration                                    | Object
-| staticImageConfig | Custom configuration                                    | Object
-| default           | If it's a default layer for the dataset that it belongs | Boolean
-| published         | Is the layer published?                                 | Boolean
-
+Field             |                                     Description                                      |    Type
+----------------- | :----------------------------------------------------------------------------------: | ------:
+userId            |                                   Id of the owner                                    |    Text
+application       |                       Application to which the dataset belongs                       |   Array
+iso               |                        The isos to which the dataset belongs                         |   Array
+slug              |                            Unique identifier of the layer                            |    Text
+name              |                                  Name of the layer                                   |     Url
+description       |                               Description of the layer                               |   Array
+dataset           |                      UuId of the dataset that the layer belongs                      |    Text
+layerConfig       |                                 Custom configuration                                 |  Object
+legendConfig      |                                 Custom configuration                                 |  Object
+applicationConfig |                                 Custom configuration                                 |  Object
+staticImageConfig |                                 Custom configuration                                 |  Object
+default           |               If it's a default layer for the dataset that it belongs                | Boolean
+published         |                               Is the layer published?                                | Boolean
+env               | environment in witch the layer was published, one of `preproduction` or `production` |    Text
 
 ## How obtain all layers
 
@@ -80,7 +81,7 @@ Remember — the response is jsonapi format
             }
           },
           "applicationConfig": {},
-		  "staticImageConfig": {}
+          "staticImageConfig": {}
         }
       }
    ],
@@ -98,15 +99,15 @@ Remember — the response is jsonapi format
 
 Available filters:
 
-| Field         | Description           | Type
-| ------------- |:-------------:| -----:|
-| name          | Filter the layers whose name contains the filter text    | Text
-| dataset       | Filter the layers by dataset uuid                        | Text
-| sort          | Sort json response by specific attributes                | Text
-| status        | Filter layers on status (pending, saved, failed, all)    | Text
-| published     | Filter layers on published status (true, false)          | Boolean
-| app           | Filter layers on application (prep, gfw, etc..)          | Text
-
+Field     |                                     Description                                      |    Type
+--------- | :----------------------------------------------------------------------------------: | ------:
+name      |                Filter the layers whose name contains the filter text                 |    Text
+dataset   |                          Filter the layers by dataset uuid                           |    Text
+sort      |                      Sort json response by specific attributes                       |    Text
+status    |                Filter layers on status (pending, saved, failed, all)                 |    Text
+published |                   Filter layers on published status (true, false)                    | Boolean
+app       |                   Filter layers on application (prep, gfw, etc..)                    |    Text
+env       | environment in witch the layer was published, one of `preproduction` or `production` |    Text
 
 > Return the layers filtered by those whose name contains emissions
 
@@ -147,10 +148,10 @@ curl -X GET https://api.resourcewatch.org/v1/layer?app=rw
 
 ### Pagination params
 
-| Field           | Description                | Type
-| -------------   |:-------------:| -----:|
-| page[size]      | Number elements per page   | Number
-| page[number]    | Number of page             | Number
+Field        |       Description        |   Type
+------------ | :----------------------: | -----:
+page[size]   | Number elements per page | Number
+page[number] |      Number of page      | Number
 
 > Return the layers of page 2 with 5 elements per page
 
@@ -216,7 +217,7 @@ Remember — the response is jsonapi format
         }
       },
       "applicationConfig": {},
-	  "staticImageConfig": {}
+      "staticImageConfig": {}
     }
   },
   "meta": {
@@ -232,19 +233,18 @@ Remember — the response is jsonapi format
 
 To create a layer, you need to define all of the required fields in the request body. The fields that compose a layer are:
 
-| Field             | Description                               | Type    | Values                                          | Required |
-| ------------------|:-----------------------------------------:| -------:| ---------------------------------------:        |  -------:|
-| name              | Name of the layer                         | Text    | Any Text                                        | Yes
-| description       | Description of the dataset                | Text    | Any text                                        | No
-| application       | Application to which the layer belongs    | Array   | gfw, forest-atlas, rw, prep, aqueduct, data4sdg | Yes
-| layerConfig       | Custom configuration                      | Object  | Valid object                                    | No
-| legendConfig      | Custom configuration                      | Object  | Valid object                                    | No
-| applicationConfig | Custom configuration                      | Object  | Valid object                                    | No
-| staticImageConfig | Custom configuration                      | Object  | Valid object                                    | No
-| iso               | Isos to which the layer belongs           | Array   | BRA, ES                                         | No
-| status            | Status of the Layer                       | Number  | 1                                               | No
-| dataset           | UuId of the dataset                       | Text    | Uuid of Dataset                                 | No
-
+Field             |                                                                         Description                                                                         |   Type |                                          Values | Required
+----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------: | -----: | ----------------------------------------------: | -------:
+name              |                                                                      Name of the layer                                                                      |   Text |                                        Any Text |      Yes
+description       |                                                                 Description of the dataset                                                                  |   Text |                                        Any text |       No
+application       |                                                           Application to which the layer belongs                                                            |  Array | gfw, forest-atlas, rw, prep, aqueduct, data4sdg |      Yes
+layerConfig       | Custom configuration, [rw definition example](https://github.com/resource-watch/notebooks/blob/develop/ResourceWatch/Api_definition/layer_definition.ipynb) | Object |                                    Valid object |       No
+legendConfig      |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
+applicationConfig |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
+staticImageConfig |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
+iso               |                                                               Isos to which the layer belongs                                                               |  Array |                                         BRA, ES |       No
+status            |                                                                     Status of the Layer                                                                     | Number |                                               1 |       No
+dataset           |                                                                     UuId of the dataset                                                                     |   Text |                                 Uuid of Dataset |       No
 
 > To create a layer, you have to do a POST request with the following body:
 
@@ -267,19 +267,18 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer \
 
 To update a layer, you need to define all of the required fields in the request body. The fields that compose a layer are:
 
-| Field             | Description                               | Type    | Values                                          | Required |
-| ------------------|:-----------------------------------------:| -------:| ---------------------------------------:        |  -------:|
-| name              | Name of the layer                         | Text    | Any Text                                        | Yes
-| description       | Description of the dataset                | Text    | Any text                                        | No
-| application       | Application to which the layer belongs    | Array   | gfw, forest-atlas, rw, prep, aqueduct, data4sdg | Yes
-| layerConfig       | Custom configuration                      | Object  | Valid object                                    | No
-| legendConfig      | Custom configuration                      | Object  | Valid object                                    | No
-| applicationConfig | Custom configuration                      | Object  | Valid object                                    | No
-| staticImageConfig | Custom configuration                      | Object  | Valid object                                    | No
-| iso               | The isos to which the layer belongs           | Array   | BRA, ES                                         | No
-| status            | Status of the Layer                       | Number  | 1                                               | No
-| dataset           | UuId of the dataset                       | Text    | Uuid of Dataset                                 | No
-
+Field             |              Description               |   Type |                                          Values | Required
+----------------- | :------------------------------------: | -----: | ----------------------------------------------: | -------:
+name              |           Name of the layer            |   Text |                                        Any Text |      Yes
+description       |       Description of the dataset       |   Text |                                        Any text |       No
+application       | Application to which the layer belongs |  Array | gfw, forest-atlas, rw, prep, aqueduct, data4sdg |      Yes
+layerConfig       |          Custom configuration          | Object |                                    Valid object |       No
+legendConfig      |          Custom configuration          | Object |                                    Valid object |       No
+applicationConfig |          Custom configuration          | Object |                                    Valid object |       No
+staticImageConfig |          Custom configuration          | Object |                                    Valid object |       No
+iso               |  The isos to which the layer belongs   |  Array |                                         BRA, ES |       No
+status            |          Status of the Layer           | Number |                                               1 |       No
+dataset           |          UuId of the dataset           |   Text |                                 Uuid of Dataset |       No
 
 > To create a layer, you have to do a POST requestwith the following body:
 

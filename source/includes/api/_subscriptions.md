@@ -1,28 +1,24 @@
 # Subscriptions
 
+Subscription represents to wich datasets and analyisis a user can have access to.
+
 <aside class="notice">
 Remember — All subscription endpoints need to be authenticated.
 </aside>
 
 ## Create Subscription
 
-
-| Field             | Description                                                                     | Type
-| ------------------|:-----------------------------------------:                                      | -----:
-| name              | Name                                                                            | Text
-| application       | Application of the subscription                                                 | gfw, rw, prep
-| language          | Language of the subscriptions (used to select the email template)          | en, es, fr, pt, zh
-| resource          | This field contains the subscription is of type email or hook                | Object
-| -- type           | Type                                                                            | EMAIL or URL
-| -- content        | Email or url                                                                    | Text
-| datasets          | Array of datasets of the subscription                                           | Array<Text>
-| datasetsQuery     | Subscriptions to subscribable datasets                                         | Array<Object>
-| -- id             | Id of dataset                                                                   | ObjectId
-| -- type           | Type of subscription defined in the dataset                                     | Text
-| -- params         | Geographic area of the subscription                                             | Object
-
-You only require datasets or datasetsQuery, not both.
-
+Field         |                            Description                            |               Type
+------------- | :---------------------------------------------------------------: | -----------------:
+name          |                               Name                                |               Text
+application   |                  Application of the subscription                  |      gfw, rw, prep
+language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh
+resource      |   This field contains the subscription is of type email or hook   |             Object
+-- type       |                               Type                                |       EMAIL or URL
+-- content    |                           Email or url                            |               Text
+datasets      |               Array of datasets of the subscription               |              Array
+datasetsQuery |              Subscriptions to subscribable datasets               |              Array
+-- id         |                           Id of dataset                           |   ObjectId -- type | Type of subscription defined in the dataset | Text -- params | Geographic area of the subscription | Object You only require datasets or datasetsQuery, not both.
 
 <aside class="notice">
 Remember — All subscriptions are created unconfirmed and the process sends a message to the email of the subscription to confirm it.
@@ -30,13 +26,12 @@ Remember — All subscriptions are created unconfirmed and the process sends a m
 
 You can create a subscription with 6 different params:
 
-### With a area
+### With an area
 
-| Field             | Description                                                                     | Type
-| ------------------|:-----------------------------------------:                                      | -----:
-| params            | Geographic area of the subscription                                             | Object
-| -- area           | Id of area object                                                               | Text (ObjectId)
-
+Field   |             Description             |            Type
+------- | :---------------------------------: | --------------:
+params  | Geographic area of the subscription |          Object
+-- area |          Id of area object          | Text (ObjectId)
 
 > To create a Subscription, you have to do a POST request with the following body:
 
@@ -61,12 +56,11 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 
 ### From country
 
-| Field             | Description                                                                     | Type
-| ------------------|:-----------------------------------------:                                      | -----:
-| params            | Geographic area of the subscription                                             | Object
-| -- iso            | Country or region information                                                   | Object
-| ---- country      | Iso code                                                                        | Text
-
+Field        |             Description             |   Type
+------------ | :---------------------------------: | -----:
+params       | Geographic area of the subscription | Object
+-- iso       |    Country or region information    | Object
+---- country |              Iso code               |   Text
 
 > To create a Subscription, you have to do a POST with the following body:
 
@@ -93,13 +87,12 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 
 ### From country and region
 
-| Field             | Description                                                                     | Type
-| ------------------|:-----------------------------------------:                                      | -----:
-| params            | Geographic area of the subscription                                             | Object
-| -- iso            | Country or region information                                                   | Object
-| ---- country      | Iso code                                                                        | Text
-| ---- region       | Region code                                                                     | Number
-
+Field        |             Description             |   Type
+------------ | :---------------------------------: | -----:
+params       | Geographic area of the subscription | Object
+-- iso       |    Country or region information    | Object
+---- country |              Iso code               |   Text
+---- region  |             Region code             | Number
 
 > To create a Subscription, you have to do a POST request with the following body:
 
@@ -127,11 +120,10 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 
 ### From World Database on Protected Areas (wdpa)
 
-| Field             | Description                                                                     | Type
-| ------------------|:-----------------------------------------:                                      | -----:
-| params            | Geographic area of the subscription                                             | Object
-| -- wdpaid         | id of protected area                                                            | Number
-
+Field     |             Description             |   Type
+--------- | :---------------------------------: | -----:
+params    | Geographic area of the subscription | Object
+-- wdpaid |        id of protected area         | Number
 
 > To create a Subscription, you have to do a POST request with the following body:
 
@@ -156,12 +148,11 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 
 ### From land use areas
 
-
-| Field             | Description                                                                     | Type
-| ------------------|:-----------------------------------------:                                      | -----:
-| params            | Geographic area of the subscription                                             | Object
-| -- use            | Use name                                                                        | Text
-| -- useid          | Id use                                                                          | Number
+Field    |             Description             |   Type
+-------- | :---------------------------------: | -----:
+params   | Geographic area of the subscription | Object
+-- use   |              Use name               |   Text
+-- useid |               Id use                | Number
 
 > To create a Subscription, you have to do a POST request with the following body:
 
@@ -209,7 +200,6 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
   }'
 ```
 
-
 #### Mining
 
 ```shell
@@ -254,7 +244,6 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
   }'
 ```
 
-
 #### Congo Basin logging roads
 
 ```shell
@@ -279,12 +268,10 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 
 ### From geostore
 
-| Field             | Description                                                                     | Type
-| ------------------|:-----------------------------------------:                                      | -----:
-| params            | Geographic area of the subscription                                             | Object
-| -- geostore       | Id of geostore                                                                  | Text
-
-
+Field       |             Description             |   Type
+----------- | :---------------------------------: | -----:
+params      | Geographic area of the subscription | Object
+-- geostore |           Id of geostore            |   Text
 
 > To create a Subscription, you have to do a POST request with the following body:
 
@@ -367,8 +354,8 @@ Remember — the response is in JSONApi format.
       }
    ]
 }
-
 ```
+
 ## Resend confirmation
 
 To resend the confirmation:
@@ -385,11 +372,9 @@ To modify a subscription:
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
 -H "Authorization: Bearer <your-token>"
-
 ```
 
 With the same body that creates the subscription.
-
 
 ## Unsubscribe
 

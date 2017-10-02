@@ -1,8 +1,10 @@
 # Jiminy
 
+[Jiminy](https://github.com/vizzuality/jiminy) is a lightweight library that powers this api endopoint whose aim is to infer which type of charts can be obtained from a dataset.
+
 To get the jiminy information from a query, you can do the following request:
 
-**/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number>**
+**`/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number>`**
 
 In order to retrieve the mentioned information the name of the columns that you want to obtain the data from are required.
 
@@ -11,7 +13,6 @@ Remember — It is mandatory to set a limit value. If you do not set it and the 
 </aside>
 
 > To obtain jiminy information, you have to do a GET with the following query params:
-
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/jiminy?sql=select <columns> from <dataset.slug or dataset.id> \
@@ -28,7 +29,6 @@ curl -X POST https://api.resourcewatch.org/v1/jiminy \
   }'
 ```
 
-
 > Real example
 
 ```shell
@@ -38,7 +38,7 @@ curl -X GET https://api.resourcewatch.org/v1/jiminy?sql=select satellite, confid
 
 The response will be 200 if the query is correct:
 
-````json
+```json
 
 {
   "data": {
@@ -107,6 +107,4 @@ The response will be 200 if the query is correct:
     }
   }
 }
-
-
-````
+```

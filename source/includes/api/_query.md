@@ -6,7 +6,7 @@ It is possible to refer to the dataset using its table name, its slug or just it
 
 ```shell
 curl -i -H 'Authorization: Bearer your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/<dataset_id>/' -d '{
-	"sql": "select * from <dataset_id> limit 10"
+    "sql": "select * from <dataset_id> limit 10"
 }
 '
 ```
@@ -50,6 +50,14 @@ Select * from table where st_intersects(st_setsrid(st_geomfromgeojson(‘{}’),
 
 select a, count(int) from table group by a
 select count(*) FROM tablename group by ST_GeoHash(the_geom, 8)
+
+### Raster queries available
+
+SELECT ST_METADATA(rast) from table
+SELECT ST_BANDMETADATA(rast, occurrence) from table
+SELECT ST_SUMMARYSTATS() from table
+SELECT ST_HISTOGRAM(rast, 1, auto, true) from table
+SELECT ST_valueCount(rast, 1, true) from table
 ```
 
 ## Rasdaman queries
@@ -62,7 +70,7 @@ In order to run a query directly, POST your query in the wcps attribute to the e
 
 ```shell
 curl -i -H 'Authorization: Bearer your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/' -d '{
-	"wcps": "FOR c in (nightlights) return 1"
+    "wcps": "FOR c in (nightlights) return 1"
 }
 '
 ```
@@ -71,7 +79,7 @@ The result of a WCPS query can have varying dimensionality, depending on the axe
 
 ```
 curl -i -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/' -d '{
-	"wcps":  "for cov in (nightlights) return encode( cov[ Long(-1:1), Lat(-1:1)], \"CSV\")"
+    "wcps":  "for cov in (nightlights) return encode( cov[ Long(-1:1), Lat(-1:1)], \"CSV\")"
 }
 '
 ```
@@ -80,13 +88,14 @@ For zonal stats, use the 'stats' endpoint. The geostore will be used to generate
 
 ```shell
 curl -i -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/stats/e9c3a94d-6b1c-4513-a745-6acdff53cfc9' -d '{
-	"geostore": "70ba01daaa803aea2eeff502c845bcef",
-	"additionalAxes": {
-		"ansi": "1950-03-03"
-	}
+    "geostore": "70ba01daaa803aea2eeff502c845bcef",
+    "additionalAxes": {
+        "ansi": "1950-03-03"
+    }
 }
 '
 ```
+
 > Response
 
 ```json

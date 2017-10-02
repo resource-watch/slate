@@ -1,36 +1,35 @@
 # Widget
 
-
 ## What is a Widget?
-It is a graphic representation of a Dataset's data. Most of them are defined with [Vega grammar](#what-is-vega).
+
+It is a graphic representation of a Dataset's data. Most of them are defined with [Vega grammar](#what-is-vega) but also we can find other custom definitions. Here there is [RW widgets definitions](https://github.com/resource-watch/notebooks/blob/develop/ResourceWatch/Api_definition/widget_definition.ipynb).
 
 Widgets contains the following fields:
 
-| Field         | Description           | Type
-| ------------- |:-------------:| -----:|
-| userId        | Id of the owner                                           | Text
-| application   | Application to which the dataset belongs                  | Array
-| slug          | Unique identifier of the widget                           | Text
-| name          | Name of the widget                                        | Url
-| description   | Description of the widget                                 | Array
-| source        | Publisher of the original code                            | Text
-| sourceUrl     | Link to publisher page                                    | Url
-| layerId       | UuId of the relationship with layer                       | String
-| dataset       | UuId of the dataset that the widget belongs               | Text
-| authors       | Name of the authors                                       | Text
-| queryUrl      | Url with the data of the chart shows                      | Text
-| widgetConfig  | Vega configuration                                        | Object
-| template      | If it's a template (base schema to create other widgets)  | Boolean
-| default       | If it's a default widget for the dataset that it belongs  | Boolean
-| status        | Status of the Widget                                      | Text
-| published     | If it's available to use                                  | Text
-| verified      | If it's verified by other user                            | Text
-
+Field        |                         Description                          |    Type
+------------ | :----------------------------------------------------------: | ------:
+userId       |                       Id of the owner                        |    Text
+application  |           Application to which the dataset belongs           |   Array
+slug         |               Unique identifier of the widget                |    Text
+name         |                      Name of the widget                      |     Url
+description  |                  Description of the widget                   |   Array
+source       |                Publisher of the original code                |    Text
+sourceUrl    |                    Link to publisher page                    |     Url
+layerId      |             UuId of the relationship with layer              |  String
+dataset      |         UuId of the dataset that the widget belongs          |    Text
+authors      |                     Name of the authors                      |    Text
+queryUrl     |             Url with the data of the chart shows             |    Text
+widgetConfig |                     Custom configuration                     |  Object
+template     |   If it's a template (base schema to create other widgets)   | Boolean
+default      |   If it's a default widget for the dataset that it belongs   | Boolean
+status       |                     Status of the Widget                     |    Text
+published    |                   If it's available to use                   |    Text
+verified     |                If it's verified by other user                |    Text
+env          | environment in can be one of `production` or `preproduction` |    Text
 
 ### What is Vega?
 
-Vega is a visualization grammar, a declarative format for creating, saving and sharing interactive visualization designs. This wiki contains documentation and learning materials for getting up and running with Vega.
-[More info](https://github.com/vega/vega/wiki)
+Vega is a visualization grammar, a declarative format for creating, saving and sharing interactive visualization designs. This wiki contains documentation and learning materials for getting up and running with Vega. [More info](https://github.com/vega/vega/wiki)
 
 ## How obtain all widgets
 
@@ -91,18 +90,18 @@ Remember — the response is jsonapi format
 
 Available filters:
 
-| Field         | Description           | Type
-| ------------- |:-------------:| -----:|
-| name          | Filter the widgets whose name contains the filter text    | Text
-| dataset       | Filter the widgets by dataset uuid                        | Text
-| sort          | Sort json response by specific attributes                 | Text
-| status        | Filter widgets on status (pending, saved, failed, all)    | Text
-| published     | Filter widgets on published status (true, false)          | Boolean
-| verified      | Filter by verified status (true, false)                    | Boolean
-| template      | Filter by template status (true, false)                    | Boolean
-| default       | Filter by default status (true, false)                     | Boolean
-| app           | Filter widgets on application (prep, gfw, etc..)          | Text
-
+Field     |                         Description                          |    Type
+--------- | :----------------------------------------------------------: | ------:
+name      |    Filter the widgets whose name contains the filter text    |    Text
+dataset   |              Filter the widgets by dataset uuid              |    Text
+sort      |          Sort json response by specific attributes           |    Text
+status    |    Filter widgets on status (pending, saved, failed, all)    |    Text
+published |       Filter widgets on published status (true, false)       | Boolean
+verified  |           Filter by verified status (true, false)            | Boolean
+template  |           Filter by template status (true, false)            | Boolean
+default   |            Filter by default status (true, false)            | Boolean
+app       |       Filter widgets on application (prep, gfw, etc..)       |    Text
+env       | environment in can be one of `production` or `preproduction` |    Text
 
 > Return the widgets filtered whose name contains glad
 
@@ -161,10 +160,10 @@ curl -X GET https://api.resourcewatch.org/v1/widget?app=rw
 
 ### Pagination params
 
-| Field           | Description                | Type
-| -------------   |:-------------:| -----:|
-| page[size]      | Number elements per page   | Number
-| page[number]    | Number of page             | Number
+Field        |       Description        |   Type
+------------ | :----------------------: | -----:
+page[size]   | Number elements per page | Number
+page[number] |      Number of page      | Number
 
 > Return the widgets from page 2 with 5 elements per page
 
@@ -1015,24 +1014,23 @@ Remember — the response is jsonapi format
 
 To create a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
 
-| Field             | Description                               | Type    | Values                                          | Required |
-| ------------------|:-----------------------------------------:| -------:| ---------------------------------------:        |  -------:|
-| name              | Name of the widget                        | Text    | Any Text                                        | Yes
-| description       | Description of the dataset                | Text    | Any text                                        | No
-| source            | Publisher of the original code            | Text    | Any text                                        | No
-| sourceUrl         | Link to publisher page                    | Text    | Any url                                         | No
-| application       | Application to which the widget belongs   | Array   | gfw, forest-atlas, rw, prep, aqueduct, data4sdg | Yes
-| authors           | Name of the authors                       | Text    | Any text                                        | No
-| queryUrl          | Url with the data of the chart shows      | Text    | Any valid query                                 | No
-| widgetConfig      | Vega configuration                        | Object  | Valid object                                    | No
-| status            | Status of the Widget                      | Number  | 1                                               | No
-| published         | If it's available to use                  | Boolean | true - false                                    | No
-| verified          | If it's verified by other user            | Boolean | true - false                                    | No
-| template          | If it's a template                        | Boolean | true - false                                    | No
-| default           | If it's default for dataset               | Boolean | true - false                                    | No
-| layerId           | UuId of the relationship with layer       | Text    | Uuid of layer                                   | No
-| dataset           | UuId of the dataset                       | Text    | Uuid of Dataset                                 | No
-
+Field        |               Description               |    Type |                                          Values | Required
+------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
+name         |           Name of the widget            |    Text |                                        Any Text |      Yes
+description  |       Description of the dataset        |    Text |                                        Any text |       No
+source       |     Publisher of the original code      |    Text |                                        Any text |       No
+sourceUrl    |         Link to publisher page          |    Text |                                         Any url |       No
+application  | Application to which the widget belongs |   Array | gfw, forest-atlas, rw, prep, aqueduct, data4sdg |      Yes
+authors      |           Name of the authors           |    Text |                                        Any text |       No
+queryUrl     |  Url with the data of the chart shows   |    Text |                                 Any valid query |       No
+widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
+status       |          Status of the Widget           |  Number |                                               1 |       No
+published    |        If it's available to use         | Boolean |                                    true - false |       No
+verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
+template     |           If it's a template            | Boolean |                                    true - false |       No
+default      |       If it's default for dataset       | Boolean |                                    true - false |       No
+layerId      |   UuId of the relationship with layer   |    Text |                                   Uuid of layer |       No
+dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
 
 > To create a widget, you have to do a POST request with the following body:
 
@@ -1056,24 +1054,24 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget \
 
 To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
 
-| Field             | Description                               | Type    | Values                                          | Required |
-| ------------------|:-----------------------------------------:| -------:| ---------------------------------------:        |  -------:|
-| name              | Name of the widget                        | Text    | Any Text                                        | Yes
-| description       | Description of the dataset                | Text    | Any text                                        | No
-| source            | Publisher of the original code            | Text    | Any text                                        | No
-| sourceUrl         | Link to publisher page                    | Text    | Any url                                         | No
-| application       | Application to which the widget belongs   | Array   | gfw, forest-atlas, rw, prep, aqueduct, data4sdg | Yes
-| authors           | Name of the authors                       | Text    | Any text                                        | No
-| queryUrl          | Url with the data of the chart shows      | Text    | Any valid query                                 | No
-| widgetConfig      | Vega configuration                        | Object  | Valid object                                    | No
-| status            | Status of the Widget                      | Number  | 1                                               | No
-| published         | If it's available to use                  | Boolean | true - false                                    | No
-| verified          | If it's verified by other user            | Boolean | true - false                                    | No
-| template          | If it's a template                        | Boolean | true - false                                    | No
-| default           | If it's default for dataset               | Boolean | true - false                                    | No
-| layerId           | UuId of the relationship with layer       | Text    | Uuid of layer                                   | No
-| dataset           | UuId of the dataset                       | Text    | Uuid of Dataset                                 | No
-
+Field        |               Description               |    Type |                                          Values | Required
+------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
+name         |           Name of the widget            |    Text |                                        Any Text |      Yes
+description  |       Description of the dataset        |    Text |                                        Any text |       No
+source       |     Publisher of the original code      |    Text |                                        Any text |       No
+sourceUrl    |         Link to publisher page          |    Text |                                         Any url |       No
+application  | Application to which the widget belongs |   Array | gfw, forest-atlas, rw, prep, aqueduct, data4sdg |      Yes
+authors      |           Name of the authors           |    Text |                                        Any text |       No
+queryUrl     |  Url with the data of the chart shows   |    Text |                                 Any valid query |       No
+widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
+status       |          Status of the Widget           |  Number |                                               1 |       No
+published    |        If it's available to use         | Boolean |                                    true - false |       No
+verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
+template     |           If it's a template            | Boolean |                                    true - false |       No
+default      |       If it's default for dataset       | Boolean |                                    true - false |       No
+layerId      |   UuId of the relationship with layer   |    Text |                                   Uuid of layer |       No
+dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
+env          |               environment               |    Text |                 `production` or `preproduction` |      Yes
 
 > To create a widget, you have to do a POST request with the following body:
 
