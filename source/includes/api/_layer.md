@@ -2,9 +2,9 @@
 
 ## What is a Layer?
 
-Is a geographical representation of a Dataset's data.
+A layer is a geographical representation of a Dataset's data.
 
-Layer contains the next fields:
+Layer contains the following fields:
 
 Field             |                                     Description                                      |    Type
 ----------------- | :----------------------------------------------------------------------------------: | ------:
@@ -107,7 +107,7 @@ sort      |                      Sort json response by specific attributes      
 status    |                Filter layers on status (pending, saved, failed, all)                 |    Text
 published |                   Filter layers on published status (true, false)                    | Boolean
 app       |                   Filter layers on application (prep, gfw, etc..)                    |    Text
-env       | environment in witch the layer was published, one of `preproduction` or `production` |    Text
+env       | Environment in witch the layer was published, one of `preproduction` or `production` |    Text
 
 > Return the layers filtered by those whose name contains emissions
 
