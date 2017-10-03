@@ -2,9 +2,9 @@
 
 ## What is a Widget?
 
-It is a graphic representation of a Dataset's data. Most of them are defined with [Vega grammar](#what-is-vega) but also we can find other custom definitions. Here there is [RW widgets definitions](https://github.com/resource-watch/notebooks/blob/develop/ResourceWatch/Api_definition/widget_definition.ipynb).
+A widget is a graphic representation of a Dataset's data. Most of them are defined with [Vega grammar](#what-is-vega) but we can also find other custom definitions. Here are the [RW widgets definitions](https://github.com/resource-watch/notebooks/blob/develop/ResourceWatch/Api_definition/widget_definition.ipynb).
 
-Widgets contains the following fields:
+Widgets contain the following fields:
 
 Field        |                         Description                          |    Type
 ------------ | :----------------------------------------------------------: | ------:
@@ -25,11 +25,11 @@ default      |   If it's a default widget for the dataset that it belongs   | Bo
 status       |                     Status of the Widget                     |    Text
 published    |                   If it's available to use                   |    Text
 verified     |                If it's verified by other user                |    Text
-env          | environment in can be one of `production` or `preproduction` |    Text
+env          |  Environment can be one of `production` or `preproduction`   |    Text
 
 ### What is Vega?
 
-Vega is a visualization grammar, a declarative format for creating, saving and sharing interactive visualization designs. This wiki contains documentation and learning materials for getting up and running with Vega. [More info](https://github.com/vega/vega/wiki)
+Vega is a visualization grammar; a declarative format for creating, saving and sharing interactive visualization designs. This wiki contains documentation and learning materials for getting up and running with Vega. [More info](https://github.com/vega/vega/wiki)
 
 ## How obtain all widgets
 
@@ -101,7 +101,7 @@ verified  |           Filter by verified status (true, false)            | Boole
 template  |           Filter by template status (true, false)            | Boolean
 default   |            Filter by default status (true, false)            | Boolean
 app       |       Filter widgets on application (prep, gfw, etc..)       |    Text
-env       | environment in can be one of `production` or `preproduction` |    Text
+env       |   Environment can be one of `production` or `preproduction`  |    Text
 
 > Return the widgets filtered whose name contains glad
 
@@ -165,7 +165,7 @@ Field        |       Description        |   Type
 page[size]   | Number elements per page | Number
 page[number] |      Number of page      | Number
 
-> Return the widgets from page 2 with 5 elements per page
+> Return the widgets from page 2, with 5 elements per page
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2
@@ -1071,7 +1071,7 @@ template     |           If it's a template            | Boolean |              
 default      |       If it's default for dataset       | Boolean |                                    true - false |       No
 layerId      |   UuId of the relationship with layer   |    Text |                                   Uuid of layer |       No
 dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
-env          |               environment               |    Text |                 `production` or `preproduction` |      Yes
+env          |               Environment               |    Text |                 `production` or `preproduction` |      Yes
 
 > To create a widget, you have to do a POST request with the following body:
 
