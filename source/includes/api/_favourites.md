@@ -78,7 +78,7 @@ This endpoint deletes the favorite with id of the param. If the favorite belongs
 > To delete the favorite by id, you have to do a DELETE request:
 
 
-```shella
+```shell
 curl -X DELETE https://api.resourcewatch.org/v1/favourite/:id \
 -H "Authorization: Bearer <your-token>"
 ```

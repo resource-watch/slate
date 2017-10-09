@@ -21,6 +21,7 @@ includes:
   - api/geostore
   - api/subscriptions
   - api/favourites
+  - api/collections
   - errors
 
 search: true
