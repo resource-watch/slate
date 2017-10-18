@@ -119,7 +119,7 @@
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Resource Watch API Documentation</p>
+<p>Welcome to the Resource Watch API Documentation.</p>
 
           <h1 id="authentication">Authentication</h1>
 
@@ -146,7 +146,7 @@
 
 <h2 id="how-to-create-a-new-user">How to create a new user</h2>
 
-<p>To create a new user make a request like that on the sidebar:</p>
+<p>To create a new user make a request like the one in the sidebar:</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/auth/user <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -234,253 +234,429 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 <p>This endpoint will allow to get all datasets available in the API:</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset
 </code></pre>
-<aside class="success">
-Remember — the response is in <a href="http://jsonapi.org/format/">JSON Api format.</a></aside>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00f2be42-1ee8-4069-a55a-16a988f2b7a0"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Glad points"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Glad-points-1490086842129"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"data4sdgs"</span><span class="p">],</span><span class="w">
+            </span><span class="nt">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"attributesPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"connectorType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"csv"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58333dcfd9f39b189ca44c75"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"blockchain"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"geoInfo"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="nt">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"clonedHost"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="nt">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-13T10:45:46.368Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"widgetRelevantProps"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="nt">"layerRelevantProps"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="slug-amp-dataset-id">Slug &amp; dataset-id</h3>
 
-> Response:
+<p>Datasets have an auto-generated and unique slug and id that allows the user to get, create, update, query or clone that dataset.</p>
 
-&ldquo;`json
-{
-    &quot;data&rdquo;: [
-        {
-        &ldquo;id&rdquo;: &ldquo;00f2be42-1ee8-4069-a55a-16a988f2b7a0&rdquo;,
-        &ldquo;type&rdquo;: &ldquo;dataset&rdquo;,
-        &ldquo;attributes&rdquo;: {
-            &ldquo;name&rdquo;: &ldquo;Glad points&rdquo;,
-            &ldquo;slug&rdquo;: &ldquo;Glad-points-1490086842129&rdquo;,
-            &ldquo;type&rdquo;: null,
-            &ldquo;subtitle&rdquo;: null,
-            &ldquo;application&rdquo;: [&ldquo;data4sdgs&rdquo;],
-            &ldquo;dataPath&rdquo;: null,
-            &ldquo;attributesPath&rdquo;: null,
-            &ldquo;connectorType&rdquo;: &ldquo;document&rdquo;,
-            &ldquo;provider&rdquo;: &ldquo;csv&rdquo;,
-            &ldquo;userId&rdquo;: &ldquo;58333dcfd9f39b189ca44c75&rdquo;,
-            &ldquo;connectorUrl&rdquo;: &ldquo;http://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv&rdquo;,
-            &ldquo;tableName&rdquo;: &ldquo;data&rdquo;,
-            &ldquo;status&rdquo;: &ldquo;pending&rdquo;,
-            &ldquo;published&rdquo;: true,
-            &ldquo;overwrite&rdquo;: false,
-            &ldquo;verified&rdquo;: false,
-            &ldquo;blockchain&rdquo;: {},
-            &ldquo;env&rdquo;: &ldquo;production&rdquo;,
-            &ldquo;geoInfo&rdquo;: false,
-            &ldquo;legend&rdquo;: {
-                &ldquo;date&rdquo;: [],
-                &ldquo;region&rdquo;: [],
-                &ldquo;country&rdquo;: []
-                },
-            &ldquo;clonedHost&rdquo;: {},
-            &ldquo;errorMessage&rdquo;: null,
-            &ldquo;updatedAt&rdquo;: &ldquo;2017-01-13T10:45:46.368Z&rdquo;,
-            &ldquo;widgetRelevantProps&rdquo;: [],
-            &ldquo;layerRelevantProps&rdquo;: []
-            }
-        },
-    &hellip;
-    ]
-}
-&ldquo;`
+<p>The dataset slug and the id cannot be updated even if the name changes.</p>
 
-### Slug & dataset-id
+<h3 id="error-message">Error Message</h3>
 
-Datasets have an auto-generated and unique slug and id that allows the user to get, create, update, query or clone that dataset.
+<p>When a dataset is created the status is set to &ldquo;pending&rdquo; by default. Once the adapter validates the dataset, the status is changed to &ldquo;saved&rdquo;. If the validation fails, the status will be set to &ldquo;failed&rdquo; and the adapter will also set an error message indicating the reason.</p>
 
-The dataset slug and the id cannot be updated even if the name changes.
+<h3 id="filters">Filters</h3>
 
-### Error Message
+<p>The dataset list provided by the endpoint can be filtered with the following attributes:</p>
 
-When a dataset is created the status is set to &quot;pending&rdquo; by default. Once the adapter validates the dataset, the status is changed to &ldquo;saved&rdquo;. If the validation fails, the status will be set to &ldquo;failed&rdquo; and the adapter will also set an error message indicating the reason.
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Accepted values</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>Allow us to filter by name</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>type</td>
+<td>Allow us to distinguish between tabular and raster datasets</td>
+<td><code class="prettyprint">raster</code> or <code class="prettyprint">tabular</code></td>
+</tr>
+<tr>
+<td>app</td>
+<td>Aplications to which this dataset is being used</td>
+<td>Available Aplications like: <code class="prettyprint">[&quot;data4sdgs&quot;,&quot;gfw&quot;,&quot;rw&quot;,&quot;aqueduct&quot;,&quot;prep&quot;,&quot;forest-atlas&quot;,&quot;gfw-climate&quot;,&quot;aqueduct-water-risk&quot;,&quot;test&quot;,&quot;gfw-pro&quot;,&quot;globalforestwatch&quot;, &quot;ghg-gdp&quot;]</code></td>
+</tr>
+<tr>
+<td>connectorType</td>
+<td></td>
+<td><code class="prettyprint">rest</code> or <code class="prettyprint">document</code></td>
+</tr>
+<tr>
+<td>provider</td>
+<td>Dataset provider this include inner connectors and 3rd party ones</td>
+<td><a href="##supported-dataset-sources">A valid dataset provider</a></td>
+</tr>
+<tr>
+<td>userId</td>
+<td>the user who registered the dataset</td>
+<td>valid id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>the internal dataset status at connection time</td>
+<td><code class="prettyprint">pending</code>, <code class="prettyprint">saved</code> or <code class="prettyprint">failed</code></td>
+</tr>
+<tr>
+<td>published</td>
+<td></td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>env</td>
+<td>If the dataset is in preproduction envirenment or in production one</td>
+<td><code class="prettyprint">production</code>or <code class="prettyprint">preproduction</code></td>
+</tr>
+<tr>
+<td>overwritted</td>
+<td>If the data can be overwritten (only for being able to make dataset updates)</td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>verify</td>
+<td>If this dataset contains data that is verified using blockchain</td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>geoInfo</td>
+<td>If it contains intersectable geographical info</td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+</tbody></table>
 
-### Filters
+<blockquote>
+<p>Filtering datasets</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>birds&amp;provider<span class="o">=</span>cartodb
+</code></pre>
+<blockquote>
+<p>For inclusive filtering with array props use &rsquo;@&rsquo;</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?app<span class="o">=</span>gfw@rw@prep
+</code></pre>
+<h3 id="sorting">Sorting</h3>
 
-We can filter the datasets answers.<br>
-Available filters:<br>
+<p>You can sort by any dataset property. Prefix with &rsquo;-&rsquo; for a &lsquo;desc&rsquo; ordering.</p>
 
-Filter        | Description                                                                  | Accepted values
-&mdash;&mdash;&mdash;&mdash;- | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
-name          | Allow us to filter by name                                                   | any valid text
-type          | Allow us to distinguish between tabular and raster datasets                  | `raster` or `tabular`
-app           | Aplications to which this dataset is being used                              | Available Aplications like: `[&ldquo;data4sdgs&rdquo;,&ldquo;gfw&rdquo;,&ldquo;rw&rdquo;,&ldquo;aqueduct&rdquo;,&ldquo;prep&rdquo;,&ldquo;forest-atlas&rdquo;,&ldquo;gfw-climate&rdquo;,&ldquo;aqueduct-water-risk&rdquo;,&ldquo;test&rdquo;,&ldquo;gfw-pro&rdquo;,&ldquo;globalforestwatch&rdquo;, &ldquo;ghg-gdp&rdquo;]`
-connectorType |                                                                              | `rest` or `document`
-provider      | Dataset provider this include inner connectors and 3rd party ones            | [A valid dataset provider](##supported-dataset-sources)
-userId        | the user who registered the dataset                                          | valid id
-status        | the internal dataset status at connection time                               | `pending`, `saved` or `failed`
-published     |                                                                              | `true`or `false`
-env           | If the dataset is in preproduction envirenment or in production one          | `production`or `preproduction`
-overwritted   | If the data can be overwritten (only for being able to make dataset updates) | `true`or `false`
-verify        | If this dataset contains data that is verified using blockchain              | `true`or `false`
-geoInfo       | If it contains intersectable geographical info                               | `true`or `false`
+<blockquote>
+<p>Sorting datasets</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-provider,slug
+</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved
+</code></pre>
+<h3 id="relationships">Relationships</h3>
 
-&ldquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
-&rdquo;`
+<p>Available relationships: Any dataset relationship [&#39;widget&rsquo;, &#39;layer&rsquo;, &#39;vocabulary&rsquo;, &#39;metadata&rsquo;]</p>
 
-Inclusive filtering with array props using &rsquo;@&rsquo;
+<blockquote>
+<p>Including relationships</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer
+</code></pre>
+<h3 id="advanced-filters">Advanced filters</h3>
 
-&ldquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
-&rdquo;`
+<p>By vocabulary-tag matching</p>
 
-### Sorting
+<blockquote>
+<p>Matching vocabulary tags</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>umd
+</code></pre>
+<h3 id="pagination">Pagination</h3>
 
-Available sorting: Any dataset property (desc: -)
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page</td>
+<td style="text-align: right">Number</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page number</td>
+<td style="text-align: right">Number</td>
+</tr>
+</tbody></table>
 
-&ldquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-provider,slug
-&rdquo;`
+<blockquote>
+<p>Paginating the output</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>1
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>2
+</code></pre>
+<h2 id="how-to-get-a-specific-dataset">How to get a specific dataset</h2>
 
-&ldquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved
-&rdquo;`
+<blockquote>
+<p>To get a dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057ad4fc2145
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+    <span class="s2">"data"</span>: <span class="o">{</span>
+        <span class="s2">"id"</span>: <span class="s2">"51943691-eebc-4cb4-bdfb-057ad4fc2145"</span>,
+        <span class="s2">"type"</span>: <span class="s2">"dataset"</span>,
+        <span class="s2">"attributes"</span>: <span class="o">{</span>
+            <span class="s2">"name"</span>: <span class="s2">"Timber Production RDC (test)"</span>,
+            <span class="s2">"slug"</span>: <span class="s2">"Timber-Production-RDC-test-1490086842132"</span>,
+            <span class="s2">"type"</span>: null,
+            <span class="s2">"subtitle"</span>: null,
+            <span class="s2">"application"</span>: <span class="o">[</span><span class="s2">"forest-atlas"</span><span class="o">]</span>,
+            <span class="s2">"dataPath"</span>: null,
+            <span class="s2">"attributesPath"</span>: null,
+            <span class="s2">"connectorType"</span>: <span class="s2">"document"</span>,
+            <span class="s2">"provider"</span>: <span class="s2">"csv"</span>,
+            <span class="s2">"userId"</span>: <span class="s2">"58750a56dfc643722bdd02ab"</span>,
+            <span class="s2">"connectorUrl"</span>: <span class="s2">"http://wri-forest-atlas.s3.amazonaws.com/COD/temp/annual%20timber%20production%20DRC%20%28test%29%20-%20Sheet1.csv"</span>,
+            <span class="s2">"tableName"</span>: <span class="s2">"index_51943691eebc4cb4bdfb057ad4fc2145"</span>,
+            <span class="s2">"status"</span>: <span class="s2">"saved"</span>,
+            <span class="s2">"overwrite"</span>: <span class="nb">false</span>,
+            <span class="s2">"legend"</span>: <span class="o">{</span>
+                <span class="s2">"date"</span>: <span class="o">[</span><span class="s2">"year"</span><span class="o">]</span>,
+                <span class="s2">"region"</span>: <span class="o">[]</span>,
+                <span class="s2">"country"</span>: <span class="o">[]</span>,
+                <span class="s2">"long"</span>: <span class="s2">""</span>,
+                <span class="s2">"lat"</span>: <span class="s2">""</span>
+            <span class="o">}</span>,
+            <span class="s2">"clonedHost"</span>: <span class="o">{}</span>,
+            <span class="s2">"errorMessage"</span>: null,
+            <span class="s2">"createdAt"</span>: <span class="s2">"2017-01-25T21:48:27.535Z"</span>,
+            <span class="s2">"updatedAt"</span>: <span class="s2">"2017-01-25T21:48:28.675Z"</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+<blockquote>
+<p>To get the dataset including its relationships:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes<span class="o">=</span>metadata,vocabulary,widget,layer
+</code></pre>
+<h2 id="creating-a-dataset">Creating a Dataset</h2>
 
-### Relationships
+<p>To create a dataset, you will need an authorization token. Follow the steps of this <a href="#generate-your-own-oauth-token">guide</a> to get yours.</p>
 
-Available relationships: Any dataset relationship [&lsquo;widget&rsquo;, 'layer&rsquo;, 'vocabulary&rsquo;, 'metadata&rsquo;]
+<p>To create a dataset, you need to define all of the required fields in the request body. The fields that compose a dataset are:</p>
 
-&ldquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer
-&rdquo;`
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Dataset name</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>type</td>
+<td style="text-align: center">Dataset type</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td style="text-align: center">Dataset subtitle</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Applications the dataset belongs to</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Any valid application name(s)</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>connectorType</td>
+<td style="text-align: center">Connector type</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">rest, document, wms</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>provider</td>
+<td style="text-align: center">The connectorType provider</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">cartodb, feature service, gee, csv, tsv, xml, json, nexgddp</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>connectorUrl</td>
+<td style="text-align: center">Url of the data source</td>
+<td style="text-align: right">Url</td>
+<td style="text-align: right">Any url</td>
+<td style="text-align: right">Yes (except for gee, nexgddp and json formats)</td>
+</tr>
+<tr>
+<td>tableName</td>
+<td style="text-align: center">Table name</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any valid table name</td>
+<td style="text-align: right">No (just for GEE and nexgddp datasets)</td>
+</tr>
+<tr>
+<td>data</td>
+<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
+<td style="text-align: right">JSON</td>
+<td style="text-align: right">[{},{},{}]</td>
+<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
+</tr>
+<tr>
+<td>dataPath</td>
+<td style="text-align: center">Path to the data in a json dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any valid JSON key</td>
+<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
+</tr>
+<tr>
+<td>dataAttributes</td>
+<td style="text-align: center">Data fields - for json connector if data present</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">{&ldquo;key1&rdquo;: {&ldquo;type&rdquo;: &ldquo;string&rdquo;},&hellip; }</td>
+<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
+</tr>
+<tr>
+<td>legend</td>
+<td style="text-align: center">Legend for dataset. Keys for special fields</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">&ldquo;legend&rdquo;: {&ldquo;long&rdquo;: &ldquo;123&rdquo;, &ldquo;lat&rdquo;: &ldquo;123&rdquo;, &ldquo;country&rdquo;: [&ldquo;pais&rdquo;], &ldquo;region&rdquo;: [&ldquo;barrio&rdquo;], &ldquo;date&rdquo;: [&ldquo;startDate&rdquo;, &ldquo;endDate&rdquo;]}}</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>overwrite</td>
+<td style="text-align: center">It allows to overwrite dataset data</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true/false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>published</td>
+<td style="text-align: center">To set a public or private dataset</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true/false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>verified</td>
+<td style="text-align: center">To generate a verified blockchain of the dataset</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true/false</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>vocabularies</td>
+<td style="text-align: center">Cluster of tags</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right"><code class="prettyprint">{&quot;vocabularyOne&quot;: {&quot;tags&quot;: [&lt;tags&gt;]},&quot;vocabularyTwo&quot;: {&quot;tags&quot;: [&lt;tags&gt;]}}</code></td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>widgetRelevantProps</td>
+<td style="text-align: center">Group of relevant props of a widget</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>layerRelevantProps</td>
+<td style="text-align: center">Group of relevant props of a layer</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>subscribable</td>
+<td style="text-align: center">Available dataset queries for subscriptions parameters accepted: <code class="prettyprint">{{begin}}</code> for date begin and <code class="prettyprint">{{end}}</code> for date end</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right"><code class="prettyprint">{&quot; &lt;queryname&gt;&quot;: &quot;&lt;querybodytemplate&gt;&quot;}</code></td>
+<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
+</tr>
+</tbody></table>
 
-### Advanced filters
+<p>There are some differences between datasets types.</p>
 
-By vocabulary-tag matching
-
-&ldquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=umd
-&rdquo;`
-
-### Pagination
-
-Field        |         Description          |   Type
-&mdash;&mdash;&mdash;&mdash; | :&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;: | &mdash;&ndash;:
-page[size]   | The number elements per page | Number
-page[number] |       The page number        | Number
-
-&ldquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=1
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=2
-&rdquo;`
-
-## How to get a specific dataset
-
-> To get a dataset:
-
-&ldquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057ad4fc2145
-&rdquo;`
-
-> Response:
-
-&ldquo;`json
-{
-    &quot;data&rdquo;: {
-        &ldquo;id&rdquo;: &ldquo;51943691-eebc-4cb4-bdfb-057ad4fc2145&rdquo;,
-        &ldquo;type&rdquo;: &ldquo;dataset&rdquo;,
-        &ldquo;attributes&rdquo;: {
-            &ldquo;name&rdquo;: &ldquo;Timber Production RDC (test)&rdquo;,
-            &ldquo;slug&rdquo;: &ldquo;Timber-Production-RDC-test-1490086842132&rdquo;,
-            &ldquo;type&rdquo;: null,
-            &ldquo;subtitle&rdquo;: null,
-            &ldquo;application&rdquo;: [&ldquo;forest-atlas&rdquo;],
-            &ldquo;dataPath&rdquo;: null,
-            &ldquo;attributesPath&rdquo;: null,
-            &ldquo;connectorType&rdquo;: &ldquo;document&rdquo;,
-            &ldquo;provider&rdquo;: &ldquo;csv&rdquo;,
-            &ldquo;userId&rdquo;: &ldquo;58750a56dfc643722bdd02ab&rdquo;,
-            &ldquo;connectorUrl&rdquo;: &ldquo;http://wri-forest-atlas.s3.amazonaws.com/COD/temp/annual%20timber%20production%20DRC%20%28test%29%20-%20Sheet1.csv&rdquo;,
-            &ldquo;tableName&rdquo;: &ldquo;index_51943691eebc4cb4bdfb057ad4fc2145&rdquo;,
-            &ldquo;status&rdquo;: &ldquo;saved&rdquo;,
-            &ldquo;overwrite&rdquo;: false,
-            &ldquo;legend&rdquo;: {
-                &ldquo;date&rdquo;: [&ldquo;year&rdquo;],
-                &ldquo;region&rdquo;: [],
-                &ldquo;country&rdquo;: [],
-                &ldquo;long&rdquo;: &ldquo;&rdquo;,
-                &ldquo;lat&rdquo;: &ldquo;&rdquo;
-            },
-            &ldquo;clonedHost&rdquo;: {},
-            &ldquo;errorMessage&rdquo;: null,
-            &ldquo;createdAt&rdquo;: &ldquo;2017-01-25T21:48:27.535Z&rdquo;,
-            &ldquo;updatedAt&rdquo;: &ldquo;2017-01-25T21:48:28.675Z&rdquo;
-        }
-    }
-}
-&ldquo;`
-
-> To get the dataset including its relationships:
-
-&rdquo;`shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes=metadata,vocabulary,widget,layer
-&ldquo;`
-
-<aside class="success">
-Remember — the response is in <a href="http://jsonapi.org/format/">JSON Api format.</a></aside>
-
-## Creating a Dataset
-
-To create a dataset, you will need an authorization token. Follow the steps of this [guide](#generate-your-own-oauth-token) to get yours.
-
-To create a dataset, you need to define all of the required fields in the request body. The fields that compose a dataset are:
-
-Field               |                                                      Description                                                       |    Type |                                                                                                                Values |                                          Required
-&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- | :&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;: | &mdash;&mdash;: | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;: | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;:
-name                |                                                      Dataset name                                                      |    Text |                                                                                                              Any Text |                                               Yes
-type                |                                                      Dataset type                                                      |    Text |                                                                                                              Any Text |                                                No
-subtitle            |                                                    Dataset subtitle                                                    |    Text |                                                                                                              Any Text |                                                No
-application         |                                          Applications the dataset belongs to                                           |   Array |                                                                                         Any valid application name(s) |                                               Yes
-connectorType       |                                                     Connector type                                                     |    Text |                                                                                                   rest, document, wms |                                               Yes
-provider            |                                               The connectorType provider                                               |    Text |                                                           cartodb, feature service, gee, csv, tsv, xml, json, nexgddp |                                               Yes
-connectorUrl        |                                                 Url of the data source                                                 |     Url |                                                                                                               Any url |    Yes (except for gee, nexgddp and json formats)
-tableName           |                                                       Table name                                                       |    Text |                                                                                                  Any valid table name |            No (just for GEE and nexgddp datasets)
-data                |                             JSON DATA only for json connector if connectorUrl not present                              |    JSON |                                                                                                            [{},{},{}] | No (just for json if connectorUrl is not present)
-dataPath            |                                           Path to the data in a json dataset                                           |    Text |                                                                                                    Any valid JSON key | No (just for json if connectorUrl is not present)
-dataAttributes      |                                    Data fields - for json connector if data present                                    |  Object |                                                                                     {&quot;key1&rdquo;: {&ldquo;type&rdquo;: &ldquo;string&rdquo;},&hellip; } | No (just for json if connectorUrl is not present)
-legend              |                                      Legend for dataset. Keys for special fields                                       |  Object | &ldquo;legend&rdquo;: {&ldquo;long&rdquo;: &ldquo;123&rdquo;, &ldquo;lat&rdquo;: &ldquo;123&rdquo;, &ldquo;country&rdquo;: [&ldquo;pais&rdquo;], &ldquo;region&rdquo;: [&ldquo;barrio&rdquo;], &ldquo;date&rdquo;: [&ldquo;startDate&rdquo;, &ldquo;endDate&rdquo;]}} |                                                No
-overwrite           |                                          It allows to overwrite dataset data                                           | Boolean |                                                                                                            true/false |                                                No
-published           |                                           To set a public or private dataset                                           | Boolean |                                                                                                            true/false |                                                No
-verified            |                                    To generate a verified blockchain of the dataset                                    | Boolean |                                                                                                            true/false |                                                No
-vocabularies        |                                                    Cluster of tags                                                     |  Object |                                           `{&ldquo;vocabularyOne&rdquo;: {&ldquo;tags&rdquo;: [<tags>]},&ldquo;vocabularyTwo&rdquo;: {&ldquo;tags&rdquo;: [<tags>]}}` |                                                No
-widgetRelevantProps |                                          Group of relevant props of a widget                                           |   Array |                                                                                                              Any Text |                                                No
-layerRelevantProps  |                                           Group of relevant props of a layer                                           |   Array |                                                                                                              Any Text |                                                No
-subscribable        | Available dataset queries for subscriptions parameters accepted: `{{begin}}` for date begin and `{{end}}` for date end |  Object |                                                                             `{&ldquo; <queryname>&rdquo;: &ldquo;<querybodytemplate>&rdquo;}` | No (just for json if connectorUrl is not present)
-
-There are some differences between datasets types.
-
-### Rest-Carto datasets
-
-&ldquo;`shell
-curl -X POST https://api.resourcewatch.org/v1/dataset \
--H &quot;Authorization: Bearer <your-token>&rdquo; \
--H &ldquo;Content-Type: application/json&rdquo;  -d \
- &rsquo;{
-    &ldquo;connectorType&rdquo;:&ldquo;rest&rdquo;,
-    &ldquo;provider&rdquo;:&ldquo;cartodb&rdquo;,
-    &ldquo;connectorUrl&rdquo;:&ldquo;<cartoUrl>&rdquo;,
-    &ldquo;application&rdquo;:[
-     &ldquo;your&rdquo;, &ldquo;apps&rdquo;
+<h3 id="rest-carto-datasets">Rest-Carto datasets</h3>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "connectorType":"rest",
+    "provider":"cartodb",
+    "connectorUrl":"&lt;cartoUrl&gt;",
+    "application":[
+     "your", "apps"
     ],
-    &ldquo;name&rdquo;:&ldquo;Example Carto Dataset&rdquo;
-}&rsquo;
-&ldquo;`
-
-> A real example:
-
-&rdquo;`shell
-curl -X POST https://api.resourcewatch.org/v1/dataset \
--H &ldquo;Authorization: Bearer <your-token>&rdquo; \
--H &ldquo;Content-Type: application/json&rdquo;  -d \
-&rsquo;{
-    &ldquo;connectorType&rdquo;:&ldquo;rest&rdquo;,
-    &ldquo;provider&rdquo;:&ldquo;cartodb&rdquo;,
-    &ldquo;connectorUrl&rdquo;:&ldquo;https://wri-01.carto.com/tables/wdpa_protected_areas/table&rdquo;,
-    &ldquo;application&rdquo;:[
-     &ldquo;gfw&rdquo;, &ldquo;forest-atlas&rdquo;
+    "name":"Example Carto Dataset"
+}'</span>
+</code></pre>
+<blockquote>
+<p>A real example:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+    "connectorType":"rest",
+    "provider":"cartodb",
+    "connectorUrl":"https://wri-01.carto.com/tables/wdpa_protected_areas/table",
+    "application":[
+     "gfw", "forest-atlas"
     ],
-    &ldquo;name&rdquo;:&ldquo;World Database on Protected Areas &ndash; Global&rdquo;
-}&rsquo;
-&ldquo;`
-
+    "name":"World Database on Protected Areas -- Global"
+}'</span>
+</code></pre>
 <aside class="notice">
     This is an authenticated endpoint!
 </aside>
@@ -533,15 +709,18 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 </code></pre>
 <h3 id="rasdaman">Rasdaman</h3>
 
-<p>The <code class="prettyprint">connectorUrl</code> must be a valid url that responds to a Web Coverage Service (WCS Core) DescribeCoverage call with a valid XML document.</p>
-<pre class="highlight shell"><code>curl -H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>  -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'https://api.resourcewatch.org/v1/dataset'</span> -d <span class="s1">'{
+<p>The <code class="prettyprint">connectorUrl</code> must be a URL pointing to a valid geotiff file.</p>
+<pre class="highlight shell"><code>curl -XPOST <span class="s1">'https://api.resourcewatch.org/v1/dataset'</span> -d <span class="se">\</span>
+-H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>  <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> -d <span class="se">\</span>
+<span class="s1">'{
     "connectorType":"rest",
     "provider":"rasdaman",
-    "connectorUrl":"http://54.146.170.2:8080/rasdaman/ows?&amp;SERVICE=WCS&amp;VERSION=2.0.1&amp;REQUEST=DescribeCoverage&amp;COVERAGEID=nightlights",
+    "connectorUrl":"rw.dataset.raw/1508321309784_test_rasdaman_1b.tiff",
     "application":[
      "rw"
     ],
-    "name":"nightlights"
+    "name":"rasdaman dataset"
 }'</span>
 </code></pre>
 <h3 id="document-csv-document-tsv-document-xml">Document-CSV, Document-TSV, Document-XML</h3>
@@ -739,7 +918,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
     "name":"Example JSON Dataset",
 }'</span>
 </code></pre>
-<p>Or it is also possible to create a JSON dataset setting the data directly in the request:</p>
+<p>It is also possible to create a JSON dataset by including the data directly in the request:</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -766,12 +945,13 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 </code></pre>
 <h2 id="uploading-a-dataset-binary">Uploading a Dataset (Binary)</h2>
 
-<p>You can upload your raw data directly to S3 making use of the &quot;upload&rdquo; endpoint. This endpoint accepts a file in the property &ldquo;dataset&rdquo; and returns a valid connectorUrl. With this connectorUrl you can create or update a &ldquo;document&rdquo; dataset.</p>
+<p>You can upload your raw data directly to S3 making use of the &ldquo;upload&rdquo; endpoint. This endpoint accepts a file in the property &ldquo;dataset&rdquo; and returns a valid connectorUrl. With this connectorUrl you can create or update a &ldquo;document&rdquo; dataset, or a raster dataset in the Rasdaman adapter.</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/upload <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--F <span class="s2">"dataset=@&lt;your-file&gt;"</span>
+-F <span class="nv">provider</span><span class="o">=</span>csv,
+-F <span class="nv">dataset</span><span class="o">=</span>@&lt;your-file&gt;
 </code></pre>
-<p>It returns the following:</p>
+<p>It returns the following information:</p>
 
 <blockquote>
 <p>Response</p>
@@ -2758,13 +2938,6 @@ Remember — the response is jsonapi format
 <td style="text-align: right">No</td>
 </tr>
 <tr>
-<td>status</td>
-<td style="text-align: center">Status of the Layer</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
 <td>dataset</td>
 <td style="text-align: center">UuId of the dataset</td>
 <td style="text-align: right">Text</td>
@@ -2859,13 +3032,6 @@ Remember — the response is jsonapi format
 <td style="text-align: right">No</td>
 </tr>
 <tr>
-<td>status</td>
-<td style="text-align: center">Status of the Layer</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
 <td>dataset</td>
 <td style="text-align: center">UuId of the dataset</td>
 <td style="text-align: right">Text</td>
@@ -2950,45 +3116,11 @@ SELECT ST_valueCount(rast, 1, true) from table
 </code></pre>
 <h2 id="rasdaman-queries">Rasdaman queries</h2>
 
-<p>Rasdaman datasets do not expose an SQL interface from where to query the data – instead it offers interfaces to WCPS (the OGC Web Coverage Processing Service) and RasQL (a superset of SQL dealing with coverages).</p>
-
-<p>So far only WCPS is supported in the RW API. Two different endpoints are offered: one to directly run WCPS queries against the database, and one that abstracts the calculation of (2D) zonal statistics on rasdaman coverages with vector masks. For more information on the WCPS standard, consult the <a href="http://www.opengeospatial.org/standards/wcp">OGC page</a> about it</p>
-
-<p>In order to run a query directly, POST your query in the wcps attribute to the endpoint:</p>
-<pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/'</span> -d <span class="s1">'{
-    "wcps": "FOR c in (nightlights) return 1"
-}
-'</span>
+<p>SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.</p>
+<pre class="highlight shell"><code>curl -XGET https://api.resourcewatch.org/v1/query?sql<span class="o">=</span><span class="k">select </span>avg<span class="o">(</span>Green<span class="o">)</span> from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat &gt; 0 and  Lat &lt; 45 <span class="se">\</span>
+    -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+    -H <span class="s1">'Authorization: Bearer &lt;token&gt;'</span>
 </code></pre>
-<p>The result of a WCPS query can have varying dimensionality, depending on the axes of the original dataset. The result must be encoded in an appropriate file format, which is done with the <code class="prettyprint">encode</code> WCPS function. A large variety of formats are supported (as the underlying implementation depends on GDAL), but some care has to be taken to match the dimensionality of the query output with one that the desired format supports. For subsetting the domain of the original coverage, trimming and slicing can be used too:</p>
-<pre class="highlight plaintext"><code>curl -i -H 'Authorization: Bearer &lt;your-token&gt;' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/' -d '{
-    "wcps":  "for cov in (nightlights) return encode( cov[ Long(-1:1), Lat(-1:1)], \"CSV\")"
-}
-'
-</code></pre>
-<p>For zonal stats, use the &lsquo;stats&rsquo; endpoint. The geostore will be used to generate spatial masks. If the original coverage is not 2-dimensional, additional subsettings have to be specified in the requests as &#39;additionalAxes&rsquo; to reduce the coverage dimensionality. The most usual subsetting will be a time slice that has to be specified as an ANSI (ISO 8601) date – with the appropriate level of granularity.</p>
-<pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/stats/e9c3a94d-6b1c-4513-a745-6acdff53cfc9'</span> -d <span class="s1">'{
-    "geostore": "70ba01daaa803aea2eeff502c845bcef",
-    "additionalAxes": {
-        "ansi": "1950-03-03"
-    }
-}
-'</span>
-</code></pre>
-<blockquote>
-<p>Response</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"min"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"max"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00016111972217913717</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"mean"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.019295106901743e-05</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">993</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
 <h2 id="nex-gddp-queries">NEX-GDDP queries</h2>
 
 <p>A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data are available. These can be accessed in the following ways:</p>
