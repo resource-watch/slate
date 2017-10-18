@@ -62,53 +62,12 @@ SELECT ST_valueCount(rast, 1, true) from table
 
 ## Rasdaman queries
 
-Rasdaman datasets do not expose an SQL interface from where to query the data – instead it offers interfaces to WCPS (the OGC Web Coverage Processing Service) and RasQL (a superset of SQL dealing with coverages).
-
-So far only WCPS is supported in the RW API. Two different endpoints are offered: one to directly run WCPS queries against the database, and one that abstracts the calculation of (2D) zonal statistics on rasdaman coverages with vector masks. For more information on the WCPS standard, consult the [OGC page](http://www.opengeospatial.org/standards/wcp) about it
-
-In order to run a query directly, POST your query in the wcps attribute to the endpoint:
+SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.
 
 ```shell
-curl -i -H 'Authorization: Bearer your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/' -d '{
-    "wcps": "FOR c in (nightlights) return 1"
-}
-'
-```
-
-The result of a WCPS query can have varying dimensionality, depending on the axes of the original dataset. The result must be encoded in an appropriate file format, which is done with the `encode` WCPS function. A large variety of formats are supported (as the underlying implementation depends on GDAL), but some care has to be taken to match the dimensionality of the query output with one that the desired format supports. For subsetting the domain of the original coverage, trimming and slicing can be used too:
-
-```
-curl -i -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a/' -d '{
-    "wcps":  "for cov in (nightlights) return encode( cov[ Long(-1:1), Lat(-1:1)], \"CSV\")"
-}
-'
-```
-
-For zonal stats, use the 'stats' endpoint. The geostore will be used to generate spatial masks. If the original coverage is not 2-dimensional, additional subsettings have to be specified in the requests as 'additionalAxes' to reduce the coverage dimensionality. The most usual subsetting will be a time slice that has to be specified as an ANSI (ISO 8601) date – with the appropriate level of granularity.
-
-```shell
-curl -i -H 'Authorization: Bearer <your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/stats/e9c3a94d-6b1c-4513-a745-6acdff53cfc9' -d '{
-    "geostore": "70ba01daaa803aea2eeff502c845bcef",
-    "additionalAxes": {
-        "ansi": "1950-03-03"
-    }
-}
-'
-```
-
-> Response
-
-```json
-{
-    "data": [
-        {
-            "min": 0,
-            "max": 0.00016111972217913717,
-            "mean": 2.019295106901743e-05,
-            "count": 993
-        }
-    ]
-}
+curl -XGET https://api.resourcewatch.org/v1/query?sql=select avg(Green) from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat > 0 and  Lat < 45 \
+	-H 'Content-Type: application/json' \
+	-H 'Authorization: Bearer <token>'
 ```
 
 ## NEX-GDDP queries

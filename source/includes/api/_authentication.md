@@ -21,7 +21,7 @@ You can login with your WRI credentials (email and password) or with other auth 
 
 ## How to create a new user
 
-To create a new user make a request like that on the sidebar:
+To create a new user make a request like the one in the sidebar:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/auth/user \

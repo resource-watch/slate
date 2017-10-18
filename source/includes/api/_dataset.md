@@ -69,12 +69,10 @@ Arbitrary [XML](https://www.w3.org/TR/2006/REC-xml11-20060816/) data documents
 
 This endpoint will allow to get all datasets available in the API:
 
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset
 ```
-
-<aside class="success">
-Remember — the response is in <a href="http://jsonapi.org/format/">JSON Api format.</a></aside>
 
 > Response:
 
@@ -133,8 +131,7 @@ When a dataset is created the status is set to "pending" by default. Once the ad
 
 ### Filters
 
-We can filter the datasets answers.<br>
-Available filters:<br>
+The dataset list provided by the endpoint can be filtered with the following attributes:
 
 Filter        | Description                                                                  | Accepted values
 ------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -151,11 +148,13 @@ overwritted   | If the data can be overwritten (only for being able to make data
 verify        | If this dataset contains data that is verified using blockchain              | `true`or `false`
 geoInfo       | If it contains intersectable geographical info                               | `true`or `false`
 
+> Filtering datasets
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
 ```
 
-Inclusive filtering with array props using '@'
+> For inclusive filtering with array props use '@'
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
@@ -163,7 +162,9 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
 
 ### Sorting
 
-Available sorting: Any dataset property (desc: -)
+You can sort by any dataset property. Prefix with '-' for a 'desc' ordering.
+
+> Sorting datasets
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-provider,slug
@@ -177,6 +178,8 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&
 
 Available relationships: Any dataset relationship ['widget', 'layer', 'vocabulary', 'metadata']
 
+> Including relationships
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer
 ```
@@ -184,6 +187,8 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&
 ### Advanced filters
 
 By vocabulary-tag matching
+
+> Matching vocabulary tags
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=umd
@@ -195,6 +200,8 @@ Field        |         Description          |   Type
 ------------ | :--------------------------: | -----:
 page[size]   | The number elements per page | Number
 page[number] |       The page number        | Number
+
+> Paginating the output
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=1
@@ -211,7 +218,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057
 
 > Response:
 
-```json
+```shell
 {
     "data": {
         "id": "51943691-eebc-4cb4-bdfb-057ad4fc2145",
@@ -252,9 +259,6 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes=metadata,vocabulary,widget,layer
 ```
-
-<aside class="success">
-Remember — the response is in <a href="http://jsonapi.org/format/">JSON Api format.</a></aside>
 
 ## Creating a Dataset
 
@@ -381,17 +385,20 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 
 ### Rasdaman
 
-The `connectorUrl` must be a valid url that responds to a Web Coverage Service (WCS Core) DescribeCoverage call with a valid XML document.
+The `connectorUrl` must be a URL pointing to a valid geotiff file.
 
 ```shell
-curl -H 'Authorization: Bearer <your-token>'  -H 'Content-Type: application/json' -XPOST 'https://api.resourcewatch.org/v1/dataset' -d '{
+curl -XPOST 'https://api.resourcewatch.org/v1/dataset' -d \
+-H 'Authorization: Bearer <your-token>'  \
+-H 'Content-Type: application/json' -d \
+'{
     "connectorType":"rest",
     "provider":"rasdaman",
-    "connectorUrl":"http://54.146.170.2:8080/rasdaman/ows?&SERVICE=WCS&VERSION=2.0.1&REQUEST=DescribeCoverage&COVERAGEID=nightlights",
+    "connectorUrl":"rw.dataset.raw/1508321309784_test_rasdaman_1b.tiff",
     "application":[
      "rw"
     ],
-    "name":"nightlights"
+    "name":"rasdaman dataset"
 }'
 ```
 
@@ -503,7 +510,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-Or it is also possible to create a JSON dataset setting the data directly in the request:
+It is also possible to create a JSON dataset by including the data directly in the request:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -533,15 +540,16 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 
 ## Uploading a Dataset (Binary)
 
-You can upload your raw data directly to S3 making use of the "upload" endpoint. This endpoint accepts a file in the property "dataset" and returns a valid connectorUrl. With this connectorUrl you can create or update a "document" dataset.
+You can upload your raw data directly to S3 making use of the "upload" endpoint. This endpoint accepts a file in the property "dataset" and returns a valid connectorUrl. With this connectorUrl you can create or update a "document" dataset, or a raster dataset in the Rasdaman adapter.
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/upload \
 -H "Authorization: Bearer <your-token>" \
--F "dataset=@<your-file>"
+-F provider=csv,
+-F dataset=@<your-file>
 ```
 
-It returns the following:
+It returns the following information:
 
 > Response
 

@@ -243,7 +243,6 @@ legendConfig      |                                                             
 applicationConfig |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
 staticImageConfig |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
 iso               |                                                               Isos to which the layer belongs                                                               |  Array |                                         BRA, ES |       No
-status            |                                                                     Status of the Layer                                                                     | Number |                                               1 |       No
 dataset           |                                                                     UuId of the dataset                                                                     |   Text |                                 Uuid of Dataset |       No
 
 > To create a layer, you have to do a POST request with the following body:
@@ -277,7 +276,6 @@ legendConfig      |          Custom configuration          | Object |           
 applicationConfig |          Custom configuration          | Object |                                    Valid object |       No
 staticImageConfig |          Custom configuration          | Object |                                    Valid object |       No
 iso               |  The isos to which the layer belongs   |  Array |                                         BRA, ES |       No
-status            |          Status of the Layer           | Number |                                               1 |       No
 dataset           |          UuId of the dataset           |   Text |                                 Uuid of Dataset |       No
 
 > To create a layer, you have to do a POST requestwith the following body:

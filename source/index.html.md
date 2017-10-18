@@ -29,4 +29,4 @@ search: true
 
 # Introduction
 
-Welcome to the Resource Watch API Documentation
+Welcome to the Resource Watch API Documentation.
