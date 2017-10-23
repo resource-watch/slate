@@ -22,6 +22,7 @@ includes:
   - api/subscriptions
   - api/favourites
   - api/collections
+  - api/graph
   - errors
 
 search: true
