@@ -347,3 +347,69 @@ https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descenden
   ]
 }
 ```
+
+## Search datasets by concepts
+
+This endpoint performs a dataset search based on the concepts provided and the tags that have been associated to all the different datasets that are part of the
+application. Ancestors of the tags directly associated to a datasets are taken into account in the search.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]='water'
+```
+
+Up to three sets of concepts can be provided as shown in the example below.
+Given the following sets of concepts:
+
+- Set 1: `['spain', 'europe']`
+- Set 2: `['water']`
+- Set 3: `['raster', 'geospatial']`
+
+The url should be formed as follows:
+
+`https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=spain,concepts[0][1]=europe,concepts[1][0]=water,concepts[2][0]=raster,concepts[2][1]=geospatial`
+
+**AND** logical operators are applied among the sets while **OR** is used for set elements.
+
+### Parameters available
+
+Parameter        |               Description               |    Type |                                          Values | Required
+------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
+published         |   Include only published datasets            |    Boolean |                                        true/false |      No
+app  |   List of applications datasets should belong to (at least one of them)      |    Text |     Any text, values separated by commas |       No
+env  |   Include only datasets with at least one of the specified environments | Text | One or more values from ['production', 'preproduction'] |       No
+page[size] | Maximum number of results returned by the endpoint | Number | No
+
+### Example
+
+Search for datasets with the tag `global` and `water` and at least one of the two tags: `raster`, `geospatial`. The resulting datasets should also be published and be categorized either as `production` or `preproduction` and belong to the application `rw`. The total number of results returned won't be limited since a very high number has been provided as limit _(999999)_.
+
+`https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=global&concepts[1][0]=water&concepts[2][0]=raster&concepts[2][1]=geospatial&published=true&env=production,preproduction&app=rw&page[size]=999999`
+
+```
+{
+  "data": [
+    "11f43558-d703-4b9d-aff0-f2354a11b359",
+    "1b97e47e-ca18-4e50-9aae-a2853acca3f0",
+    "20c70a51-4ddf-4f6c-ad2c-1a6729b95fa4",
+    "21ac3cd2-9c19-47c7-ad18-4bcad118870f",
+    "33bed1fb-9261-41bf-8b50-127a4d0c80c5",
+    "3624554e-b240-4edb-9110-1f010642c3f3",
+    "36803484-c413-49a9-abe2-2286ee99b624",
+    "371e700e-bc9a-4526-af92-335d888de309",
+    "60be01b0-99fb-459c-8a08-b934270f8c4b",
+    "63a7a997-695d-4629-b6e9-9b169f5c69bf",
+    "894f43a8-ce8e-43a5-a4c7-fa80faa43d63",
+    "99075509-df36-461e-abb0-659cee555bd0",
+    "9e9a5c50-b825-4f12-838f-1650943c2be1",
+    "c17fab24-f71a-4c3e-bb87-6b753a944e6b",
+    "c9eadefd-4a06-4f3b-a2eb-3e3f45624c24",
+    "d7c3d954-ac86-4d1a-bb6a-c8c432a94e26",
+    "e63bb157-4b98-4ecb-81d6-c1b15e79895a",
+    "e7582657-9c16-4eb1-89e8-0211d94015c6",
+    "e94f0e2d-2b5f-41ed-967f-d97e54dd81ea",
+    "ede84747-0116-45c2-accb-1dfe141c00ff",
+    "f717ac77-6f06-493f-8336-4e660a18f74c",
+    "fa6443ff-eb95-4d0f-84d2-f0c91682efdf"
+  ]
+}
+```
