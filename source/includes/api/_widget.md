@@ -1010,6 +1010,14 @@ Remember — the response is jsonapi format
 }
 ```
 
+### Modify the Query Url of a widget
+
+The `queryUrl` query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the queryUrl, will be pass to the microservice.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl=/v1/query?sql=Select%20*%20from%20data&geostore=ungeostore
+```
+
 ## Create a Widget
 
 To create a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:

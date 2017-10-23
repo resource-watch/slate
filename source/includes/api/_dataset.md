@@ -595,6 +595,8 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 
 ## Deleting a Dataset
 
+**When a dataset is deleted the user's applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.**
+
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 -H "Authorization: Bearer <your-token>"
