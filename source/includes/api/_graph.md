@@ -188,6 +188,71 @@ https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=spain,ra
 }
 ```
 
+## Concepts' ancestors
+
+This endpoint returns the ancestors from the list of concepts provided
+
+### Parameters
+
+Parameter        |               Description               |    Type |                                          Values | Required
+------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
+concepts         |           List of concepts            |    Text |                                        Any Text, values separated by commas |      Yes
+
+```shell
+https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=<concept_list>
+```
+
+### Example
+
+Ancestors of the concepts from the set: ['forest_cover', 'landslide']
+
+```url
+https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=forest_cover,landslide
+```
+
+```
+{
+  "data": [
+    {
+      "id": "indicator",
+      "label": "Indicator",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    },
+    {
+      "id": "forest",
+      "label": "Forest",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    },
+    {
+      "id": "natural_disaster",
+      "label": "Natural disaster",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    },
+    {
+      "id": "natural_phenomena",
+      "label": "Natural phenomena",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    }
+  ]
+}
+```
+
 ## Similar datasets
 
 Returns a set of datasets that are similar to the dataset provider sorted by their degree of similarity.
