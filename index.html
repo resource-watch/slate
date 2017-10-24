@@ -991,6 +991,8 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 </aside>
 
 <h2 id="deleting-a-dataset">Deleting a Dataset</h2>
+
+<p><strong>When a dataset is deleted the user&rsquo;s applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.</strong></p>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 -H <span class="s2">"Content-Type: application/json"</span>
@@ -2257,6 +2259,11 @@ Remember — the response is jsonapi format
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<h3 id="modify-the-query-url-of-a-widget">Modify the Query Url of a widget</h3>
+
+<p>The <code class="prettyprint">queryUrl</code> query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the queryUrl, will be pass to the microservice.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl<span class="o">=</span>/v1/query?sql<span class="o">=</span>Select%20<span class="k">*</span>%20from%20data&amp;geostore<span class="o">=</span>ungeostore
+</code></pre>
 <h2 id="create-a-widget">Create a Widget</h2>
 
 <p>To create a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:</p>
@@ -5805,6 +5812,76 @@ Remember — All favorite endpoints need to be authenticated.
       </span><span class="nt">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="concepts-39-ancestors">Concepts&rsquo; ancestors</h2>
+
+<p>This endpoint returns the ancestors from the list of concepts provided</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>concepts</td>
+<td style="text-align: center">List of concepts</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text, values separated by commas</td>
+<td style="text-align: right">Yes</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts<span class="o">=</span>&lt;concept_list&gt;
+</code></pre>
+<h3 id="example">Example</h3>
+
+<p>Ancestors of the concepts from the set: [&#39;forest_cover&rsquo;, &#39;landslide&rsquo;]</p>
+<pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=forest_cover,landslide
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"indicator"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Indicator"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forest"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Forest"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"natural_disaster"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Natural disaster"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"natural_phenomena"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Natural phenomena"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
