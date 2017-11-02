@@ -478,3 +478,258 @@ Search for datasets with the tag `global` and `water` and at least one of the tw
   ]
 }
 ```
+
+## Most liked datasets
+
+This endpoint returns the list of the most liked datasets in descending order.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
+```
+
+### Example of result
+
+```
+{
+	"data": [
+		{
+			"id": "e2971008-029f-441b-97cd-ee0555728182",
+			"count": {
+				"low": 2,
+				"high": 0
+			}
+		},
+		{
+			"id": "f6bb99af-541a-4d41-9e47-cc36cb479d4b",
+			"count": {
+				"low": 2,
+				"high": 0
+			}
+		},
+		{
+			"id": "223b936e-06b8-4970-abd9-4f123904d95d",
+			"count": {
+				"low": 2,
+				"high": 0
+			}
+		},
+		{
+			"id": "0b9f0100-ce5b-430f-ad8f-3363efa05481",
+			"count": {
+				"low": 2,
+				"high": 0
+			}
+		},
+		{
+			"id": "93ee443e-cb39-424a-9aa4-1d16af813418",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "7bcf2f48-8ebd-4900-a485-57a75f9f4e85",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "c18a38cd-94ff-48cd-818f-6ffb05992abb",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "5b5a21ac-0835-43fb-86b9-64b93d472e10",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "fc8cf356-f4be-4635-a896-fb468aaaa832",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "b8307c16-fd77-4e35-9b68-8726a025f401",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "e7c9251c-d39e-4b48-88c5-b2783bb7afdc",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "6e05a9e8-ba07-4e6f-8337-31c5362d07fe",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "3ac5a895-b8ab-4480-b7eb-0fbb452ea76f",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "e2aa09eb-c82e-4977-b614-ef71da5936ce",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "60be01b0-99fb-459c-8a08-b934270f8c4b",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "1ef55baf-bbbe-480d-85e9-7132c742f196",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "3a46f6b4-0eec-49d4-bbfc-e2e8f64e6117",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "d8a45b34-4cc0-42f4-957d-e13b37e9182e",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "80c31f61-6e12-47a0-865d-f33a48bfdebb",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "048b2140-9d4b-433e-a2dd-8d4122eb157b",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "4338471d-881a-475f-8bd9-60c4d48b8e12",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "f84b559f-1eb1-43f2-871f-93fea669bf93",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "9ea634db-53af-445e-a767-60ec9efc321e",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "c02da519-12f3-4c6a-86e7-648afac80b23",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "0a59f415-ee0b-4d19-96f7-c7304c152e1b",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "a07f1bed-ca16-4fbf-b14b-d3a0344cab74",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "f8d3e79c-c3d0-4f9a-9b68-9c5ad1f025e4",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "cefd2836-3cc1-43dc-a9d1-bfecf79a6252",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "63a7a997-695d-4629-b6e9-9b169f5c69bf",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "1b97e47e-ca18-4e50-9aae-a2853acca3f0",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "de452a4c-a55c-464d-9037-8c3e9fe48365",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "c36c3108-2581-4b68-852a-c929fc758001",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "05b7c688-09ba-4f33-90ea-185a1039df43",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		},
+		{
+			"id": "134caa0a-21f7-451d-a7fe-30db31a424aa",
+			"count": {
+				"low": 1,
+				"high": 0
+			}
+		}
+	]
+}
+```
