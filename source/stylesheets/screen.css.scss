@@ -55,6 +55,17 @@ html, body {
     $nav-subitem-bg;
 }
 
+.gfw {
+  .tocify-wrapper>img {
+    height: 70px;
+  }
+}
+.rw {
+  .tocify-wrapper>img {
+
+  }
+}
+
 .tocify-wrapper {
   transition: left 0.3s ease-in-out;
 
@@ -84,6 +95,7 @@ html, body {
     display: block;
     max-width: 200px;
     padding: 20px 5px;
+    margin: 0 auto;
   }
 
   &>.search {

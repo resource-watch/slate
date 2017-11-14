@@ -34,6 +34,17 @@ body {
 .tocify-wrapper>img {
   margin: 0 auto;
   display: block;
+
+}
+.gfw {
+  .tocify-wrapper>img {
+    height: 70px;
+  }
+}
+.rw {
+  .tocify-wrapper>img {
+
+  }
 }
 
 .content {

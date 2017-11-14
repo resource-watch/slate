@@ -1,11 +1,11 @@
 ---
-title: API Reference
-
+title: RW API Reference
+app: rw
 language_tabs:
   - shell: cURL
 
 toc_footers:
-  - <a href='https://ui.resourcewatch.org'>Sign Up for a Developer Key</a>
+  - <a href='http://ui.resourcewatch.org'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -21,15 +21,13 @@ includes:
   - api/geostore
   - api/subscriptions
   - api/favourites
-  - api/collections
-  - api/graph
   - errors
+
+logo: logo-rw.png
 
 search: true
 ---
 
 # Introduction
 
-Welcome to the Resource Watch API Documentation.
-=======
-
+Welcome to the Resource Watch API Documentation
