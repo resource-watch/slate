@@ -11,7 +11,7 @@ function getQueryVariable(variable) {
 }
 
 var app = getQueryVariable('app');
-if ( (window.location.pathname === '' ||window.location.pathname === '/' )) {
+if ( (window.location.pathname === '' ||window.location.pathname === '/' || window.location.pathname === '/doc-api/' )) {
   if(app && ['gfw', 'rw', 'aqueduct'].indexOf(app) >= 0) {
     window.location.href = 'index-'+app+'.html';
   } else {
