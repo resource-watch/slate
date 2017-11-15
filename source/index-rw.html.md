@@ -21,6 +21,7 @@ includes:
   - api/geostore
   - api/subscriptions
   - api/favourites
+  - api/graph
   - errors
 
 logo: logo-rw.png
