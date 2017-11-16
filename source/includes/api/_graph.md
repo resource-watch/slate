@@ -16,31 +16,36 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
 {
   "data": [
     {
-      "id": "azerbaijan",
-      "label": "Azerbaijan",
+      "id": "europe",
+      "label": "Europe",
       "synonyms": "",
       "labels": [
         "CONCEPT",
         "GEOGRAPHY"
-      ]
+      ],
+      "numberOfDatasetsTagged": 0
     },
     {
-      "id": "bahamas",
-      "label": "Bahamas",
-      "synonyms": "",
+      "id": "damage",
+      "label": "Damage",
+      "synonyms": [
+        "destruction"
+      ],
       "labels": [
         "CONCEPT",
-        "GEOGRAPHY"
-      ]
+        "TOPIC"
+      ],
+      "numberOfDatasetsTagged": 2
     },
     {
-      "id": "bahrain",
-      "label": "Bahrain",
+      "id": "guernsey",
+      "label": "Guernsey",
       "synonyms": "",
       "labels": [
         "CONCEPT",
         "GEOGRAPHY"
-      ]
+      ],
+      "numberOfDatasetsTagged": 0
     }
   ]
 }
