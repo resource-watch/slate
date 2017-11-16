@@ -22,6 +22,7 @@ includes:
   - api/subscriptions
   - api/favourites
   - api/graph
+  - api/areas
   - errors
 
 logo: logo-rw.png
