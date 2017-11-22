@@ -23,6 +23,7 @@ includes:
   - api/favourites
   - api/collections
   - api/graph
+  - api/areas
   - errors
 
 search: true
@@ -32,4 +33,3 @@ search: true
 
 Welcome to the Resource Watch API Documentation.
 =======
-
