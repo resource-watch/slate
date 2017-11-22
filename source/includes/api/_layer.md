@@ -91,6 +91,11 @@ Remember — the response is jsonapi format
       "next":"https://api.resourcewatch.org/v1/layer?page%5Bnumber%5D=2&page%5Bsize%5D=10",
       "last":"https://api.resourcewatch.org/v1/layer?page%5Bnumber%5D=64&page%5Bsize%5D=10",
       "self":"https://api.resourcewatch.org/v1/layer?page%5Bnumber%5D=1&page%5Bsize%5D=10"
+   },
+   "meta": {
+      "total-pages": 63,
+      "total-items": 628,
+      "size": 10
    }
 }
 ```
