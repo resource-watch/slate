@@ -115,7 +115,19 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
             }
         },
     ...
-    ]
+  ],
+  "links": {
+    "self": "http://api.resourcewatch.org/v1/dataset?page[number]=1&page[size]=10",
+    "first": "http://api.resourcewatch.org/v1/dataset?page[number]=1&page[size]=10",
+    "last": "http://api.resourcewatch.org/v1/dataset?page[number]=99&page[size]=10",
+    "prev": "http://api.resourcewatch.org/v1/dataset?page[number]=1&page[size]=10",
+    "next": "http://api.resourcewatch.org/v1/dataset?page[number]=2&page[size]=10"
+  },
+  "meta": {
+    "total-pages": 99,
+    "total-items": 990,
+    "size": 10
+  }
 }
 ```
 
