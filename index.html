@@ -368,6 +368,11 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 <td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
 </tr>
 <tr>
+<td>protected</td>
+<td>If it&rsquo;s a protected layer</td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
 <td>geoInfo</td>
 <td>If it contains intersectable geographical info</td>
 <td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
@@ -1230,6 +1235,11 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <tr>
 <td>default</td>
 <td style="text-align: center">If it&rsquo;s a default widget for the dataset that it belongs</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>protected</td>
+<td style="text-align: center">If it&rsquo;s a protected widget (not is possible to delete if it&rsquo;s true)</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
@@ -2991,6 +3001,13 @@ Remember — the response is jsonapi format
 <td style="text-align: center">UuId of the dataset</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Uuid of Dataset</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>protected</td>
+<td style="text-align: center">If it&rsquo;s a protected layer (not is possible to delete if it&rsquo;s true)</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true-false</td>
 <td style="text-align: right">No</td>
 </tr>
 </tbody></table>
