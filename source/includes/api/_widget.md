@@ -1039,6 +1039,7 @@ queryUrl     |  Url with the data of the chart shows   |    Text |              
 widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
 status       |          Status of the Widget           |  Number |                                               1 |       No
 published    |        If it's available to use         | Boolean |                                    true - false |       No
+protected    |        If it's a protected widget (not is possible to delete if it's true)         | Boolean |                                    true - false |       No
 verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
 template     |           If it's a template            | Boolean |                                    true - false |       No
 default      |       If it's default for dataset       | Boolean |                                    true - false |       No

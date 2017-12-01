@@ -20,6 +20,7 @@ legendConfig      |                                 Custom configuration        
 applicationConfig |                                 Custom configuration                                 |  Object
 staticImageConfig |                                 Custom configuration                                 |  Object
 default           |               If it's a default layer for the dataset that it belongs                | Boolean
+protected         |               If it's a protected layer (not is possible to delete if it's true)     | Boolean
 published         |                               Is the layer published?                                | Boolean
 env               | environment in witch the layer was published, one of `preproduction` or `production` |    Text
 
