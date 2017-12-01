@@ -158,6 +158,7 @@ published     |                                                                 
 env           | If the dataset is in preproduction envirenment or in production one          | `production`or `preproduction`
 overwritted   | If the data can be overwritten (only for being able to make dataset updates) | `true`or `false`
 verify        | If this dataset contains data that is verified using blockchain              | `true`or `false`
+protected     | If it's a protected layer                                                    | `true`or `false`
 geoInfo       | If it contains intersectable geographical info                               | `true`or `false`
 
 > Filtering datasets

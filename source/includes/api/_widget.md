@@ -22,6 +22,7 @@ queryUrl     |             Url with the data of the chart shows             |   
 widgetConfig |                     Custom configuration                     |  Object
 template     |   If it's a template (base schema to create other widgets)   | Boolean
 default      |   If it's a default widget for the dataset that it belongs   | Boolean
+protected    |  If it's a protected widget (not is possible to delete if it's true)   | Boolean
 status       |                     Status of the Widget                     |    Text
 published    |                   If it's available to use                   |    Text
 verified     |                If it's verified by other user                |    Text

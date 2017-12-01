@@ -250,6 +250,8 @@ applicationConfig |                                                             
 staticImageConfig |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
 iso               |                                                               Isos to which the layer belongs                                                               |  Array |                                         BRA, ES |       No
 dataset           |                                                                     UuId of the dataset                                                                     |   Text |                                 Uuid of Dataset |       No
+protected         |                                            If it's a protected layer (not is possible to delete if it's true)                                               |   Boolean |                                 true-false |       No
+
 
 > To create a layer, you have to do a POST request with the following body:
 
