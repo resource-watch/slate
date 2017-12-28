@@ -25,6 +25,7 @@ default      |   If it's a default widget for the dataset that it belongs   | Bo
 protected    |  If it's a protected widget (not is possible to delete if it's true)   | Boolean
 status       |                     Status of the Widget                     |    Text
 published    |                   If it's available to use                   |    Text
+freeze       |                   If the data is freezed                     |    Boolean
 verified     |                If it's verified by other user                |    Text
 env          |  Environment can be one of `production` or `preproduction`   |    Text
 
@@ -73,6 +74,7 @@ Remember — the response is jsonapi format
             "default":true,
             "status":"saved",
             "published":true,
+            "freeze": false,
             "verified":false
          }
       }
@@ -103,6 +105,7 @@ dataset   |              Filter the widgets by dataset uuid              |    Te
 sort      |          Sort json response by specific attributes           |    Text
 status    |    Filter widgets on status (pending, saved, failed, all)    |    Text
 published |       Filter widgets on published status (true, false)       | Boolean
+published |       Filter widgets on freeze status (true, false)          | Boolean
 verified  |           Filter by verified status (true, false)            | Boolean
 template  |           Filter by template status (true, false)            | Boolean
 default   |            Filter by default status (true, false)            | Boolean
@@ -1040,6 +1043,7 @@ queryUrl     |  Url with the data of the chart shows   |    Text |              
 widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
 status       |          Status of the Widget           |  Number |                                               1 |       No
 published    |        If it's available to use         | Boolean |                                    true - false |       No
+freeze    |        If the data is freezed         | Boolean |                                    true - false |       No
 protected    |        If it's a protected widget (not is possible to delete if it's true)         | Boolean |                                    true - false |       No
 verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
 template     |           If it's a template            | Boolean |                                    true - false |       No
@@ -1081,6 +1085,7 @@ queryUrl     |  Url with the data of the chart shows   |    Text |              
 widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
 status       |          Status of the Widget           |  Number |                                               1 |       No
 published    |        If it's available to use         | Boolean |                                    true - false |       No
+freeze    |        If the data is freezed         | Boolean |                                    true - false |       No
 verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
 template     |           If it's a template            | Boolean |                                    true - false |       No
 default      |       If it's default for dataset       | Boolean |                                    true - false |       No
