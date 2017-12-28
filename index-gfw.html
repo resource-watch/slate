@@ -3180,6 +3180,15 @@ SELECT ST_SUMMARYSTATS() from table
 SELECT ST_HISTOGRAM(rast, 1, auto, true) from table
 SELECT ST_valueCount(rast, 1, true) from table
 </code></pre>
+<h3 id="freeze-query">Freeze query</h3>
+
+<p>It is possible generate a json file in a bucket of the sql result. You only need send a query param freeze with value true and you will obtain the url of the json file.</p>
+
+<aside class="notice">
+    This is an authenticated feature!
+</aside>
+<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query<span class="se">\?</span>sql<span class="se">\=</span><span class="k">select</span><span class="se">\ \*\ </span>from<span class="se">\ </span>&lt;dataset.slug&gt;&amp;freeze<span class="o">=</span><span class="nb">true</span>
+</code></pre>
 <h2 id="rasdaman-queries">Rasdaman queries</h2>
 
 <p>SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.</p>
