@@ -25,6 +25,7 @@ includes:
   - api/graph
   - api/areas
   - errors
+  - attribution
 
 search: true
 ---
