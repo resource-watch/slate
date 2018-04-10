@@ -24,6 +24,7 @@ includes:
   - api/graph
   - api/areas
   - errors
+  - attribution
 
 logo: logo-rw.png
 
