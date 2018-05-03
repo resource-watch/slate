@@ -1,0 +1,15 @@
+slate:
+  build: .
+  ports:
+    - "4567:4567"
+  volumes:
+    - ./source:/app/source
+  entrypoint: bundle exec middleman server
+
+build:
+  build: .
+  ports:
+    - "4567:4567"
+  volumes:
+    - ./source:/app/source
+  entrypoint: bundle exec middleman build --clean

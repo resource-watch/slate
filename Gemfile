@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 
-ruby '2.3.1'
+ruby '2.4.4'
 
 # Middleman
+gem 'json', '~>2.1.0'
 gem 'middleman', '~>4.1.0'
 gem 'middleman-syntax', '~> 3.0.0'
 gem 'middleman-autoprefixer', '~> 2.7.0'
