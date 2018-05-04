@@ -6,6 +6,31 @@ Subscription represents to wich datasets and analyisis a user can have access to
 Remember — All subscription endpoints need to be authenticated.
 </aside>
 
+## Subscribable datasets
+
+In order to create a subscription, a dataset must be prepared to accept them. This is achieved by declaring some queries in the dataset json object sent to the `/v1/dataset` endpoint under the `subscribable`property. 
+
+```json
+{
+	"name": "dataset name",
+	"application": ["app"],
+	"provider": "dataset provider",
+	"other": "dataset_fields",
+    "subscribable": {
+        "test_subscription": {
+            "dataQuery": "SELECT * FROM dataset-name  WHERE \"reported_date\" >= '{{begin}}' AND \"reported_date\" <= '{{end}}' AND \"number_dead\" > 0 ORDER BY reported_date DESC LIMIT 10",
+            "subscriptionQuery": "SELECT COUNT(*) FROM dataset-name WHERE \"reported_date\" >= '{begin}' AND \"reported_date\" <= '{end}' AND \"number\" > 0"
+        }
+    }
+}
+```
+
+Inside the `subscribable` object, one (or several) subobjects can be declared. In the provided example, the `test_subscription` is provided, with both a `dataQuery` and a `subscriptionQuery`. The former will be evaluated as the subscription's content, while the latter will be evaluated to check if a subscription has changed since the last update. Both queries can contain two special keywords: {begin} and {end}. These will be substituted with  ansi-formatted datetimes --with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.
+
+<aside class="notice">
+Mind the string format: double quotes and curly braces need to be properly escaped.
+</aside>
+
 ## Create Subscription
 
 Field         |                            Description                            |               Type
@@ -18,13 +43,17 @@ resource      |   This field contains the subscription is of type email or hook 
 -- content    |                           Email or url                            |               Text
 datasets      |               Array of datasets of the subscription               |              Array
 datasetsQuery |              Subscriptions to subscribable datasets               |              Array
--- id         |                           Id of dataset                           |   ObjectId -- type | Type of subscription defined in the dataset | Text -- params | Geographic area of the subscription | Object You only require datasets or datasetsQuery, not both.
+-- id         |                           Id of dataset                           |   ObjectId
+-- type       | Type of subscription defined in the dataset | Text 
+-- params     | Geographic area of the subscription                               | Object
+
+You only require one of `datasets`  or `datasetsQuery`, but not both.
 
 <aside class="notice">
-Remember — All subscriptions are created unconfirmed and the process sends a message to the email of the subscription to confirm it.
+Remember — Subscriptions are created unconfirmed. A link for confirmation will be sent to the subscription email.
 </aside>
 
-You can create a subscription with 6 different params:
+A way to determine the area of interest for the subscriptions needs to be provided. A subscription can be created in six different ways:
 
 ### With an area
 
@@ -40,20 +69,31 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
-   "name": "<name>",
-   "application": "<application>",
-   "language": "<language>",
-   "resource": {
-       "type": "<type>",
-       "content": "<content>"
-   },
-   "datasets" : ["<dataset>"],
-   "params": {
-       "area": "<idArea>"
-   }
-  }'
+    "name": "<name>",
+    "datasets": [
+        "<dataset>"
+    ],
+    "params": {
+        "geostore": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "datasetsQuery": [
+        {
+            "id": ":subscription_dataset_id",
+            "type": "test_subscription",
+            "threshold": 1
+        }
+    ],
+    "application": "rw",
+    "language": "en",
+    "resource": {
+        "type": "EMAIL",
+        "content": "email@addres.com"
+    }
+}'
 ```
 
+In this case, a subscription is being created in reference to the `subscribable` field present in the previously defined dataset. After confirming the subscription the `subscriptionQuery` will be ran and its result will be compared against the `threshold`. If the query result is at least equal to the threshold, a new alert will be sent to the subscription's email.
+ 
 ### From country
 
 Field        |             Description             |   Type
@@ -81,7 +121,8 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
        "iso": {
            "country": "<iso>"
        }
-   }
+   },
+   "datasetsQuery": [{}]
   }'
 ```
 
@@ -142,7 +183,8 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
    "datasets" : ["<dataset>"],
    "params": {
        "wdpaid": <idWdpa>
-    }
+    },
+   "datasetsQuery": [{}]
   }'
 ```
 
@@ -172,7 +214,8 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
    "params": {
        "use": "<useName>",
        "useid": <id>
-    }
+    },
+   "datasetsQuery": [{}]
   }'
 ```
 
@@ -196,7 +239,8 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
    "params": {
        "use": "oilpalm",
        "useid": <id>
-    }
+    },
+	"datasetsQuery": [{}]
   }'
 ```
 
@@ -240,7 +284,8 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
    "params": {
        "use": "fiber",
        "useid": <id>
-    }
+    },
+	"datasetsQuery": [{}]
   }'
 ```
 
@@ -262,7 +307,8 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
    "params": {
        "use": "logging",
        "useid": <id>
-    }
+    },
+	"datasetsQuery": [{}]
   }'
 ```
 
@@ -290,7 +336,8 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
    "datasets" : ["<dataset>"],
    "params": {
        "geostore": "<idGeostore>"
-    }
+    },	
+   "datasetsQuery": [{}]
   }'
 ```
 
@@ -302,9 +349,9 @@ All subscriptions are created unconfirmed. The user needs confirm his subscripti
 curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
 ```
 
-## Obtain the subscriptions of a user
+## Obtain the subscriptions for a user
 
-To get the user subscriptions:
+To get the authenticated  user subscriptions:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/subscriptions \
@@ -374,11 +421,11 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
 -H "Authorization: Bearer <your-token>"
 ```
 
-With the same body that creates the subscription.
+With a body with the same format as before.
 
 ## Unsubscribe
 
-To unsubscribe a subscription:
+To unsubscribe from a subscription:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
@@ -387,7 +434,7 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 
 ## Delete subscription
 
-To delete a subscription (same that unsubscribe):
+To unsubscribe (delete a subscription):
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
