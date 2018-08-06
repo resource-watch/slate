@@ -376,7 +376,7 @@ html, body {
   }
 
   // the div is the tocify hidden div for placeholding stuff
-  &>h1, &>h2, &>h3, &>div {
+  &>h1, &>h2, &>h3, &>h4, &>div {
     clear:both;
   }
 
@@ -422,7 +422,7 @@ html, body {
     margin-bottom: 0.8em;
   }
 
-  h4, h5, h6 {
+  h5, h6 {
     font-size: 10px;
   }
 
