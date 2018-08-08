@@ -175,16 +175,52 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
 
 ### Sorting
 
-You can sort by any dataset property. Prefix with '-' for a 'desc' ordering.
+#### Basics of sorting
+
+The API currently supports sorting by means of the `sort` parameter. 
 
 > Sorting datasets
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-provider,slug
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name
+```
+
+Multiple sorting criteria can be used, separating them by commas.
+
+
+> Sorting datasets by multiple criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name,description
+```
+
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+
+> Explicit order of sorting
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
+```
+
+#### Special sorting criteria
+
+There are four special sorting criteria:
+
+- `metadata`: delegates sorting to the metadata component, sorting by the name field of the metadata.
+- `most-visited` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently.
+- `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favourited.
+- `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order. 
+
+Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria.
+
+> Sorting datasets with special criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-most-favourited
 ```
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=relevance&status=saved&search=agriculture
 ```
 
 ### Relationships
