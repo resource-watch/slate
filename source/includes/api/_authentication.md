@@ -2,6 +2,8 @@
 
 The RW API uses JWT [(JSON Web Tokens)](https://tools.ietf.org/html/rfc7519) to identify and authenticate its users. This token must be provided inside an `Authorization` header, with the form `Bearer: <token>`.
 
+However be aware that in order to perform GET requests for content that it's not private there's no need for any sort of authentication or token.
+
 ## How to generate your private token
 
 To generate your own token, perform the following steps:
