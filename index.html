@@ -6851,6 +6851,101 @@ Given the following sets of concepts:</p>
     }
 }
 </code></pre>
+          <h1 id="user-management">User Management</h1>
+
+<p>The following endpoints expose the API&rsquo;s functionality regarding user management.
+For more information or implementation details, see <a href="https://github.com/control-tower/ct-oauth-plugin">the source code</a>.</p>
+
+<h2 id="login-email-password">Login (email + password)</h2>
+
+<ul>
+<li>GET &rsquo;<BASE API URL>/auth/&rsquo; - Basic API auth login page</li>
+<li>GET &rsquo;<BASE API URL>/auth/login&rsquo; - Basic API auth login page</li>
+<li>POST &rsquo;<BASE API URL>/auth/login&rsquo; - Endpoint for email + password based login</li>
+</ul>
+<pre class="highlight shell"><code><span class="c"># Email + password based login</span>
+curl -X POST http://localhost:9000/auth/login <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "email":"your-email@provider.com",
+    "password":"potato"
+}'</span>
+</code></pre>
+<ul>
+<li>GET &rsquo;<BASE API URL>/auth/fail&rsquo; - Displays login errors</li>
+<li>GET &rsquo;<BASE API URL>/auth/check-logged&rsquo; - Check login status</li>
+<li>GET &rsquo;<BASE API URL>/auth/success&rsquo; - Successful login page</li>
+<li>GET &rsquo;<BASE API URL>/auth/logout&rsquo; - Login invalidation endpoint</li>
+<li>GET &rsquo;<BASE API URL>/auth/generate-token&rsquo; - Generates a JWT token for the current user session.</li>
+</ul>
+
+<h2 id="login-3rd-party-oauth">Login (3rd party oauth)</h2>
+
+<ul>
+<li>GET &rsquo;<BASE API URL>/auth/twitter&rsquo; - Starts authentication using the configured Twitter settings</li>
+<li>GET &rsquo;<BASE API URL>/auth/twitter/callback&rsquo; - Callback used once Twitter auth is done</li>
+<li>GET &rsquo;<BASE API URL>/auth/google&rsquo; - Starts authentication using the configured Google settings</li>
+<li>GET &rsquo;<BASE API URL>/auth/google/callback&rsquo; - Callback used once Google auth is done</li>
+<li>GET &rsquo;<BASE API URL>/auth/google/token&rsquo; - Endpoint that expects the Google token used by the API to validate the user session.</li>
+<li>GET &rsquo;<BASE API URL>/auth/facebook&rsquo; - Starts authentication using the configured Google settings</li>
+<li>GET &rsquo;<BASE API URL>/auth/facebook/callback&rsquo; - Callback used once Facebook auth is done</li>
+<li>GET &rsquo;<BASE API URL>/auth/facebook/token&rsquo; - Endpoint that expects the Facebook token used by the API to validate the user session.</li>
+</ul>
+
+<h2 id="registration">Registration</h2>
+
+<ul>
+<li>GET &rsquo;<BASE API URL>/auth/sign-up&rsquo; - Account creation page, for accounts using email + password based login</li>
+<li>POST &rsquo;<BASE API URL>/auth/sign-up&rsquo; - Account creation endpoint, for accounts using email + password based login</li>
+</ul>
+<pre class="highlight shell"><code><span class="c"># Account creation using email + password</span>
+curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "email":"your-email@provider.com",
+    "password":"potato",
+    "repeatPassword":"potato"
+}'</span>
+</code></pre>
+<ul>
+<li>GET &rsquo;<BASE API URL>/auth/confirm/:token&rsquo; - Endpoint used in the user validation email to confirm the address upon registration</li>
+</ul>
+
+<h2 id="password-recovery">Password recovery</h2>
+
+<ul>
+<li>GET &rsquo;<BASE API URL>/auth/reset-password&rsquo; - Displays the password reset form page.</li>
+<li>POST &rsquo;<BASE API URL>/auth/reset-password&rsquo; - Endpoint where the password reset request is sent.</li>
+</ul>
+<pre class="highlight shell"><code><span class="c"># Password reset</span>
+curl -X POST http://localhost:9000/auth/reset-password <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "email":"your-email@provider.com"
+}'</span>
+</code></pre>
+<ul>
+<li>GET &rsquo;<BASE API URL>/auth/reset-password/:token&rsquo; - Endpoint used to validate email address upon password reset request.</li>
+<li>POST &rsquo;<BASE API URL>/auth/reset-password/:token&rsquo; - Endpoint used to submit the new password.</li>
+</ul>
+<pre class="highlight shell"><code><span class="c"># New password submission</span>
+curl -X POST http://localhost:9000/auth/reset-password/&lt;email token&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "password":"potato",
+    "repeatPassword":"potato"
+}'</span>
+</code></pre>
+<h2 id="user-management">User management</h2>
+
+<ul>
+<li>GET &rsquo;<BASE API URL>/auth/user&rsquo; - Lists currently active users</li>
+<li>GET &rsquo;<BASE API URL>/auth/user/:id&rsquo; - Shows info for user with the given id</li>
+<li>POST &rsquo;<BASE API URL>/auth/user&rsquo; - Creates a new user</li>
+<li>PATCH &rsquo;<BASE API URL>/auth/user/me&rsquo; - Updates current user details</li>
+<li>PATCH &rsquo;<BASE API URL>/auth/user/:id&rsquo; - Updates specified user details</li>
+</ul>
+
           <h1 id="errors">Errors</h1>
 
 <p>The Resource Watch API uses the following error codes:</p>
