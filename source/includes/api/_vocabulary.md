@@ -14,6 +14,7 @@ To do it, the only parameter that is required is the name of the Vocabulary.
 | Field             | Description                                                       | Type
 | ------------------|:-----------------------------------------:                        | -----:
 | name              | The name of the Vocabulary (**it has to be unique and it represents the "primaryKey"**) | String
+| application  | The associated application for this vocabulary  | String
 
 However, the most common use case relies on the relationships creation.
 
@@ -42,6 +43,7 @@ If you don't know how to do this, please go to the <a href="#authentication">Aut
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
+ "application": <application>,
    "tags": [<tags>]
   }'
 ```
@@ -50,6 +52,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<v
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
+ "application": <application>,
    "tags": [<tags>]
   }'
 ```
@@ -58,6 +61,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widge
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
+ "application": <application>,
    "tags": [<tags>]
   }'
 ```
@@ -68,6 +72,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
 curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 -H "Content-Type: application/json"  -d \
  '{
+ "application": <application>,
    "tags": ["biology", "chemistry"]
   }'
 ```
@@ -121,6 +126,7 @@ The previous tags will be deleted in benefit of the new ones.
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
+ "application": <application>,
    "tags": [<tags>]
   }'
 ```
@@ -129,6 +135,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
+ "application": <application>,
    "tags": [<tags>]
   }'
 ```
@@ -137,6 +144,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
+ "application": <application>,
    "tags": [<tags>]
   }'
 ```
@@ -147,6 +155,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 -H "Content-Type: application/json"  -d \
  '{
+ "application": <application>,
    "tags": ["maths", "astronomy"]
   }'
 ```
@@ -200,9 +209,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
 -H "Content-Type: application/json"  -d \
  '{
    "vocabularyOne": {
+   "application": <application>,
        "tags": [<tags>]
    },
    "vocabularyTwo": {
+   "application": <application>,
        "tags": [<tags>]
    }
   }'
@@ -213,9 +224,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widge
 -H "Content-Type: application/json"  -d \
 '{
   "vocabularyOne": {
+  "application": <application>,
       "tags": [<tags>]
   },
   "vocabularyTwo": {
+  "application": <application>,
       "tags": [<tags>]
   }
  }'
@@ -226,9 +239,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
 -H "Content-Type: application/json"  -d \
 '{
   "vocabularyOne": {
+  "application": <application>,
       "tags": [<tags>]
   },
   "vocabularyTwo": {
+  "application": <application>,
       "tags": [<tags>]
   }
  }'
@@ -237,7 +252,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
 > real example
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
+curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary?application=<application>
 -H "Content-Type: application/json"  -d \
  '{
      "country": {
@@ -593,6 +608,7 @@ As was mentioned before, it is possible to just create a new and empty vocabular
 curl -X POST https://api.resourcewatch.org/v1/vocabulary/vocabularyName \
 -H "Content-Type: application/json"  -d \
  '{
+   "application": <application>,
    "name": <vocabularyName>
   }'
 ```
