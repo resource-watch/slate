@@ -3838,6 +3838,11 @@ To do it, the only parameter that is required is the name of the Vocabulary.</p>
 <td style="text-align: center">The name of the Vocabulary (<strong>it has to be unique and it represents the &ldquo;primaryKey&rdquo;</strong>)</td>
 <td style="text-align: right">String</td>
 </tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The associated application for this vocabulary</td>
+<td style="text-align: right">String</td>
+</tr>
 </tbody></table>
 
 <p>However, the most common use case relies on the relationships creation.</p>
@@ -3867,16 +3872,19 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+ "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+ "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+ "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre>
@@ -3886,6 +3894,7 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+ "application": &lt;application&gt;,
    "tags": ["biology", "chemistry"]
   }'</span>
 </code></pre>
@@ -3935,16 +3944,19 @@ The previous tags will be deleted in benefit of the new ones.</p>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+ "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre><pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+ "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre><pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+ "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre>
@@ -3954,6 +3966,7 @@ The previous tags will be deleted in benefit of the new ones.</p>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+ "application": &lt;application&gt;,
    "tags": ["maths", "astronomy"]
   }'</span>
 </code></pre>
@@ -4003,9 +4016,11 @@ The previous tags will be deleted in benefit of the new ones.</p>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
    "vocabularyOne": {
+   "application": &lt;application&gt;,
        "tags": [&lt;tags&gt;]
    },
    "vocabularyTwo": {
+   "application": &lt;application&gt;,
        "tags": [&lt;tags&gt;]
    }
   }'</span>
@@ -4013,9 +4028,11 @@ The previous tags will be deleted in benefit of the new ones.</p>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
   "vocabularyOne": {
+  "application": &lt;application&gt;,
       "tags": [&lt;tags&gt;]
   },
   "vocabularyTwo": {
+  "application": &lt;application&gt;,
       "tags": [&lt;tags&gt;]
   }
  }'</span>
@@ -4023,9 +4040,11 @@ The previous tags will be deleted in benefit of the new ones.</p>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
   "vocabularyOne": {
+  "application": &lt;application&gt;,
       "tags": [&lt;tags&gt;]
   },
   "vocabularyTwo": {
+  "application": &lt;application&gt;,
       "tags": [&lt;tags&gt;]
   }
  }'</span>
@@ -4033,7 +4052,7 @@ The previous tags will be deleted in benefit of the new ones.</p>
 <blockquote>
 <p>real example</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary?application<span class="o">=</span>&lt;application&gt;
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
      "country": {
@@ -4329,6 +4348,7 @@ payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/vocabulary/vocabularyName <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
+   "application": &lt;application&gt;,
    "name": &lt;vocabularyName&gt;
   }'</span>
 </code></pre>
