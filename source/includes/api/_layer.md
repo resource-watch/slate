@@ -260,6 +260,21 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
+    "application":[
+       "your", "apps"
+    ],
+    "name":"Example layer",
+    "status": 1
+}'
+```
+
+> The following structure was previously supported but should now be considered deprecated:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
    "layer": {
       "application":[
          "your", "apps"
