@@ -3080,20 +3080,6 @@ Remember — the response is jsonapi format
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-    "application":[
-       "your", "apps"
-    ],
-    "name":"Example layer",
-    "status": 1
-}'</span>
-</code></pre>
-<blockquote>
-<p>The following structure was previously supported but should now be considered deprecated:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
    "layer": {
       "application":[
          "your", "apps"
@@ -6932,9 +6918,17 @@ curl -X POST http://localhost:9000/auth/login <span class="se">\</span>
 <li>GET &rsquo;<BASE API URL>/auth/sign-up&rsquo; - Account creation page, for accounts using email + password based login</li>
 <li>POST &rsquo;<BASE API URL>/auth/sign-up&rsquo; - Account creation endpoint, for accounts using email + password based login</li>
 </ul>
-<pre class="highlight shell"><code><span class="c"># Account creation using email + password</span>
+<pre class="highlight shell"><code><span class="c"># Account creation using email + password (JSON output)</span>
 curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "email":"your-email@provider.com",
+    "password":"potato",
+    "repeatPassword":"potato"
+}'</span>
+
+<span class="c"># Account creation using email + password (HTML output)</span>
+curl -X POST http://localhost:9000/auth/sign-up -d <span class="se">\</span>
  <span class="s1">'{
     "email":"your-email@provider.com",
     "password":"potato",
