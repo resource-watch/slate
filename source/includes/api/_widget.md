@@ -1085,7 +1085,7 @@ queryUrl     |  Url with the data of the chart shows   |    Text |              
 widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
 status       |          Status of the Widget           |  Number |                                               1 |       No
 published    |        If it's available to use         | Boolean |                                    true - false |       No
-freeze    |        If the data is freezed         | Boolean |                                    true - false |       No
+freeze       |        If the data is freezed           | Boolean |                                    true - false |       No
 verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
 template     |           If it's a template            | Boolean |                                    true - false |       No
 default      |       If it's default for dataset       | Boolean |                                    true - false |       No
@@ -1107,6 +1107,32 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widg
       "name":"New Example Carto Dataset Name",
       "widgetConfig": {}
    }
+}'
+```
+
+## Clone a Widget
+
+You can clone an existing widget as long as you have permissions to the applications associated with it. Basic usage requires no body params, but you can optionally pass a new `name` or `description` to be used in the creation of the new widget.
+
+
+> To clone a widget, you have to do a POST request with the following body:
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+> You can optionally set a new name or description:
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+   "name": "name for the cloned widget",
+   "description": "
+   "name": "name for the cloned widget", for the cloned widget",
 }'
 ```
 
