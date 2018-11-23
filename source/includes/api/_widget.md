@@ -1118,7 +1118,7 @@ You can clone an existing widget as long as you have permissions to the applicat
 > To clone a widget, you have to do a POST request with the following body:
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone \
+curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
@@ -1126,7 +1126,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widg
 > You can optionally set a new name or description:
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone \
+curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
