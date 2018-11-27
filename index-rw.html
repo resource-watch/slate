@@ -2652,16 +2652,27 @@ Remember — the response is jsonapi format
 <p>You can clone an existing widget as long as you have permissions to the applications associated with it. Basic usage requires no body params, but you can optionally pass a new <code class="prettyprint">name</code> or <code class="prettyprint">description</code> to be used in the creation of the new widget.</p>
 
 <blockquote>
-<p>To clone a widget, you have to do a POST request with the following body:</p>
+<p>To clone a widget, you should use one of the following POST requests:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
 <blockquote>
 <p>You can optionally set a new name or description:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "name for the cloned widget",
+   "description": "
+   "name": "name for the cloned widget", for the cloned widget",
+}'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -6748,26 +6759,64 @@ For more information or implementation details, see <a href="https://github.com/
 
 <h2 id="login-email-password">Login (email + password)</h2>
 
-<ul>
-<li>GET &rsquo;<BASE API URL>/auth/&rsquo; - Basic API auth login page</li>
-<li>GET &rsquo;<BASE API URL>/auth/login&rsquo; - Basic API auth login page</li>
-<li>POST &rsquo;<BASE API URL>/auth/login&rsquo; - Endpoint for email + password based login</li>
-</ul>
-<pre class="highlight shell"><code><span class="c"># Email + password based login</span>
+<p>Login endpoints support both HTML and JSON output formats, depending on the <code class="prettyprint">Content-type</code> provided in the request. Keep in mind that HTML-based requests will result in redirects - for example, after successfully logging in, you will be taken to <code class="prettyprint">/auth/success</code> - while JSON based requests will simply return the matching HTTP code - 200 in case of a successful login.</p>
+
+<h3 id="get-lt-base-api-url-gt-auth">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/</code></h3>
+
+<p>Convenience URL that redirects to <code class="prettyprint">&lt;BASE API URL&gt;/auth/login</code></p>
+
+<h3 id="get-lt-base-api-url-gt-auth-login">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/login</code></h3>
+
+<p>Basic API auth login page. Only supported for HTML requests.</p>
+
+<h3 id="post-lt-base-api-url-gt-auth-login">POST <code class="prettyprint">&lt;BASE API URL&gt;/auth/login</code></h3>
+
+<p>Endpoint for email + password based login.</p>
+
+<p>For HTML requests, it will redirect to either <code class="prettyprint">&lt;BASE API URL&gt;/auth/success</code> or <code class="prettyprint">&lt;BASE API URL&gt;/auth/fail</code> depending on whether the login was successful or not. An optional <code class="prettyprint">callbackUrl</code> query parameter can be provided, in which case the user will be redirected to that URL in case of login success.</p>
+
+<p>For JSON requests, it will return 200 or 401 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object.</p>
+<pre class="highlight shell"><code><span class="c"># Email + password based login - JSON format</span>
 curl -X POST http://localhost:9000/auth/login <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
     "email":"your-email@provider.com",
     "password":"potato"
 }'</span>
+</code></pre><pre class="highlight plaintext"><code>// Response:
+{
+  "data": {
+    "email": "your-email@provider.com",
+    "createdAt": "2018-11-15T04:46:35.313Z",
+    "role": "USER",
+    "extraUserData": {
+      "apps": [
+        "rw"
+      ]
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViZWNmYTJiNjdkYTBkM2VjMDdhMjdmNiIsInJvbGUiOiJVU0VSIiwicHJvdmlkZXIiOiJsb2NhbCIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImV4dHJhVXNlckRhdGEiOnsiYXBwcyI6WyJydyJdfSwiY3JlYXRlZEF0IjoxNTQzMzE1NzMxNzcwLCJpYXQiOjE1NDMzMTU3MzF9.kIdkSOb7mCMOxE2ipqVOBrK7IefAjLDhaPG9DT1qvCw"
+  }
+}
 </code></pre>
-<ul>
-<li>GET &rsquo;<BASE API URL>/auth/fail&rsquo; - Displays login errors</li>
-<li>GET &rsquo;<BASE API URL>/auth/check-logged&rsquo; - Check login status</li>
-<li>GET &rsquo;<BASE API URL>/auth/success&rsquo; - Successful login page</li>
-<li>GET &rsquo;<BASE API URL>/auth/logout&rsquo; - Login invalidation endpoint</li>
-<li>GET &rsquo;<BASE API URL>/auth/generate-token&rsquo; - Generates a JWT token for the current user session.</li>
-</ul>
+<h3 id="get-lt-base-api-url-gt-auth-fail">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/fail</code></h3>
+
+<p>Displays login errors for HTML requests. Not supported on JSON requests.</p>
+
+<h3 id="get-lt-base-api-url-gt-auth-check-logged">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/check-logged</code></h3>
+
+<p>Check login status</p>
+
+<h3 id="get-lt-base-api-url-gt-auth-success">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/success</code></h3>
+
+<p>Successful login page for HTML requests. Not supported on JSON requests.</p>
+
+<h3 id="get-lt-base-api-url-gt-auth-logout">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/logout</code></h3>
+
+<p>Login invalidation endpoint</p>
+
+<h3 id="get-lt-base-api-url-gt-auth-generate-token">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/generate-token</code></h3>
+
+<p>Generates a JWT token for the current user session.</p>
 
 <h2 id="login-3rd-party-oauth">Login (3rd party oauth)</h2>
 
@@ -6784,10 +6833,19 @@ curl -X POST http://localhost:9000/auth/login <span class="se">\</span>
 
 <h2 id="registration">Registration</h2>
 
-<ul>
-<li>GET &rsquo;<BASE API URL>/auth/sign-up&rsquo; - Account creation page, for accounts using email + password based login</li>
-<li>POST &rsquo;<BASE API URL>/auth/sign-up&rsquo; - Account creation endpoint, for accounts using email + password based login</li>
-</ul>
+<p>Registration endpoints support both HTML and JSON output formats, depending on the <code class="prettyprint">Content-type</code> provided in the request.</p>
+
+<h3 id="get-lt-base-api-url-gt-auth-sign-up">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/sign-up</code></h3>
+
+<p>Account creation page, for accounts using email + password based login for HTML requests. Not supported on JSON requests.</p>
+
+<h3 id="post-lt-base-api-url-gt-auth-sign-up">POST <code class="prettyprint">&lt;BASE API URL&gt;/auth/sign-up</code></h3>
+
+<p>Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.</p>
+
+<p>For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.</p>
+
+<p>For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.</p>
 <pre class="highlight shell"><code><span class="c"># Account creation using email + password</span>
 curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -6796,12 +6854,33 @@ curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
     "password":"potato",
     "repeatPassword":"potato"
 }'</span>
+</code></pre><pre class="highlight plaintext"><code>// Response:
+{
+  "data": {
+    "id": "5bfd237767b3176dd63f2eb7",
+    "email": "your-email@provider.com",
+    "createdAt": "2018-11-27T10:59:03.531Z",
+    "role": "USER",
+    "extraUserData": {
+      "apps": []
+    }
+  }
+}
+
 </code></pre>
-<ul>
-<li>GET &rsquo;<BASE API URL>/auth/confirm/:token&rsquo; - Endpoint used in the user validation email to confirm the address upon registration</li>
-</ul>
+<h3 id="get-lt-base-api-url-gt-auth-confirm-token">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/confirm/:token</code></h3>
+
+<p>Endpoint used in the user validation email to confirm the address upon registration. </p>
+
+<p>It accepts an optional <code class="prettyprint">callbackUrl</code> query parameter with an URL to which the user will be redirect if the confirmation succeeds.</p>
+
+<p>Should no <code class="prettyprint">callbackUrl</code> be provided, the user is redirected to an URL based on the first application associated to their user account - see <code class="prettyprint">ct-oauth-plugin</code> configuration for more info.</p>
+
+<p>Should that application have no configured redirect URL, or the user have no configured app, they are redirect to a platform-wide default URL - see <code class="prettyprint">ct-oauth-plugin</code> configuration for more info.</p>
 
 <h2 id="password-recovery">Password recovery</h2>
+
+<p>Password recovery endpoints support both HTML and JSON output formats, depending on the <code class="prettyprint">Content-type</code> provided in the request.</p>
 
 <ul>
 <li>GET &rsquo;<BASE API URL>/auth/reset-password&rsquo; - Displays the password reset form page.</li>

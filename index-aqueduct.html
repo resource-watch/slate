@@ -2652,16 +2652,27 @@ Remember — the response is jsonapi format
 <p>You can clone an existing widget as long as you have permissions to the applications associated with it. Basic usage requires no body params, but you can optionally pass a new <code class="prettyprint">name</code> or <code class="prettyprint">description</code> to be used in the creation of the new widget.</p>
 
 <blockquote>
-<p>To clone a widget, you have to do a POST request with the following body:</p>
+<p>To clone a widget, you should use one of the following POST requests:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
 <blockquote>
 <p>You can optionally set a new name or description:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "name for the cloned widget",
+   "description": "
+   "name": "name for the cloned widget", for the cloned widget",
+}'</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
