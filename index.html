@@ -7013,6 +7013,8 @@ curl -X POST http://localhost:9000/auth/login <span class="se">\</span>
 <p>For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.</p>
 
 <p>For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.</p>
+
+<p>While optional, it&rsquo;s highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user&rsquo;s apps match datasets, widgets, etc.</p>
 <pre class="highlight shell"><code><span class="c"># Account creation using email + password</span>
 curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -7020,6 +7022,7 @@ curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
     "email":"your-email@provider.com",
     "password":"potato",
     "repeatPassword":"potato"
+    "apps" ["rw"]
 }'</span>
 </code></pre><pre class="highlight plaintext"><code>// Response:
 {
@@ -7029,7 +7032,7 @@ curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
     "createdAt": "2018-11-27T10:59:03.531Z",
     "role": "USER",
     "extraUserData": {
-      "apps": []
+      "apps": ["rw"]
     }
   }
 }
