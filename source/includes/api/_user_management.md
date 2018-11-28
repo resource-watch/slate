@@ -93,6 +93,8 @@ For HTML requests, it will display a message informing about any validation erro
 
 For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.
 
+While optional, it's highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user's apps match datasets, widgets, etc.
+
 ```bash
 # Account creation using email + password
 curl -X POST http://localhost:9000/auth/sign-up \
@@ -101,6 +103,7 @@ curl -X POST http://localhost:9000/auth/sign-up \
     "email":"your-email@provider.com",
     "password":"potato",
     "repeatPassword":"potato"
+    "apps" ["rw"]
 }'
 ```
 
@@ -113,7 +116,7 @@ curl -X POST http://localhost:9000/auth/sign-up \
     "createdAt": "2018-11-27T10:59:03.531Z",
     "role": "USER",
     "extraUserData": {
-      "apps": []
+      "apps": ["rw"]
     }
   }
 }
