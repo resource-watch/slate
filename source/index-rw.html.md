@@ -23,6 +23,7 @@ includes:
   - api/favourites
   - api/graph
   - api/areas
+  - api/webshot
   - api/user_management
   - errors
   - attribution
