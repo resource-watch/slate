@@ -1303,6 +1303,11 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <td style="text-align: center">Environment can be one of <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code></td>
 <td style="text-align: right">Text</td>
 </tr>
+<tr>
+<td>thumbnailUrl</td>
+<td style="text-align: center">Url of the widget&rsquo;s thumbnail, if one exists</td>
+<td style="text-align: right">Text</td>
+</tr>
 </tbody></table>
 
 <h3 id="what-is-vega">What is Vega?</h3>
@@ -2497,6 +2502,10 @@ Remember — the response is jsonapi format
    }
 }'</span>
 </code></pre>
+<aside class="notice">
+Creating a widget will cause its thumbnail to be generated, which may take a few seconds to process.
+</aside>
+
 <h2 id="update-a-widget">Update a Widget</h2>
 
 <p>To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:</p>
@@ -2632,7 +2641,7 @@ Remember — the response is jsonapi format
 </tbody></table>
 
 <blockquote>
-<p>To create a widget, you have to do a POST request with the following body:</p>
+<p>To update a widget, you have to do a PATCH request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -2647,6 +2656,10 @@ Remember — the response is jsonapi format
    }
 }'</span>
 </code></pre>
+<aside class="notice">
+Updating a widget will cause a thumbnail to be generated, which may take a few seconds to process.
+</aside>
+
 <h2 id="clone-a-widget">Clone a Widget</h2>
 
 <p>You can clone an existing widget as long as you have permissions to the applications associated with it. Basic usage requires no body params, but you can optionally pass a new <code class="prettyprint">name</code> or <code class="prettyprint">description</code> to be used in the creation of the new widget.</p>
@@ -2681,6 +2694,10 @@ Remember — the response is jsonapi format
    "name": "name for the cloned widget", for the cloned widget",
 }'</span>
 </code></pre>
+<aside class="notice">
+Cloning a widget will cause a thumbnail to be generated for the new widget, which may take a few seconds to process.
+</aside>
+
 <h2 id="delete-a-widget">Delete a Widget</h2>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
