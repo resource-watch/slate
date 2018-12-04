@@ -28,6 +28,8 @@ published    |                   If it's available to use                   |   
 freeze       |                   If the data is freezed                     |    Boolean
 verified     |                If it's verified by other user                |    Text
 env          |  Environment can be one of `production` or `preproduction`   |    Text
+thumbnailUrl |             Url of the widget's thumbnail, if one exists     |    Text
+
 
 ### What is Vega?
 
@@ -1069,6 +1071,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget \
 }'
 ```
 
+<aside class="notice">
+Creating a widget will cause its thumbnail to be generated, which may take a few seconds to process.
+</aside>
+
+
 ## Update a Widget
 
 To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
@@ -1093,7 +1100,7 @@ layerId      |   UuId of the relationship with layer   |    Text |              
 dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
 env          |               Environment               |    Text |                 `production` or `preproduction` |      Yes
 
-> To create a widget, you have to do a POST request with the following body:
+> To update a widget, you have to do a PATCH request with the following body:
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id> \
@@ -1109,6 +1116,11 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widg
    }
 }'
 ```
+
+<aside class="notice">
+Updating a widget will cause a thumbnail to be generated, which may take a few seconds to process.
+</aside>
+
 
 ## Clone a Widget
 
@@ -1153,6 +1165,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widge
    "name": "name for the cloned widget", for the cloned widget",
 }'
 ```
+
+<aside class="notice">
+Cloning a widget will cause a thumbnail to be generated for the new widget, which may take a few seconds to process.
+</aside>
+
 
 ## Delete a Widget
 
