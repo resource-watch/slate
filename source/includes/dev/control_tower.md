@@ -558,3 +558,70 @@ curl -X PATCH \
     }
 }
 ```
+
+## Control Tower plugins
+
+Control Tower provides basic API management functionality, but it also has a set of plugins that allow decoupling non-core functionality from the core code base. In this section we'll briefly cover the functional aspect of each plugin, without focusing too much on the underlying implementation, which will be covered separately.
+
+
+### Time Request
+
+This plugin times the time elapsed between the external request is received and the reply to it being dispatched back to the external API client. It adds the computed value as a response header `X-Response-Time`
+
+
+### Manage errors
+
+This plugin intercepts replies that represent errors and formats them properly.
+
+
+### CORS
+
+This plugins adds the necessary headers to support [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+
+
+### Invalidate cache endpoints
+
+Varnish cache integration plugin that invalidates cache entries.
+
+<aside class="notice">
+This plugin is disabled and is no longer supported.
+</aside>
+
+
+### Response formatter
+
+Handles response formats other than the default JSON, setting headers and formatting the response body according to the requested content type. Currently only supports XML.
+
+
+### Statistics
+
+Collects and stores statistics about the API usage. You can find more details on [this repo](https://github.com/control-tower/ct-stadistics-plugin).
+
+
+### MongoDB sessions
+
+Adds support for storing session data on MongoDB
+
+
+### Oauth plugin
+
+User management and authentication plugin. Supports email+password based registration, as well as Facebook, Twitter and Google+ oauth-based authentication. You can find more details on [this repo](https://github.com/control-tower/ct-oauth-plugin).
+
+
+### Redis cache
+
+Redis-based caching for Control Tower. You can find more details on [this repo](https://github.com/control-tower/ct-redis-cache).
+
+<aside class="notice">
+This plugin is disabled and is no longer supported.
+</aside>
+
+
+### Application key authorization
+
+Application key handling.
+
+
+### Fastly cache
+
+Integrates HTTP caching using [Fastly](https://www.fastly.com/).
