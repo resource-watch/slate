@@ -59,13 +59,13 @@ Control Tower     |                                     Request                 
                   |                        <===   POST /v1/microservice  <===                            | 
                   | {"name":"microservice name", "url": "http://microservice-url.com", "active": true }  | 
                   |                                ===>   Reply  ===>                                    | 
-                  |                      { /* JSON with microservice details */ }                        | 
+                  |                                      HTTP OK                                         | 
                   |                                                                                      | 
                   |                                                                                      | 
                   |                                                                                      | 
                   |                           ===>   GET /api/info  ===>                                 | 
                   |                                <===   Reply  <===                                    | 
-                  |                      { /* JSON with microservice endpoints */ }                      | 
+                  |                      { /* JSON with microservice details */ }                        | 
                   |                                                                                      | 
                   |                                                                                      | 
                   |                                                                                      | 
@@ -101,7 +101,8 @@ During the registration process, each microservice is responsible for informing 
                 "path": "/api/v1/dataset"
             }
         }
-	]
+	],
+	"swagger": {}
 }
 ```
 
@@ -110,6 +111,7 @@ Breaking it down bit by bit:
 - `name`: Name of the microservice.
 - `tags`: List of tags associated with the microservice.
 - `endpoints`: Array of `endpoint` objects.
+- `swagger`: [Swagger](https://swagger.io/) formatted JSON object documenting the microservice's endpoints.
 
 Within the `endpoints` array, the expected object structure is the following: 
 
@@ -366,4 +368,193 @@ curl -X DELETE \
   http://<CT URL>/api/v1/endpoint/purge-all \
   -H 'Authorization: Bearer <your user token>' \
   -H 'Content-Type: application/json'
+```
+
+### Documentation management endpoints
+
+#### GET `/doc/swagger`
+
+Generates a complete [Swagger](https://swagger.io/) JSON file documenting all API endpoints. This swagger is compiled by Control Tower based on Swagger files provided by each microservice. As such, the Swagger details for a given endpoint will only be as good as the information provided by the microservice itself.
+
+<aside class="notice">
+This
+</aside>
+
+
+```bash
+curl -X GET \
+  http://<CT URL>/api/v1/endpoint \
+  -H 'Authorization: Bearer <your user token>' \
+  -H 'Content-Type: application/json'
+```
+
+```json
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Control Tower",
+        "description": "Control Tower - API",
+        "version": "1.0.0"
+    },
+    "host": "tower.dev:9000",
+    "schemes": [
+        "http"
+    ],
+    "produces": [
+        "application/vnd.api+json",
+        "application/json"
+    ],
+    "paths": {
+        "/api/v1/doc/swagger": {
+            "get": {
+                "description": "Return swagger files of registered microservices",
+                "operationId": "getSwagger",
+                "tags": [
+                    "ControlTower"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/vnd.api+json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Swagger json"
+                    },
+                    "500": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Errors"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Errors": {
+            "type": "object",
+            "description": "Errors",
+            "properties": {
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Error"
+                    }
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "A unique identifier for this particular occurrence of the problem."
+                },
+                "links": {
+                    "type": "object",
+                    "description": "A links object",
+                    "properties": {
+                        "about": {
+                            "type": "string",
+                            "description": "A link that leads to further details about this particular occurrence of the problem."
+                        }
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "description": "The HTTP status code applicable to this problem, expressed as a string value"
+                },
+                "code": {
+                    "type": "string",
+                    "description": "An application-specific error code, expressed as a string value"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization."
+                },
+                "detail": {
+                    "type": "string",
+                    "description": "A human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized"
+                },
+                "source": {
+                    "type": "object",
+                    "description": "An object containing references to the source of the error, optionally including any of the following members",
+                    "properties": {
+                        "pointer": {
+                            "type": "string",
+                            "description": "A JSON Pointer [RFC6901] to the associated entity in the request document"
+                        },
+                        "parameter": {
+                            "type": "string",
+                            "description": "A string indicating which URI query parameter caused the error."
+                        }
+                    }
+                },
+                "meta": {
+                    "type": "object",
+                    "description": "A meta object containing non-standard meta-information about the error."
+                }
+            }
+        }
+    }
+}
+```
+
+### Plugin management endpoints
+
+Control Tower as a plugin system of its own, which we'll cover in detail in the next section. As part of that system it has a few API endpoints to support certain actions
+
+#### GET `/plugin`
+
+Lists all currently enabled plugins, along with their configuration.
+
+```bash
+curl -X GET \
+  http://<CT URL>/api/v1/plugin \
+  -H 'Authorization: Bearer <your user token>' \
+  -H 'Content-Type: application/json'
+```
+
+```json
+[
+    {
+        "active": true,
+        "_id": "5bfd440834d5076bb4609f9f",
+        "name": "manageErrors",
+        "description": "Manage Errors",
+        "mainFile": "plugins/manageErrors",
+        "config": {
+            "jsonAPIErrors": true
+        }
+    }
+]
+```
+
+#### PATCH `/plugin/:id`
+
+Updates the settings of a given plugin.
+
+```bash
+curl -X PATCH \
+  http://<CT URL>/api/v1/plugin/:pluginId \
+  -H 'Authorization: Bearer <your user token>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"config": {
+        "jsonAPIErrors": false
+    }
+}'
+```
+
+```json
+{
+    "_id": "5bfd440834d5076bb4609f9f",
+    "name": "manageErrors",
+    "description": "Manage Errors",
+    "mainFile": "plugins/manageErrors",
+    "config": {
+        "jsonAPIErrors": false
+    }
+}
 ```
