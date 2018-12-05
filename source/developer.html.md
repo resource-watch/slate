@@ -11,6 +11,7 @@ toc_footers:
 includes:
   - dev/architecture
   - dev/control_tower
+  - dev/control_tower_plugin_development
 
 logo: logo-rw.png
 
