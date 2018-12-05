@@ -56,7 +56,7 @@ Here's a graphical overview of the requests exchanged between CT and a microserv
 
 Control Tower     |                                     Request                                          |    Microservice
 ----------------- | :----------------------------------------------------------------------------------: | ------:
-                  |                      <===   POST /api/v1/microservice  <===                          | 
+                  |                        <===   POST /v1/microservice  <===                            | 
                   | {"name":"microservice name", "url": "http://microservice-url.com", "active": true }  | 
                   |                                ===>   Reply  ===>                                    | 
                   |                      { /* JSON with microservice details */ }                        | 
@@ -165,7 +165,7 @@ The `redirect.path` references the same `:dataset` value - meaning the incoming 
 
 You'll also notice new fields that were not present before: 
 
-- ###### `binary`: Using this causes Control Tower to pipe the microservice's response content as a binary stream to the external request's reply. Use this in case you expect your microservice's replies to have large amounts of data.
+- `binary`: Using this causes Control Tower to pipe the microservice's response content as a binary stream to the external request's reply. Use this in case you expect your microservice's replies to have large amounts of data.
 - `authenticated`: Setting this to `true` causes Control Tower to immediately return an HTTP `401` error code in case this endpoint matches the external request, but that request has no user identification data.
 - `applicationRequired`: Setting this to `true` causes Control Tower to immediately return an HTTP `401` error code in case this endpoint matches the external request, but that request has no application data as part of the user's data.
 - `filters`: An array of filter objects that the request must match to in order for a match to be considered successful.
@@ -177,7 +177,193 @@ You'll also notice new fields that were not present before:
 
 The filtering section has the most complex structure, so lets analyse it with a real-world example. The above example would match a request like GET `<api external URL>/v1/query/<dataset id>`. Once that request is received by Control Tower, it is tentatively matched to this endpoint, but pending the validation of the filter section.
 
-To process the filter, Control Tower will do a request of type `filters.method` (GET, in this case) and URI `filters.path`. As the URI contains a `:dataset` variable, it will use the `filters.params`
+To process the filter, Control Tower will do a request of type `filters.method` (GET, in this case) and URI `filters.path`. As the URI contains a `:dataset` variable, it will use the `filters.params` object to map that value to the `dataset` value from the external request. This internal request is then issued and the process briefly stopped until a response is returned.
+
+Once the response is returned, the `filters.compare` object comes into play: Control Tower will see if the response body object matches the set value in the `filters.compare` object. In this particular example, the resulting comparison would be something like `response.body.data.attributes.connectorType == "document"`. Should this evaluate to `true`, the filter is considered to have matched, and this endpoint is used to dispatch the internal request to. Otherwise, this endpoint is discarded from the list of possible matches for this external request.
+
+Its worth noting at this stage that there's no restriction regarding uniqueness of internal endpoints - two microservices may support the same endpoint, and use filters to differentiate between them based on the underlying data. The example above illustrates how a microservice can support the `/v1/query/:dataset` external endpoint, but only for datasets of type `document`. A different microservice may support the same endpoint, but with a different filter value (for example `carto`) and offer the same external functionality with a completely different underlying implementation.
+
+Should multiple endpoints match an external request, one of them is chosen and used - there are no guarantees in terms of which is picked, so while this scenario does not produce an error, you probably want to avoid it.
 
 
+## Management API
 
+In the previous section, we discussed how microservices can register their endpoint on Control Tower, exposing their functionality to the outside world. That registration process uses part of Control Tower's own API, which we'll discuss in finer detail in this section.
+
+### Microservice management endpoints
+
+The microservice registration endpoint is one of 4 endpoints that exist around microservice management:
+
+#### GET `/microservice/`
+
+This endpoint shows a list of registered microservice and their corresponding endpoints.
+
+```bash
+curl -X GET \
+  http://<CT URL>/api/v1/microservice \
+  -H 'Authorization: Bearer <your user token>' \
+  -H 'Content-Type: application/json'
+```
+
+```json
+[
+    {
+        "infoStatus": {
+            "numRetries": 0,
+            "error": null,
+            "lastCheck": "2018-12-05T07:33:30.244Z"
+        },
+        "pathInfo": "/info",
+        "pathLive": "/ping",
+        "status": "active",
+        "cache": [],
+        "uncache": [],
+        "tags": [
+            "dataset"
+        ],
+        "_id": "5aa66766aee7ae846a419c0c",
+        "name": "Dataset",
+        "url": "http://dataset.default.svc.cluster.local:3000",
+        "version": 1,
+        "endpoints": [
+            {
+                "redirect": {
+                    "method": "GET",
+                    "path": "/api/v1/dataset"
+                },
+                "path": "/v1/dataset",
+                "method": "GET"
+            }
+        ],
+        "updatedAt": "2018-11-23T14:27:10.957Z",
+        "swagger": "{}"
+    }
+]
+```
+
+#### GET `/microservice/status`
+
+Lists information about operational status of each microservice - like errors detected by Control Tower trying to contact the microservice or number of retries attempted.
+
+```bash
+curl -X GET \
+  http://<CT URL>/api/v1/microservice/status \
+  -H 'Authorization: Bearer <your user token>' \
+  -H 'Content-Type: application/json'
+```
+
+```json
+[
+    {
+        "infoStatus": {
+            "numRetries": 0,
+            "error": null,
+            "lastCheck": "2018-12-05T07:36:30.199Z"
+        },
+        "status": "active",
+        "name": "Dataset"
+    }
+]
+```
+
+#### POST `/microservice/`
+
+This is the endpoint used by microservices to register on Control Tower. You can find a detailed analysis of its syntax in the [previous section](#api-proxy-router)
+
+#### DELETE `/microservice/:id`
+
+This endpoint is used to unregister a microservice's endpoints from Control Tower. Control Tower does not actually delete the microservice information, nor does it immediately remove the endpoints associated to it. This endpoint iterates over all endpoint associated with the microservice to be unregistered, and flags them for deletion - which is actually done by a cron task that in the background. Until that moment, the microservice and associated endpoints will continue to be available, and external requests to those endpoints will be handled as matched as they were before. However, you will notice that endpoints scheduled for deletion will have a `toDelete` value of true - more on this in the next section.
+
+
+```bash
+curl -X DELETE \
+  http://<CT URL>/api/v1/microservice/<microservice id> \
+  -H 'Authorization: Bearer <your user token>' \
+  -H 'Content-Type: application/json'
+```
+
+```json
+{
+    "infoStatus": {
+        "numRetries": 0
+    },
+    "pathInfo": "/info",
+    "pathLive": "/ping",
+    "status": "active",
+    "cache": [],
+    "uncache": [],
+    "tags": [
+        "dataset",
+        "dataset",
+        "dataset"
+    ],
+    "_id": "5c0782831b0bf92a37a754e2",
+    "name": "Dataset",
+    "url": "http://127.0.0.1:3001",
+    "version": 1,
+    "updatedAt": "2018-12-05T07:49:36.754Z",
+    "endpoints": [
+        {
+            "redirect": {
+                "method": "GET",
+                "path": "/api/v1/dataset"
+            },
+            "path": "/v1/dataset",
+            "method": "GET"
+        }
+    ],
+    "swagger": "{}"
+}
+```
+
+### Endpoint management endpoints
+
+#### GET `/endpoint`
+
+This endpoint lists all microservice endpoint known by Control Tower. Note that it does not contain endpoints offered by Control Tower itself or any of its plugins.
+
+```bash
+curl -X GET \
+  http://<CT URL>/api/v1/endpoint \
+  -H 'Authorization: Bearer <your user token>' \
+  -H 'Content-Type: application/json'
+```
+
+```json
+[
+    {
+        "pathKeys": [],
+        "authenticated": false,
+        "applicationRequired": false,
+        "binary": false,
+        "cache": [],
+        "uncache": [],
+        "toDelete": true,
+        "_id": "5c0784c88dcce0323abe705d",
+        "path": "/v1/dataset",
+        "method": "GET",
+        "pathRegex": {},
+        "redirect": [
+            {
+                "filters": null,
+                "_id": "5c0784c88dcce0323abe705e",
+                "method": "GET",
+                "path": "/api/v1/dataset",
+                "url": "http://127.0.0.1:3001"
+            }
+        ],
+        "version": 1
+    }
+]
+```
+
+#### DELETE `/endpoint/purge-all`
+
+This endpoint purges the complete HTTP cache for all microservices. It does not support any kind of parametrization, so it's not possible to use this endpoint to clear only parts of the cache. As such, we recommend not using this endpoint unless you are certain of its consequences, as it will have noticeable impact in end-user perceived performance.
+
+```bash
+curl -X DELETE \
+  http://<CT URL>/api/v1/endpoint/purge-all \
+  -H 'Authorization: Bearer <your user token>' \
+  -H 'Content-Type: application/json'
+```
