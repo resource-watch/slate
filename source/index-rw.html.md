@@ -24,6 +24,8 @@ includes:
   - api/graph
   - api/areas
   - api/webshot
+  - api/topic
+  - api/dashboard
   - api/user_management
   - errors
   - attribution
