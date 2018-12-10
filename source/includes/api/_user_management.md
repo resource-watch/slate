@@ -102,8 +102,8 @@ curl -X POST http://localhost:9000/auth/sign-up \
  '{
     "email":"your-email@provider.com",
     "password":"potato",
-    "repeatPassword":"potato"
-    "apps" ["rw"]
+    "repeatPassword":"potato",
+    "apps": ["rw"]
 }'
 ```
 
@@ -162,8 +162,52 @@ curl -X POST http://localhost:9000/auth/reset-password/<email token> \
 
 ## User management
 
-- GET '<BASE API URL>/auth/user' - Lists currently active users
-- GET '<BASE API URL>/auth/user/:id' - Shows info for user with the given id
-- POST '<BASE API URL>/auth/user' - Creates a new user
-- PATCH '<BASE API URL>/auth/user/me' - Updates current user details
-- PATCH '<BASE API URL>/auth/user/:id' - Updates specified user details
+- GET '<BASE API URL>/auth/user'
+```bash
+# lists currently active users
+curl -X GET http://localhost:9000/auth/user
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+- GET '<BASE API URL>/auth/user/:id'
+```bash
+# shows info for user with the given id
+curl -X GET http://localhost:9000/auth/user/<user_id>
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+- PATCH '<BASE API URL>/auth/user/me'
+  - Updates current user details.
+  - Can be used by any user.
+  - Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
+  - Returns the new state of the updated user object.
+
+```bash
+# updates current user details
+curl -X PATCH http://localhost:9000/auth/user/me
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+ '{
+    "name":"new-name",
+    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
+    ...
+}'
+```
+- PATCH '<BASE API URL>/auth/user/:id'
+    - Updates specified user details.
+    - Can only be used by admins.
+    - Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
+    - Returns the new state of the updated user object.
+```bash
+# updates details of user given its id
+curl -X PATCH http://localhost:9000/auth/user/<user_id>
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+ '{
+    "name":"new-name",
+    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
+    ...
+}'
+```
