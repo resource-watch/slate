@@ -173,7 +173,7 @@ curl -X POST http://localhost:9000/auth/reset-password/<email token> \
 }'
 ```
 
-## User management
+## User details management
 
 ### GET `<BASE API URL>/auth/user`
 
