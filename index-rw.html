@@ -6939,10 +6939,13 @@ curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
 
 <p>Password recovery endpoints support both HTML and JSON output formats, depending on the <code class="prettyprint">Content-type</code> provided in the request.</p>
 
-<ul>
-<li>GET &rsquo;<BASE API URL>/auth/reset-password&rsquo; - Displays the password reset form page.</li>
-<li>POST &rsquo;<BASE API URL>/auth/reset-password&rsquo; - Endpoint where the password reset request is sent.</li>
-</ul>
+<h3 id="get-lt-base-api-url-gt-auth-reset-password">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/reset-password</code></h3>
+
+<p>Displays the password reset form page.</p>
+
+<h3 id="post-lt-base-api-url-gt-auth-reset-password">POST <code class="prettyprint">&lt;BASE API URL&gt;/auth/reset-password</code></h3>
+
+<p>Endpoint where the password reset request is sent.</p>
 <pre class="highlight shell"><code><span class="c"># Password reset</span>
 curl -X POST http://localhost:9000/auth/reset-password <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -6950,10 +6953,13 @@ curl -X POST http://localhost:9000/auth/reset-password <span class="se">\</span>
     "email":"your-email@provider.com"
 }'</span>
 </code></pre>
-<ul>
-<li>GET &rsquo;<BASE API URL>/auth/reset-password/:token&rsquo; - Endpoint used to validate email address upon password reset request.</li>
-<li>POST &rsquo;<BASE API URL>/auth/reset-password/:token&rsquo; - Endpoint used to submit the new password.</li>
-</ul>
+<h3 id="get-lt-base-api-url-gt-auth-reset-password-token">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/reset-password/:token</code></h3>
+
+<p>Endpoint used to validate email address upon password reset request.</p>
+
+<h3 id="post-lt-base-api-url-gt-auth-reset-password-token">POST <code class="prettyprint">&lt;BASE API URL&gt;/auth/reset-password/:token</code></h3>
+
+<p>Endpoint used to submit the new password.</p>
 <pre class="highlight shell"><code><span class="c"># New password submission</span>
 curl -X POST http://localhost:9000/auth/reset-password/&lt;email token&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -6964,33 +6970,25 @@ curl -X POST http://localhost:9000/auth/reset-password/&lt;email token&gt; <span
 </code></pre>
 <h2 id="user-management">User management</h2>
 
-<ul>
-<li><p>GET &rsquo;<BASE API URL>/auth/user&rsquo;
-&ldquo;`bash</p>
-
-<h1 id="lists-currently-active-users">lists currently active users</h1>
-
-<p>curl -X GET http://localhost:9000/auth/user
--H &quot;Content-Type: application/json&rdquo;  -d \
--H &ldquo;Authorization: Bearer <your-token>&rdquo; \
-&ldquo;`</p></li>
-<li><p>GET &rsquo;<BASE API URL>/auth/user/:id&rsquo;
-&rdquo;`bash</p>
-
-<h1 id="shows-info-for-user-with-the-given-id">shows info for user with the given id</h1>
-
-<p>curl -X GET http://localhost:9000/auth/user/<user_id>
--H &ldquo;Content-Type: application/json&rdquo;  -d \
--H &ldquo;Authorization: Bearer <your-token>&rdquo; \
-&ldquo;`</p></li>
-<li><p>PATCH &rsquo;<BASE API URL>/auth/user/me&rsquo;</p>
+<h3 id="get-lt-base-api-url-gt-auth-user">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/user</code></h3>
+<pre class="highlight shell"><code><span class="c"># lists currently active users</span>
+curl -X GET http://localhost:9000/auth/user
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre>
+<h3 id="get-lt-base-api-url-gt-auth-user-id">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/:id</code></h3>
+<pre class="highlight shell"><code><span class="c"># shows info for user with the given id</span>
+curl -X GET http://localhost:9000/auth/user/&lt;user_id&gt;
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre>
+<h3 id="patch-lt-base-api-url-gt-auth-user-me">PATCH <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/me</code></h3>
 
 <ul>
 <li>Updates current user details.</li>
 <li>Can be used by any user.</li>
 <li>Supported fields: <code class="prettyprint">name</code>, <code class="prettyprint">photo</code> and <code class="prettyprint">email</code> (except on 3rd party auth)</li>
 <li>Returns the new state of the updated user object.</li>
-</ul></li>
 </ul>
 <pre class="highlight shell"><code><span class="c"># updates current user details</span>
 curl -X PATCH http://localhost:9000/auth/user/me
@@ -7002,28 +7000,24 @@ curl -X PATCH http://localhost:9000/auth/user/me
     ...
 }'</span>
 </code></pre>
-<ul>
-<li>PATCH &rsquo;<BASE API URL>/auth/user/:id&rsquo;
+<h3 id="patch-lt-base-api-url-gt-auth-user-id">PATCH <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/:id</code></h3>
 
 <ul>
 <li>Updates specified user details.</li>
 <li>Can only be used by admins.</li>
 <li>Supported fields: <code class="prettyprint">name</code>, <code class="prettyprint">photo</code> and <code class="prettyprint">email</code> (except on 3rd party auth)</li>
-<li>Returns the new state of the updated user object.
-<code class="prettyprint">bash
-# updates details of user given its id
-curl -X PATCH http://localhost:9000/auth/user/&lt;user_id&gt;
--H &quot;Content-Type: application/json&quot;  -d \
--H &quot;Authorization: Bearer &lt;your-token&gt;&quot; \
-&#39;{
-&quot;name&quot;:&quot;new-name&quot;,
-&quot;photo&quot;: &quot;https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314&quot;,
-...
-}&#39;
-</code></li>
-</ul></li>
+<li>Returns the new state of the updated user object.</li>
 </ul>
-
+<pre class="highlight shell"><code><span class="c"># updates details of user given its id</span>
+curl -X PATCH http://localhost:9000/auth/user/&lt;user_id&gt;
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+ <span class="s1">'{
+    "name":"new-name",
+    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
+    ...
+}'</span>
+</code></pre>
           <h1 id="errors">Errors</h1>
 
 <p>The Resource Watch API uses the following error codes:</p>
