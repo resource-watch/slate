@@ -7038,8 +7038,8 @@ curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
  <span class="s1">'{
     "email":"your-email@provider.com",
     "password":"potato",
-    "repeatPassword":"potato"
-    "apps" ["rw"]
+    "repeatPassword":"potato",
+    "apps": ["rw"]
 }'</span>
 </code></pre><pre class="highlight plaintext"><code>// Response:
 {
@@ -7095,11 +7095,63 @@ curl -X POST http://localhost:9000/auth/reset-password/&lt;email token&gt; <span
 <h2 id="user-management">User management</h2>
 
 <ul>
-<li>GET &rsquo;<BASE API URL>/auth/user&rsquo; - Lists currently active users</li>
-<li>GET &rsquo;<BASE API URL>/auth/user/:id&rsquo; - Shows info for user with the given id</li>
-<li>POST &rsquo;<BASE API URL>/auth/user&rsquo; - Creates a new user</li>
-<li>PATCH &rsquo;<BASE API URL>/auth/user/me&rsquo; - Updates current user details</li>
-<li>PATCH &rsquo;<BASE API URL>/auth/user/:id&rsquo; - Updates specified user details</li>
+<li><p>GET &rsquo;<BASE API URL>/auth/user&rsquo;
+&ldquo;`bash</p>
+
+<h1 id="lists-currently-active-users">lists currently active users</h1>
+
+<p>curl -X GET http://localhost:9000/auth/user
+-H &quot;Content-Type: application/json&rdquo;  -d \
+-H &ldquo;Authorization: Bearer <your-token>&rdquo; \
+&ldquo;`</p></li>
+<li><p>GET &rsquo;<BASE API URL>/auth/user/:id&rsquo;
+&rdquo;`bash</p>
+
+<h1 id="shows-info-for-user-with-the-given-id">shows info for user with the given id</h1>
+
+<p>curl -X GET http://localhost:9000/auth/user/<user_id>
+-H &ldquo;Content-Type: application/json&rdquo;  -d \
+-H &ldquo;Authorization: Bearer <your-token>&rdquo; \
+&ldquo;`</p></li>
+<li><p>PATCH &rsquo;<BASE API URL>/auth/user/me&rsquo;</p>
+
+<ul>
+<li>Updates current user details.</li>
+<li>Can be used by any user.</li>
+<li>Supported fields: <code class="prettyprint">name</code>, <code class="prettyprint">photo</code> and <code class="prettyprint">email</code> (except on 3rd party auth)</li>
+<li>Returns the new state of the updated user object.</li>
+</ul></li>
+</ul>
+<pre class="highlight shell"><code><span class="c"># updates current user details</span>
+curl -X PATCH http://localhost:9000/auth/user/me
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+ <span class="s1">'{
+    "name":"new-name",
+    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
+    ...
+}'</span>
+</code></pre>
+<ul>
+<li>PATCH &rsquo;<BASE API URL>/auth/user/:id&rsquo;
+
+<ul>
+<li>Updates specified user details.</li>
+<li>Can only be used by admins.</li>
+<li>Supported fields: <code class="prettyprint">name</code>, <code class="prettyprint">photo</code> and <code class="prettyprint">email</code> (except on 3rd party auth)</li>
+<li>Returns the new state of the updated user object.
+<code class="prettyprint">bash
+# updates details of user given its id
+curl -X PATCH http://localhost:9000/auth/user/&lt;user_id&gt;
+-H &quot;Content-Type: application/json&quot;  -d \
+-H &quot;Authorization: Bearer &lt;your-token&gt;&quot; \
+&#39;{
+&quot;name&quot;:&quot;new-name&quot;,
+&quot;photo&quot;: &quot;https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314&quot;,
+...
+}&#39;
+</code></li>
+</ul></li>
 </ul>
 
           <h1 id="errors">Errors</h1>
