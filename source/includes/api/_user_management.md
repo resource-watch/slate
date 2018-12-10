@@ -179,6 +179,11 @@ curl -X GET http://localhost:9000/auth/user/<user_id>
 ```
 
 - PATCH '<BASE API URL>/auth/user/me'
+  - Updates current user details.
+  - Can be used by any user.
+  - Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
+  - Returns the new state of the updated user object.
+
 ```bash
 # updates current user details
 curl -X PATCH http://localhost:9000/auth/user/me
@@ -191,6 +196,10 @@ curl -X PATCH http://localhost:9000/auth/user/me
 }'
 ```
 - PATCH '<BASE API URL>/auth/user/:id'
+    - Updates specified user details.
+    - Can only be used by admins.
+    - Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
+    - Returns the new state of the updated user object.
 ```bash
 # updates details of user given its id
 curl -X PATCH http://localhost:9000/auth/user/<user_id>
