@@ -136,8 +136,14 @@ Should that application have no configured redirect URL, or the user have no con
 
 Password recovery endpoints support both HTML and JSON output formats, depending on the `Content-type` provided in the request.
 
-- GET '<BASE API URL>/auth/reset-password' - Displays the password reset form page.
-- POST '<BASE API URL>/auth/reset-password' - Endpoint where the password reset request is sent.
+### GET `<BASE API URL>/auth/reset-password` 
+
+Displays the password reset form page.
+
+
+### POST `<BASE API URL>/auth/reset-password`
+
+Endpoint where the password reset request is sent.
 
 ```bash
 # Password reset
@@ -147,8 +153,15 @@ curl -X POST http://localhost:9000/auth/reset-password \
     "email":"your-email@provider.com"
 }'
 ```
-- GET '<BASE API URL>/auth/reset-password/:token' - Endpoint used to validate email address upon password reset request.
-- POST '<BASE API URL>/auth/reset-password/:token' - Endpoint used to submit the new password.
+
+### GET `<BASE API URL>/auth/reset-password/:token`
+
+Endpoint used to validate email address upon password reset request.
+
+
+### POST `<BASE API URL>/auth/reset-password/:token`
+
+Endpoint used to submit the new password.
 
 ```bash
 # New password submission
@@ -162,7 +175,8 @@ curl -X POST http://localhost:9000/auth/reset-password/<email token> \
 
 ## User management
 
-- GET '<BASE API URL>/auth/user'
+### GET `<BASE API URL>/auth/user`
+
 ```bash
 # lists currently active users
 curl -X GET http://localhost:9000/auth/user
@@ -170,7 +184,8 @@ curl -X GET http://localhost:9000/auth/user
 -H "Authorization: Bearer <your-token>" \
 ```
 
-- GET '<BASE API URL>/auth/user/:id'
+### GET `<BASE API URL>/auth/user/:id`
+
 ```bash
 # shows info for user with the given id
 curl -X GET http://localhost:9000/auth/user/<user_id>
@@ -178,11 +193,12 @@ curl -X GET http://localhost:9000/auth/user/<user_id>
 -H "Authorization: Bearer <your-token>" \
 ```
 
-- PATCH '<BASE API URL>/auth/user/me'
-  - Updates current user details.
-  - Can be used by any user.
-  - Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
-  - Returns the new state of the updated user object.
+### PATCH `<BASE API URL>/auth/user/me`
+
+- Updates current user details.
+- Can be used by any user.
+- Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
+- Returns the new state of the updated user object.
 
 ```bash
 # updates current user details
@@ -195,11 +211,15 @@ curl -X PATCH http://localhost:9000/auth/user/me
     ...
 }'
 ```
-- PATCH '<BASE API URL>/auth/user/:id'
-    - Updates specified user details.
-    - Can only be used by admins.
-    - Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
-    - Returns the new state of the updated user object.
+
+### PATCH `<BASE API URL>/auth/user/:id`
+
+- Updates specified user details.
+- Can only be used by admins.
+- Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
+- Returns the new state of the updated user object.
+    
+    
 ```bash
 # updates details of user given its id
 curl -X PATCH http://localhost:9000/auth/user/<user_id>
