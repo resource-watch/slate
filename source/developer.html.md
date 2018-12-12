@@ -12,6 +12,7 @@ includes:
   - dev/architecture
   - dev/control_tower
   - dev/control_tower_plugin_development
+  - dev/microservice
 
 logo: logo-rw.png
 
