@@ -1,0 +1,1055 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>RW API Developer docs</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #272822;
+  background-color: #f92672;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #f8f8f2;
+}
+.highlight .p, .highlight .pi {
+  color: #f8f8f2;
+}
+.highlight .gi {
+  color: #a6e22e;
+}
+.highlight .gd {
+  color: #f92672;
+}
+.highlight .gh {
+  color: #66d9ef;
+  background-color: #272822;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #ae81ff;
+}
+.highlight .kc {
+  color: #fd971f;
+}
+.highlight .kt {
+  color: #fd971f;
+}
+.highlight .kd {
+  color: #fd971f;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #a6e22e;
+}
+.highlight .sr {
+  color: #a1efe4;
+}
+.highlight .si {
+  color: #cc6633;
+}
+.highlight .se {
+  color: #cc6633;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #66d9ef;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #a6e22e;
+}
+.highlight .ss {
+  color: #a6e22e;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="developer rw" data-languages="[&quot;shell&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo-rw.png" alt="Logo rw" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="shell">cURL</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='http://ui.resourcewatch.org'>Sign Up for a Developer Key</a></li>
+            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="introduction">Introduction</h1>
+
+<p>Welcome to the Resource Watch API Developer Documentation</p>
+
+          <h1 id="api-architecture">API Architecture</h1>
+
+<p>This chapter covers the basic architectural details of the API. If you are new to RW API development, you should start here, as key concepts explained here will be needed as you go more hands-on with the API code and/or infrastructure.</p>
+
+<h2 id="microservice-architecture">Microservice architecture</h2>
+
+<p>The RW API is built using a <a href="https://en.wikipedia.org/wiki/Microservices">microservices architecture</a> using <a href="https://github.com/control-tower/control-tower">Control Tower</a> as the gateway application.</p>
+
+<p>In this configuration, Control Tower (CT) offers gateway and core functionality, like routing or user management, while user-facing functionality is provided by a set of microservices that communicate with each other and the external world through Control Tower.</p>
+
+<p>Internal communication between CT and the microservices is done through HTTP requests, and as such each microservice is built on top of a web server..These different web servers create a network within the API itself, to which will refer throughout the rest of the documentation when we mention &ldquo;internal network&rdquo; or &ldquo;internal requests&rdquo;. By opposition, an &ldquo;external request&rdquo; will reference a request from/to the world wide web, and &ldquo;external network&rdquo; basically means &ldquo;the internet&rdquo;.</p>
+
+<p>Control Tower itself acts both as an API in itself - with endpoints for management and monitoring - as well as a catch-all side, that is used to proxy requests to the functional endpoints. gi</p>
+
+<h2 id="lifecycle-of-a-request">Lifecycle of a request</h2>
+
+<p>All incoming requests to the API are handled by CT that, among other things, does the following:
+- Checks if there&rsquo;s a microservice capable of handling that request.
+- Checks if authentication data is required and/or is present.
+- Automatically filters out anonymous requests to authenticated endpoints.</p>
+
+<p>We&rsquo;ll go into more details about these processes in the next sections</p>
+
+<p>Control Tower matches each incoming external request to a microservice, by comparing its URI and request method. It then generates a new HTTP request to that microservice and will wait for a response to it - which is used as a response to the original external request.</p>
+
+<p>Microservices can make requests to each other via Control Tower. They  also have unrestricted access to the public internet, so 3rd party services can be accessed as they normally would be. The API infrastructure also has other resources, like databases (MongoDB, ElasticSearch, Postgres) or publish-subscribe queues (RabbitMQ), which can be accessed. We&rsquo;ll cover those in more details in a separate section.</p>
+
+          <h1 id="control-tower">Control Tower</h1>
+
+<p>This chapter covers Control Tower in depth - what it does and how it does it.</p>
+
+<h2 id="overview">Overview</h2>
+
+<p><a href="https://github.com/control-tower/control-tower">Control Tower</a> is essentially a mix of 3 main concepts:
+- An API proxy/router
+- A lightweight management API
+- A plugin system to extend functionality and its own API.</p>
+
+<p>We&rsquo;ll cover those 3 topics individually in this section.</p>
+
+<h2 id="api-proxy-router">API proxy/router</h2>
+
+<p>Control Tower&rsquo;s most basic functionality is accepting external requests to the API, &ldquo;forwarding&rdquo; them to the corresponding microservices, and returning whatever response the microservices produce.</p>
+
+<p>Once an external request is received, Control Tower uses the HTTP request method and the URI of the request to match it to one of the known endpoints exposed internally by one of the microservices. Note that all external requests are handled exclusively by Control Tower, and microservices are no able to directly receive requests from outside the API&rsquo;s internal network (they can, however, make external requests).</p>
+
+<p>This matching process can have one of two results:</p>
+
+<h3 id="handling-a-matching-request">Handling a matching request</h3>
+
+<p>Should a match be found for the external request&rsquo;s URI and method, a new, internal request is generated and dispatched to the corresponding microservice. The original external request will be blocked until the microservice replies to the internal request - and the internal request&rsquo;s reply will be used as the reply to the external request as soon as the corresponding microservice returns it.</p>
+
+<aside class="notice">
+By default, Control Tower does as little changes as necessary to the incoming external request and to the associated response produced by the microservice. However, for security, authentication/authorization, or due to external-to-internal endpoint mapping, changes will be made to requests and replies body, headers, etc.
+</aside>
+
+<h3 id="handling-a-non-matching-request">Handling a non-matching request</h3>
+
+<h4 id="no-uri-and-method-match">No URI and method match</h4>
+
+<p>At its most basic, the external requests is matched by URI and HTTP method. Should no combination of URI and method be found, Control Tower will reply to the external request with a <code class="prettyprint">404</code> HTTP code.</p>
+
+<h4 id="authenticated">Authenticated</h4>
+
+<p>Microservice endpoints can be marked as requiring authentication. If a matching request is received, but no user authentication data is provided in the request, Control Tower will reject the request with a <code class="prettyprint">401</code> HTTP code.</p>
+
+<h4 id="application-key">Application key</h4>
+
+<p>Similar to what happens with authenticated endpoints, microservice endpoints can also request an <code class="prettyprint">application</code> to be provided in the request. If that requirement is not fulfilled, Control Tower will reject the request with a <code class="prettyprint">401</code> HTTP code.</p>
+
+<h4 id="filter-error">Filter error</h4>
+
+<p>Registered endpoints also have the possibility to specify <code class="prettyprint">filters</code> - a custom requirement that must be met by the request in order for a request match to be successful. For example, endpoints associated with dataset operations use a common URI and HTTP method, but will be handled by different microservices depending on the type of dataset being used - this type of functionality can be implemented using the <code class="prettyprint">filter</code> functionality. On some scenarios, even if all the previous conditions are met, <code class="prettyprint">filters</code> may rule out a given match, in which case a <code class="prettyprint">401</code> HTTP code will be returned.</p>
+
+<h3 id="microservice-registration-process">Microservice registration process</h3>
+
+<p>The matching process described above is carried out by Control Tower based on endpoints declared by each microservice. In this section, we&rsquo;ll take a detailed look at the process through which microservices can declare their available endpoints to Control Tower</p>
+
+<h4 id="overview">Overview</h4>
+
+<p>Here&rsquo;s a graphical overview of the requests exchanged between CT and a microservice:</p>
+
+<table><thead>
+<tr>
+<th>Control Tower</th>
+<th style="text-align: center">Request</th>
+<th style="text-align: right">Microservice</th>
+</tr>
+</thead><tbody>
+<tr>
+<td></td>
+<td style="text-align: center">&lt;===   POST /v1/microservice  &lt;===</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">{&ldquo;name&rdquo;:&ldquo;microservice name&rdquo;, &ldquo;url&rdquo;: &ldquo;http://microservice-url.com&rdquo;, &ldquo;active&rdquo;: true }</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">===&gt;   Reply  ===&gt;</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">HTTP OK</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center"></td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center"></td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center"></td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">===&gt;   GET /api/info  ===&gt;</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">&lt;===   Reply  &lt;===</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">{ /* JSON with microservice details */ }</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center"></td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center"></td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center"></td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">(every 30 seconds)</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">===&gt;   GET /api/ping  ===&gt;</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">&lt;===   Reply  &lt;===</td>
+<td style="text-align: right"></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center">pong</td>
+<td style="text-align: right"></td>
+</tr>
+</tbody></table>
+
+<p>The registration process is started by the microservice. It announces its name, internal URL and active state to Control Tower. This tentatively registers the microservice in Control Tower&rsquo;s database, and triggers the next step of the process.</p>
+
+<p>Immediately after receiving the initial request from the microservice, Control Tower uses the provided URL to reach the microservice. This is used not only to load the endpoint data, but also to ensure that Control Tower is able to reach the microservice at the provided URL - if that does not happen, the registration process is aborted on Control Tower&rsquo;s side, and the microservice data dropped. When it receives this request, the microservice should reply with a JSON array of supported endpoints. We&rsquo;ll dive deeper into the structure of that reply in a moment.</p>
+
+<p>The last step of the process is Control Tower processing that JSON entity, and storing its data in its database. From this point on, the microservice is registered and is able to receive user requests through Control Tower.</p>
+
+<p>Control Tower will, every 30 seconds, emit a <code class="prettyprint">ping</code> request to the microservice, which must reply to it to confirm to Control Tower that it&rsquo;s still functional. Should the microservice fail to reply to a ping request, Control Tower will assume its failure, and de-register the microservice and associated endpoints. Should this happen, it&rsquo;s up to the microservice to re-register itself on Control Tower, to be able to continue accepting requests.</p>
+
+<h4 id="minimal-configuration">Minimal configuration</h4>
+
+<p>During the registration process, each microservice is responsible for informing Control Tower of the endpoints it supports, if they require authentication, application info, etc. This is done through a JSON object, that has the following basic structure:</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"dataset"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Breaking it down bit by bit:</p>
+
+<ul>
+<li><code class="prettyprint">name</code>: Name of the microservice.</li>
+<li><code class="prettyprint">tags</code>: List of tags associated with the microservice.</li>
+<li><code class="prettyprint">endpoints</code>: Array of <code class="prettyprint">endpoint</code> objects.</li>
+<li><code class="prettyprint">swagger</code>: <a href="https://swagger.io/">Swagger</a> formatted JSON object documenting the microservice&rsquo;s endpoints.</li>
+</ul>
+
+<p>Within the <code class="prettyprint">endpoints</code> array, the expected object structure is the following: </p>
+
+<ul>
+<li><code class="prettyprint">path</code>: Expected external request URI that will match to this endpoint.</li>
+<li><code class="prettyprint">method</code>: Expected external request method that will match to this endpoint.</li>
+<li><code class="prettyprint">redirect.method</code>: Method to use in the internal request to the microservice.</li>
+<li><code class="prettyprint">redirect.path</code>: URI to use in the internal request to the microservice.</li>
+</ul>
+
+<p>Taking the example above, that reply would be provided by the <code class="prettyprint">dataset</code> microservice while registering on Control Tower. It would tell CT that it has a single public endpoint, available at GET <code class="prettyprint">&lt;api public URL&gt;/v1/dataset</code>. When receiving that external request, the <code class="prettyprint">redirect</code> portion of the endpoint configuration tells CT to issue a GET request to <code class="prettyprint">&lt;microservice URL&gt;/api/v1/dataset</code>. It then follows the process previously described to handle the reply from the microservice and return its content to the user.</p>
+
+<h4 id="advanced-configuration">Advanced configuration</h4>
+
+<p>The example from the previous section covers the bare minimum a microservice needs to provide to Control Tower in order to register an endpoint. However, as discussed before, Control Tower can also provide support for more advanced features, like authentication and application data filtering. The JSON <code class="prettyprint">endpoint</code> snippet below shows how these optional parameters can be used to configure said functionality. </p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"query-document"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"query-document"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/query/:dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"binary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authenticated"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"applicationRequired"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/document/query/:dataset"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"compare"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"connectorType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}]</span><span class="w">
+        </span><span class="p">}</span><span class="w">   
+    </span><span class="p">]</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Within the <code class="prettyprint">endpoints</code> array, you&rsquo;ll notice a few changes. The <code class="prettyprint">path</code> property now includes an URI which contains <code class="prettyprint">:dataset</code> in it - this notation tells Control Tower to expect a random value in that part of the URI (delimited by <code class="prettyprint">/</code>) and to refer to that value as <code class="prettyprint">dataset</code> in other parts of the process.</p>
+
+<p>The <code class="prettyprint">redirect.path</code> references the same <code class="prettyprint">:dataset</code> value - meaning the incoming value from the external request will be passed on to the internal requests to the microservice generated by Control Tower.</p>
+
+<p>You&rsquo;ll also notice new fields that were not present before: </p>
+
+<ul>
+<li><code class="prettyprint">binary</code>: Using this causes Control Tower to pipe the microservice&rsquo;s response content as a binary stream to the external request&rsquo;s reply. Use this in case you expect your microservice&rsquo;s replies to have large amounts of data.</li>
+<li><code class="prettyprint">authenticated</code>: Setting this to <code class="prettyprint">true</code> causes Control Tower to immediately return an HTTP <code class="prettyprint">401</code> error code in case this endpoint matches the external request, but that request has no user identification data.</li>
+<li><code class="prettyprint">applicationRequired</code>: Setting this to <code class="prettyprint">true</code> causes Control Tower to immediately return an HTTP <code class="prettyprint">401</code> error code in case this endpoint matches the external request, but that request has no application data as part of the user&rsquo;s data.</li>
+<li><code class="prettyprint">filters</code>: An array of filter objects that the request must match to in order for a match to be considered successful.</li>
+<li><code class="prettyprint">filters.name</code>: A name for the filter, without functional implications.</li>
+<li><code class="prettyprint">filters.method</code>: Method to use in the filter request.</li>
+<li><code class="prettyprint">filters.path</code>: URI to use in the filter request.</li>
+<li><code class="prettyprint">filters.params</code>: Query parameters passed to the filter request.</li>
+<li><code class="prettyprint">filters.compare</code>: Response structure to be matched with the filter request reply, to determine if the external request matches this filter.</li>
+</ul>
+
+<p>The filtering section has the most complex structure, so lets analyse it with a real-world example. The above example would match a request like GET <code class="prettyprint">&lt;api external URL&gt;/v1/query/&lt;dataset id&gt;</code>. Once that request is received by Control Tower, it is tentatively matched to this endpoint, but pending the validation of the filter section.</p>
+
+<p>To process the filter, Control Tower will do a request of type <code class="prettyprint">filters.method</code> (GET, in this case) and URI <code class="prettyprint">filters.path</code>. As the URI contains a <code class="prettyprint">:dataset</code> variable, it will use the <code class="prettyprint">filters.params</code> object to map that value to the <code class="prettyprint">dataset</code> value from the external request. This internal request is then issued and the process briefly stopped until a response is returned.</p>
+
+<p>Once the response is returned, the <code class="prettyprint">filters.compare</code> object comes into play: Control Tower will see if the response body object matches the set value in the <code class="prettyprint">filters.compare</code> object. In this particular example, the resulting comparison would be something like <code class="prettyprint">response.body.data.attributes.connectorType == &quot;document&quot;</code>. Should this evaluate to <code class="prettyprint">true</code>, the filter is considered to have matched, and this endpoint is used to dispatch the internal request to. Otherwise, this endpoint is discarded from the list of possible matches for this external request.</p>
+
+<p>Its worth noting at this stage that there&rsquo;s no restriction regarding uniqueness of internal endpoints - two microservices may support the same endpoint, and use filters to differentiate between them based on the underlying data. The example above illustrates how a microservice can support the <code class="prettyprint">/v1/query/:dataset</code> external endpoint, but only for datasets of type <code class="prettyprint">document</code>. A different microservice may support the same endpoint, but with a different filter value (for example <code class="prettyprint">carto</code>) and offer the same external functionality with a completely different underlying implementation.</p>
+
+<p>Should multiple endpoints match an external request, one of them is chosen and used - there are no guarantees in terms of which is picked, so while this scenario does not produce an error, you probably want to avoid it.</p>
+
+<h2 id="management-api">Management API</h2>
+
+<p>In the previous section, we discussed how microservices can register their endpoint on Control Tower, exposing their functionality to the outside world. That registration process uses part of Control Tower&rsquo;s own API, which we&rsquo;ll discuss in finer detail in this section.</p>
+
+<h3 id="microservice-management-endpoints">Microservice management endpoints</h3>
+
+<p>The microservice registration endpoint is one of 4 endpoints that exist around microservice management:</p>
+
+<h4 id="get-microservice">GET <code class="prettyprint">/microservice/</code></h4>
+
+<p>This endpoint shows a list of registered microservice and their corresponding endpoints.</p>
+<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
+  http://&lt;CT URL&gt;/api/v1/microservice <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;your user token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span>
+</code></pre><pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-12-05T07:33:30.244Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aa66766aee7ae846a419c0c"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dataset"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://dataset.default.svc.cluster.local:3000"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-23T14:27:10.957Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<h4 id="get-microservice-status">GET <code class="prettyprint">/microservice/status</code></h4>
+
+<p>Lists information about operational status of each microservice - like errors detected by Control Tower trying to contact the microservice or number of retries attempted.</p>
+<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
+  http://&lt;CT URL&gt;/api/v1/microservice/status <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;your user token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span>
+</code></pre><pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-12-05T07:36:30.199Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dataset"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<h4 id="post-microservice">POST <code class="prettyprint">/microservice/</code></h4>
+
+<p>This is the endpoint used by microservices to register on Control Tower. You can find a detailed analysis of its syntax in the <a href="#api-proxy-router">previous section</a></p>
+
+<h4 id="delete-microservice-id">DELETE <code class="prettyprint">/microservice/:id</code></h4>
+
+<p>This endpoint is used to unregister a microservice&rsquo;s endpoints from Control Tower. Control Tower does not actually delete the microservice information, nor does it immediately remove the endpoints associated to it. This endpoint iterates over all endpoint associated with the microservice to be unregistered, and flags them for deletion - which is actually done by a cron task that in the background. Until that moment, the microservice and associated endpoints will continue to be available, and external requests to those endpoints will be handled as matched as they were before. However, you will notice that endpoints scheduled for deletion will have a <code class="prettyprint">toDelete</code> value of true - more on this in the next section.</p>
+<pre class="highlight shell"><code>curl -X DELETE <span class="se">\</span>
+  http://&lt;CT URL&gt;/api/v1/microservice/&lt;microservice id&gt; <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;your user token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"dataset"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c0782831b0bf92a37a754e2"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dataset"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:3001"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-12-05T07:49:36.754Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="endpoint-management-endpoints">Endpoint management endpoints</h3>
+
+<h4 id="get-endpoint">GET <code class="prettyprint">/endpoint</code></h4>
+
+<p>This endpoint lists all microservice endpoint known by Control Tower. Note that it does not contain endpoints offered by Control Tower itself or any of its plugins.</p>
+<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
+  http://&lt;CT URL&gt;/api/v1/endpoint <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;your user token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span>
+</code></pre><pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"pathKeys"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"authenticated"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"applicationRequired"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"binary"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"toDelete"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c0784c88dcce0323abe705d"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pathRegex"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c0784c88dcce0323abe705e"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:3001"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<h4 id="delete-endpoint-purge-all">DELETE <code class="prettyprint">/endpoint/purge-all</code></h4>
+
+<p>This endpoint purges the complete HTTP cache for all microservices. It does not support any kind of parametrization, so it&rsquo;s not possible to use this endpoint to clear only parts of the cache. As such, we recommend not using this endpoint unless you are certain of its consequences, as it will have noticeable impact in end-user perceived performance.</p>
+<pre class="highlight shell"><code>curl -X DELETE <span class="se">\</span>
+  http://&lt;CT URL&gt;/api/v1/endpoint/purge-all <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;your user token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<h3 id="documentation-management-endpoints">Documentation management endpoints</h3>
+
+<h4 id="get-doc-swagger">GET <code class="prettyprint">/doc/swagger</code></h4>
+
+<p>Generates a complete <a href="https://swagger.io/">Swagger</a> JSON file documenting all API endpoints. This swagger is compiled by Control Tower based on Swagger files provided by each microservice. As such, the Swagger details for a given endpoint will only be as good as the information provided by the microservice itself.</p>
+
+<aside class="notice">
+This
+</aside>
+<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
+  http://&lt;CT URL&gt;/api/v1/endpoint <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;your user token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Control Tower"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Control Tower - API"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tower.dev:9000"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"schemes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"http"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"produces"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"application/vnd.api+json"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application/json"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"paths"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"/api/v1/doc/swagger"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"get"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Return swagger files of registered microservices"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"operationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"getSwagger"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"ControlTower"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"produces"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"application/vnd.api+json"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"responses"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"200"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Swagger json"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"500"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unexpected error"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"schema"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"$ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#/definitions/Errors"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"definitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"Errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Errors"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"$ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#/definitions/Error"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"Error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"integer"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int32"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A unique identifier for this particular occurrence of the problem."</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A links object"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"about"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A link that leads to further details about this particular occurrence of the problem."</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The HTTP status code applicable to this problem, expressed as a string value"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"An application-specific error code, expressed as a string value"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization."</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A human-readable explanation specific to this occurrence of the problem. Like title, this field's value can be localized"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"An object containing references to the source of the error, optionally including any of the following members"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"pointer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A JSON Pointer [RFC6901] to the associated entity in the request document"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"parameter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A string indicating which URI query parameter caused the error."</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A meta object containing non-standard meta-information about the error."</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="plugin-management-endpoints">Plugin management endpoints</h3>
+
+<p>Control Tower as a plugin system of its own, which we&rsquo;ll cover in detail in the next section. As part of that system it has a few API endpoints to support certain actions</p>
+
+<h4 id="get-plugin">GET <code class="prettyprint">/plugin</code></h4>
+
+<p>Lists all currently enabled plugins, along with their configuration.</p>
+<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
+  http://&lt;CT URL&gt;/api/v1/plugin <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;your user token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span>
+</code></pre><pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd440834d5076bb4609f9f"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"manageErrors"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Manage Errors"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"mainFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plugins/manageErrors"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"jsonAPIErrors"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<h4 id="patch-plugin-id">PATCH <code class="prettyprint">/plugin/:id</code></h4>
+
+<p>Updates the settings of a given plugin.</p>
+<pre class="highlight shell"><code>curl -X PATCH <span class="se">\</span>
+  http://&lt;CT URL&gt;/api/v1/plugin/:pluginId <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;your user token&gt;'</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "config": {
+        "jsonAPIErrors": false
+    }
+}'</span>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd440834d5076bb4609f9f"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"manageErrors"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Manage Errors"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"mainFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plugins/manageErrors"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"jsonAPIErrors"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="control-tower-plugins">Control Tower plugins</h2>
+
+<p>Control Tower provides basic API management functionality, but it also has a set of plugins that allow decoupling non-core functionality from the core code base. In this section we&rsquo;ll briefly cover the functional aspect of each plugin, without focusing too much on the underlying implementation, which will be covered separately.</p>
+
+<h3 id="time-request">Time Request</h3>
+
+<p>This plugin times the time elapsed between the external request is received and the reply to it being dispatched back to the external API client. It adds the computed value as a response header <code class="prettyprint">X-Response-Time</code></p>
+
+<h3 id="manage-errors">Manage errors</h3>
+
+<p>This plugin intercepts replies that represent errors and formats them properly.</p>
+
+<h3 id="cors">CORS</h3>
+
+<p>This plugins adds the necessary headers to support <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">CORS</a></p>
+
+<h3 id="invalidate-cache-endpoints">Invalidate cache endpoints</h3>
+
+<p>Varnish cache integration plugin that invalidates cache entries.</p>
+
+<aside class="notice">
+This plugin is disabled and is no longer supported.
+</aside>
+
+<h3 id="response-formatter">Response formatter</h3>
+
+<p>Handles response formats other than the default JSON, setting headers and formatting the response body according to the requested content type. Currently only supports XML.</p>
+
+<h3 id="statistics">Statistics</h3>
+
+<p>Collects and stores statistics about the API usage. You can find more details on <a href="https://github.com/control-tower/ct-stadistics-plugin">this repo</a>.</p>
+
+<h3 id="mongodb-sessions">MongoDB sessions</h3>
+
+<p>Adds support for storing session data on MongoDB</p>
+
+<h3 id="oauth-plugin">Oauth plugin</h3>
+
+<p>User management and authentication plugin. Supports email+password based registration, as well as Facebook, Twitter and Google+ oauth-based authentication. You can find more details on <a href="https://github.com/control-tower/ct-oauth-plugin">this repo</a>.</p>
+
+<h3 id="redis-cache">Redis cache</h3>
+
+<p>Redis-based caching for Control Tower. You can find more details on <a href="https://github.com/control-tower/ct-redis-cache">this repo</a>.</p>
+
+<aside class="notice">
+This plugin is disabled and is no longer supported.
+</aside>
+
+<h3 id="application-key-authorization">Application key authorization</h3>
+
+<p>Application key handling.</p>
+
+<h3 id="fastly-cache">Fastly cache</h3>
+
+<p>Integrates HTTP caching using <a href="https://www.fastly.com/">Fastly</a>.</p>
+
+          <h1 id="control-tower-plugin-development">Control Tower plugin development</h1>
+
+<p>This chapter covers Control Tower plugin development basics. It aims at providing basic understanding of how existing Control Tower plugins work, and give you the foundations to develop your own plugins.</p>
+
+<h2 id="implementing-functionality">Implementing functionality</h2>
+
+<p>Control Tower and its plugins are implemented using Nodejs and <a href="https://koajs.com/">Koa</a>. Be sure to familiarize yourself with the key concepts behind this framework before exploring this section, as it assumes you are comfortable with concepts like route declaration or koa middleware.</p>
+
+<p>Existing plugin functionality for Control Tower falls within one of two categories: middleware that intercepts requests as they are processed by Control Tower, or new endpoints that are added to Control Tower&rsquo;s API. Some plugins combine the two approaches to implement their functionality.</p>
+
+<h3 id="middleware">Middleware</h3>
+
+<p>Middleware-based functionality consists of intercepting the external request and/or response and either gathering data about them (for logging or statistics) or modifying them (for example, for caching). This type of functionality can be implemented using koa&rsquo;s middleware API, as Control Tower itself does not modify or extend that in any way.</p>
+
+<h3 id="endpoint-creation">Endpoint creation</h3>
+
+<p>Plugins can also extend Control Tower&rsquo;s endpoint list by registering new endpoints of their own. An example of this is the Control Tower Oauth plugin that exposes a number of endpoints to support actions like registering, logging in, recovering password, etc. Like with the middleware approach, this can be implemented by relying on koa principles, and Control Tower does not modify this behavior.</p>
+
+<h2 id="data-storage">Data storage</h2>
+
+<p>Control Tower uses a Mongo database to store data like known microservices or endpoints. Plugins can also access this database and create their own collections, should they wish to. Control Tower and existing plugins rely on <a href="https://mongoosejs.com/">Mongoose</a> to that effect, and you&rsquo;ll find example of its usage throughout Control Tower and its plugins code.</p>
+
+<h2 id="plugin-bootstrap-and-config">Plugin bootstrap and config</h2>
+
+<p>During its first initialization, Control Tower will load plugin settings from <a href="https://github.com/control-tower/control-tower/blob/develop/app/src/migrations/init.js">this file</a>. It includes a list of plugins to be initialized, whether or not they should be active, and their default configuration. On subsequent executions, this information will be loaded from the database instead, so additional changes you may want to do should be done on the database, and not on this file.</p>
+
+<p>An important part of this file and of the corresponding database entries is plugin configuration. This data is stored within the <code class="prettyprint">plugins</code> MongoDB collection managed by Control Tower but it&rsquo;s made available to plugins as they are initialized and ran.</p>
+
+          <h1 id="microservice">Microservice</h1>
+
+<p>This section of the docs covers the details of a microservice.</p>
+
+<h2 id="microservice-overview">Microservice overview</h2>
+
+<p>As described in the <a href="#api-architecture">API Architecture</a> section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API&rsquo;s core microservices are built using <a href="https://nodejs.org">nodejs</a>, with <a href="https://www.python.org/">python</a> and <a href="https://rubyonrails.org/">Rails</a> being distant 2nd and 3rd respectively. This is due to personal preference of the team behind the API, as there really isn&rsquo;t a technical reason or limitation preventing the creation of microservices in PHP, Go, Elixir, etc.</p>
+
+<aside class="notice">
+In this whole section, we will use code examples from the dataset microservice, which is built using nodejs. We will discuss the general principles, which should apply to all implementations, as well as implementation details, which may apply to your scenario if you are also using nodejs, or that may not apply if you are using something else.
+</aside>
+
+<h3 id="control-tower-integration">Control Tower integration</h3>
+
+<p>While they could technically work as standalone applications, microservices are built from the ground up to work through Control Tower. As such, not only do they lack built-in functionality provided by Control Tower itself (for example, user management), they also need to handle their own integration with Control Tower. Control Tower provides integration libraries for certain languages and frameworks, which you can use to ease development:
+- <a href="https://github.com/control-tower/ct-register-microservice-node">nodejs package for Koa</a>
+- <a href="https://github.com/control-tower/ct-register-microservice-python-flask">Python module for Flask</a>
+- <a href="https://github.com/control-tower/ct-register-microservice-rails">Rails engine</a></p>
+
+<p>These libraries provide 2 basic features that we&rsquo;ll cover in detail in this chapter. You can also use it for reference in case you want to implement a microservice in a different programming language or framework. </p>
+
+<p>We&rsquo;ll use the nodejs library as reference and example in the following sections, as it&rsquo;s the most commoly used language in this API. Other libraries will provided the same underlying functionality, but may have different ways to operate. Refer to each library&rsquo;s specific documentation for more details.</p>
+
+<h4 id="registering-on-control-tower">Registering on Control Tower</h4>
+
+<p>The first feature provided by these libraries, and that a microservice must perform, is registering on Control Tower. Most of the details of this process can be found on <a href="#microservice-registration-process">Control Tower&rsquo;s documentation</a>, which you should read at this point if you haven&rsquo;t already.</p>
+<pre class="highlight javascript"><code><span class="c1">// dataset microservice registration example</span>
+
+<span class="kr">const</span> <span class="nx">ctRegisterMicroservice</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'ct-register-microservice-node'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">Koa</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'koa'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'logger'</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Koa</span><span class="p">();</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">ctRegisterMicroservice</span><span class="p">.</span><span class="nx">register</span><span class="p">({</span>
+        <span class="na">info</span><span class="p">:</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'../microservice/register.json'</span><span class="p">),</span>
+        <span class="na">swagger</span><span class="p">:</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'../microservice/public-swagger.json'</span><span class="p">),</span>
+        <span class="na">mode</span><span class="p">:</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CT_REGISTER_MODE</span> <span class="o">&amp;&amp;</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CT_REGISTER_MODE</span> <span class="o">===</span> <span class="s1">'auto'</span><span class="p">)</span> <span class="p">?</span> <span class="nx">ctRegisterMicroservice</span><span class="p">.</span><span class="nx">MODE_AUTOREGISTER</span> <span class="p">:</span> <span class="nx">ctRegisterMicroservice</span><span class="p">.</span><span class="nx">MODE_NORMAL</span><span class="p">,</span>
+        <span class="na">framework</span><span class="p">:</span> <span class="nx">ctRegisterMicroservice</span><span class="p">.</span><span class="nx">KOA2</span><span class="p">,</span>
+        <span class="nx">app</span><span class="p">,</span>
+        <span class="nx">logger</span><span class="p">,</span>
+        <span class="na">name</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'service.name'</span><span class="p">),</span>
+        <span class="na">ctUrl</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CT_URL</span><span class="p">,</span>
+        <span class="na">url</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">LOCAL_URL</span><span class="p">,</span>
+        <span class="na">token</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CT_TOKEN</span><span class="p">,</span>
+        <span class="na">active</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="p">},</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre>
+<p>Covering the arguments in detail:</p>
+
+<ul>
+<li>info: path to the JSON file that will be sent to Control Tower, containing the details about the endpoints exposed by this microservice.</li>
+<li>swagger: path to the Swagger YAML file that will be sent to Control Tower, documenting the public endpoints exposed by this microservice.</li>
+<li>mode: if set to <code class="prettyprint">ctRegisterMicroservice.MODE_AUTOREGISTER</code> the Control Tower registration process will be automaticall triggered when the Koa application server starts. Otherwise, use <code class="prettyprint">ctRegisterMicroservice.MODE_NORMAL</code> if you want to register manually.</li>
+<li>framework: <code class="prettyprint">ctRegisterMicroservice.KOA2</code> or <code class="prettyprint">ctRegisterMicroservice.KOA1</code>, depending on the Koa version your app uses.</li>
+<li>app: Koa application instance</li>
+<li>logger: <a href="https://github.com/quirkey/node-logger">Logger</a> instance.</li>
+<li>name: name of the microservice to be provided to Control Tower as part of the registration process.</li>
+<li>ctUrl: Control Tower URL.</li>
+<li>url: URL within the internal network through which this microservice can be accessed.</li>
+<li>token: Control Tower token to authenticate the registration requests</li>
+<li>active: If set to <code class="prettyprint">false</code> the microservice will be registered as disabled (not accessible). You should set this to <code class="prettyprint">true</code> in most cases.</li>
+</ul>
+
+<p>This registration call usually takes place right after the microservice&rsquo;s start process has ended, and the corresponding web server is available. Keep in mind that the call above will trigger an HTTP request to Control Tower, which in turn will call the microservice&rsquo;s web server - so make sure the microservice&rsquo;s web server is up and running when you attempt to register it.</p>
+
+<h4 id="requests-to-other-microservices">Requests to other microservices</h4>
+
+<p>Besides contacting Control Tower to register themselves, microservices also need to contact Control Tower to make requests to other micorservices. </p>
+<pre class="highlight javascript"><code><span class="c1">// Microservice call to another microservice's endpoint</span>
+<span class="kr">const</span> <span class="nx">ctRegisterMicroservice</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'ct-register-microservice-node'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'tag1'</span><span class="p">,</span> <span class="s1">'tag2'</span><span class="p">];</span>
+
+<span class="nx">ctRegisterMicroservice</span><span class="p">.</span><span class="nx">requestToMicroservice</span><span class="p">({</span>
+    <span class="na">uri</span><span class="p">:</span> <span class="s2">`/graph/dataset/</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">/associate`</span><span class="p">,</span>
+    <span class="na">method</span><span class="p">:</span> <span class="s1">'POST'</span><span class="p">,</span>
+    <span class="na">json</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">body</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nx">tags</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre>
+<p>In this example, the dataset microservice makes a call to the <code class="prettyprint">/graph/dataset/&lt;id&gt;/associate</code> endpoint to tag a dataset with the given tag list. This endpoint is implemented by the Graph microservice, but the request is actually handled by Control Tower. Taking a deeper look at the code that implements the call above, we learn a few things:</p>
+<pre class="highlight javascript"><code><span class="c1">// Implementation of call to another microservice</span>
+
+<span class="nx">requestToMicroservice</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">'Adding authentication header '</span><span class="p">);</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">version</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">API_VERSION</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">version</span> <span class="o">=</span> <span class="s2">`/</span><span class="p">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">API_VERSION</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">version</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">version</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">headers</span> <span class="o">||</span> <span class="p">{},</span> <span class="p">{</span> <span class="na">authentication</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">token</span> <span class="p">});</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">application</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">app_key</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="na">application</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">application</span> <span class="p">});</span>
+        <span class="p">}</span>
+        <span class="nx">config</span><span class="p">.</span><span class="nx">uri</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">ctUrl</span> <span class="o">+</span> <span class="nx">version</span> <span class="o">+</span> <span class="nx">config</span><span class="p">.</span><span class="nx">uri</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">requestPromise</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">'Error to doing request'</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+        <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre>
+<p>As explained above, although the call is ultimately to another microservice, the request is sent to Control Tower, who is then resposible for issuing another internal request to the destination microservice, getting the reply from that call and passing it on to the microservice that initiated the process.</p>
+
+<p>Another thing you&rsquo;ll notice is that this call depends on preexisting configuration stored in the <code class="prettyprint">this.options</code> property. These configuration options are stored within the object during the Control Tower registration process, meaning you should not attempt to make a call to another microservice unless you have previously registered your microservice on Control Tower. Keep in mind that this is a restriction of this particular integration library, and not of Control Tower itself - a different implementation could do internal requests to microservices through Control Tower without being registered as a microservice.</p>
+
+<h3 id="logging">Logging</h3>
+
+<p>An important part of microservice operation is logging events as it processes requests. Many errors are only triggered during staging and production server execution, and without proper logging, there isn&rsquo;t a way to identify how it can be reproduced, so it can then be fixed.</p>
+
+<p>Common development languages often come with either built-in or 3rd party logging libraries than make logging easier to handle. Current nodejs microservices use <a href="https://github.com/trentm/node-bunyan">Bunyan</a> to manage logs, which eases managing log destinations (stdout, file, etc) and log levels. Other libraries, for nodejs and other languages, offer similar functionality.</p>
+
+<p>For microservice logs, the main output channel should be <code class="prettyprint">stdout</code>, so it can seamlessly integrate with the infrastructure to which microservices will be deployed when going live - more on this later. If you prefer, you can also log to file or other output channels for development purposes - it&rsquo;s in this sort of scenarios that logging libraries become useful, as they decouple the logging action from the destination channels.</p>
+<pre class="highlight javascript"><code><span class="kr">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'logger'</span><span class="p">);</span>
+
+<span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">'Validating Dataset Update'</span><span class="p">);</span>
+</code></pre>
+<p>The example above logs that the validation process for input data associated with a dataset updated has been started. You&rsquo;ll notice that the <code class="prettyprint">info()</code> function is called - this sets the logging level for this message. While different logging tools implement different strategies to differentiate logs, this approach is rather common and widespread. It&rsquo;s up to you to define your log levels, how they translate into entries on the logging output, or how different logging levels are forwarded to different channels - just remember to keep the day-to-day logs on <code class="prettyprint">stdout</code>. </p>
+
+<p>If you want to access your logging output for a microservice that&rsquo;s already deployed on either staging or production, you&rsquo;ll need access to <code class="prettyprint">kubernetes</code> logging UI or CLI. The details of this are discussed on a separate section.</p>
+
+<h3 id="microservice-internal-architecture-nodejs">Microservice internal architecture - nodejs</h3>
+
+<aside class="notice">
+This section is completely implementation specific and opinionated, and does not reflect any technical requirement of the API. However, as all nodejs microservices use this architecture, we will cover it here as it&rsquo;s useful for new developers. Other microservice implementations in other languages will have different architectures, and you can also implement your own microservice using nodejs using a totally different architecture. Take this whole section as information/suggestion rather than as a ruleset.
+</aside>
+
+<p>Nodejs microservices are based on the <a href="https://koajs.com/">Koa</a> framework for nodejs. To understand the following code snippets, we assume you are familiar with the basics of the framework, like how routes are declared and handled, and what middleware are and how they work. You should also be somewhat familiar with tools like <a href="https://www.npmjs.com/">npm</a>, <a href="https://www.mongodb.com/">mongo</a> and <a href="https://mongoosejs.com/">mongoose</a>, <a href="https://jenkins.io/">Jenkins CI</a>, <a href="https://www.docker.com/">docker</a> and <a href="https://docs.docker.com/compose/">docker-compose</a></p>
+
+<h4 id="anatomy-of-a-nodejs-microservice">Anatomy of a (nodejs) microservice</h4>
+
+<p>In this section, we&rsquo;ll use <a href="https://github.com/resource-watch/dataset">the dataset microservice</a> as an example, but these concepts should apply to most if not all nodejs microservices:</p>
+
+<ul>
+<li>app: source code for the microservice functionality.</li>
+<li>config: configuration for different environments in which the microservice will be executed.</li>
+<li>k8s: <a href="https://kubernetes.io/">kubernetes</a> configuration.</li>
+<li>Jenkinsfile: deployment configuration for <a href="https://jenkins.io/">Jenkins CI</a>.</li>
+<li>dataset.sh: convenience executable file (the name will always match the microservice).</li>
+<li>docker-compose-develop.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for develop environment.</li>
+<li>docker-compose-test.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for test environment.</li>
+<li>docker-compose.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for production environment.</li>
+<li>entrypoint.sh: <a href="https://www.docker.com/">docker</a> entry point.</li>
+</ul>
+
+<p>Since we are interested in the microservice&rsquo;s functional bits, we&rsquo;ll analyse the <code class="prettyprint">app</code> folder content in more detail. It&rsquo;s worth mentioning that, depending on how you run the microservice, the respective <code class="prettyprint">docker compose</code> files may contain relevant information and configuration, as do the files inside the <code class="prettyprint">config</code> folder.</p>
+
+<p>The <code class="prettyprint">app</code> folder contains the following structure:</p>
+
+<ul>
+<li>microservice: JSON files used during the Control Tower registration process.</li>
+<li>src: source code for the microservice.</li>
+<li>test: test source code.</li>
+<li>Gruntfile.js: <a href="https://gruntjs.com/">grunt</a> task definition file.</li>
+<li>index.js: nodejs entry point.</li>
+</ul>
+
+<p>The grunt file includes several task definition that may be useful during day-to-day development. However, grunt is semi-deprecated (it&rsquo;s still needed, don&rsquo;t remove it) in the sense that it&rsquo;s recommended to define useful tasks in the <code class="prettyprint">package.json</code> file instead - those tasks will, in turn, call grunt tasks.</p>
+
+<p>Inside the <code class="prettyprint">app/src</code> folder you&rsquo;ll find the following structure. The folders below will be commonly found on all microservice, unless stated otherwise:</p>
+
+<ul>
+<li>data: data files. This folder is specific to the dataset microservice.</li>
+<li>errors: error classes for specific scenarios, which then in turn translate into specific HTTP codes and responses.</li>
+<li>models: <code class="prettyprint">mongose</code> models to ease integration with <code class="prettyprint">mongo</code>.</li>
+<li>routes: <code class="prettyprint">koa</code> route and request handling definition, as well as middleware.</li>
+<li>serializers: <code class="prettyprint">mongoogse</code> model to JSON response serializers.</li>
+<li>services: application business logic.</li>
+<li>validators: input validators.</li>
+<li>app.constants.js: microservice application constants.</li>
+<li>app.js: <code class="prettyprint">koa</code> bootstrap, as well as basic error handling and Control Tower registration.</li>
+<li>loader.js: convenience file that iterates over the nested content of the <code class="prettyprint">routes</code> folder and loads files.</li>
+<li>logger.js: convenience file that configures the logger for ease of use.</li>
+</ul>
+
+<h4 id="adding-a-new-endpoint">Adding a new endpoint</h4>
+
+<p>In this section we&rsquo;ll cover how you can add a new endpoint with new functionality to an existing microservice. The aim is not to be a comprehensive guide to cover all cases, but more of a quick entry point into day-to-day actions you may want to perform, which should be complemented by your own learning of how a microservice works - remember that all microservices, despite being structurally similar, have their own custom code and functionality.</p>
+
+<p>To add a new endpoint, here&rsquo;s the short tasklist you have to tackle:</p>
+
+<ul>
+<li>Register your route in koa.</li>
+<li>Add a handler for that route.</li>
+<li>Add middleware for validation, if applicable.</li>
+<li>Implement new services, models or serializers to handle your application logic, if applicable.</li>
+<li>Add tests for your functionality (you may want to start with this, if TDD is your thing).</li>
+<li>Update the Control Tower registration file.</li>
+</ul>
+
+<h5 id="register-your-route-in-koa">Register your route in koa</h5>
+
+<p>This can be done in the <code class="prettyprint">app/src/routes/api/v1/dataset.router.js</code> file, usually at the bottom of if:</p>
+<pre class="highlight javascript"><code>
+<span class="c1">// router object declaration, usually at the top of the file</span>
+<span class="kr">const</span> <span class="nx">router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Router</span><span class="p">({</span>
+    <span class="na">prefix</span><span class="p">:</span> <span class="s1">'/dataset'</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// routes declaration, usually at the bottom of the file</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">getAll</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/find-by-ids'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">findByIds</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">authorizationBigQuery</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">create</span><span class="p">);</span>
+<span class="c1">// router.post('/', validationMiddleware, authorizationMiddleware, authorizationBigQuery, authorizationSubscribable, DatasetRouter.create);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/upload'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">upload</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/flush'</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">flushDataset</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/recover'</span><span class="p">,</span> <span class="nx">authorizationRecover</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">recover</span><span class="p">);</span>
+
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">get</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/:dataset/verification'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">verification</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">update</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="k">delete</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/clone'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">clone</span><span class="p">);</span>
+</code></pre>
+<p>In here you&rsquo;ll find the already existing routes. As you can see from the rather explicit syntax, you need to call the method that matches the desired HTTP verb on the <code class="prettyprint">router</code> object, and pass it a variable number of arguments - more on this in the next section. One thing to keep in mind is that all the routes in a file are typically prefixed, as defined in the <code class="prettyprint">router</code> object declaration.</p>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="shell">cURL</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
