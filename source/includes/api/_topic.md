@@ -80,3 +80,38 @@ curl -X POST https://api.resourcewatch.org/v1/topics/10/clone -H 'Authorization:
     }
 }
 ```
+
+## Clone dashboard
+
+Creates a new dashboard with the information of the provided topic
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/topics/10/clone-dashboard -H 'Authorization: Bearer exampleToken' 
+```
+
+```json
+{
+    "data": {
+        "id": "333",
+        "type": "dashboards",
+        "attributes": {
+            "name": "Cities",
+            "slug": "cities",
+            "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+            "description": "",
+            "content": "[{\"id\":1511952250652,\"type\":\"widget\",\"content\":{\"widgetId\":\"b9186ce9-78ae-418b-a6d3-d521283ce485\",\"categories\":[]}},...}]",
+            "published": false,
+            "photo": {
+                "cover": "/system/dashboards/photos/data?1523301918",
+                "thumb": "/system/dashboards/photos/data?1523301918",
+                "original": "/system/dashboards/photos/data?1523301918"
+            },
+            "user-id": "eb63867922e16e34ef3ce862",
+            "private": true,
+            "production": true,
+            "preproduction": false,
+            "staging": false
+        }
+    }
+}
+```
