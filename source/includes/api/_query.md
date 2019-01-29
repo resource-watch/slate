@@ -162,3 +162,20 @@ You can delimit an area of interest by providing a geostore id as a parameter:
 ```shell
 curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
 ```
+
+## Download
+
+You can download the result of a query using the `download` endpoint. You can specify which format you want to use (JSON or CSV) for all the dataset providers except Google Earth Engine, for which you can only download a JSON file.
+
+<aside class="notice">
+    By default, the API will return a CSV file (JSON file for Google Earth Engine).
+</aside>
+
+```shell
+# Basic query
+curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>
+
+# Specifying the format of the file
+curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>&format=json
+curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>&format=csv
+```
