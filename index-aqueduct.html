@@ -3369,6 +3369,42 @@ Special grouping operations are available for document-type datasets (CSV and JS
 <p>You can delimit an area of interest by providing a geostore id as a parameter:</p>
 <pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span>SELECT<span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ \ </span>where<span class="se">\ </span>year<span class="se">\ </span>between<span class="se">\ </span>1960<span class="se">\ </span>and<span class="se">\ </span>1962&amp;geostore<span class="se">\=</span>0279093c278a64f4c3348ff63e4cfce0
 </code></pre>
+<h2 id="download">Download</h2>
+
+<p>You can download the result of a query using the <code class="prettyprint">download</code> endpoint. </p>
+
+<aside class="warning">
+    <ul>
+    This endpoint is not supported for all the dataset providers. The following dataset connector provide support for downloads:
+        <li>Google Earth Engine</li>
+        <li>Document</li>
+        <li>Carto</li>
+        <li>BigQuery</li>
+        <li>ArcGIS FeatureService</li>
+    </ul>
+</aside>
+<pre class="highlight shell"><code><span class="c"># The id of the dataset is part of the URL</span>
+curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span class="o">=</span>SELECT <span class="k">*</span> from &lt;dataset.tableName&gt;
+
+<span class="c"># The id of the dataset is in the FROM clause</span>
+curl -XGET https://api.resourcewatch.org/v1/download?sql<span class="o">=</span>SELECT <span class="k">*</span> from &lt;dataset.id&gt;
+</code></pre>
+<p>There are two ways to call it:</p>
+
+<ul>
+<li>you can either specify the id of the dataset in the URL</li>
+<li>or you can pass it as part of the SQL query (in the FROM clause)</li>
+</ul>
+
+<p>You can also specify which file type you want to download (JSON or CSV), except for Google Earth Engine datasets (only JSON).</p>
+
+<aside class="notice">
+    By default, the API will return a CSV file (JSON file for Google Earth Engine).
+</aside>
+<pre class="highlight shell"><code><span class="c"># The format is explicitly set</span>
+curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span class="o">=</span>SELECT <span class="k">*</span> from &lt;dataset.tableName&gt;&amp;format<span class="o">=</span>json
+curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span class="o">=</span>SELECT <span class="k">*</span> from &lt;dataset.tableName&gt;&amp;format<span class="o">=</span>csv
+</code></pre>
           <h1 id="fields">Fields</h1>
 
 <h2 id="what-are-fields">What are fields?</h2>
