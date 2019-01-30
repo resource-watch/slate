@@ -162,3 +162,43 @@ You can delimit an area of interest by providing a geostore id as a parameter:
 ```shell
 curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
 ```
+
+## Download
+
+You can download the result of a query using the `download` endpoint. 
+
+<aside class="warning">
+    <ul>
+    This endpoint is not supported for all the dataset providers. The following dataset connector provide support for downloads:
+        <li>Google Earth Engine</li>
+        <li>Document</li>
+        <li>Carto</li>
+        <li>BigQuery</li>
+        <li>ArcGIS FeatureService</li>
+    </ul>
+</aside>
+
+```shell
+# The id of the dataset is part of the URL
+curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>
+
+# The id of the dataset is in the FROM clause
+curl -XGET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>
+```
+
+There are two ways to call it:
+
+- you can either specify the id of the dataset in the URL
+- or you can pass it as part of the SQL query (in the FROM clause)
+
+You can also specify which file type you want to download (JSON or CSV), except for Google Earth Engine datasets (only JSON).
+
+<aside class="notice">
+    By default, the API will return a CSV file (JSON file for Google Earth Engine).
+</aside>
+
+```shell
+# The format is explicitly set
+curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>&format=json
+curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>&format=csv
+```
