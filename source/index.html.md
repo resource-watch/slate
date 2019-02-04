@@ -25,8 +25,10 @@ includes:
   - api/graph
   - api/areas
   - api/user_management
+  - api/microservices
   - errors
   - attribution
+
 
 search: true
 ---
