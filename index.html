@@ -7137,8 +7137,31 @@ curl -X POST http://localhost:9000/auth/reset-password/&lt;email token&gt; <span
 <h2 id="user-details-management">User details management</h2>
 
 <h3 id="get-lt-base-api-url-gt-auth-user">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/user</code></h3>
-<pre class="highlight shell"><code><span class="c"># lists currently active users</span>
+
+<p>Lists user accounts:</p>
+
+<ul>
+<li>Only users with role ADMIN have permissions to use this endpoint.</li>
+<li>Email+password based accounts that have not had their email address confirmed will not be listed by this endpoint.</li>
+<li>Only users belonging to the same apps as the requesting user will be shown. </li>
+</ul>
+
+<p>This endpoint supports the following optional filter params:</p>
+
+<ul>
+<li>name</li>
+<li>email</li>
+<li>provider</li>
+<li>role</li>
+</ul>
+<pre class="highlight shell"><code><span class="c"># Lists all currently active users belonging to the same apps as the requester</span>
 curl -X GET http://localhost:9000/auth/user
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+
+
+<span class="c"># User listing, filter by email address</span>
+curl -X GET http://localhost:9000/auth/user?email<span class="o">=</span>my.address@email.com
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
