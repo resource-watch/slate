@@ -588,6 +588,12 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
+## Notes
+
+When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column.
+
+This way, an uploaded column named `3` will become `col_3`.
+
 ## Uploading a Dataset (Binary)
 
 You can upload your raw data directly to S3 making use of the "upload" endpoint. This endpoint accepts a file in the property "dataset" and returns a valid connectorUrl. With this connectorUrl you can create or update a "document" dataset, or a raster dataset in the Rasdaman adapter.
