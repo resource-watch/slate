@@ -2503,7 +2503,7 @@ Remember — the response is jsonapi format
 }'</span>
 </code></pre>
 <aside class="notice">
-Creating a widget will cause its thumbnail to be generated, which may take a few seconds to process.
+Creating a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
 </aside>
 
 <h2 id="update-a-widget">Update a Widget</h2>
@@ -2657,7 +2657,7 @@ Creating a widget will cause its thumbnail to be generated, which may take a few
 }'</span>
 </code></pre>
 <aside class="notice">
-Updating a widget will cause a thumbnail to be generated, which may take a few seconds to process.
+Updating a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
 </aside>
 
 <h2 id="clone-a-widget">Clone a Widget</h2>
@@ -2695,7 +2695,7 @@ Updating a widget will cause a thumbnail to be generated, which may take a few s
 }'</span>
 </code></pre>
 <aside class="notice">
-Cloning a widget will cause a thumbnail to be generated for the new widget, which may take a few seconds to process.
+Cloning a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
 </aside>
 
 <h2 id="delete-a-widget">Delete a Widget</h2>
