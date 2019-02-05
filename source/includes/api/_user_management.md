@@ -177,9 +177,28 @@ curl -X POST http://localhost:9000/auth/reset-password/<email token> \
 
 ### GET `<BASE API URL>/auth/user`
 
+Lists user accounts:
+
+- Only users with role ADMIN have permissions to use this endpoint.
+- Email+password based accounts that have not had their email address confirmed will not be listed by this endpoint.
+- Only users belonging to the same apps as the requesting user will be shown. 
+
+This endpoint supports the following optional filter params:
+
+- name
+- email
+- provider
+- role
+
 ```bash
-# lists currently active users
+# Lists all currently active users belonging to the same apps as the requester
 curl -X GET http://localhost:9000/auth/user
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+
+
+# User listing, filter by email address
+curl -X GET http://localhost:9000/auth/user?email=my.address@email.com
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
