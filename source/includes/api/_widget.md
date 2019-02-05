@@ -1072,7 +1072,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget \
 ```
 
 <aside class="notice">
-Creating a widget will cause its thumbnail to be generated, which may take a few seconds to process.
+Creating a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
 </aside>
 
 
@@ -1118,7 +1118,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widg
 ```
 
 <aside class="notice">
-Updating a widget will cause a thumbnail to be generated, which may take a few seconds to process.
+Updating a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
 </aside>
 
 
@@ -1167,7 +1167,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widge
 ```
 
 <aside class="notice">
-Cloning a widget will cause a thumbnail to be generated for the new widget, which may take a few seconds to process.
+Cloning a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
 </aside>
 
 
