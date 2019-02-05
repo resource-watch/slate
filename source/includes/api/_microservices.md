@@ -2,12 +2,16 @@
 
 A list of information related to the microservices
 
+<aside class="notice">
+    These services are only available to ADMIN users.
+</aside>
+
 ## List all registered microservices
 
 To obtain a list of all the registered microservices:
 
 ```shell
-curl -X GET http://api.globalforestwatch.org/api/v1/microservice \
+curl -X GET https://api.resourcewatch.org/api/v1/microservice \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -119,11 +123,11 @@ curl -X GET http://api.globalforestwatch.org/api/v1/microservice \
 To remove a microservice:
 
 ```shell
-curl -X DELETE http://api.globalforestwatch.org/api/v1/microservice/:id \
+curl -X DELETE https://api.resourcewatch.org/api/v1/microservice/:id \
 -H "Authorization: Bearer <your-token>"
 ```
 
-> Notes
+#### Notes
 
 Keep in mind that this does not actually delete the microservice, instead it schedules it for being removed. 
 There's a cron task that does the actual deleting, so the process is async.

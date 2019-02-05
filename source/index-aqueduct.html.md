@@ -18,6 +18,7 @@ includes:
   - api/metadata
   - api/vocabulary
   - api/geostore
+  - api/microservices
   - errors
 
 logo: logo-aqueduct.png

@@ -13,6 +13,7 @@ includes:
   - dev/control_tower
   - dev/control_tower_plugin_development
   - dev/microservice
+  - api/microservices
 
 logo: logo-rw.png
 
