@@ -19,6 +19,7 @@ includes:
   - api/vocabulary
   - api/geostore
   - api/subscriptions
+  - api/microservices
   - errors
 
 logo: logo-gfw.png

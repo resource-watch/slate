@@ -25,6 +25,7 @@ includes:
   - api/areas
   - api/webshot
   - api/user_management
+  - api/microservices
   - errors
   - attribution
 
