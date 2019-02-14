@@ -843,7 +843,9 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 </tr>
 </tbody></table>
 
-<p>z</p>
+<aside class="notice">
+When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.
+</aside>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -955,6 +957,10 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <td style="text-align: right">No</td>
 </tr>
 </tbody></table>
+
+<aside class="notice">
+When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.
+</aside>
 
 <aside class="notice">
     This is an authenticated endpoint!
@@ -1314,6 +1320,50 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 
 <p>Vega is a visualization grammar; a declarative format for creating, saving and sharing interactive visualization designs. This wiki contains documentation and learning materials for getting up and running with Vega. <a href="https://github.com/vega/vega/wiki">More info</a></p>
 
+<h2 id="how-obtain-a-single-widget">How obtain a single widget</h2>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example Carto Dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be76f130-ed4e-4972-827d-aef8e0dc6b18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-carto-dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5820ad9469a0287982f4cd18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sourceUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"defaultEditableWidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"freeze"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"layerId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="customize-the-query-url-of-a-widget">Customize the query url of a widget</h3>
+
+<p>The <code class="prettyprint">queryUrl</code> query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the <code class="prettyprint">queryUrl</code> will be pass to the microservice.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl<span class="o">=</span>/v1/query?sql<span class="o">=</span>Select%20<span class="k">*</span>%20from%20data&amp;geostore<span class="o">=</span>ungeostore
+</code></pre>
 <h2 id="how-obtain-all-widgets">How obtain all widgets</h2>
 
 <p>To obtain all widgets:</p>
@@ -1371,9 +1421,7 @@ Remember — the response is jsonapi format
    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="filter-params">Filter params</h3>
-
-<p>Available filters:</p>
+<p>Available filters parameters:</p>
 
 <table><thead>
 <tr>
@@ -1543,786 +1591,9 @@ Remember — the response is jsonapi format
       </span><span class="s2">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="s2">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"query/d02df2f6-d80c-4274-bb6f-f062061655c4?sql=select country, rank, iso3, total from estimated_co2_emission_filtered"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"values"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-            </span><span class="s2">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"by"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rank"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sort"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.iso3 === 'CHN'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filter"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.rank"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current_rank"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"max"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"summarize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"rank"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                    </span><span class="s2">"max"</span><span class="w">
-                  </span><span class="p">]</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.b.current_rank &lt;= 5 ? datum.a.rank &lt;= 5 : datum.a.rank === 1"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filter"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.rank === datum.b.current_rank ? '#5BB1D2' : '#9aa2a9'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.rank === datum.b.current_rank ? '500' : '300'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head_count"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"summarize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"*"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"max"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.b.current_rank &gt; 5 &amp;&amp; datum.a.b.current_rank &lt; datum.b.max_rank - 5 ? datum.a.a.rank &gt;= datum.a.b.current_rank - 2 &amp;&amp; datum.a.a.rank &lt;= datum.a.b.current_rank + 2  : false"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filter"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.a.rank === datum.a.b.current_rank ? '#5BB1D2' : '#9aa2a9'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.a.rank === datum.a.b.current_rank ? '500' : '300'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center_count"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aggregate"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"summarize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"*"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"transform"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cross"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"with"</span><span class="p">:</span><span class="w"> </span><span class="s2">"max"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"test"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.b.current_rank &gt;= datum.b.max_rank - 4 ? datum.a.a.rank &gt;= datum.b.max_rank - 4 : datum.a.a.rank === datum.b.max_rank"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"filter"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.a.rank === datum.a.b.current_rank ? '#5BB1D2' : '#9aa2a9'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.b.current_rank &lt;= 5 || datum.a.b.current_rank &gt;= datum.b.max_rank - 4 ? datum.color : 'transparent'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trick_color"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.b.current_rank &lt;= 5 || datum.a.b.current_rank &gt;= datum.b.max_rank - 4 ? '#9aa2a9' : 'transparent'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule_trick_color"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"expr"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datum.a.a.rank === datum.a.b.current_rank ? '500' : '300'"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"formula"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_head"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.rank}}"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"right"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_head"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.country | truncate:10}}"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"left"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_head"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-6</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.total"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"height"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head_count"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"group"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-15</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"x2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"stroke"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#9aa2a9"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"strokeWidth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_center"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"fimeld"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.rank}}"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"right"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_center"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.country | truncate:20}}"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"left"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_center"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-6</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.total"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"height"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center_count"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"group"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                  </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-                          </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-15</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"x2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                            </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                          </span><span class="p">}</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"stroke"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#9aa2a9"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"strokeWidth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">},</span><span class="w">
-                  </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
-                          </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.rank}}"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"right"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">},</span><span class="w">
-                  </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
-                          </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.country | truncate:20}}"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"left"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">},</span><span class="w">
-                  </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                            </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                          </span><span class="p">}</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
-                          </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="p">,</span><span class="w">
-                          </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-6</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-                          </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.total"</span><span class="p">,</span><span class="w">
-                          </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="s2">"height"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">],</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head_count"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"group"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-15</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"x2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"stroke"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rule_trick_color"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"strokeWidth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trick_color"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.rank}}"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"right"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trick_color"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{datum.a.a.country | truncate:20}}"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"align"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"left"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"middle"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fontSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fontWeight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"weight"</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"from"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rect"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                      </span><span class="p">}</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">-6</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"fill"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"trick_color"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.total"</span><span class="p">,</span><span class="w">
-                      </span><span class="s2">"scale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="s2">"height"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"enter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"mult"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"count"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"scales"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_head"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ordinal"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="mi">0</span><span class="p">,</span><span class="w">
-              </span><span class="mi">20</span><span class="p">,</span><span class="w">
-              </span><span class="mi">40</span><span class="p">,</span><span class="w">
-              </span><span class="mi">60</span><span class="p">,</span><span class="w">
-              </span><span class="mi">80</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"domain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"head"</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"sort"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"min"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.rank"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_center"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ordinal"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="mi">0</span><span class="p">,</span><span class="w">
-              </span><span class="mi">20</span><span class="p">,</span><span class="w">
-              </span><span class="mi">40</span><span class="p">,</span><span class="w">
-              </span><span class="mi">60</span><span class="p">,</span><span class="w">
-              </span><span class="mi">80</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"domain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"center"</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"sort"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"min"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vertical_tail"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ordinal"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="mi">0</span><span class="p">,</span><span class="w">
-              </span><span class="mi">20</span><span class="p">,</span><span class="w">
-              </span><span class="mi">40</span><span class="p">,</span><span class="w">
-              </span><span class="mi">60</span><span class="p">,</span><span class="w">
-              </span><span class="mi">80</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"domain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tail"</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"sort"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"min"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
-              </span><span class="p">},</span><span class="w">
-              </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a.a.rank"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bar"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"linear"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"range"</span><span class="p">:</span><span class="w"> </span><span class="s2">"width"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"domain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"table"</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"total"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"marks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"scales"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">],</span><span class="w">
         </span><span class="s2">"padding"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
           </span><span class="s2">"top"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w">
           </span><span class="s2">"left"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
@@ -2346,11 +1617,6 @@ Remember — the response is jsonapi format
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="modify-the-query-url-of-a-widget">Modify the Query Url of a widget</h3>
-
-<p>The <code class="prettyprint">queryUrl</code> query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the queryUrl, will be pass to the microservice.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl<span class="o">=</span>/v1/query?sql<span class="o">=</span>Select%20<span class="k">*</span>%20from%20data&amp;geostore<span class="o">=</span>ungeostore
-</code></pre>
 <h2 id="create-a-widget">Create a Widget</h2>
 
 <p>To create a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:</p>
@@ -5027,6 +4293,133 @@ To import the geojson in geostore, you need to define all of the required fields
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+          <h1 id="microservices">Microservices</h1>
+
+<p>A list of information related to the microservices</p>
+
+<aside class="notice">
+    These services are only available to ADMIN users.
+</aside>
+
+<h2 id="list-all-registered-microservices">List all registered microservices</h2>
+
+<p>To obtain a list of all the registered microservices:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.748Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="w">
+
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dataset"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://dataset.default.svc.cluster.local:3000"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/find-by-ids"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/find-by-ids"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-01-24T13:04:46.728Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.778Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"layer"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"layer"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aa667d1aee7ae16fb419c23"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Layer"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://layer.default.svc.cluster.local:6000"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/layer"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/layer"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-08T12:07:38.014Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="delete-microservice">Delete microservice</h2>
+
+<p>To remove a microservice:</p>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/api/v1/microservice/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h4 id="notes">Notes</h4>
+
+<p>Keep in mind that this does not actually delete the microservice, instead it schedules it for being removed. 
+There&rsquo;s a cron task that does the actual deleting, so the process is async.</p>
+
           <h1 id="errors">Errors</h1>
 
 <p>The Resource Watch API uses the following error codes:</p>
