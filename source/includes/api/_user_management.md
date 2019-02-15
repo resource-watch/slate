@@ -250,3 +250,28 @@ curl -X PATCH http://localhost:9000/auth/user/<user_id>
     ...
 }'
 ```
+
+
+### DELETE `<BASE API URL>/auth/user/:id`
+
+- Deletes the specified user account.
+- Can only be used by admins.
+- Returns the deleted user object.
+
+<aside class="notice">
+This action only deletes the user account. Any resources that may be associated with this given user account are not modified or deleted.
+</aside>
+
+    
+```bash
+# updates details of user given its id
+curl -X DELETE http://localhost:9000/auth/user/<user_id>
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+ '{
+    "name":"user name",
+    "email":"user@email.com",
+    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
+    ...
+}'
+```
