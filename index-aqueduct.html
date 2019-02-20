@@ -1132,8 +1132,8 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "connectorUrl":"&lt;url&gt;",
-   "dataPath": "data"
+   "url":"&lt;url&gt;",
+   "provider": "csv"
 }'</span>
 </code></pre>
 <blockquote>
@@ -1143,7 +1143,8 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "data": [{},{}]
+   "data": [{},{}],
+   "provider": "csv"
 }'</span>
 </code></pre>
 <aside class="notice">
