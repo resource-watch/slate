@@ -733,8 +733,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
-   "connectorUrl":"<url>",
-   "dataPath": "data"
+   "url":"<url>",
+   "provider": "csv"
 }'
 ```
 
@@ -745,7 +745,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
-   "data": [{},{}]
+   "data": [{},{}],
+   "provider": "csv"
 }'
 ```
 
