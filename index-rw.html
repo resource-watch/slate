@@ -1060,6 +1060,12 @@ When creating a dataset, if any of the fields has a numerical name (for example,
 <h2 id="deleting-a-dataset">Deleting a Dataset</h2>
 
 <p><strong>When a dataset is deleted the user&rsquo;s applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.</strong></p>
+
+<p>Datasets can be deleted either by any user with role ADMIN or by the user with role MANAGER that created them. Note that the deletion process cascades; deleting a dataset will also remove all layer, vocabularies, and metadata entities associated with it.</p>
+
+<aside class="warning">
+Deleting a dataset removes it permanently! It is recommended that you save a local copy before doing so.
+</aside>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 -H <span class="s2">"Content-Type: application/json"</span>
