@@ -26,6 +26,7 @@ includes:
   - api/collections
   - api/graph
   - api/areas
+  - api/tasks
   - api/user_management
   - api/microservices
   - errors

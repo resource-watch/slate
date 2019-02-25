@@ -21,6 +21,7 @@ includes:
   - api/topic
   - api/dashboard
   - api/subscriptions
+  - api/tasks
   - api/microservices
   - errors
 

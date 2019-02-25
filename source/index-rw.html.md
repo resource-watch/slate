@@ -26,6 +26,7 @@ includes:
   - api/webshot
   - api/topic
   - api/dashboard
+  - api/tasks
   - api/user_management
   - api/microservices
   - errors

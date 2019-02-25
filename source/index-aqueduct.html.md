@@ -18,6 +18,7 @@ includes:
   - api/metadata
   - api/vocabulary
   - api/geostore
+  - api/tasks
   - api/microservices
   - errors
 
