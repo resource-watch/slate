@@ -6418,6 +6418,352 @@ Given the following sets of concepts:</p>
     }
 }
 </code></pre>
+          <h1 id="tasks">Tasks</h1>
+
+<h2 id="what-is-a-task">What is a task?</h2>
+
+<p>In the context of this API, a task is a process in charge of performing certain actions on datasets of the document type.
+These actions can be creating a dataset or overwriting its content.</p>
+
+<p>A task may contains the following fields:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td style="text-align: center">Id of the task</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>type</td>
+<td style="text-align: center">Task type - see full list <a href="https://github.com/resource-watch/doc-importer-messages/blob/master/task.messages.js#L4">here</a></td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>message</td>
+<td style="text-align: center">Task message, which parametrizes the task</td>
+<td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Status of the task - see full list <a href="https://github.com/resource-watch/doc-orchestrator/blob/master/app/src/app.constants.js#L3">here</a></td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>reads</td>
+<td style="text-align: center">Number of data reads performed by the task</td>
+<td style="text-align: right">Number</td>
+</tr>
+<tr>
+<td>writes</td>
+<td style="text-align: center">Number of data writes performed by the task</td>
+<td style="text-align: right">Number</td>
+</tr>
+<tr>
+<td>index</td>
+<td style="text-align: center">Name of the Elasticsearch index used in this task</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>datasetId</td>
+<td style="text-align: center">Id of the dataset to which this task relates</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>logs</td>
+<td style="text-align: center">List of the individual operations carried out by this task</td>
+<td style="text-align: right">Array</td>
+</tr>
+<tr>
+<td>error</td>
+<td style="text-align: center">Error message generated should the task fail</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td style="text-align: center">Date and time in which the task was created</td>
+<td style="text-align: right">DateTime</td>
+</tr>
+<tr>
+<td>updatedAt</td>
+<td style="text-align: center">Date and time in which the task was last updated</td>
+<td style="text-align: right">DateTime</td>
+</tr>
+</tbody></table>
+
+<p>A task is fundamentally an internal element to the API, and it&rsquo;s visibility and interaction is limited to maintenance and debug actions.
+At its core, a task represents a single package that contains:</p>
+
+<ul>
+<li>An action to be carried out.</li>
+<li>A message that parametrises that action.</li>
+<li>A status that identifies the progress stage of the task.</li>
+<li>A dataset to which that action should relate.</li>
+<li>An Elasticsearch index identifier where the resulting data will be saved.</li>
+<li>Counters for read and write operations.</li>
+<li>Logs for those operations.</li>
+<li>An optional error field that identifies what happened in case of failure.</li>
+</ul>
+
+<h2 id="get-all-tasks">Get all tasks</h2>
+
+<p>To obtain all tasks:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/doc-importer/task
+</code></pre>
+<aside class="success">
+Remember — the response is jsonapi format
+</aside>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55b02cfd-dabf-4ad0-a04d-5501cf248a0c"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"task"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TASK_CREATE"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55b02cfd-dabf-4ad0-a04d-5501cf248a0c"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TASK_CREATE"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"datasetId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"65593fee-26e0-4c3c-84b3-cc0921bf8bc1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"fileUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://gfw2-data.s3.amazonaws.com/country-pages/fire_alerts_all.csv"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"csv"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="s2">"nested"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rows"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SAVED"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"reads"</span><span class="p">:</span><span class="w"> </span><span class="mi">973</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"writes"</span><span class="p">:</span><span class="w"> </span><span class="mi">973</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-20T07:39:31.295Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-20T10:10:07.147Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_65593fee26e04c3c84b3cc0921bf8bc1_1550648371365"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"datasetId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"65593fee-26e0-4c3c-84b3-cc0921bf8bc1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"logs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a67f2557-9237-4435-82fd-3a0ad64b0292"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STATUS_INDEX_CREATED"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55b02cfd-dabf-4ad0-a04d-5501cf248a0c"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_65593fee26e04c3c84b3cc0921bf8bc1_1550648371365"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"53ac8e83-167b-4c77-9b61-6642b1764b32"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STATUS_READ_DATA"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55b02cfd-dabf-4ad0-a04d-5501cf248a0c"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"415ecb4e-ed9a-4b0f-9f8b-7755775b08f5"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"task"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TASK_CREATE"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"415ecb4e-ed9a-4b0f-9f8b-7755775b08f5"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TASK_CREATE"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"datasetId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"638cce8c-3e97-4bdd-b4de-41cd28254370"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"fileUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://gfw2-data.s3.amazonaws.com/country-pages/fire_alerts_all.csv"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"csv"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="s2">"nested"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rows"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SAVED"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"reads"</span><span class="p">:</span><span class="w"> </span><span class="mi">973</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"writes"</span><span class="p">:</span><span class="w"> </span><span class="mi">973</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-20T07:39:36.421Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-20T10:10:09.175Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_638cce8c3e974bddb4de41cd28254370_1550652900017"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"datasetId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"638cce8c-3e97-4bdd-b4de-41cd28254370"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"logs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8f5b6b0c-9132-4b5c-b7c4-b58582b3cb0b"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STATUS_INDEX_CREATED"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"415ecb4e-ed9a-4b0f-9f8b-7755775b08f5"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_638cce8c3e974bddb4de41cd28254370_1550652900017"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"63c69b2b-31cd-4bdb-9794-f6d4ec155e7b"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STATUS_READ_DATA"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"415ecb4e-ed9a-4b0f-9f8b-7755775b08f5"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="filter-params">Filter params</h3>
+
+<p>Available filters:</p>
+
+<p>type: &lsquo;type&rsquo;,
+            status: &#39;status&rsquo;,
+            createdAt: &#39;createdAt&rsquo;,
+            updatedAt: &#39;updatedAt&rsquo;,
+            createdBefore: &#39;createdAt&rsquo;,
+            createdAfter: &#39;createdAt&rsquo;,
+            updatedBefore: &#39;updatedAt&rsquo;,
+            updatedAfter: &#39;updatedAt&rsquo;</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td style="text-align: center">Task type</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Task status</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td style="text-align: center">Tasks created on the given date</td>
+<td style="text-align: right">Date</td>
+</tr>
+<tr>
+<td>updatedAt</td>
+<td style="text-align: center">Tasks last updated on the given date</td>
+<td style="text-align: right">Date</td>
+</tr>
+<tr>
+<td>createdBefore</td>
+<td style="text-align: center">Tasks created before the given date</td>
+<td style="text-align: right">Date</td>
+</tr>
+<tr>
+<td>createdAfter</td>
+<td style="text-align: center">Tasks created after the given date</td>
+<td style="text-align: right">Date</td>
+</tr>
+<tr>
+<td>updatedBefore</td>
+<td style="text-align: center">Tasks last updated before the given date</td>
+<td style="text-align: right">Date</td>
+</tr>
+<tr>
+<td>updatedAfter</td>
+<td style="text-align: center">Tasks last updated after the given date</td>
+<td style="text-align: right">Date</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>Return tasks with type TASK_OVERWRITE</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/doc-importer/task?type<span class="o">=</span>TASK_OVERWRITE
+</code></pre>
+<blockquote>
+<p>Return the tasks with status SAVED</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/doc-importer/task?status<span class="o">=</span>SAVED
+</code></pre>
+<blockquote>
+<p>Return the tasks created on Feb 1st 2019</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/doc-importer/task?createdAt<span class="o">=</span>2019-02-01
+</code></pre>
+<blockquote>
+<p>Return the tasks last updated between Jan 2nd and Feb 2nd 2019</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/doc-importer/task?updatedAfter<span class="o">=</span>2019-01-02&amp;updatedBefore<span class="o">=</span>2019-02-02
+</code></pre>
+<blockquote>
+<p>Return the tasks last updated before and Feb 2nd 2019 and with status ERROR</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/doc-importer/task?updatedBefore<span class="o">=</span>2019-02-02&amp;status<span class="o">=</span>ERROR
+</code></pre>
+<h2 id="get-a-single-task">Get a single task</h2>
+
+<p>To obtain the task:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/doc-importer/task/55b02cfd-dabf-4ad0-a04d-5501cf248a0c
+</code></pre>
+<aside class="success">
+Remember — the response is jsonapi format
+</aside>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55b02cfd-dabf-4ad0-a04d-5501cf248a0c"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"task"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TASK_CREATE"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55b02cfd-dabf-4ad0-a04d-5501cf248a0c"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TASK_CREATE"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"datasetId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"65593fee-26e0-4c3c-84b3-cc0921bf8bc1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"fileUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://gfw2-data.s3.amazonaws.com/country-pages/fire_alerts_all.csv"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"csv"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"nested"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rows"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SAVED"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"reads"</span><span class="p">:</span><span class="w"> </span><span class="mi">973</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"writes"</span><span class="p">:</span><span class="w"> </span><span class="mi">973</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-20T07:39:31.295Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-20T10:10:07.147Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_65593fee26e04c3c84b3cc0921bf8bc1_1550648371365"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"datasetId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"65593fee-26e0-4c3c-84b3-cc0921bf8bc1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"logs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a67f2557-9237-4435-82fd-3a0ad64b0292"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STATUS_INDEX_CREATED"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55b02cfd-dabf-4ad0-a04d-5501cf248a0c"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_65593fee26e04c3c84b3cc0921bf8bc1_1550648371365"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"53ac8e83-167b-4c77-9b61-6642b1764b32"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STATUS_READ_DATA"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55b02cfd-dabf-4ad0-a04d-5501cf248a0c"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="delete-a-task">Delete a task</h2>
+
+<p>You can delete a task if, for example, it is stuck on a running state, but it&rsquo;s not actually running. This should
+be considered a &ldquo;only do it if you know what you are doing&rdquo; operation, and requires ADMIN permission.</p>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/doc-importer/task/&lt;task_id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
           <h1 id="user-management">User Management</h1>
 
 <p>The following endpoints expose the API&rsquo;s functionality regarding user management.
