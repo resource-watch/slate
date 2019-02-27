@@ -6104,7 +6104,7 @@ This process is computational demanding and may be slow at times, depeding on se
 This endpoint does not validate the existence of the widget - you will not get a 404 HTTP error if you provided a non-existent widget id. 
 </aside>
 <pre class="highlight plaintext"><code>curl -X POST \
-  http://localhost:9000/v1/webshot/widget/7b540186-9a9f-4e13-a6e8-f38e64fab2e1/thumbnail \
+  http://api.resourcewatch.org/v1/webshot/widget/7b540186-9a9f-4e13-a6e8-f38e64fab2e1/thumbnail \
   -H 'Authorization: Bearer &lt;your-token&gt;' \
   -H 'Content-Type: application/json' \
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -6659,7 +6659,7 @@ For more information or implementation details, see <a href="https://github.com/
 
 <p>For JSON requests, it will return 200 or 401 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object.</p>
 <pre class="highlight shell"><code><span class="c"># Email + password based login - JSON format</span>
-curl -X POST http://localhost:9000/auth/login <span class="se">\</span>
+curl -X POST http://api.resourcewatch.org/auth/login <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
     "email":"your-email@provider.com",
@@ -6731,7 +6731,7 @@ curl -X POST http://localhost:9000/auth/login <span class="se">\</span>
 
 <p>While optional, it&rsquo;s highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user&rsquo;s apps match datasets, widgets, etc.</p>
 <pre class="highlight shell"><code><span class="c"># Account creation using email + password</span>
-curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
+curl -X POST http://api.resourcewatch.org/auth/sign-up <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
     "email":"your-email@provider.com",
@@ -6775,7 +6775,7 @@ curl -X POST http://localhost:9000/auth/sign-up <span class="se">\</span>
 
 <p>Endpoint where the password reset request is sent.</p>
 <pre class="highlight shell"><code><span class="c"># Password reset</span>
-curl -X POST http://localhost:9000/auth/reset-password <span class="se">\</span>
+curl -X POST http://api.resourcewatch.org/auth/reset-password <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
     "email":"your-email@provider.com"
@@ -6789,7 +6789,7 @@ curl -X POST http://localhost:9000/auth/reset-password <span class="se">\</span>
 
 <p>Endpoint used to submit the new password.</p>
 <pre class="highlight shell"><code><span class="c"># New password submission</span>
-curl -X POST http://localhost:9000/auth/reset-password/&lt;email token&gt; <span class="se">\</span>
+curl -X POST http://api.resourcewatch.org/auth/reset-password/&lt;email token&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
     "password":"potato",
@@ -6817,19 +6817,19 @@ curl -X POST http://localhost:9000/auth/reset-password/&lt;email token&gt; <span
 <li>role</li>
 </ul>
 <pre class="highlight shell"><code><span class="c"># Lists all currently active users belonging to the same apps as the requester</span>
-curl -X GET http://localhost:9000/auth/user
+curl -X GET http://api.resourcewatch.org/auth/user
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 
 
 <span class="c"># User listing, filter by email address</span>
-curl -X GET http://localhost:9000/auth/user?email<span class="o">=</span>my.address@email.com
+curl -X GET http://api.resourcewatch.org/auth/user?email<span class="o">=</span>my.address@email.com
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
 <h3 id="get-lt-base-api-url-gt-auth-user-id">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/:id</code></h3>
 <pre class="highlight shell"><code><span class="c"># shows info for user with the given id</span>
-curl -X GET http://localhost:9000/auth/user/&lt;user_id&gt;
+curl -X GET http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
@@ -6842,7 +6842,7 @@ curl -X GET http://localhost:9000/auth/user/&lt;user_id&gt;
 <li>Returns the new state of the updated user object.</li>
 </ul>
 <pre class="highlight shell"><code><span class="c"># updates current user details</span>
-curl -X PATCH http://localhost:9000/auth/user/me
+curl -X PATCH http://api.resourcewatch.org/auth/user/me
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
  <span class="s1">'{
@@ -6860,7 +6860,7 @@ curl -X PATCH http://localhost:9000/auth/user/me
 <li>Returns the new state of the updated user object.</li>
 </ul>
 <pre class="highlight shell"><code><span class="c"># updates details of user given its id</span>
-curl -X PATCH http://localhost:9000/auth/user/&lt;user_id&gt;
+curl -X PATCH http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
  <span class="s1">'{
@@ -6881,7 +6881,7 @@ curl -X PATCH http://localhost:9000/auth/user/&lt;user_id&gt;
 This action only deletes the user account. Any resources that may be associated with this given user account are not modified or deleted.
 </aside>
 <pre class="highlight shell"><code><span class="c"># updates details of user given its id</span>
-curl -X DELETE http://localhost:9000/auth/user/&lt;user_id&gt;
+curl -X DELETE http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
  <span class="s1">'{
