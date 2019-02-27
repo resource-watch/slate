@@ -29,7 +29,7 @@ This endpoint does not validate the existence of the widget - you will not get a
 
 ```
 curl -X POST \
-  http://localhost:9000/v1/webshot/widget/7b540186-9a9f-4e13-a6e8-f38e64fab2e1/thumbnail \
+  http://api.resourcewatch.org/v1/webshot/widget/7b540186-9a9f-4e13-a6e8-f38e64fab2e1/thumbnail \
   -H 'Authorization: Bearer <your-token>' \
   -H 'Content-Type: application/json' \
 ```

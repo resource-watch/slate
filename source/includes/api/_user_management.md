@@ -26,7 +26,7 @@ For JSON requests, it will return 200 or 401 HTTP response code depending on whe
 
 ```bash
 # Email + password based login - JSON format
-curl -X POST http://localhost:9000/auth/login \
+curl -X POST http://api.resourcewatch.org/auth/login \
 -H "Content-Type: application/json"  -d \
  '{
     "email":"your-email@provider.com",
@@ -97,7 +97,7 @@ While optional, it's highly recommended that you specify which apps the user wil
 
 ```bash
 # Account creation using email + password
-curl -X POST http://localhost:9000/auth/sign-up \
+curl -X POST http://api.resourcewatch.org/auth/sign-up \
 -H "Content-Type: application/json"  -d \
  '{
     "email":"your-email@provider.com",
@@ -147,7 +147,7 @@ Endpoint where the password reset request is sent.
 
 ```bash
 # Password reset
-curl -X POST http://localhost:9000/auth/reset-password \
+curl -X POST http://api.resourcewatch.org/auth/reset-password \
 -H "Content-Type: application/json"  -d \
  '{
     "email":"your-email@provider.com"
@@ -165,7 +165,7 @@ Endpoint used to submit the new password.
 
 ```bash
 # New password submission
-curl -X POST http://localhost:9000/auth/reset-password/<email token> \
+curl -X POST http://api.resourcewatch.org/auth/reset-password/<email token> \
 -H "Content-Type: application/json"  -d \
  '{
     "password":"potato",
@@ -192,13 +192,13 @@ This endpoint supports the following optional filter params:
 
 ```bash
 # Lists all currently active users belonging to the same apps as the requester
-curl -X GET http://localhost:9000/auth/user
+curl -X GET http://api.resourcewatch.org/auth/user
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 
 
 # User listing, filter by email address
-curl -X GET http://localhost:9000/auth/user?email=my.address@email.com
+curl -X GET http://api.resourcewatch.org/auth/user?email=my.address@email.com
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
@@ -207,7 +207,7 @@ curl -X GET http://localhost:9000/auth/user?email=my.address@email.com
 
 ```bash
 # shows info for user with the given id
-curl -X GET http://localhost:9000/auth/user/<user_id>
+curl -X GET http://api.resourcewatch.org/auth/user/<user_id>
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
@@ -221,7 +221,7 @@ curl -X GET http://localhost:9000/auth/user/<user_id>
 
 ```bash
 # updates current user details
-curl -X PATCH http://localhost:9000/auth/user/me
+curl -X PATCH http://api.resourcewatch.org/auth/user/me
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
  '{
@@ -241,7 +241,7 @@ curl -X PATCH http://localhost:9000/auth/user/me
     
 ```bash
 # updates details of user given its id
-curl -X PATCH http://localhost:9000/auth/user/<user_id>
+curl -X PATCH http://api.resourcewatch.org/auth/user/<user_id>
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
  '{
@@ -265,7 +265,7 @@ This action only deletes the user account. Any resources that may be associated 
     
 ```bash
 # updates details of user given its id
-curl -X DELETE http://localhost:9000/auth/user/<user_id>
+curl -X DELETE http://api.resourcewatch.org/auth/user/<user_id>
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
  '{
