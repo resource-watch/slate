@@ -1967,6 +1967,20 @@ Updating a widget will cause a thumbnail to be generated in the background for t
    "name": "name for the cloned widget", for the cloned widget",
 }'</span>
 </code></pre>
+<h3 id="cloning-widgets-from-other-microservices">Cloning widgets from other microservices</h3>
+
+<p>When cloning a widget, the newly created clone will take the <code class="prettyprint">userId</code> of the originating request. If you call this endpoint as an authenticated user from your custom application, that means it will get that authenticated user&rsquo;s <code class="prettyprint">userId</code>. However, if invoked from another API microservice, that <code class="prettyprint">userId</code> is no longer available. In this scenario, when the request to clone is originated internally, you can optionally pass a <code class="prettyprint">userÌd</code> body value that will be set as the <code class="prettyprint">userId</code> of the newly created widget.</p>
+
+<aside class="warning">
+User IDs provided this way are not validated.
+</aside>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/widget/&lt;widget_id&gt;/clone <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "userID": "123456789",
+}'</span>
+</code></pre>
 <aside class="notice">
 Cloning a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
 </aside>
