@@ -430,6 +430,23 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widge
 }'
 ```
 
+### Cloning widgets from other microservices
+
+When cloning a widget, the newly created clone will take the `userId` of the originating request. If you call this endpoint as an authenticated user from your custom application, that means it will get that authenticated user's `userId`. However, if invoked from another API microservice, that `userId` is no longer available. In this scenario, when the request to clone is originated internally, you can optionally pass a `userÌd` body value that will be set as the `userId` of the newly created widget.
+
+<aside class="warning">
+User IDs provided this way are not validated.
+</aside>
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/widget/<widget_id>/clone \
+-H "Authorization: Bearer <microservice-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+   "userID": "123456789",
+}'
+```
+
 <aside class="notice">
 Cloning a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
 </aside>
