@@ -159,6 +159,7 @@ Field           |                                     Description               
 --------------- | :----------------------------------------------------------------------------------: | ------:
 type            |  Task type                                                                           |    Text
 status          |  Task status                                                                         |    Text
+datasetID       |  Id of the dataset to which the task refers                                          |    Text
 createdAt       |  Tasks created on the given date                                                     |    Date
 updatedAt       |  Tasks last updated on the given date                                                |    Date
 createdBefore   |  Tasks created before the given date                                                 |    Date
