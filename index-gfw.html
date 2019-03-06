@@ -422,8 +422,8 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 
 <ul>
 <li><code class="prettyprint">metadata</code>: delegates sorting to the metadata component, sorting by the name field of the metadata.</li>
-<li><code class="prettyprint">most-visited</code> delegates sorting to the graph component, sorting by the datasets that have been queried more frequently.</li>
-<li><code class="prettyprint">most-favorited</code>: delegates sorting to the graph component, sorting by the datasets that have been more favourited.</li>
+<li><code class="prettyprint">most-viewed</code> delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.</li>
+<li><code class="prettyprint">most-favorited</code>: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.</li>
 <li><code class="prettyprint">relevance</code>: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a <code class="prettyprint">search</code> parameter. Does not support ascending order. </li>
 </ul>
 
@@ -432,7 +432,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 <blockquote>
 <p>Sorting datasets with special criteria</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-most-favourited
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-most-favorited
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>relevance&amp;status<span class="o">=</span>saved&amp;search<span class="o">=</span>agriculture
 </code></pre>
 <h3 id="relationships">Relationships</h3>
@@ -1313,13 +1313,23 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">Environment can be one of <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code></td>
+<td style="text-align: center">Environment can be one of <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code>. <em>By default, it&rsquo;s set to &ldquo;production&rdquo; unless specified otherwise on creation/update</em></td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
 <td>thumbnailUrl</td>
 <td style="text-align: center">Url of the widget&rsquo;s thumbnail, if one exists</td>
 <td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td style="text-align: center">Date in which the widget was created</td>
+<td style="text-align: right">Date</td>
+</tr>
+<tr>
+<td>updatedAt</td>
+<td style="text-align: center">Date in which the widget was last updated</td>
+<td style="text-align: right">Date</td>
 </tr>
 </tbody></table>
 
@@ -1371,13 +1381,17 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 <p>The <code class="prettyprint">queryUrl</code> query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the <code class="prettyprint">queryUrl</code> will be pass to the microservice.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl<span class="o">=</span>/v1/query?sql<span class="o">=</span>Select%20<span class="k">*</span>%20from%20data&amp;geostore<span class="o">=</span>ungeostore
 </code></pre>
-<h2 id="how-obtain-all-widgets">How obtain all widgets</h2>
+<h2 id="how-to-obtain-all-widgets">How to obtain all widgets</h2>
 
 <p>To obtain all widgets:</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget
 </code></pre>
 <aside class="success">
 Remember — the response is jsonapi format
+</aside>
+
+<aside class="success">
+Remember — <strong>the resulting list is filtered by env=production</strong> unless another env is explicitly provided as a query param. <i>A list of environments can also be provided such as e.g. &ldquo;env=production,preproduction&rdquo;</i>.
 </aside>
 
 <blockquote>
@@ -1566,7 +1580,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f06
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
 </code></pre>
-<h2 id="how-obtain-a-widget-for-a-specific-dataset">How obtain a widget for a specific dataset</h2>
+<h2 id="how-to-obtain-a-widget-for-a-specific-dataset">How to obtain a widget for a specific dataset</h2>
 
 <p>To obtain the widget:</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3
@@ -5262,6 +5276,11 @@ Remember — the response is jsonapi format
 <tr>
 <td>status</td>
 <td style="text-align: center">Task status</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>datasetID</td>
+<td style="text-align: center">Id of the dataset to which the task refers</td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
