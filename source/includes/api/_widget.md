@@ -27,7 +27,7 @@ status       |                     Status of the Widget                     |   
 published    |                   If it's available to use                   |    Text
 freeze       |                   If the data is freezed                     |    Boolean
 verified     |                If it's verified by other user                |    Text
-env          |  Environment can be one of `production` or `preproduction`   |    Text
+env          |  Environment can be one of `production` or `preproduction`. _By default, it's set to "production" unless specified otherwise on creation/update_   |    Text
 thumbnailUrl |             Url of the widget's thumbnail, if one exists     |    Text
 createdAt    |             Date in which the widget was created             |    Date
 updatedAt    |             Date in which the widget was last updated        |    Date
@@ -88,7 +88,7 @@ The `queryUrl` query parameter can be set if the user needs to modify the final 
 curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl=/v1/query?sql=Select%20*%20from%20data&geostore=ungeostore
 ```
 
-## How obtain all widgets
+## How to obtain all widgets
 
 To obtain all widgets:
 
@@ -98,6 +98,10 @@ curl -X GET https://api.resourcewatch.org/v1/widget
 
 <aside class="success">
 Remember — the response is jsonapi format
+</aside>
+
+<aside class="success">
+Remember — <strong>the resulting list is filtered by env=production</strong> unless another env is explicitly provided as a query param. <i>A list of environments can also be provided such as e.g. "env=production,preproduction"</i>.
 </aside>
 
 > Example response:
@@ -233,7 +237,7 @@ page[number] |      Number of page      | Number
 curl -X GET https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2
 ```
 
-## How obtain a widget for a specific dataset
+## How to obtain a widget for a specific dataset
 
 To obtain the widget:
 
