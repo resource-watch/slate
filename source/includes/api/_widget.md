@@ -29,6 +29,8 @@ freeze       |                   If the data is freezed                     |   
 verified     |                If it's verified by other user                |    Text
 env          |  Environment can be one of `production` or `preproduction`   |    Text
 thumbnailUrl |             Url of the widget's thumbnail, if one exists     |    Text
+createdAt    |             Date in which the widget was created             |    Date
+updatedAt    |             Date in which the widget was last updated        |    Date
 
 
 ### What is Vega?
