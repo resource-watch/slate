@@ -2,9 +2,11 @@
 
 ## Metadata definition
 
-Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget)
+Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget). Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per `application` and `language` pair. As such, the `application` and `language` attributes are required and it is mandatory to include them in when creating/updating metadata.
 
 Some fields are important to identify the entity properly; others are just optional and give extra information about it.
+
+
 
 | Field             | Description                                                       | Type
 | ------------------|:-----------------------------------------:                        | -----:
