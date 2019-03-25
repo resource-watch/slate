@@ -2802,7 +2802,7 @@ curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span
 
 <h2 id="metadata-definition">Metadata definition</h2>
 
-<p>Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget)</p>
+<p>Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget). Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per <code class="prettyprint">application</code> and <code class="prettyprint">language</code> pair. As such, the <code class="prettyprint">application</code> and <code class="prettyprint">language</code> attributes are required and it is mandatory to include them in when creating/updating metadata.</p>
 
 <p>Some fields are important to identify the entity properly; others are just optional and give extra information about it.</p>
 
