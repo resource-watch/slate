@@ -6,6 +6,12 @@ Metadata can be any kind of data associated to an existing resource (i.e. Datase
 
 Some fields are important to identify the entity properly; others are just optional and give extra information about it.
 
+The "application" and "language" attributes are required and it is mandatory to include them in the payload.
+
+<aside class="notice">
+Note that, although there might be several metadata per dataset, each dataset will have - at most - one metadatum per LANGUAGE and APPLICATION pair.
+</aside>
+
 | Field             | Description                                                       | Type
 | ------------------|:-----------------------------------------:                        | -----:
 | application       | The metadata application                                          | String
