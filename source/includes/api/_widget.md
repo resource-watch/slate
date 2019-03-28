@@ -449,7 +449,7 @@ curl -X POST https://api.resourcewatch.org/v1/widget/<widget_id>/clone \
 -H "Authorization: Bearer <microservice-token>" \
 -H "Content-Type: application/json"  -d \
  '{
-   "userID": "123456789",
+   "userId": "123456789",
 }'
 ```
 
