@@ -1151,32 +1151,6 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
     This is an authenticated endpoint!
 </aside>
 
-<h2 id="overwrite-specific-data">Overwrite specific Data</h2>
-
-<p>You can overwrite specific data if the overwrite dataset property has been set to true.</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data/:data_id <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{
-   "data_id":":data_id",
-   "data": {"a": 1}
-}'</span>
-</code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
-<h2 id="delete-specific-data">Delete specific Data</h2>
-
-<p>You can delete specific data if the overwrite dataset property has been set to true.</p>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/:dataset_id/data/:data_id <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>
-</code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
 <h2 id="dataset-data-sync">Dataset data sync</h2>
 
 <p>To sync the data of a dataset, you need to choose the action type (concat or overwrite), a cron pattern and a valid url. This configuration should be set in the &#39;sync&rsquo; property when creating or updating a document dataset.</p>
@@ -1992,7 +1966,7 @@ User IDs provided this way are not validated.
 -H <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "userID": "123456789",
+   "userId": "123456789",
 }'</span>
 </code></pre>
 <aside class="notice">
