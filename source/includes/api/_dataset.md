@@ -754,38 +754,6 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite
     This is an authenticated endpoint!
 </aside>
 
-## Overwrite specific Data
-
-You can overwrite specific data if the overwrite dataset property has been set to true.
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data/:data_id \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
-'{
-   "data_id":":data_id",
-   "data": {"a": 1}
-}'
-```
-
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
-## Delete specific Data
-
-You can delete specific data if the overwrite dataset property has been set to true.
-
-```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/:dataset_id/data/:data_id \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"
-```
-
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
 ## Dataset data sync
 
 To sync the data of a dataset, you need to choose the action type (concat or overwrite), a cron pattern and a valid url. This configuration should be set in the 'sync' property when creating or updating a document dataset.
