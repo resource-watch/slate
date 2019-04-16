@@ -1042,21 +1042,7 @@ This section is completely implementation specific and opinionated, and does not
 <span class="nx">router</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="k">delete</span><span class="p">);</span>
 <span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/clone'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">clone</span><span class="p">);</span>
 </code></pre>
-<p>In here you&rsquo;ll find the already existing routes. As you can see from the rather explicit syntax, you need to call the method that matches the desired HTTP verb on the <code class="prettyprint">router</code> object, and pass it a variable number of arguments - more on this in the next section. </p>
-
-<p>The routes declared above have 2 prefixes prepended to them:
-- The first one is based on the file path. In our example, the file is located inside the <code class="prettyprint">app/src/routes/api/v1/</code> folder, so the file path prefix will be <code class="prettyprint">/api/v1</code> 
-- The second prefix is defined on the constructor of the router object - <code class="prettyprint">/dataset</code> in this example. </p>
-
-<h5 id="add-a-handler-for-that-route">Add a handler for that route.</h5>
-
-<h5 id="add-middleware-for-validation-if-applicable">Add middleware for validation, if applicable.</h5>
-
-<h5 id="implement-new-services-models-or-serializers-to-handle-your-application-logic-if-applicable">Implement new services, models or serializers to handle your application logic, if applicable.</h5>
-
-<h5 id="add-tests-for-your-functionality-you-may-want-to-start-with-this-if-tdd-is-your-thing">Add tests for your functionality (you may want to start with this, if TDD is your thing).</h5>
-
-<h5 id="update-the-control-tower-registration-file">Update the Control Tower registration file.</h5>
+<p>In here you&rsquo;ll find the already existing routes. As you can see from the rather explicit syntax, you need to call the method that matches the desired HTTP verb on the <code class="prettyprint">router</code> object, and pass it a variable number of arguments - more on this in the next section. One thing to keep in mind is that all the routes in a file are typically prefixed, as defined in the <code class="prettyprint">router</code> object declaration.</p>
 
           <h1 id="microservices">Microservices</h1>
 

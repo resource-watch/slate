@@ -395,7 +395,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 
 <h4 id="basics-of-sorting">Basics of sorting</h4>
 
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. </p>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter.</p>
 
 <blockquote>
 <p>Sorting datasets</p>
@@ -424,7 +424,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 <li><code class="prettyprint">metadata</code>: delegates sorting to the metadata component, sorting by the name field of the metadata.</li>
 <li><code class="prettyprint">most-viewed</code> delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.</li>
 <li><code class="prettyprint">most-favorited</code>: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.</li>
-<li><code class="prettyprint">relevance</code>: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a <code class="prettyprint">search</code> parameter. Does not support ascending order. </li>
+<li><code class="prettyprint">relevance</code>: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a <code class="prettyprint">search</code> parameter. Does not support ascending order.</li>
 </ul>
 
 <p>Special search criteria must be used as sole sorting criteria, as it&rsquo;s not possible to combine any of them with any other search criteria.</p>
@@ -1150,6 +1150,13 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 <aside class="notice">
     This is an authenticated endpoint!
 </aside>
+
+<p>Who can use this endpoint?</p>
+
+<ul>
+<li><strong>MANAGER</strong> users who are included in the <code class="prettyprint">userId</code> field of the dataset entity.</li>
+<li><strong>ADMIN</strong> users who belong to <strong>at least one of the dataset&rsquo;s applications</strong>.</li>
+</ul>
 
 <h2 id="dataset-data-sync">Dataset data sync</h2>
 
