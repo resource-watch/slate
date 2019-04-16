@@ -177,7 +177,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
 
 #### Basics of sorting
 
-The API currently supports sorting by means of the `sort` parameter. 
+The API currently supports sorting by means of the `sort` parameter.
 
 > Sorting datasets
 
@@ -209,7 +209,7 @@ There are four special sorting criteria:
 - `metadata`: delegates sorting to the metadata component, sorting by the name field of the metadata.
 - `most-viewed` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.
 - `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.
-- `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order. 
+- `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order.
 
 Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria.
 
@@ -753,6 +753,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite
 <aside class="notice">
     This is an authenticated endpoint!
 </aside>
+
+Who can use this endpoint?
+
+* **MANAGER** users who are included in the `userId` field of the dataset entity.
+* **ADMIN** users who belong to **at least one of the dataset's applications**.
 
 ## Dataset data sync
 
