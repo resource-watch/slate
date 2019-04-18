@@ -13,7 +13,7 @@ Remember — All favorite endpoints need to be authenticated.
 | ownerId           | Id of the owner                                                                 | Text
 | resources         | Resources in the collection                                                     | Array of Objects
 | --- type          | The type of resource                                                            | Text (dataset, layer, widget)
-| --- id            | The id of the reource                                                           | Text
+| --- id            | The id of the resource                                                           | Text
 
 
 

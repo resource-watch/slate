@@ -1,6 +1,6 @@
 # Subscriptions
 
-Subscription represents to wich datasets and analyisis a user can have access to.
+Subscription represents to which datasets and analysis a user can have access to.
 
 <aside class="notice">
 Remember — All subscription endpoints need to be authenticated.
@@ -25,7 +25,7 @@ In order to create a subscription, a dataset must be prepared to accept them. Th
 }
 ```
 
-Inside the `subscribable` object, one (or several) subobjects can be declared. In the provided example, the `test_subscription` is provided, with both a `dataQuery` and a `subscriptionQuery`. The former will be evaluated as the subscription's content, while the latter will be evaluated to check if a subscription has changed since the last update. Both queries can contain two special keywords: {begin} and {end}. These will be substituted with  ansi-formatted datetimes --with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.
+Inside the `subscribable` object, one (or several) sub-objects can be declared. In the provided example, the `test_subscription` is provided, with both a `dataQuery` and a `subscriptionQuery`. The former will be evaluated as the subscription's content, while the latter will be evaluated to check if a subscription has changed since the last update. Both queries can contain two special keywords: {begin} and {end}. These will be substituted with  ansi-formatted datetimes --with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.
 
 <aside class="notice">
 Mind the string format: double quotes and curly braces need to be properly escaped.

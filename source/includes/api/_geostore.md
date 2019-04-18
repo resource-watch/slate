@@ -268,7 +268,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/wdpa/555538160
 
 ### From land use areas
 
-Geostore has the geojson of 4 differents lands use:
+Geostore has the geojson of 4 different lands use:
 
 #### Oil palm
 

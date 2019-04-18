@@ -2,7 +2,7 @@
 
 ## What is a Dashboard?
 
-A dashboard contains the information to display a webpage belonging to a user. 
+A dashboard contains the information to display a web page belonging to a user. 
 
 ## Getting all dashboards
 

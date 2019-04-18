@@ -1,6 +1,6 @@
 # Jiminy
 
-[Jiminy](https://github.com/vizzuality/jiminy) is a lightweight library that powers this api endopoint whose aim is to infer which type of charts can be obtained from a dataset.
+[Jiminy](https://github.com/vizzuality/jiminy) is a lightweight library that powers this api endpoint whose aim is to infer which type of charts can be obtained from a dataset.
 
 To get the jiminy information from a query, you can do the following request:
 

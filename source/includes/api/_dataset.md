@@ -149,17 +149,17 @@ Filter        | Description                                                     
 ------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 name          | Allow us to filter by name                                                   | any valid text
 type          | Allow us to distinguish between tabular and raster datasets                  | `raster` or `tabular`
-app           | Aplications to which this dataset is being used                              | Available Aplications like: `["data4sdgs","gfw","rw","aqueduct","prep","forest-atlas","gfw-climate","aqueduct-water-risk","test","gfw-pro","globalforestwatch", "ghg-gdp"]`
+app           | Applications to which this dataset is being used                              | Available applications like: `["data4sdgs","gfw","rw","aqueduct","prep","forest-atlas","gfw-climate","aqueduct-water-risk","test","gfw-pro","globalforestwatch", "ghg-gdp"]`
 connectorType |                                                                              | `rest` or `document`
 provider      | Dataset provider this include inner connectors and 3rd party ones            | [A valid dataset provider](##supported-dataset-sources)
 userId        | the user who registered the dataset                                          | valid id
 status        | the internal dataset status at connection time                               | `pending`, `saved` or `failed`
 published     |                                                                              | `true`or `false`
-env           | If the dataset is in preproduction envirenment or in production one          | `production`or `preproduction`
+env           | If the dataset is in preproduction environment or in production one          | `production`or `preproduction`
 overwritted   | If the data can be overwritten (only for being able to make dataset updates) | `true`or `false`
 verify        | If this dataset contains data that is verified using blockchain              | `true`or `false`
 protected     | If it's a protected layer                                                    | `true`or `false`
-geoInfo       | If it contains intersectable geographical info                               | `true`or `false`
+geoInfo       | If it contains interceptable geographical info                               | `true`or `false`
 
 > Filtering datasets
 

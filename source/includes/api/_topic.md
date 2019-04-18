@@ -2,7 +2,7 @@
 
 ## What is a Topic?
 
-A topic contains the information to display a webpage belonging to a user. 
+A topic contains the information to display a web page belonging to a user. 
 
 ## Getting all topics
 

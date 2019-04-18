@@ -25,7 +25,7 @@ default      |   If it's a default widget for the dataset that it belongs   | Bo
 protected    |  If it's a protected widget (not is possible to delete if it's true)   | Boolean
 status       |                     Status of the Widget                     |    Text
 published    |                   If it's available to use                   |    Text
-freeze       |                   If the data is freezed                     |    Boolean
+freeze       |                   If the data is frozen                      |    Boolean
 verified     |                If it's verified by other user                |    Text
 env          |  Environment can be one of `production` or `preproduction`. _By default, it's set to "production" unless specified otherwise on creation/update_   |    Text
 thumbnailUrl |             Url of the widget's thumbnail, if one exists     |    Text

@@ -20,7 +20,7 @@ While they could technically work as standalone applications, microservices are 
 
 These libraries provide 2 basic features that we'll cover in detail in this chapter. You can also use it for reference in case you want to implement a microservice in a different programming language or framework. 
 
-We'll use the nodejs library as reference and example in the following sections, as it's the most commoly used language in this API. Other libraries will provided the same underlying functionality, but may have different ways to operate. Refer to each library's specific documentation for more details.
+We'll use the nodejs library as reference and example in the following sections, as it's the most commonly used language in this API. Other libraries will provided the same underlying functionality, but may have different ways to operate. Refer to each library's specific documentation for more details.
 
 #### Registering on Control Tower
 
@@ -60,7 +60,7 @@ Covering the arguments in detail:
 
 - info: path to the JSON file that will be sent to Control Tower, containing the details about the endpoints exposed by this microservice.
 - swagger: path to the Swagger YAML file that will be sent to Control Tower, documenting the public endpoints exposed by this microservice.
-- mode: if set to `ctRegisterMicroservice.MODE_AUTOREGISTER` the Control Tower registration process will be automaticall triggered when the Koa application server starts. Otherwise, use `ctRegisterMicroservice.MODE_NORMAL` if you want to register manually.
+- mode: if set to `ctRegisterMicroservice.MODE_AUTOREGISTER` the Control Tower registration process will be automatically triggered when the Koa application server starts. Otherwise, use `ctRegisterMicroservice.MODE_NORMAL` if you want to register manually.
 - framework: `ctRegisterMicroservice.KOA2` or `ctRegisterMicroservice.KOA1`, depending on the Koa version your app uses.
 - app: Koa application instance
 - logger: [Logger](https://github.com/quirkey/node-logger) instance.
@@ -76,7 +76,7 @@ This registration call usually takes place right after the microservice's start 
 
 #### Requests to other microservices
 
-Besides contacting Control Tower to register themselves, microservices also need to contact Control Tower to make requests to other micorservices. 
+Besides contacting Control Tower to register themselves, microservices also need to contact Control Tower to make requests to other microservices. 
 
 ```javascript
 // Microservice call to another microservice's endpoint
@@ -122,7 +122,7 @@ requestToMicroservice(config) {
 }
 ```
 
-As explained above, although the call is ultimately to another microservice, the request is sent to Control Tower, who is then resposible for issuing another internal request to the destination microservice, getting the reply from that call and passing it on to the microservice that initiated the process.
+As explained above, although the call is ultimately to another microservice, the request is sent to Control Tower, who is then responsible for issuing another internal request to the destination microservice, getting the reply from that call and passing it on to the microservice that initiated the process.
 
 Another thing you'll notice is that this call depends on preexisting configuration stored in the `this.options` property. These configuration options are stored within the object during the Control Tower registration process, meaning you should not attempt to make a call to another microservice unless you have previously registered your microservice on Control Tower. Keep in mind that this is a restriction of this particular integration library, and not of Control Tower itself - a different implementation could do internal requests to microservices through Control Tower without being registered as a microservice.
 

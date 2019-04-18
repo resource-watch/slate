@@ -9,7 +9,7 @@ However, in order to perform GET requests for content that is not private, there
 To generate your own token, perform the following steps:
 
 
-1. Navigate to [here](http://ui.resourcewatch.org/). If you aren't logged in yet, the application will redirect you to the login page. You will see the login page:
+1. Navigate to [here](http://ui.resourcewatch.org/). If you are not logged in yet, the application will redirect you to the login page. You will see the login page:
 
 ![Control Tower login page](images/authentication/login.png)
 
