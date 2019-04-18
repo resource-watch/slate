@@ -837,7 +837,7 @@ In this whole section, we will use code examples from the dataset microservice, 
 
 <p>These libraries provide 2 basic features that we&rsquo;ll cover in detail in this chapter. You can also use it for reference in case you want to implement a microservice in a different programming language or framework. </p>
 
-<p>We&rsquo;ll use the nodejs library as reference and example in the following sections, as it&rsquo;s the most commoly used language in this API. Other libraries will provided the same underlying functionality, but may have different ways to operate. Refer to each library&rsquo;s specific documentation for more details.</p>
+<p>We&rsquo;ll use the nodejs library as reference and example in the following sections, as it&rsquo;s the most commonly used language in this API. Other libraries will provided the same underlying functionality, but may have different ways to operate. Refer to each library&rsquo;s specific documentation for more details.</p>
 
 <h4 id="registering-on-control-tower">Registering on Control Tower</h4>
 
@@ -875,7 +875,7 @@ In this whole section, we will use code examples from the dataset microservice, 
 <ul>
 <li>info: path to the JSON file that will be sent to Control Tower, containing the details about the endpoints exposed by this microservice.</li>
 <li>swagger: path to the Swagger YAML file that will be sent to Control Tower, documenting the public endpoints exposed by this microservice.</li>
-<li>mode: if set to <code class="prettyprint">ctRegisterMicroservice.MODE_AUTOREGISTER</code> the Control Tower registration process will be automaticall triggered when the Koa application server starts. Otherwise, use <code class="prettyprint">ctRegisterMicroservice.MODE_NORMAL</code> if you want to register manually.</li>
+<li>mode: if set to <code class="prettyprint">ctRegisterMicroservice.MODE_AUTOREGISTER</code> the Control Tower registration process will be automatically triggered when the Koa application server starts. Otherwise, use <code class="prettyprint">ctRegisterMicroservice.MODE_NORMAL</code> if you want to register manually.</li>
 <li>framework: <code class="prettyprint">ctRegisterMicroservice.KOA2</code> or <code class="prettyprint">ctRegisterMicroservice.KOA1</code>, depending on the Koa version your app uses.</li>
 <li>app: Koa application instance</li>
 <li>logger: <a href="https://github.com/quirkey/node-logger">Logger</a> instance.</li>
@@ -890,7 +890,7 @@ In this whole section, we will use code examples from the dataset microservice, 
 
 <h4 id="requests-to-other-microservices">Requests to other microservices</h4>
 
-<p>Besides contacting Control Tower to register themselves, microservices also need to contact Control Tower to make requests to other micorservices. </p>
+<p>Besides contacting Control Tower to register themselves, microservices also need to contact Control Tower to make requests to other microservices. </p>
 <pre class="highlight javascript"><code><span class="c1">// Microservice call to another microservice's endpoint</span>
 <span class="kr">const</span> <span class="nx">ctRegisterMicroservice</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'ct-register-microservice-node'</span><span class="p">);</span>
 <span class="kr">const</span> <span class="nx">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'tag1'</span><span class="p">,</span> <span class="s1">'tag2'</span><span class="p">];</span>
@@ -930,7 +930,7 @@ In this whole section, we will use code examples from the dataset microservice, 
 
 <span class="p">}</span>
 </code></pre>
-<p>As explained above, although the call is ultimately to another microservice, the request is sent to Control Tower, who is then resposible for issuing another internal request to the destination microservice, getting the reply from that call and passing it on to the microservice that initiated the process.</p>
+<p>As explained above, although the call is ultimately to another microservice, the request is sent to Control Tower, who is then responsible for issuing another internal request to the destination microservice, getting the reply from that call and passing it on to the microservice that initiated the process.</p>
 
 <p>Another thing you&rsquo;ll notice is that this call depends on preexisting configuration stored in the <code class="prettyprint">this.options</code> property. These configuration options are stored within the object during the Control Tower registration process, meaning you should not attempt to make a call to another microservice unless you have previously registered your microservice on Control Tower. Keep in mind that this is a restriction of this particular integration library, and not of Control Tower itself - a different implementation could do internal requests to microservices through Control Tower without being registered as a microservice.</p>
 

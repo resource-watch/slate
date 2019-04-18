@@ -132,7 +132,7 @@
 <p>To generate your own token, perform the following steps:</p>
 
 <ol>
-<li>Navigate to <a href="http://ui.resourcewatch.org/">here</a>. If you aren&rsquo;t logged in yet, the application will redirect you to the login page. You will see the login page:</li>
+<li>Navigate to <a href="http://ui.resourcewatch.org/">here</a>. If you are not logged in yet, the application will redirect you to the login page. You will see the login page:</li>
 </ol>
 
 <p><img src="images/authentication/login.png" alt="Control Tower login page" /></p>
@@ -326,8 +326,8 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </tr>
 <tr>
 <td>app</td>
-<td>Aplications to which this dataset is being used</td>
-<td>Available Aplications like: <code class="prettyprint">[&quot;data4sdgs&quot;,&quot;gfw&quot;,&quot;rw&quot;,&quot;aqueduct&quot;,&quot;prep&quot;,&quot;forest-atlas&quot;,&quot;gfw-climate&quot;,&quot;aqueduct-water-risk&quot;,&quot;test&quot;,&quot;gfw-pro&quot;,&quot;globalforestwatch&quot;, &quot;ghg-gdp&quot;]</code></td>
+<td>Applications to which this dataset is being used</td>
+<td>Available applications like: <code class="prettyprint">[&quot;data4sdgs&quot;,&quot;gfw&quot;,&quot;rw&quot;,&quot;aqueduct&quot;,&quot;prep&quot;,&quot;forest-atlas&quot;,&quot;gfw-climate&quot;,&quot;aqueduct-water-risk&quot;,&quot;test&quot;,&quot;gfw-pro&quot;,&quot;globalforestwatch&quot;, &quot;ghg-gdp&quot;]</code></td>
 </tr>
 <tr>
 <td>connectorType</td>
@@ -356,7 +356,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </tr>
 <tr>
 <td>env</td>
-<td>If the dataset is in preproduction envirenment or in production one</td>
+<td>If the dataset is in preproduction environment or in production one</td>
 <td><code class="prettyprint">production</code>or <code class="prettyprint">preproduction</code></td>
 </tr>
 <tr>
@@ -376,7 +376,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </tr>
 <tr>
 <td>geoInfo</td>
-<td>If it contains intersectable geographical info</td>
+<td>If it contains interceptable geographical info</td>
 <td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
 </tr>
 </tbody></table>
@@ -612,13 +612,6 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <td style="text-align: center">Path to the data in a json dataset</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Any valid JSON key</td>
-<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
-</tr>
-<tr>
-<td>dataAttributes</td>
-<td style="text-align: center">Data fields - for json connector if data present</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right">{&ldquo;key1&rdquo;: {&ldquo;type&rdquo;: &ldquo;string&rdquo;},&hellip; }</td>
 <td style="text-align: right">No (just for json if connectorUrl is not present)</td>
 </tr>
 <tr>
@@ -1284,7 +1277,7 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 </tr>
 <tr>
 <td>freeze</td>
-<td style="text-align: center">If the data is freezed</td>
+<td style="text-align: center">If the data is frozen</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
@@ -4050,7 +4043,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
 </code></pre>
 <h3 id="from-land-use-areas">From land use areas</h3>
 
-<p>Geostore has the geojson of 4 differents lands use:</p>
+<p>Geostore has the geojson of 4 different lands use:</p>
 
 <h4 id="oil-palm">Oil palm</h4>
 

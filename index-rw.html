@@ -132,7 +132,7 @@
 <p>To generate your own token, perform the following steps:</p>
 
 <ol>
-<li>Navigate to <a href="http://ui.resourcewatch.org/">here</a>. If you aren&rsquo;t logged in yet, the application will redirect you to the login page. You will see the login page:</li>
+<li>Navigate to <a href="http://ui.resourcewatch.org/">here</a>. If you are not logged in yet, the application will redirect you to the login page. You will see the login page:</li>
 </ol>
 
 <p><img src="images/authentication/login.png" alt="Control Tower login page" /></p>
@@ -326,8 +326,8 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </tr>
 <tr>
 <td>app</td>
-<td>Aplications to which this dataset is being used</td>
-<td>Available Aplications like: <code class="prettyprint">[&quot;data4sdgs&quot;,&quot;gfw&quot;,&quot;rw&quot;,&quot;aqueduct&quot;,&quot;prep&quot;,&quot;forest-atlas&quot;,&quot;gfw-climate&quot;,&quot;aqueduct-water-risk&quot;,&quot;test&quot;,&quot;gfw-pro&quot;,&quot;globalforestwatch&quot;, &quot;ghg-gdp&quot;]</code></td>
+<td>Applications to which this dataset is being used</td>
+<td>Available applications like: <code class="prettyprint">[&quot;data4sdgs&quot;,&quot;gfw&quot;,&quot;rw&quot;,&quot;aqueduct&quot;,&quot;prep&quot;,&quot;forest-atlas&quot;,&quot;gfw-climate&quot;,&quot;aqueduct-water-risk&quot;,&quot;test&quot;,&quot;gfw-pro&quot;,&quot;globalforestwatch&quot;, &quot;ghg-gdp&quot;]</code></td>
 </tr>
 <tr>
 <td>connectorType</td>
@@ -356,7 +356,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </tr>
 <tr>
 <td>env</td>
-<td>If the dataset is in preproduction envirenment or in production one</td>
+<td>If the dataset is in preproduction environment or in production one</td>
 <td><code class="prettyprint">production</code>or <code class="prettyprint">preproduction</code></td>
 </tr>
 <tr>
@@ -376,7 +376,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </tr>
 <tr>
 <td>geoInfo</td>
-<td>If it contains intersectable geographical info</td>
+<td>If it contains interceptable geographical info</td>
 <td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
 </tr>
 </tbody></table>
@@ -612,13 +612,6 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <td style="text-align: center">Path to the data in a json dataset</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Any valid JSON key</td>
-<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
-</tr>
-<tr>
-<td>dataAttributes</td>
-<td style="text-align: center">Data fields - for json connector if data present</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right">{&ldquo;key1&rdquo;: {&ldquo;type&rdquo;: &ldquo;string&rdquo;},&hellip; }</td>
 <td style="text-align: right">No (just for json if connectorUrl is not present)</td>
 </tr>
 <tr>
@@ -1284,7 +1277,7 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 </tr>
 <tr>
 <td>freeze</td>
-<td style="text-align: center">If the data is freezed</td>
+<td style="text-align: center">If the data is frozen</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
@@ -2689,7 +2682,7 @@ curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span
 </code></pre>
           <h1 id="jiminy">Jiminy</h1>
 
-<p><a href="https://github.com/vizzuality/jiminy">Jiminy</a> is a lightweight library that powers this api endopoint whose aim is to infer which type of charts can be obtained from a dataset.</p>
+<p><a href="https://github.com/vizzuality/jiminy">Jiminy</a> is a lightweight library that powers this api endpoint whose aim is to infer which type of charts can be obtained from a dataset.</p>
 
 <p>To get the jiminy information from a query, you can do the following request:</p>
 
@@ -4153,7 +4146,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
 </code></pre>
 <h3 id="from-land-use-areas">From land use areas</h3>
 
-<p>Geostore has the geojson of 4 differents lands use:</p>
+<p>Geostore has the geojson of 4 different lands use:</p>
 
 <h4 id="oil-palm">Oil palm</h4>
 
@@ -4414,7 +4407,7 @@ To import the geojson in geostore, you need to define all of the required fields
 </span></code></pre>
           <h1 id="subscriptions">Subscriptions</h1>
 
-<p>Subscription represents to wich datasets and analyisis a user can have access to.</p>
+<p>Subscription represents to which datasets and analysis a user can have access to.</p>
 
 <aside class="notice">
 Remember — All subscription endpoints need to be authenticated.
@@ -4436,7 +4429,7 @@ Remember — All subscription endpoints need to be authenticated.
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>Inside the <code class="prettyprint">subscribable</code> object, one (or several) subobjects can be declared. In the provided example, the <code class="prettyprint">test_subscription</code> is provided, with both a <code class="prettyprint">dataQuery</code> and a <code class="prettyprint">subscriptionQuery</code>. The former will be evaluated as the subscription&rsquo;s content, while the latter will be evaluated to check if a subscription has changed since the last update. Both queries can contain two special keywords: {begin} and {end}. These will be substituted with  ansi-formatted datetimes &ndash;with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.</p>
+<p>Inside the <code class="prettyprint">subscribable</code> object, one (or several) sub-objects can be declared. In the provided example, the <code class="prettyprint">test_subscription</code> is provided, with both a <code class="prettyprint">dataQuery</code> and a <code class="prettyprint">subscriptionQuery</code>. The former will be evaluated as the subscription&rsquo;s content, while the latter will be evaluated to check if a subscription has changed since the last update. Both queries can contain two special keywords: {begin} and {end}. These will be substituted with  ansi-formatted datetimes &ndash;with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.</p>
 
 <aside class="notice">
 Mind the string format: double quotes and curly braces need to be properly escaped.
@@ -6128,7 +6121,7 @@ This endpoint does not validate the existence of the widget - you will not get a
 
 <h2 id="what-is-a-topic">What is a Topic?</h2>
 
-<p>A topic contains the information to display a webpage belonging to a user. </p>
+<p>A topic contains the information to display a web page belonging to a user. </p>
 
 <h2 id="getting-all-topics">Getting all topics</h2>
 
@@ -6229,7 +6222,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
 
 <h2 id="what-is-a-dashboard">What is a Dashboard?</h2>
 
-<p>A dashboard contains the information to display a webpage belonging to a user. </p>
+<p>A dashboard contains the information to display a web page belonging to a user. </p>
 
 <h2 id="getting-all-dashboards">Getting all dashboards</h2>
 
