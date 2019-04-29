@@ -1087,7 +1087,16 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 
 <h2 id="concatenate-data">Concatenate Data</h2>
 
-<p>You can add more data to a dataset only if the overwrite dataset property has been set to true.</p>
+<p>Using this endpoint, you can add more data to an already existing dataset. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.</p>
+
+<p>This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset&rsquo;s <code class="prettyprint">status</code> to be set to <code class="prettyprint">pending</code>, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to <code class="prettyprint">saved</code> and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.</p>
+
+<p>In order to perform this operation, the following conditions must be met:
+- the dataset&rsquo;s <code class="prettyprint">overwrite</code> property must be set to <code class="prettyprint">true</code>.
+- the dataset&rsquo;s <code class="prettyprint">status</code> property must be set to <code class="prettyprint">saved</code>.
+- the user must be logged in and match one of the following:
+  - have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset
+  - have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</p>
 
 <blockquote>
 <p>Concatenate data using external data source:</p>
@@ -1116,7 +1125,16 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 
 <h2 id="overwrite-data">Overwrite Data</h2>
 
-<p>You can overwrite the data if the overwrite dataset property has been set to true.</p>
+<p>Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.</p>
+
+<p>This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset&rsquo;s <code class="prettyprint">status</code> to be set to <code class="prettyprint">pending</code>, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to <code class="prettyprint">saved</code> and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.</p>
+
+<p>In order to perform this operation, the following conditions must be met:
+- the dataset&rsquo;s <code class="prettyprint">overwrite</code> property must be set to <code class="prettyprint">true</code>.
+- the dataset&rsquo;s <code class="prettyprint">status</code> property must be set to <code class="prettyprint">saved</code>.
+- the user must be logged in and match one of the following:
+  - have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset
+  - have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</p>
 
 <blockquote>
 <p>Overwrite data using external data source:</p>
