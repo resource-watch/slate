@@ -378,3 +378,9 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/metadata/find-by-ids \
   ]
 }
 ```
+
+## Privileges
+
+### Create
+
+Only `ADMIN`s and `MANAGER`s can create metadata for an app, as long as they belong to that app.
