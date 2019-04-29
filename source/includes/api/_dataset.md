@@ -692,7 +692,16 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2f
 
 ## Concatenate Data
 
-You can add more data to a dataset only if the overwrite dataset property has been set to true.
+Using this endpoint, you can add more data to an already existing dataset. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
+
+This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
+
+In order to perform this operation, the following conditions must be met:
+- the dataset's `overwrite` property must be set to `true`.
+- the dataset's `status` property must be set to `saved`.
+- the user must be logged in and match one of the following:
+  - have role `ADMIN` and belong to the same application as the dataset
+  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
 
 > Concatenate data using external data source:
 
@@ -723,7 +732,16 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 
 ## Overwrite Data
 
-You can overwrite the data if the overwrite dataset property has been set to true.
+Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
+
+This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
+ 
+In order to perform this operation, the following conditions must be met:
+- the dataset's `overwrite` property must be set to `true`.
+- the dataset's `status` property must be set to `saved`.
+- the user must be logged in and match one of the following:
+  - have role `ADMIN` and belong to the same application as the dataset
+  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
 
 > Overwrite data using external data source:
 
