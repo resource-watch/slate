@@ -275,3 +275,18 @@ curl -X DELETE http://api.resourcewatch.org/auth/user/<user_id>
     ...
 }'
 ```
+
+## Permissions
+
+### ADMIN
+
+Can create any type of user.
+
+### MANAGER
+
+Can create a user of type `MANAGER` or `USER`.
+
+
+### EVERYONE
+
+Can register himself in the API. He'll be assigned the role of `USER`.
