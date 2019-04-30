@@ -653,7 +653,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 
 **When a dataset is deleted the user's applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.**
 
-Datasets can be deleted either by any user with role ADMIN or by the user with role MANAGER that created them. Note that the deletion process cascades; deleting a dataset will also remove all the layers, widgets, vocabularies, knowledge graphs, and metadata entities associated with it.
+Datasets can be deleted either by any user with role ADMIN or by the user with role MANAGER that created them. Note that the deletion process cascades; deleting a dataset will also remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it.
 
 <aside class="warning">
 Deleting a dataset removes it permanently! It is recommended that you save a local copy before doing so.
