@@ -653,7 +653,16 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 
 **When a dataset is deleted the user's applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.**
 
-Datasets can be deleted either by any user with role ADMIN or by the user with role MANAGER that created them. Note that the deletion process cascades; deleting a dataset will also remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it.
+Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them. 
+
+In order to perform this operation, the following conditions must be met:
+- the dataset's `protected` property must be set to `false`.
+- the user must be logged in and belong to the same application as the dataset
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+
+Note that the deletion process cascades in a non-atomic way; deleting a dataset will also attempt to remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it. However, if one of these deletes fails (ie. attempting to delete a protected layer will fail), the dataset will still be deleted, and those resources will be left orphaned.
 
 <aside class="warning">
 Deleting a dataset removes it permanently! It is recommended that you save a local copy before doing so.
@@ -710,8 +719,9 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
-   "connectorUrl":"<csvUrl>",
-   "dataPath": "data... etc"
+    "provider": "json",
+    "connectorUrl":"<csvUrl>",
+    "dataPath": "data... etc"
 }'
 ```
 
@@ -722,7 +732,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
-   "data": [{},{}]
+    "provider": "json",
+    "data": [{},{}]
 }'
 ```
 
