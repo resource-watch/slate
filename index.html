@@ -1054,7 +1054,16 @@ When creating a dataset, if any of the fields has a numerical name (for example,
 
 <p><strong>When a dataset is deleted the user&rsquo;s applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.</strong></p>
 
-<p>Datasets can be deleted either by any user with role ADMIN or by the user with role MANAGER that created them. Note that the deletion process cascades; deleting a dataset will also remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it.</p>
+<p>Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them. </p>
+
+<p>In order to perform this operation, the following conditions must be met:
+- the dataset&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.
+- the user must be logged in and belong to the same application as the dataset
+- the user must match one of the following:
+  - have role <code class="prettyprint">ADMIN</code>
+  - have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</p>
+
+<p>Note that the deletion process cascades in a non-atomic way; deleting a dataset will also attempt to remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it. However, if one of these deletes fails (ie. attempting to delete a protected layer will fail), the dataset will still be deleted, and those resources will be left orphaned.</p>
 
 <aside class="warning">
 Deleting a dataset removes it permanently! It is recommended that you save a local copy before doing so.
@@ -1105,8 +1114,9 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "connectorUrl":"&lt;csvUrl&gt;",
-   "dataPath": "data... etc"
+    "provider": "json",
+    "connectorUrl":"&lt;csvUrl&gt;",
+    "dataPath": "data... etc"
 }'</span>
 </code></pre>
 <blockquote>
@@ -1116,7 +1126,8 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "data": [{},{}]
+    "provider": "json",
+    "data": [{},{}]
 }'</span>
 </code></pre>
 <aside class="notice">
