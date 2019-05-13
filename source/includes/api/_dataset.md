@@ -50,7 +50,7 @@ The NASA Earth Exchange Global Daily Downscaled Projections ([NEX-GDDP](https://
 **`(connectorType: 'document', provider: 'csv')`**<br>
 Arbitrary Comma-Separated Values data
 
-##### Tab-Separated Values (TSV)
+#### Tab-Separated Values (TSV)
 
 **`(connectorType: 'document', provider: 'tsv')`**<br>
 Arbitrary tab-Separated Values data
@@ -339,7 +339,7 @@ subscribable        | Available dataset queries for subscriptions parameters acc
 
 There are some differences between datasets types.
 
-### Rest-Carto datasets
+### Carto datasets
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -377,7 +377,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
     This is an authenticated endpoint!
 </aside>
 
-### Rest-ArcGIS feature Service
+### ArcGIS feature Service
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -398,7 +398,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
     This is an authenticated endpoint!
 </aside>
 
-### Rest-GEE
+### Google Earth Engine
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -415,7 +415,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-### Rest-NEXGDDP
+### NEXGDDP
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -451,49 +451,27 @@ curl -XPOST 'https://api.resourcewatch.org/v1/dataset' -d \
 }'
 ```
 
-### Document-CSV, Document-TSV, Document-XML
+### JSON, CSV, TSV or XML
 
-The `connectorUrl` must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported.
+This dataset hosts data from a file in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
+source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations.
 
-CSV datasets support some optional fields on the creation process. They are:
+The original data must be available on a publicly accessible URL, specified in the `connectorUrl` field. The URL must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details.
+
+Here's a breakdown of the fields specific to the creation of a document-based dataset:
 
 Field      |                  Description                   |   Type |        Values | Required
 ---------- | :--------------------------------------------: | -----: | ------------: | -------:
-legend     |                                                | Object |               |       No
--- lat     |       Name of column with latitude value       |   Text |      Any word |       No
--- long    |      Name of column with longitude value       |   text |      Any word |       No
--- date    |  Name of columns with date value (ISO Format)  |  Array | Any list word |       No
--- region  | Name of columns with region value (ISO3 code)  |  Array | Any list word |       No
--- country | Name of columns with country value (ISO3 code) |  Array | Any list word |       No
+connectorUrl |                                              |   Text |           URL | Yes, unless JSON data is provided using the `data` field.
+data       | JSON DATA only for json connector if connectorUrl not present |  Array |    [{},{},{}] | Yes for JSON if connectorUrl not present
+legend     | See section below                              | Object |               |       No
+
+
 
 <aside class="notice">
 When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.
 </aside>
 
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
-'{
-    "connectorType":"document",
-    "provider":"csv",
-    "connectorUrl":"<csvUrl>",
-    "application":[
-     "your", "apps"
-    ],
-    "legend": {
-      "lat": "lat-column",
-      "long": "long-column",
-      "date": ["date1Column", "date2Column"],
-      "region": ["region1Column", "region2Column"],
-      "country": ["country1Column", "country2Column"]
-    },
-    "name":"Example CSV Dataset"
-}'
-```
-
-> Real example:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -514,59 +492,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
-### Document-JSON
-
-The JSON dataset service supports data from external json file or data as json array send in request body.
-
-The `connectorUrl` must be an accessible JSON file
-
-JSON datasets support some optional fields in the creation process. They are:
-
-Field      |                          Description                          |   Type |        Values |                                 Required
----------- | :-----------------------------------------------------------: | -----: | ------------: | ---------------------------------------:
-data       | JSON DATA only for json connector if connectorUrl not present |  Array |    [{},{},{}] | Yes for json if connectorUrl not present
-legend     |                                                               | Object |               |                                       No
--- lat     |              Name of column with latitude value               |   Text |      Any word |                                       No
--- long    |              Name of column with longitude value              |   text |      Any word |                                       No
--- date    |         Name of columns with date value (ISO Format)          |  Array | Any list word |                                       No
--- region  |         Name of columns with region value (ISO3 code)         |  Array | Any list word |                                       No
--- country |        Name of columns with country value (ISO3 code)         |  Array | Any list word |                                       No
-
-<aside class="notice">
-When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.
-</aside>
-
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
-'{
-    "connectorType":"document",
-    "provider":"json",
-    "connectorUrl":"<jsonURL>",
-    "application":[
-     "your", "apps"
-    ],
-    "legend": {
-      "lat": "lat-column",
-      "long": "long-column",
-      "date": ["date1Column", "date2Column"],
-      "region": ["region1Column", "region2Column"],
-      "country": ["country1Column", "country2Column"]
-    },
-    "name":"Example JSON Dataset",
-}'
-```
-
-It is also possible to create a JSON dataset by including the data directly in the request:
+> Creating a JSON dataset with data provided on the request body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -593,6 +519,41 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
     "name":"Example JSON Dataset"
 }'
 ```
+
+<aside class="notice">
+    This is an authenticated endpoint!
+</aside>
+
+#### Legend
+
+By default, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch [dynamic mapping API](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping).
+However, in some scenarios, it may be desirable to specify these mappings manually, to match each field type to its Elasticsearch equivalent.
+
+The `legend` field allows explicitly identifying the following mappings
+
+Mapping  |                  Notes                   |
+---------| :--------------------------------------------: |
+lat      | If `lat` and `long` are both provided, a `the_geom` mapping is added |
+long     | If `lat` and `long` are both provided, a `the_geom` mapping is added |
+date     |  Name of columns with date values (ISO Format)  |
+country   | Name of columns with country values (ISO3 code)  |
+region   | Name of columns with region values (ISO3 code)  |
+ | |
+nested   | [Nested objects](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/nested.html) need to be explicitly identified in order to be indexed.  |
+ | |
+integer  | In beta, not fully supported |
+short    | In beta, not fully supported |
+byte     | In beta, not fully supported |
+double   | In beta, not fully supported |
+float    | In beta, not fully supported |
+half_float    | In beta, not fully supported |
+scaled_float  | In beta, not fully supported |
+boolean  | In beta, not fully supported |
+binary   | In beta, not fully supported |
+text     | In beta, not fully supported |
+keyword  | In beta, not fully supported |
+
+For more details on the characteristics of each of the basic data types, refer to the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_field_datatypes).
 
 ## Uploading a Dataset (Binary)
 
