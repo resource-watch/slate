@@ -527,9 +527,13 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 #### Legend
 
 By default, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch [dynamic mapping API](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping).
-However, in some scenarios, it may be desirable to specify these mappings manually, to match each field type to its Elasticsearch equivalent.
+However, in some scenarios, it may be desirable to specify some or all of these mappings manually, to match each field type to its Elasticsearch equivalent.
 
-The `legend` field allows explicitly identifying the following mappings
+When defining manual mappings, you don't need to map every single field. When processing the data, if a field is found for which there isn't a manual mapping, Elasticsearch will fallback to its dynamic mapping algorithm to try and guess that field's type. This API only supports a single explicit mapping per field, meaning you cannot declare a given field as both `text` and `keyword` for example.
+
+Field mapping can only be defined on dataset creation. Should you want to change these mappings, you can only do so by creating a new dataset with the new mapping structure.
+
+The `legend` field allows explicitly identifying the following mappings:
 
 Mapping  |                  Notes                   |
 ---------| :--------------------------------------------: |
