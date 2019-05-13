@@ -218,7 +218,7 @@ The NASA Earth Exchange Global Daily Downscaled Projections (<a href="https://ne
 <p><strong><code class="prettyprint">(connectorType: &#39;document&#39;, provider: &#39;csv&#39;)</code></strong><br>
 Arbitrary Comma-Separated Values data</p>
 
-<h5 id="tab-separated-values-tsv">Tab-Separated Values (TSV)</h5>
+<h4 id="tab-separated-values-tsv">Tab-Separated Values (TSV)</h4>
 
 <p><strong><code class="prettyprint">(connectorType: &#39;document&#39;, provider: &#39;tsv&#39;)</code></strong><br>
 Arbitrary tab-Separated Values data</p>
@@ -682,7 +682,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 
 <p>There are some differences between datasets types.</p>
 
-<h3 id="rest-carto-datasets">Rest-Carto datasets</h3>
+<h3 id="carto-datasets">Carto datasets</h3>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -716,7 +716,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
     This is an authenticated endpoint!
 </aside>
 
-<h3 id="rest-arcgis-feature-service">Rest-ArcGIS feature Service</h3>
+<h3 id="arcgis-feature-service">ArcGIS feature Service</h3>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -734,7 +734,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
     This is an authenticated endpoint!
 </aside>
 
-<h3 id="rest-gee">Rest-GEE</h3>
+<h3 id="google-earth-engine">Google Earth Engine</h3>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -748,7 +748,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
     "name":"Water occurrence"
 }'</span>
 </code></pre>
-<h3 id="rest-nexgddp">Rest-NEXGDDP</h3>
+<h3 id="nexgddp">NEXGDDP</h3>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -778,11 +778,14 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
     "name":"rasdaman dataset"
 }'</span>
 </code></pre>
-<h3 id="document-csv-document-tsv-document-xml">Document-CSV, Document-TSV, Document-XML</h3>
+<h3 id="json-csv-tsv-or-xml">JSON, CSV, TSV or XML</h3>
 
-<p>The <code class="prettyprint">connectorUrl</code> must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported.</p>
+<p>This dataset hosts data from a file in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
+source into the API&rsquo;s internal Elasticsearch instance, which is the source used for subsequent queries or other operations.</p>
 
-<p>CSV datasets support some optional fields on the creation process. They are:</p>
+<p>The original data must be available on a publicly accessible URL, specified in the <code class="prettyprint">connectorUrl</code> field. The URL must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details.</p>
+
+<p>Here&rsquo;s a breakdown of the fields specific to the creation of a document-based dataset:</p>
 
 <table><thead>
 <tr>
@@ -794,45 +797,24 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 </tr>
 </thead><tbody>
 <tr>
-<td>legend</td>
+<td>connectorUrl</td>
 <td style="text-align: center"></td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">URL</td>
+<td style="text-align: right">Yes, unless JSON data is provided using the <code class="prettyprint">data</code> field.</td>
+</tr>
+<tr>
+<td>data</td>
+<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">[{},{},{}]</td>
+<td style="text-align: right">Yes for JSON if connectorUrl not present</td>
+</tr>
+<tr>
+<td>legend</td>
+<td style="text-align: center">See section below</td>
 <td style="text-align: right">Object</td>
 <td style="text-align: right"></td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; lat</td>
-<td style="text-align: center">Name of column with latitude value</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any word</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; long</td>
-<td style="text-align: center">Name of column with longitude value</td>
-<td style="text-align: right">text</td>
-<td style="text-align: right">Any word</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; date</td>
-<td style="text-align: center">Name of columns with date value (ISO Format)</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any list word</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; region</td>
-<td style="text-align: center">Name of columns with region value (ISO3 code)</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any list word</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; country</td>
-<td style="text-align: center">Name of columns with country value (ISO3 code)</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any list word</td>
 <td style="text-align: right">No</td>
 </tr>
 </tbody></table>
@@ -840,29 +822,6 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <aside class="notice">
 When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.
 </aside>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{
-    "connectorType":"document",
-    "provider":"csv",
-    "connectorUrl":"&lt;csvUrl&gt;",
-    "application":[
-     "your", "apps"
-    ],
-    "legend": {
-      "lat": "lat-column",
-      "long": "long-column",
-      "date": ["date1Column", "date2Column"],
-      "region": ["region1Column", "region2Column"],
-      "country": ["country1Column", "country2Column"]
-    },
-    "name":"Example CSV Dataset"
-}'</span>
-</code></pre>
-<blockquote>
-<p>Real example:</p>
-</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -880,106 +839,9 @@ When creating a dataset, if any of the fields has a numerical name (for example,
     "name":"Glad points"
 }'</span>
 </code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
-<h3 id="document-json">Document-JSON</h3>
-
-<p>The JSON dataset service supports data from external json file or data as json array send in request body.</p>
-
-<p>The <code class="prettyprint">connectorUrl</code> must be an accessible JSON file</p>
-
-<p>JSON datasets support some optional fields in the creation process. They are:</p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>data</td>
-<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">[{},{},{}]</td>
-<td style="text-align: right">Yes for json if connectorUrl not present</td>
-</tr>
-<tr>
-<td>legend</td>
-<td style="text-align: center"></td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right"></td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; lat</td>
-<td style="text-align: center">Name of column with latitude value</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any word</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; long</td>
-<td style="text-align: center">Name of column with longitude value</td>
-<td style="text-align: right">text</td>
-<td style="text-align: right">Any word</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; date</td>
-<td style="text-align: center">Name of columns with date value (ISO Format)</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any list word</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; region</td>
-<td style="text-align: center">Name of columns with region value (ISO3 code)</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any list word</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>&ndash; country</td>
-<td style="text-align: center">Name of columns with country value (ISO3 code)</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any list word</td>
-<td style="text-align: right">No</td>
-</tr>
-</tbody></table>
-
-<aside class="notice">
-When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.
-</aside>
-
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{
-    "connectorType":"document",
-    "provider":"json",
-    "connectorUrl":"&lt;jsonURL&gt;",
-    "application":[
-     "your", "apps"
-    ],
-    "legend": {
-      "lat": "lat-column",
-      "long": "long-column",
-      "date": ["date1Column", "date2Column"],
-      "region": ["region1Column", "region2Column"],
-      "country": ["country1Column", "country2Column"]
-    },
-    "name":"Example JSON Dataset",
-}'</span>
-</code></pre>
-<p>It is also possible to create a JSON dataset by including the data directly in the request:</p>
+<blockquote>
+<p>Creating a JSON dataset with data provided on the request body:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -1004,6 +866,103 @@ When creating a dataset, if any of the fields has a numerical name (for example,
     "name":"Example JSON Dataset"
 }'</span>
 </code></pre>
+<aside class="notice">
+    This is an authenticated endpoint!
+</aside>
+
+<h4 id="legend">Legend</h4>
+
+<p>By default, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping">dynamic mapping API</a>.
+However, in some scenarios, it may be desirable to specify these mappings manually, to match each field type to its Elasticsearch equivalent.</p>
+
+<p>The <code class="prettyprint">legend</code> field allows explicitly identifying the following mappings</p>
+
+<table><thead>
+<tr>
+<th>Mapping</th>
+<th style="text-align: center">Notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>lat</td>
+<td style="text-align: center">If <code class="prettyprint">lat</code> and <code class="prettyprint">long</code> are both provided, a <code class="prettyprint">the_geom</code> mapping is added</td>
+</tr>
+<tr>
+<td>long</td>
+<td style="text-align: center">If <code class="prettyprint">lat</code> and <code class="prettyprint">long</code> are both provided, a <code class="prettyprint">the_geom</code> mapping is added</td>
+</tr>
+<tr>
+<td>date</td>
+<td style="text-align: center">Name of columns with date values (ISO Format)</td>
+</tr>
+<tr>
+<td>country</td>
+<td style="text-align: center">Name of columns with country values (ISO3 code)</td>
+</tr>
+<tr>
+<td>region</td>
+<td style="text-align: center">Name of columns with region values (ISO3 code)</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>nested</td>
+<td style="text-align: center"><a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/nested.html">Nested objects</a> need to be explicitly identified in order to be indexed.</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center"></td>
+</tr>
+<tr>
+<td>integer</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>short</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>byte</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>double</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>float</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>half_float</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>scaled_float</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>text</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+<tr>
+<td>keyword</td>
+<td style="text-align: center">In beta, not fully supported</td>
+</tr>
+</tbody></table>
+
+<p>For more details on the characteristics of each of the basic data types, refer to the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_field_datatypes">Elasticsearch documentation</a>.</p>
+
 <h2 id="uploading-a-dataset-binary">Uploading a Dataset (Binary)</h2>
 
 <p>You can upload your raw data directly to S3 making use of the &ldquo;upload&rdquo; endpoint. This endpoint accepts a file in the property &ldquo;dataset&rdquo; and returns a valid connectorUrl. With this connectorUrl you can create or update a &ldquo;document&rdquo; dataset, or a raster dataset in the Rasdaman adapter.</p>
