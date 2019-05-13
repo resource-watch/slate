@@ -873,9 +873,13 @@ When creating a dataset, if any of the fields has a numerical name (for example,
 <h4 id="legend">Legend</h4>
 
 <p>By default, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping">dynamic mapping API</a>.
-However, in some scenarios, it may be desirable to specify these mappings manually, to match each field type to its Elasticsearch equivalent.</p>
+However, in some scenarios, it may be desirable to specify some or all of these mappings manually, to match each field type to its Elasticsearch equivalent.</p>
 
-<p>The <code class="prettyprint">legend</code> field allows explicitly identifying the following mappings</p>
+<p>When defining manual mappings, you don&rsquo;t need to map every single field. When processing the data, if a field is found for which there isn&rsquo;t a manual mapping, Elasticsearch will fallback to its dynamic mapping algorithm to try and guess that field&rsquo;s type. This API only supports a single explicit mapping per field, meaning you cannot declare a given field as both <code class="prettyprint">text</code> and <code class="prettyprint">keyword</code> for example.</p>
+
+<p>Field mapping can only be defined on dataset creation. Should you want to change these mappings, you can only do so by creating a new dataset with the new mapping structure.</p>
+
+<p>The <code class="prettyprint">legend</code> field allows explicitly identifying the following mappings:</p>
 
 <table><thead>
 <tr>
