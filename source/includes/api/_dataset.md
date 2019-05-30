@@ -664,23 +664,40 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2f
     This is an authenticated endpoint!
 </aside>
 
-## Concatenate Data
+## Concatenate and Append Data
 
-Using this endpoint, you can add more data to an already existing dataset. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
+Using these endpoints, you can add more data to an already existing dataset. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
 
-This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
+These process are asynchronous and not instantaneous. Immediately when triggered, these requests will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite, concatenate or append requests. Once the request has been fully processed, the status will be automatically set to `saved`. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
 
-In order to perform this operation, the following conditions must be met:
+In order to perform these operation, the following conditions must be met:
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
 - the user must be logged in and match one of the following:
   - have role `ADMIN` and belong to the same application as the dataset
   - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
 
+While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.
+- The concatenate process relies on a slower approach to ensure the operation is atomic. Until the operation is completed, you will see the dataset data as it was before the concatenate operation was triggered. If the operation fails, the old version of the data is kept accessible as it was before the concatenation process was started.
+- The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones. 
+
 > Concatenate data using external data source:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+'{
+    "provider": "json",
+    "connectorUrl":"<csvUrl>",
+    "dataPath": "data... etc"
+}'
+```
+
+> Append data using external data source:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/append \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
@@ -703,7 +720,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 ```
 
 <aside class="notice">
-    This is an authenticated endpoint!
+    These are authenticated endpoints.
 </aside>
 
 ## Overwrite Data
