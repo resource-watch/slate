@@ -87,7 +87,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
     "language": "en",
     "resource": {
         "type": "EMAIL",
-        "content": "email@addres.com"
+        "content": "email@address.com"
     }
 }'
 ```
