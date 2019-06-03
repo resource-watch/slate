@@ -322,6 +322,9 @@ template     |           If it's a template            | Boolean |              
 default      |       If it's default for dataset       | Boolean |                                    true - false |       No
 layerId      |   UuId of the relationship with layer   |    Text |                                   Uuid of layer |       No
 dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
+env         |                                            Environment of the Widget. Set to 'production' by default                                               |   String |                                 Valid string |       No
+
+It is possible to create a widget that has a different `env` property to it's parent dataset. 
 
 > To create a widget, you have to do a POST request with the following body:
 

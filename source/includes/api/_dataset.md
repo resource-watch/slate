@@ -614,6 +614,8 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id> \
     This is an authenticated endpoint!
 </aside>
 
+Note: When updating the `env` property of a dataset this way the change will cascade down to all associated layer and widget entities.
+
 ## Deleting a Dataset
 
 **When a dataset is deleted the user's applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.**
