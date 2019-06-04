@@ -348,6 +348,7 @@ Creating a widget will cause a thumbnail to be generated in the background for t
 
 ## Update a Widget
 
+
 To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
 
 Field        |               Description               |    Type |                                          Values | Required
@@ -362,13 +363,16 @@ queryUrl     |  Url with the data of the chart shows   |    Text |              
 widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
 status       |          Status of the Widget           |  Number |                                               1 |       No
 published    |        If it's available to use         | Boolean |                                    true - false |       No
-freeze       |        If the data is freezed           | Boolean |                                    true - false |       No
+freeze       |        If the data is frozen            | Boolean |                                    true - false |       No
 verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
 template     |           If it's a template            | Boolean |                                    true - false |       No
 default      |       If it's default for dataset       | Boolean |                                    true - false |       No
 layerId      |   UuId of the relationship with layer   |    Text |                                   Uuid of layer |       No
 dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
 env          |               Environment               |    Text |                 `production` or `preproduction` |      Yes
+
+
+A user with role `USER` can update their own widgets, based on the `userId` field. A user with `ADMIN` role can update any widget.
 
 > To update a widget, you have to do a PATCH request with the following body:
 
@@ -459,6 +463,11 @@ Cloning a widget will cause a thumbnail to be generated in the background for th
 
 
 ## Delete a Widget
+
+Who can delete Widgets?
+
+- Users with the `MANAGER` role who are in the same app as the widget and are in the widget's `userId`
+- Users with the `ADMIN` role who are in the same app as the widget.
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id> \

@@ -95,6 +95,14 @@ For JSON requests, it will return 200 or 422 HTTP response code depending on whe
 
 While optional, it's highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user's apps match datasets, widgets, etc.
 
+#### Permissions
+
+Based on roles, different types of users can create new users with different roles:
+
+- ADMIN: Can create any type of user
+- MANAGER: Can create a user of type `MANAGER` or `USER`.
+- Public users: Can register themselves in the API, being assigned the `USER` role.
+
 ```bash
 # Account creation using email + password
 curl -X POST http://api.resourcewatch.org/auth/sign-up \
