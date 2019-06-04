@@ -348,6 +348,11 @@ Creating a widget will cause a thumbnail to be generated in the background for t
 
 ## Update a Widget
 
+Who can `UPDATE` a widget?
+
+- A `USER` can update his widgets. 
+- An `ADMIN` can update any widget.
+
 To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
 
 Field        |               Description               |    Type |                                          Values | Required
@@ -460,26 +465,13 @@ Cloning a widget will cause a thumbnail to be generated in the background for th
 
 ## Delete a Widget
 
+Who can delete Widgets?
+
+- MANAGERs who are in the same app as the widget and are in the widget's userId
+- ADMINs who are in the same app as the widget
+
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id> \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
-
-## Permissions
-
-<aside class="notice">
-ADMIN, MANAGER and USER are defined roles in the API and each authenticated userhas one role. EVERYONE refers to a non-authenticated user. 
-</aside>
-
-### List
-
-`ANYONE` can list the widgets.
-
-### Update
-
-A `USER` can update his widgets. An `ADMIN` can update any widget.
-
-### Delete
-
- A `USER` can update his widgets. An `ADMIN` can update any widget.
