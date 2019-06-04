@@ -26,6 +26,8 @@ Some fields are important to identify the entity properly; others are just optio
 
 ## Creating a metadata object
 
+Only `ADMIN`s and `MANAGER`s can create metadata for an app (as long as they belong to that app).
+
 | Field             | Required/Optional                                                      
 | ------------------|:-----------------------------------------:     
 | application       | required                                                             
