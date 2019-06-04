@@ -1870,7 +1870,7 @@ Creating a widget will cause a thumbnail to be generated in the background for t
 </tr>
 <tr>
 <td>freeze</td>
-<td style="text-align: center">If the data is freezed</td>
+<td style="text-align: center">If the data is frozen</td>
 <td style="text-align: right">Boolean</td>
 <td style="text-align: right">true - false</td>
 <td style="text-align: right">No</td>
@@ -1918,6 +1918,8 @@ Creating a widget will cause a thumbnail to be generated in the background for t
 <td style="text-align: right">Yes</td>
 </tr>
 </tbody></table>
+
+<p>A user with role <code class="prettyprint">USER</code> can update their own widgets, based on the <code class="prettyprint">userId</code> field. A user with <code class="prettyprint">ADMIN</code> role can update any widget.</p>
 
 <blockquote>
 <p>To update a widget, you have to do a PATCH request with the following body:</p>
@@ -1992,6 +1994,13 @@ Cloning a widget will cause a thumbnail to be generated in the background for th
 </aside>
 
 <h2 id="delete-a-widget">Delete a Widget</h2>
+
+<p>Who can delete Widgets?</p>
+
+<ul>
+<li>Users with the <code class="prettyprint">MANAGER</code> role who are in the same app as the widget and are in the widget&rsquo;s <code class="prettyprint">userId</code></li>
+<li>Users with the <code class="prettyprint">ADMIN</code> role who are in the same app as the widget.</li>
+</ul>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
@@ -2873,6 +2882,8 @@ curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span
 </tbody></table>
 
 <h2 id="creating-a-metadata-object">Creating a metadata object</h2>
+
+<p>Only <code class="prettyprint">ADMIN</code>s and <code class="prettyprint">MANAGER</code>s can create metadata for an app (as long as they belong to that app).</p>
 
 <table><thead>
 <tr>

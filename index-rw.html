@@ -1870,7 +1870,7 @@ Creating a widget will cause a thumbnail to be generated in the background for t
 </tr>
 <tr>
 <td>freeze</td>
-<td style="text-align: center">If the data is freezed</td>
+<td style="text-align: center">If the data is frozen</td>
 <td style="text-align: right">Boolean</td>
 <td style="text-align: right">true - false</td>
 <td style="text-align: right">No</td>
@@ -1918,6 +1918,8 @@ Creating a widget will cause a thumbnail to be generated in the background for t
 <td style="text-align: right">Yes</td>
 </tr>
 </tbody></table>
+
+<p>A user with role <code class="prettyprint">USER</code> can update their own widgets, based on the <code class="prettyprint">userId</code> field. A user with <code class="prettyprint">ADMIN</code> role can update any widget.</p>
 
 <blockquote>
 <p>To update a widget, you have to do a PATCH request with the following body:</p>
@@ -1992,6 +1994,13 @@ Cloning a widget will cause a thumbnail to be generated in the background for th
 </aside>
 
 <h2 id="delete-a-widget">Delete a Widget</h2>
+
+<p>Who can delete Widgets?</p>
+
+<ul>
+<li>Users with the <code class="prettyprint">MANAGER</code> role who are in the same app as the widget and are in the widget&rsquo;s <code class="prettyprint">userId</code></li>
+<li>Users with the <code class="prettyprint">ADMIN</code> role who are in the same app as the widget.</li>
+</ul>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
@@ -2976,6 +2985,8 @@ Remember — It is mandatory to set a limit value. If you do not set it and the 
 </tbody></table>
 
 <h2 id="creating-a-metadata-object">Creating a metadata object</h2>
+
+<p>Only <code class="prettyprint">ADMIN</code>s and <code class="prettyprint">MANAGER</code>s can create metadata for an app (as long as they belong to that app).</p>
 
 <table><thead>
 <tr>
@@ -4573,7 +4584,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
     "language": "en",
     "resource": {
         "type": "EMAIL",
-        "content": "email@addres.com"
+        "content": "email@address.com"
     }
 }'</span>
 </code></pre>
@@ -6755,6 +6766,16 @@ curl -X POST http://api.resourcewatch.org/auth/login <span class="se">\</span>
 <p>For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.</p>
 
 <p>While optional, it&rsquo;s highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user&rsquo;s apps match datasets, widgets, etc.</p>
+
+<h4 id="permissions">Permissions</h4>
+
+<p>Based on roles, different types of users can create new users with different roles:</p>
+
+<ul>
+<li>ADMIN: Can create any type of user</li>
+<li>MANAGER: Can create a user of type <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code>.</li>
+<li>Public users: Can register themselves in the API, being assigned the <code class="prettyprint">USER</code> role.</li>
+</ul>
 <pre class="highlight shell"><code><span class="c"># Account creation using email + password</span>
 curl -X POST http://api.resourcewatch.org/auth/sign-up <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
