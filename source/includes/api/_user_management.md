@@ -97,9 +97,11 @@ While optional, it's highly recommended that you specify which apps the user wil
 
 #### Permissions
 
+Based on roles, different types of users can create new users with different roles:
+
 - ADMIN: Can create any type of user
 - MANAGER: Can create a user of type `MANAGER` or `USER`.
-- EVERYONE ELSE: Can register himself in the API. He'll be assigned the role of `USER`.
+- Public users: Can register themselves in the API, being assigned the `USER` role.
 
 ```bash
 # Account creation using email + password

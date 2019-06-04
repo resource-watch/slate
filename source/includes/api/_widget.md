@@ -348,10 +348,6 @@ Creating a widget will cause a thumbnail to be generated in the background for t
 
 ## Update a Widget
 
-Who can `UPDATE` a widget?
-
-- A `USER` can update his widgets. 
-- An `ADMIN` can update any widget.
 
 To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
 
@@ -374,6 +370,9 @@ default      |       If it's default for dataset       | Boolean |              
 layerId      |   UuId of the relationship with layer   |    Text |                                   Uuid of layer |       No
 dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
 env          |               Environment               |    Text |                 `production` or `preproduction` |      Yes
+
+
+A user with role `USER` can update their own widgets, based on the `userId` field. A user with `ADMIN` role can update any widget.
 
 > To update a widget, you have to do a PATCH request with the following body:
 
@@ -467,8 +466,8 @@ Cloning a widget will cause a thumbnail to be generated in the background for th
 
 Who can delete Widgets?
 
-- MANAGERs who are in the same app as the widget and are in the widget's userId
-- ADMINs who are in the same app as the widget
+- Users with the `MANAGER` role who are in the same app as the widget and are in the widget's `userId`
+- Users with the `ADMIN` role who are in the same app as the widget.
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id> \
