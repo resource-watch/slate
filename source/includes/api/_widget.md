@@ -324,7 +324,7 @@ layerId      |   UuId of the relationship with layer   |    Text |              
 dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
 env         |                                            Environment of the Widget. Set to 'production' by default                                               |   String |                                 Valid string |       No
 
-It is possible to create a widget that has a different `env` property to it's parent dataset. 
+It is possible to create a widget that has a different `env` property to its parent dataset. 
 
 > To create a widget, you have to do a POST request with the following body:
 

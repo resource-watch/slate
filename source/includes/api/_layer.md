@@ -253,7 +253,7 @@ dataset           |                                                             
 protected         |                                            If it's a protected layer (not is possible to delete if it's true)                                               |   Boolean |                                 true-false |       No
 env         |                                            Environment of the Layer. Set to 'production' by default                                               |   String |                                 Valid string |       No
 
-It is possible to create a layer that has a different `env` property to it's parent dataset. 
+It is possible to create a layer that has a different `env` property to its parent dataset. 
 
 > To create a layer, you have to do a POST request with the following body:
 
