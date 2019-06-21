@@ -167,7 +167,7 @@ The `redirect.path` references the same `:dataset` value - meaning the incoming 
 
 You'll also notice new fields that were not present before: 
 
-- `binary`: Using this causes Control Tower to pipe the microservice's response content as a binary stream to the external request's reply. Use this in case you expect your microservice's replies to have large amounts of data.
+- `binary`: Using this causes Control Tower to pipe the microservice's response content as a binary stream to the external request's reply. Use this in case you expect your microservice's replies to have large amounts of binary data - for example, a file for download.
 - `authenticated`: Setting this to `true` causes Control Tower to immediately return an HTTP `401` error code in case this endpoint matches the external request, but that request has no user identification data.
 - `applicationRequired`: Setting this to `true` causes Control Tower to immediately return an HTTP `401` error code in case this endpoint matches the external request, but that request has no application data as part of the user's data.
 - `filters`: An array of filter objects that the request must match to in order for a match to be considered successful.
