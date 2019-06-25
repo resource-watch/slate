@@ -319,7 +319,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer
    }
 }'
 ```
-Note: it is not possible to update the `env` property of a layer this way. If you wish to alter the `env` of a layer you must update it's parent dataset - see _Update a Dataset_.
+Note: it is not possible to update the `env` property of a layer this way. If you wish to alter the `env` of a layer you must update its parent dataset - see [Updating a Dataset](#updating-a-dataset).
 
 ## Delete a Layer
 
