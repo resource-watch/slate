@@ -155,7 +155,7 @@ provider      | Dataset provider this include inner connectors and 3rd party one
 userId        | the user who registered the dataset                                          | valid id
 status        | the internal dataset status at connection time                               | `pending`, `saved` or `failed`
 published     |                                                                              | `true`or `false`
-env           | If the dataset is in preproduction environment or in production one          | `production`or `preproduction`
+env           | If the dataset is in the staging, preproduction environment or in production one          | `staging`, `production` or `preproduction`. Defaults to `production`
 overwritted   | If the data can be overwritten (only for being able to make dataset updates) | `true`or `false`
 verify        | If this dataset contains data that is verified using blockchain              | `true`or `false`
 protected     | If it's a protected layer                                                    | `true`or `false`
@@ -336,6 +336,7 @@ vocabularies        |                                                    Cluster
 widgetRelevantProps |                                          Group of relevant props of a widget                                           |   Array |                                                                                                              Any Text |                                                No
 layerRelevantProps  |                                           Group of relevant props of a layer                                           |   Array |                                                                                                              Any Text |                                                No
 subscribable        | Available dataset queries for subscriptions parameters accepted: `{{begin}}` for date begin and `{{end}}` for date end |  Object |                                                                             `{" <queryname>": "<querybodytemplate>"}` | No (just for json if connectorUrl is not present)
+env                 | The environment you want the dataset to be accessible on. Defaults to production |  Text | `staging`, `production` or `preproduction` | No
 
 There are some differences between datasets types.
 
