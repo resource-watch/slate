@@ -22,7 +22,7 @@ staticImageConfig |                                 Custom configuration        
 default           |               If it's a default layer for the dataset that it belongs                | Boolean
 protected         |               If it's a protected layer (not is possible to delete if it's true)     | Boolean
 published         |                               Is the layer published?                                | Boolean
-env               | environment in witch the layer was published, one of `preproduction` or `production` |    Text
+env               | environment in witch the layer was published, one of `staging`, `preproduction` or `production` |    Text
 
 ## How obtain all layers
 
@@ -53,6 +53,7 @@ Remember — the response is jsonapi format
           "name": "Total CO2 emissions by year",
           "default": false,
           "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
+          "env": "production",
           "provider": "cartodb",
           "iso": [],
           "description": null,
@@ -113,7 +114,7 @@ sort      |                      Sort json response by specific attributes      
 status    |                Filter layers on status (pending, saved, failed, all)                 |    Text
 published |                   Filter layers on published status (true, false)                    | Boolean
 app       |                   Filter layers on application (prep, gfw, etc..)                    |    Text
-env       | Environment in witch the layer was published, one of `preproduction` or `production` |    Text
+env       | Environment in witch the layer was published, one of `staging`, `preproduction` or `production` |    Text
 
 > Return the layers filtered by those whose name contains emissions
 
@@ -194,6 +195,7 @@ Remember — the response is jsonapi format
       "name": "Total CO2 emissions by year",
       "default": false,
       "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
+      "env": "production",
       "provider": "cartodb",
       "iso": [],
       "description": null,
