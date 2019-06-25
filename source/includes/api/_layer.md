@@ -251,7 +251,9 @@ staticImageConfig |                                                             
 iso               |                                                               Isos to which the layer belongs                                                               |  Array |                                         BRA, ES |       No
 dataset           |                                                                     UuId of the dataset                                                                     |   Text |                                 Uuid of Dataset |       No
 protected         |                                            If it's a protected layer (not is possible to delete if it's true)                                               |   Boolean |                                 true-false |       No
+env         |                                            Environment of the Layer. Set to 'production' by default                                               |   String |                                 Valid string |       No
 
+It is possible to create a layer that has a different `env` property to its parent dataset. 
 
 > To create a layer, you have to do a POST request with the following body:
 
@@ -317,6 +319,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer
    }
 }'
 ```
+Note: it is not possible to update the `env` property of a layer this way. If you wish to alter the `env` of a layer you must update its parent dataset - see [Updating a Dataset](#updating-a-dataset).
 
 ## Delete a Layer
 
