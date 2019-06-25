@@ -1014,6 +1014,8 @@ However, in some scenarios, it may be desirable to specify some or all of these 
     This is an authenticated endpoint!
 </aside>
 
+<p>Note: When updating the <code class="prettyprint">env</code> property of a dataset the change will cascade down to all associated layer and widget entities.</p>
+
 <h2 id="deleting-a-dataset">Deleting a Dataset</h2>
 
 <p><strong>When a dataset is deleted the user&rsquo;s applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.</strong></p>
@@ -1762,7 +1764,16 @@ Remember — the response is jsonapi format
 <td style="text-align: right">Uuid of Dataset</td>
 <td style="text-align: right">No</td>
 </tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">Environment of the Widget. Set to &lsquo;production&rsquo; by default</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">Valid string</td>
+<td style="text-align: right">No</td>
+</tr>
 </tbody></table>
+
+<p>It is possible to create a widget that has a different <code class="prettyprint">env</code> property to its parent dataset. </p>
 
 <blockquote>
 <p>To create a widget, you have to do a POST request with the following body:</p>
@@ -2424,7 +2435,16 @@ Remember — the response is jsonapi format
 <td style="text-align: right">true-false</td>
 <td style="text-align: right">No</td>
 </tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">Environment of the Layer. Set to &lsquo;production&rsquo; by default</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">Valid string</td>
+<td style="text-align: right">No</td>
+</tr>
 </tbody></table>
+
+<p>It is possible to create a layer that has a different <code class="prettyprint">env</code> property to its parent dataset. </p>
 
 <blockquote>
 <p>To create a layer, you have to do a POST request with the following body:</p>
@@ -2550,6 +2570,8 @@ Remember — the response is jsonapi format
    }
 }'</span>
 </code></pre>
+<p>Note: it is not possible to update the <code class="prettyprint">env</code> property of a layer this way. If you wish to alter the <code class="prettyprint">env</code> of a layer you must update its parent dataset - see <a href="#updating-a-dataset">Updating a Dataset</a>.</p>
+
 <h2 id="delete-a-layer">Delete a Layer</h2>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
