@@ -357,8 +357,8 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </tr>
 <tr>
 <td>env</td>
-<td>If the dataset is in preproduction environment or in production one</td>
-<td><code class="prettyprint">production</code>or <code class="prettyprint">preproduction</code></td>
+<td>If the dataset is in the staging, preproduction environment or in production one</td>
+<td><code class="prettyprint">staging</code>, <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code>. Defaults to <code class="prettyprint">production</code></td>
 </tr>
 <tr>
 <td>overwritted</td>
@@ -677,6 +677,13 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <td style="text-align: right">Object</td>
 <td style="text-align: right"><code class="prettyprint">{&quot; &lt;queryname&gt;&quot;: &quot;&lt;querybodytemplate&gt;&quot;}</code></td>
 <td style="text-align: right">No (just for json if connectorUrl is not present)</td>
+</tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">The environment you want the dataset to be accessible on. Defaults to production</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right"><code class="prettyprint">staging</code>, <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code></td>
+<td style="text-align: right">No</td>
 </tr>
 </tbody></table>
 
@@ -2103,7 +2110,7 @@ Cloning a widget will cause a thumbnail to be generated in the background for th
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">environment in witch the layer was published, one of <code class="prettyprint">preproduction</code> or <code class="prettyprint">production</code></td>
+<td style="text-align: center">environment in witch the layer was published, one of <code class="prettyprint">staging</code>, <code class="prettyprint">preproduction</code> or <code class="prettyprint">production</code></td>
 <td style="text-align: right">Text</td>
 </tr>
 </tbody></table>
@@ -2134,6 +2141,7 @@ Remember — the response is jsonapi format
           </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Total CO2 emissions by year"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
           </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"11de2bc1-368b-42ed-a207-aaff8ece752b"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
           </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
@@ -2224,7 +2232,7 @@ Remember — the response is jsonapi format
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">Environment in witch the layer was published, one of <code class="prettyprint">preproduction</code> or <code class="prettyprint">production</code></td>
+<td style="text-align: center">Environment in witch the layer was published, one of <code class="prettyprint">staging</code>, <code class="prettyprint">preproduction</code> or <code class="prettyprint">production</code></td>
 <td style="text-align: right">Text</td>
 </tr>
 </tbody></table>
@@ -2312,6 +2320,7 @@ Remember — the response is jsonapi format
       </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Total CO2 emissions by year"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
       </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"11de2bc1-368b-42ed-a207-aaff8ece752b"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
       </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
