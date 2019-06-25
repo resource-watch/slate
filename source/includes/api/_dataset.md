@@ -336,7 +336,7 @@ vocabularies        |                                                    Cluster
 widgetRelevantProps |                                          Group of relevant props of a widget                                           |   Array |                                                                                                              Any Text |                                                No
 layerRelevantProps  |                                           Group of relevant props of a layer                                           |   Array |                                                                                                              Any Text |                                                No
 subscribable        | Available dataset queries for subscriptions parameters accepted: `{{begin}}` for date begin and `{{end}}` for date end |  Object |                                                                             `{" <queryname>": "<querybodytemplate>"}` | No (just for json if connectorUrl is not present)
-env                 | The environment you want the dataset to be accessible on. Defaults to production |  Text | staging, preproduction, production | No
+env                 | The environment you want the dataset to be accessible on. Defaults to production |  Text | `staging`, `production` or `preproduction` | No
 
 There are some differences between datasets types.
 
