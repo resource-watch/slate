@@ -166,6 +166,7 @@ published |       Filter widgets on freeze status (true, false)          | Boole
 verified  |           Filter by verified status (true, false)            | Boolean
 template  |           Filter by template status (true, false)            | Boolean
 default   |            Filter by default status (true, false)            | Boolean
+userId    |                    Filter by widget owner                    |    Text
 app       |       Filter widgets on application (prep, gfw, etc..)       |    Text
 env       |   Environment can be one of `production` or `preproduction`  |    Text
 
