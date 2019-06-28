@@ -167,6 +167,7 @@ verified  |           Filter by verified status (true, false)            | Boole
 template  |           Filter by template status (true, false)            | Boolean
 default   |            Filter by default status (true, false)            | Boolean
 userId    |                    Filter by widget owner                    |    Text
+favourite |               Filter current user's favourites               | Boolean
 app       |       Filter widgets on application (prep, gfw, etc..)       |    Text
 env       |   Environment can be one of `production` or `preproduction`  |    Text
 
