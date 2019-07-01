@@ -1507,7 +1507,27 @@ Remember — <strong>the resulting list is filtered by env=production</strong> u
 <td style="text-align: center">Environment can be one of <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code></td>
 <td style="text-align: right">Text</td>
 </tr>
+<tr>
+<td>userId</td>
+<td style="text-align: center">Filter widgets created by a specific user</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>favourite</td>
+<td style="text-align: center">Filter favourited widgets of an user</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>collection</td>
+<td style="text-align: center">Filter widgets based on an user collection</td>
+<td style="text-align: right">Text</td>
+</tr>
 </tbody></table>
+
+<aside class="notice">
+   Using `userId` filter will return widgets created/cloned by the user. This filter is not compatible with `favourite` or `collection`. 
+   If you want to fetch favourited widgets, or specific ones from a collection, do not include the `userId` param.
+</aside>
 
 <blockquote>
 <p>Return the widgets filtered whose name contains glad</p>
