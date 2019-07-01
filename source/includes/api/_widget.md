@@ -168,6 +168,14 @@ template  |           Filter by template status (true, false)            | Boole
 default   |            Filter by default status (true, false)            | Boolean
 app       |       Filter widgets on application (prep, gfw, etc..)       |    Text
 env       |   Environment can be one of `production` or `preproduction`  |    Text
+userId    |   Filter widgets created by a specific user                  |    Text
+favourite |   Filter favourited widgets of an user                       | Boolean
+collection |  Filter widgets based on an user collection                 |    Text
+
+<aside class="notice">
+   Using `userId` filter will return widgets created/cloned by the user. This filter is not compatible with `favourite` or `collection`. 
+   If you want to fetch favourited widgets, or specific ones from a collection, do not include the `userId` param.
+</aside>
 
 > Return the widgets filtered whose name contains glad
 
