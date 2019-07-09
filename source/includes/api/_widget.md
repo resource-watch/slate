@@ -480,6 +480,10 @@ Who can delete Widgets?
 - Users with the `MANAGER` role who are in the same app as the widget and are in the widget's `userId`
 - Users with the `ADMIN` role who are in the same app as the widget.
 
+<aside class="notice">
+   The endpoints `/widget/:widget` and `/dataset/:dataset/widget/:widget` perform the same action under the hood in terms of deletion, with the only difference the `dataset` endpoint checks if the dataset exists previous widget deletion.
+</aside>
+
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id> \
 -H "Authorization: Bearer <your-token>" \
