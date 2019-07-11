@@ -94,6 +94,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
             "provider": "csv",
             "userId": "58333dcfd9f39b189ca44c75",
             "connectorUrl": "http://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv",
+            "sources": [],
             "tableName": "data",
             "status": "pending",
             "published": true,
@@ -284,6 +285,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057
             "provider": "csv",
             "userId": "58750a56dfc643722bdd02ab",
             "connectorUrl": "http://wri-forest-atlas.s3.amazonaws.com/COD/temp/annual%20timber%20production%20DRC%20%28test%29%20-%20Sheet1.csv",
+            "sources": [],
             "tableName": "index_51943691eebc4cb4bdfb057ad4fc2145",
             "status": "saved",
             "overwrite": false,
@@ -323,7 +325,8 @@ subtitle            |                                                    Dataset
 application         |                                          Applications the dataset belongs to                                           |   Array |                                                                                         Any valid application name(s) |                                               Yes
 connectorType       |                                                     Connector type                                                     |    Text |                                                                                                   rest, document, wms |                                               Yes
 provider            |                                               The connectorType provider                                               |    Text |                                                           cartodb, feature service, gee, csv, tsv, xml, json, nexgddp |                                               Yes
-connectorUrl        |                                                 Url of the data source                                                 |     Url |                                                                                                               Any url |    Yes (except for gee, nexgddp and json formats)
+connectorUrl        |                                                 Url of the data source                                                 |     Url |                                                                                                               Any url | Yes (except for gee, nexgddp and document type datasets)
+sources             |                                                Urls of the data sources                                                |   Array |                                                                                                         Array of URLs |       No (recommended for document type datasets)
 tableName           |                                                       Table name                                                       |    Text |                                                                                                  Any valid table name |            No (just for GEE and nexgddp datasets)
 data                |                             JSON DATA only for json connector if connectorUrl not present                              |    JSON |                                                                                                            [{},{},{}] | No (just for json if connectorUrl is not present)
 dataPath            |                                           Path to the data in a json dataset                                           |    Text |                                                                                                    Any valid JSON key | No (just for json if connectorUrl is not present)
@@ -454,18 +457,23 @@ curl -XPOST 'https://api.resourcewatch.org/v1/dataset' -d \
 
 ### JSON, CSV, TSV or XML
 
-This dataset hosts data from a file in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
+This dataset hosts data from files in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
 source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations.
 
-The original data must be available on a publicly accessible URL, specified in the `connectorUrl` field. The URL must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details.
+The original data must be available on a publicly accessible URLs, specified in the `sources` array field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details. You can specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.
+
+<aside class="notice">
+The previously used `connectorUrl` field should be considered deprecated when creating document-based datasets.
+</aside>
 
 Here's a breakdown of the fields specific to the creation of a document-based dataset:
 
-Field      |                  Description                   |   Type |        Values | Required
----------- | :--------------------------------------------: | -----: | ------------: | -------:
-connectorUrl |                                              |   Text |           URL | Yes, unless JSON data is provided using the `data` field.
-data       | JSON DATA only for json connector if connectorUrl not present |  Array |    [{},{},{}] | Yes for JSON if connectorUrl not present
-legend     | See section below                              | Object |               |       No
+Field        |                        Description                                |   Type |        Values | Required
+------------ | :-----------------------------------------------------------:     | -----: | ------------: | -------:
+sources      |                        List of URLs from which to source data     |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
+data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
+legend       | See section below                                                 | Object |               |       No
+connectorUrl | URL from which to source data. Deprecated - use `sources` instead |   Text |           URL |       No
 
 
 
@@ -481,7 +489,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 '{
     "connectorType":"document",
     "provider":"csv",
-    "connectorUrl":"https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv",
+    "sources": [
+      "https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers_1.csv",
+      "https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers_2.csv",
+      "https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers_3.csv"
+    ],
     "application":[
      "gfw"
     ],
@@ -502,7 +514,6 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 '{
     "connectorType":"document",
     "provider":"json",
-    "connectorUrl":"",
     "application":[
      "your", "apps"
     ],
