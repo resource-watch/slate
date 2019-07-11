@@ -481,7 +481,7 @@ Who can delete Widgets?
 - Users with the `ADMIN` role who are in the same app as the widget.
 
 <aside class="notice">
-   The endpoints `/widget/:widget` and `/dataset/:dataset/widget/:widget` perform the same action under the hood in terms of deletion, with the only difference the `dataset` endpoint checks if the dataset exists previous widget deletion.
+   The endpoints `/widget/:widget` and `/dataset/:dataset/widget/:widget` perform the same action, with the only difference being that the latter checks if the dataset exists before deleting the widget.
 </aside>
 
 ```shell
