@@ -6730,6 +6730,10 @@ be considered a &ldquo;only do it if you know what you are doing&rdquo; operatio
 <p>The following endpoints expose the API&rsquo;s functionality regarding user management.
 For more information or implementation details, see <a href="https://github.com/control-tower/ct-oauth-plugin">the source code</a>.</p>
 
+<h2 id="a-note-on-ui-elements">A note on UI elements</h2>
+
+<p>Unlike the other parts of the API, this section covers endpoints that provide end-user interaction, rendering HTML pages or sending emails to reset passwords and such. Some elements of these interfaces can be configured to match specific projects identities (RW, GFW, etc). To specify which project your requests come from, you can add an optional <code class="prettyprint">origin</code> query parameter to your requests, with the name of the application. If matching visual elements exist, they will be used in the resulting interfaces displayed to the user.</p>
+
 <h2 id="login-email-password">Login (email + password)</h2>
 
 <p>Login endpoints support both HTML and JSON output formats, depending on the <code class="prettyprint">Content-type</code> provided in the request. Keep in mind that HTML-based requests will result in redirects - for example, after successfully logging in, you will be taken to <code class="prettyprint">/auth/success</code> - while JSON based requests will simply return the matching HTTP code - 200 in case of a successful login.</p>
