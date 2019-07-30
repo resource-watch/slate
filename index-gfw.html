@@ -4605,7 +4605,7 @@ Mind the string format: double quotes and curly braces need to be properly escap
 </tr>
 <tr>
 <td>application</td>
-<td style="text-align: center">Application of the subscription</td>
+<td style="text-align: center">Application of the subscription. Set to &lsquo;gfw&rsquo; by default</td>
 <td style="text-align: right">gfw, rw, prep</td>
 </tr>
 <tr>
@@ -4652,6 +4652,11 @@ Mind the string format: double quotes and curly braces need to be properly escap
 <td>&ndash; params</td>
 <td style="text-align: center">Geographic area of the subscription</td>
 <td style="text-align: right">Object</td>
+</tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">Environment of the subscription. Set to &#39;production&rsquo; by default</td>
+<td style="text-align: right">String</td>
 </tr>
 </tbody></table>
 
@@ -4707,6 +4712,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
     ],
     "application": "rw",
     "language": "en",
+    "env": &lt;environment&gt;,
     "resource": {
         "type": "EMAIL",
         "content": "email@address.com"
@@ -4750,6 +4756,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
  <span class="s1">'{
    "name": "&lt;name&gt;",
    "application": "&lt;application&gt;",
+   "env": &lt;environment&gt;,
    "language": "&lt;language&gt;",
    "resource": {
        "type": "&lt;type&gt;",
@@ -4810,6 +4817,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
        "content": "&lt;content&gt;"
    },
    "datasets" : ["&lt;dataset&gt;"],
+   "env": &lt;environment&gt;,
    "params": {
        "iso": {
            "country": "&lt;iso&gt;",
@@ -4848,6 +4856,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
  <span class="s1">'{
    "name": "&lt;name&gt;",
    "application": "&lt;application&gt;",
+   "env": &lt;environment&gt;,
    "language": "&lt;language&gt;",
    "resource": {
        "type": "&lt;type&gt;",
@@ -4895,6 +4904,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
  <span class="s1">'{
    "name": "&lt;name&gt;",
    "application": "&lt;application&gt;",
+   "env": &lt;environment&gt;,
    "language": "&lt;language&gt;",
    "resource": {
        "type": "&lt;type&gt;",
@@ -4917,6 +4927,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
  <span class="s1">'{
    "name": "&lt;name&gt;",
    "application": "&lt;application&gt;",
+   "env": &lt;environment&gt;,
    "language": "&lt;language&gt;",
    "resource": {
        "type": "&lt;type&gt;",
@@ -4937,6 +4948,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
  <span class="s1">'{
    "name": "&lt;name&gt;",
    "application": "&lt;application&gt;",
+   "env": &lt;environment&gt;,
    "language": "&lt;language&gt;",
    "resource": {
        "type": "&lt;type&gt;",
@@ -4956,6 +4968,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
  <span class="s1">'{
    "name": "&lt;name&gt;",
    "application": "&lt;application&gt;",
+   "env": &lt;environment&gt;,
    "language": "&lt;language&gt;",
    "resource": {
        "type": "&lt;type&gt;",
@@ -4976,6 +4989,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
  <span class="s1">'{
    "name": "&lt;name&gt;",
    "application": "&lt;application&gt;",
+   "env": &lt;environment&gt;,
    "language": "&lt;language&gt;",
    "resource": {
        "type": "&lt;type&gt;",
@@ -5019,6 +5033,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
  <span class="s1">'{
    "name": "&lt;name&gt;",
    "application": "&lt;application&gt;",
+   "env": &lt;environment&gt;,
    "language": "&lt;language&gt;",
    "resource": {
        "type": "&lt;type&gt;",
@@ -5038,7 +5053,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
 </code></pre>
 <h2 id="obtain-the-subscriptions-for-a-user">Obtain the subscriptions for a user</h2>
 
-<p>To get the authenticated  user subscriptions:</p>
+<p>You can get a list of the current user&rsquo;s subscriptions using the following endpoint. In order to use this endpoint, you need to be logged in.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
@@ -5078,14 +5093,37 @@ Remember — the response is in JSONApi format.
             </span><span class="p">},</span><span class="w">
             </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"language"</span><span class="p">:</span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"datasetsQuery"</span><span class="p">:[</span><span class="w">
-
-            </span><span class="p">]</span><span class="w">
+            </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
          </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>This endpoint supports the following optional query parameters as filters: </p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the subscription is associated.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;gfw&rsquo;</td>
+</tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">Id of geostore</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;production&rsquo;</td>
+</tr>
+</tbody></table>
+
 <h2 id="resend-confirmation">Resend confirmation</h2>
 
 <p>To resend the confirmation:</p>
