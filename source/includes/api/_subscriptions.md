@@ -36,16 +36,17 @@ Mind the string format: double quotes and curly braces need to be properly escap
 Field         |                            Description                            |               Type
 ------------- | :---------------------------------------------------------------: | -----------------:
 name          |                               Name                                |               Text
-application   |                  Application of the subscription                  |      gfw, rw, prep
+application   | Application of the subscription. Set to 'gfw' by default          |      gfw, rw, prep
 language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh
 resource      |   This field contains the subscription is of type email or hook   |             Object
 -- type       |                               Type                                |       EMAIL or URL
 -- content    |                           Email or url                            |               Text
 datasets      |               Array of datasets of the subscription               |              Array
 datasetsQuery |              Subscriptions to subscribable datasets               |              Array
--- id         |                           Id of dataset                           |   ObjectId
--- type       | Type of subscription defined in the dataset | Text 
--- params     | Geographic area of the subscription                               | Object
+-- id         |                           Id of dataset                           |           ObjectId
+-- type       | Type of subscription defined in the dataset                       |               Text 
+-- params     | Geographic area of the subscription                               |             Object
+env           |  Environment of the subscription. Set to 'production' by default  |             String 
 
 You only require one of `datasets`  or `datasetsQuery`, but not both.
 
@@ -85,6 +86,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
     ],
     "application": "rw",
     "language": "en",
+    "env": <environment>,
     "resource": {
         "type": "EMAIL",
         "content": "email@address.com"
@@ -111,6 +113,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
  '{
    "name": "<name>",
    "application": "<application>",
+   "env": <environment>,
    "language": "<language>",
    "resource": {
        "type": "<type>",
@@ -150,6 +153,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
        "content": "<content>"
    },
    "datasets" : ["<dataset>"],
+   "env": <environment>,
    "params": {
        "iso": {
            "country": "<iso>",
@@ -175,6 +179,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
  '{
    "name": "<name>",
    "application": "<application>",
+   "env": <environment>,
    "language": "<language>",
    "resource": {
        "type": "<type>",
@@ -205,6 +210,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
  '{
    "name": "<name>",
    "application": "<application>",
+   "env": <environment>,
    "language": "<language>",
    "resource": {
        "type": "<type>",
@@ -230,6 +236,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
  '{
    "name": "<name>",
    "application": "<application>",
+   "env": <environment>,
    "language": "<language>",
    "resource": {
        "type": "<type>",
@@ -253,6 +260,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
  '{
    "name": "<name>",
    "application": "<application>",
+   "env": <environment>,
    "language": "<language>",
    "resource": {
        "type": "<type>",
@@ -275,6 +283,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
  '{
    "name": "<name>",
    "application": "<application>",
+   "env": <environment>,
    "language": "<language>",
    "resource": {
        "type": "<type>",
@@ -298,6 +307,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
  '{
    "name": "<name>",
    "application": "<application>",
+   "env": <environment>,
    "language": "<language>",
    "resource": {
        "type": "<type>",
@@ -328,6 +338,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
  '{
    "name": "<name>",
    "application": "<application>",
+   "env": <environment>,
    "language": "<language>",
    "resource": {
        "type": "<type>",
@@ -351,7 +362,8 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
 
 ## Obtain the subscriptions for a user
 
-To get the authenticated  user subscriptions:
+You can get a list of the current user's subscriptions using the following endpoint. In order to use this endpoint, you need to be logged in.
+
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/subscriptions \
@@ -394,14 +406,20 @@ Remember — the response is in JSONApi format.
             },
             "confirmed":false,
             "language":"en",
-            "datasetsQuery":[
-
-            ]
+            "datasetsQuery": [],
+            "env": "production"
          }
       }
    ]
 }
 ```
+
+This endpoint supports the following optional query parameters as filters: 
+
+Field       |             Description                              |   Type | Default value
+----------- | :--------------------------------------------------: | -----: | -----:
+application | Application to which the subscription is associated. | String | 'gfw'
+env         |           Id of geostore                             | String | 'production'
 
 ## Resend confirmation
 
