@@ -258,6 +258,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
             </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"csv"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58333dcfd9f39b189ca44c75"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
             </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
@@ -507,6 +508,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
             <span class="s2">"provider"</span>: <span class="s2">"csv"</span>,
             <span class="s2">"userId"</span>: <span class="s2">"58750a56dfc643722bdd02ab"</span>,
             <span class="s2">"connectorUrl"</span>: <span class="s2">"http://wri-forest-atlas.s3.amazonaws.com/COD/temp/annual%20timber%20production%20DRC%20%28test%29%20-%20Sheet1.csv"</span>,
+            <span class="s2">"sources"</span>: <span class="o">[]</span>,
             <span class="s2">"tableName"</span>: <span class="s2">"index_51943691eebc4cb4bdfb057ad4fc2145"</span>,
             <span class="s2">"status"</span>: <span class="s2">"saved"</span>,
             <span class="s2">"overwrite"</span>: <span class="nb">false</span>,
@@ -592,7 +594,14 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <td style="text-align: center">Url of the data source</td>
 <td style="text-align: right">Url</td>
 <td style="text-align: right">Any url</td>
-<td style="text-align: right">Yes (except for gee, nexgddp and json formats)</td>
+<td style="text-align: right">Yes (except for gee, nexgddp and document type datasets)</td>
+</tr>
+<tr>
+<td>sources</td>
+<td style="text-align: center">Urls of the data sources</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Array of URLs</td>
+<td style="text-align: right">No (recommended for document type datasets)</td>
 </tr>
 <tr>
 <td>tableName</td>
@@ -787,10 +796,14 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 </code></pre>
 <h3 id="json-csv-tsv-or-xml">JSON, CSV, TSV or XML</h3>
 
-<p>This dataset hosts data from a file in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
+<p>This dataset hosts data from files in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
 source into the API&rsquo;s internal Elasticsearch instance, which is the source used for subsequent queries or other operations.</p>
 
-<p>The original data must be available on a publicly accessible URL, specified in the <code class="prettyprint">connectorUrl</code> field. The URL must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details.</p>
+<p>The original data must be available on a publicly accessible URLs, specified in the <code class="prettyprint">sources</code> array field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details. You can specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.</p>
+
+<aside class="notice">
+The previously used `connectorUrl` field should be considered deprecated when creating document-based datasets.
+</aside>
 
 <p>Here&rsquo;s a breakdown of the fields specific to the creation of a document-based dataset:</p>
 
@@ -804,24 +817,31 @@ source into the API&rsquo;s internal Elasticsearch instance, which is the source
 </tr>
 </thead><tbody>
 <tr>
-<td>connectorUrl</td>
-<td style="text-align: center"></td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">URL</td>
-<td style="text-align: right">Yes, unless JSON data is provided using the <code class="prettyprint">data</code> field.</td>
+<td>sources</td>
+<td style="text-align: center">List of URLs from which to source data</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">URL array</td>
+<td style="text-align: right">Yes, unless JSON data is provided using the <code class="prettyprint">data</code> field</td>
 </tr>
 <tr>
 <td>data</td>
 <td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
 <td style="text-align: right">Array</td>
 <td style="text-align: right">[{},{},{}]</td>
-<td style="text-align: right">Yes for JSON if connectorUrl not present</td>
+<td style="text-align: right">Yes for JSON if <code class="prettyprint">sources</code> is not present</td>
 </tr>
 <tr>
 <td>legend</td>
 <td style="text-align: center">See section below</td>
 <td style="text-align: right">Object</td>
 <td style="text-align: right"></td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>connectorUrl</td>
+<td style="text-align: center">URL from which to source data. Deprecated - use <code class="prettyprint">sources</code> instead</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">URL</td>
 <td style="text-align: right">No</td>
 </tr>
 </tbody></table>
@@ -835,7 +855,11 @@ When creating a dataset, if any of the fields has a numerical name (for example,
 <span class="s1">'{
     "connectorType":"document",
     "provider":"csv",
-    "connectorUrl":"https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers.csv",
+    "sources": [
+      "https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers_1.csv",
+      "https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers_2.csv",
+      "https://gfw2-data.s3.amazonaws.com/alerts-tsv/glad_headers_3.csv"
+    ],
     "application":[
      "gfw"
     ],
@@ -855,7 +879,6 @@ When creating a dataset, if any of the fields has a numerical name (for example,
 <span class="s1">'{
     "connectorType":"document",
     "provider":"json",
-    "connectorUrl":"",
     "application":[
      "your", "apps"
     ],
