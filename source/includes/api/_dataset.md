@@ -234,6 +234,65 @@ Available relationships: Any dataset relationship ['widget', 'layer', 'vocabular
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer
 ```
 
+### Verification
+
+When available, the content of the `blockchain` field is used to validate the dataset's information using [Stampery](https://stampery.com/).
+
+> Get verification
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/:datasetID/verification
+```
+
+> Response:
+
+```shell
+[
+    {
+        "id": "string",
+        "hash: "string"
+    }
+]
+```
+
+### Flush
+
+Flushes the cache for specified dataset.
+
+Only users with the `ADMIN` role can use this endpoint.
+
+> Flush dataset's cache
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/:datasetID/flush \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```shell
+OK
+```
+
+### Recover
+
+Resets a dataset's `status` to `saved` and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset's data was inconsistent for any reason, this endpoint will not change it, and it's up to you to fix it using a `data-overwrite` or other endpoints.
+
+Only users with the `ADMIN` role can use this endpoint.
+
+> Recover dataset
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/:datasetID/recover \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```shell
+OK
+```
+
 ### Advanced filters
 
 By vocabulary-tag matching
@@ -258,7 +317,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=2
 ```
 
-## How to get a specific dataset
+## How to get a dataset by id
 
 > To get a dataset:
 
@@ -309,6 +368,139 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes=metadata,vocabulary,widget,layer
+```
+
+
+## How to get multiple datasets by ids
+
+> To get multiple dataset by ids:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids \
+-H "Content-Type: application/json"  -d \
+'{
+    "ids": [
+        "0706f039-b929-453e-b154-7392123ae99e",
+        "0c630feb-8146-4fcc-a9be-be5adcb731c8",
+    ]
+}'
+```
+
+> Response
+
+```shell
+    {
+        "data": [
+          {
+            "id": "0706f039-b929-453e-b154-7392123ae99e",
+            "type": "dataset",
+            "attributes": {
+              "name": "Social Vulnerability Index (2006-2010) -- U.S. (New Hampshire)",
+              "slug": "Social-Vulnerability-Index-2006-2010-US-New-Hampshire-1490086842541",
+              "type": "tabular",
+              "subtitle": null,
+              "application": [
+                "prep"
+              ],
+              "dataPath": null,
+              "attributesPath": null,
+              "connectorType": "rest",
+              "provider": "featureservice",
+              "userId": "586bc76036aacd381cb92b3a",
+              "connectorUrl": "https://coast.noaa.gov/arcgis/rest/services/sovi/sovi_tracts2010/MapServer/19?f=pjson",
+              "tableName": "sovisovi_tracts2010MapServer19",
+              "status": "saved",
+              "published": false,
+              "overwrite": false,
+              "verified": false,
+              "blockchain": {},
+              "mainDateField": null,
+              "env": "production",
+              "geoInfo": false,
+              "protected": false,
+              "legend": {
+                "date": [],
+                "region": [],
+                "country": [],
+                "nested": [],
+                "integer": [],
+                "short": [],
+                "byte": [],
+                "double": [],
+                "float": [],
+                "half_float": [],
+                "scaled_float": [],
+                "boolean": [],
+                "binary": [],
+                "text": [],
+                "keyword": []
+              },
+              "clonedHost": {},
+              "errorMessage": null,
+              "taskId": null,
+              "createdAt": "2016-09-01T08:18:39.006Z",
+              "updatedAt": "2017-12-01T22:17:59.585Z",
+              "dataLastUpdated": null,
+              "widgetRelevantProps": [],
+              "layerRelevantProps": []
+            }
+          },
+          {
+            "id": "0c630feb-8146-4fcc-a9be-be5adcb731c8",
+            "type": "dataset",
+            "attributes": {
+              "name": "USGS Land Cover - Impervious Surface (2001) -- U.S. (Alaska)",
+              "slug": "USGS-Land-Cover-Impervious-Surface-2001-US-Alaska-1490086842439",
+              "type": "raster",
+              "subtitle": null,
+              "application": [
+                "prep"
+              ],
+              "dataPath": null,
+              "attributesPath": null,
+              "connectorType": "wms",
+              "provider": "wms",
+              "userId": "586bc76036aacd381cb92b3a",
+              "connectorUrl": "https://raster.nationalmap.gov/arcgis/rest/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/25?f=pjson",
+              "tableName": "LandCoverUSGS_EROS_LandCover_NLCDMapServer25",
+              "status": "saved",
+              "published": false,
+              "overwrite": false,
+              "verified": false,
+              "blockchain": {},
+              "mainDateField": null,
+              "env": "production",
+              "geoInfo": false,
+              "protected": false,
+              "legend": {
+                "date": [],
+                "region": [],
+                "country": [],
+                "nested": [],
+                "integer": [],
+                "short": [],
+                "byte": [],
+                "double": [],
+                "float": [],
+                "half_float": [],
+                "scaled_float": [],
+                "boolean": [],
+                "binary": [],
+                "text": [],
+                "keyword": []
+              },
+              "clonedHost": {},
+              "errorMessage": null,
+              "taskId": null,
+              "createdAt": "2016-09-01T16:59:30.294Z",
+              "updatedAt": "2018-01-03T17:36:18.509Z",
+              "dataLastUpdated": null,
+              "widgetRelevantProps": [],
+              "layerRelevantProps": []
+            }
+          }
+        ]
+    }
 ```
 
 ## Creating a Dataset
