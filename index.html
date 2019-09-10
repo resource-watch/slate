@@ -446,6 +446,59 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer
 </code></pre>
+<h3 id="verification">Verification</h3>
+
+<p>When available, the content of the <code class="prettyprint">blockchain</code> field is used to validate the dataset&rsquo;s information using <a href="https://stampery.com/">Stampery</a>.</p>
+
+<blockquote>
+<p>Get verification</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/:datasetID/verification
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">[</span>
+    <span class="o">{</span>
+        <span class="s2">"id"</span>: <span class="s2">"string"</span>,
+        <span class="s2">"hash: "</span>string<span class="s2">"
+    }
+]
+</span></code></pre>
+<h3 id="flush">Flush</h3>
+
+<p>Flushes the cache for specified dataset.</p>
+
+<p>Only users with the <code class="prettyprint">ADMIN</code> role can use this endpoint.</p>
+
+<blockquote>
+<p>Flush dataset&rsquo;s cache</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/:datasetID/flush <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight shell"><code>OK
+</code></pre>
+<h3 id="recover">Recover</h3>
+
+<p>Resets a dataset&rsquo;s <code class="prettyprint">status</code> to <code class="prettyprint">saved</code> and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset&rsquo;s data was inconsistent for any reason, this endpoint will not change it, and it&rsquo;s up to you to fix it using a <code class="prettyprint">data-overwrite</code> or other endpoints.</p>
+
+<p>Only users with the <code class="prettyprint">ADMIN</code> role can use this endpoint.</p>
+
+<blockquote>
+<p>Recover dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/:datasetID/recover <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight shell"><code>OK
+</code></pre>
 <h3 id="advanced-filters">Advanced filters</h3>
 
 <p>By vocabulary-tag matching</p>
@@ -482,7 +535,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>1
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>2
 </code></pre>
-<h2 id="how-to-get-a-specific-dataset">How to get a specific dataset</h2>
+<h2 id="how-to-get-a-dataset-by-id">How to get a dataset by id</h2>
 
 <blockquote>
 <p>To get a dataset:</p>
@@ -531,6 +584,136 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <p>To get the dataset including its relationships:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes<span class="o">=</span>metadata,vocabulary,widget,layer
+</code></pre>
+<h2 id="how-to-get-multiple-datasets-by-ids">How to get multiple datasets by ids</h2>
+
+<blockquote>
+<p>To get multiple dataset by ids:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+    "ids": [
+        "0706f039-b929-453e-b154-7392123ae99e",
+        "0c630feb-8146-4fcc-a9be-be5adcb731c8",
+    ]
+}'</span>
+</code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight shell"><code>    <span class="o">{</span>
+        <span class="s2">"data"</span>: <span class="o">[</span>
+          <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"0706f039-b929-453e-b154-7392123ae99e"</span>,
+            <span class="s2">"type"</span>: <span class="s2">"dataset"</span>,
+            <span class="s2">"attributes"</span>: <span class="o">{</span>
+              <span class="s2">"name"</span>: <span class="s2">"Social Vulnerability Index (2006-2010) -- U.S. (New Hampshire)"</span>,
+              <span class="s2">"slug"</span>: <span class="s2">"Social-Vulnerability-Index-2006-2010-US-New-Hampshire-1490086842541"</span>,
+              <span class="s2">"type"</span>: <span class="s2">"tabular"</span>,
+              <span class="s2">"subtitle"</span>: null,
+              <span class="s2">"application"</span>: <span class="o">[</span>
+                <span class="s2">"prep"</span>
+              <span class="o">]</span>,
+              <span class="s2">"dataPath"</span>: null,
+              <span class="s2">"attributesPath"</span>: null,
+              <span class="s2">"connectorType"</span>: <span class="s2">"rest"</span>,
+              <span class="s2">"provider"</span>: <span class="s2">"featureservice"</span>,
+              <span class="s2">"userId"</span>: <span class="s2">"586bc76036aacd381cb92b3a"</span>,
+              <span class="s2">"connectorUrl"</span>: <span class="s2">"https://coast.noaa.gov/arcgis/rest/services/sovi/sovi_tracts2010/MapServer/19?f=pjson"</span>,
+              <span class="s2">"tableName"</span>: <span class="s2">"sovisovi_tracts2010MapServer19"</span>,
+              <span class="s2">"status"</span>: <span class="s2">"saved"</span>,
+              <span class="s2">"published"</span>: <span class="nb">false</span>,
+              <span class="s2">"overwrite"</span>: <span class="nb">false</span>,
+              <span class="s2">"verified"</span>: <span class="nb">false</span>,
+              <span class="s2">"blockchain"</span>: <span class="o">{}</span>,
+              <span class="s2">"mainDateField"</span>: null,
+              <span class="s2">"env"</span>: <span class="s2">"production"</span>,
+              <span class="s2">"geoInfo"</span>: <span class="nb">false</span>,
+              <span class="s2">"protected"</span>: <span class="nb">false</span>,
+              <span class="s2">"legend"</span>: <span class="o">{</span>
+                <span class="s2">"date"</span>: <span class="o">[]</span>,
+                <span class="s2">"region"</span>: <span class="o">[]</span>,
+                <span class="s2">"country"</span>: <span class="o">[]</span>,
+                <span class="s2">"nested"</span>: <span class="o">[]</span>,
+                <span class="s2">"integer"</span>: <span class="o">[]</span>,
+                <span class="s2">"short"</span>: <span class="o">[]</span>,
+                <span class="s2">"byte"</span>: <span class="o">[]</span>,
+                <span class="s2">"double"</span>: <span class="o">[]</span>,
+                <span class="s2">"float"</span>: <span class="o">[]</span>,
+                <span class="s2">"half_float"</span>: <span class="o">[]</span>,
+                <span class="s2">"scaled_float"</span>: <span class="o">[]</span>,
+                <span class="s2">"boolean"</span>: <span class="o">[]</span>,
+                <span class="s2">"binary"</span>: <span class="o">[]</span>,
+                <span class="s2">"text"</span>: <span class="o">[]</span>,
+                <span class="s2">"keyword"</span>: <span class="o">[]</span>
+              <span class="o">}</span>,
+              <span class="s2">"clonedHost"</span>: <span class="o">{}</span>,
+              <span class="s2">"errorMessage"</span>: null,
+              <span class="s2">"taskId"</span>: null,
+              <span class="s2">"createdAt"</span>: <span class="s2">"2016-09-01T08:18:39.006Z"</span>,
+              <span class="s2">"updatedAt"</span>: <span class="s2">"2017-12-01T22:17:59.585Z"</span>,
+              <span class="s2">"dataLastUpdated"</span>: null,
+              <span class="s2">"widgetRelevantProps"</span>: <span class="o">[]</span>,
+              <span class="s2">"layerRelevantProps"</span>: <span class="o">[]</span>
+            <span class="o">}</span>
+          <span class="o">}</span>,
+          <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"0c630feb-8146-4fcc-a9be-be5adcb731c8"</span>,
+            <span class="s2">"type"</span>: <span class="s2">"dataset"</span>,
+            <span class="s2">"attributes"</span>: <span class="o">{</span>
+              <span class="s2">"name"</span>: <span class="s2">"USGS Land Cover - Impervious Surface (2001) -- U.S. (Alaska)"</span>,
+              <span class="s2">"slug"</span>: <span class="s2">"USGS-Land-Cover-Impervious-Surface-2001-US-Alaska-1490086842439"</span>,
+              <span class="s2">"type"</span>: <span class="s2">"raster"</span>,
+              <span class="s2">"subtitle"</span>: null,
+              <span class="s2">"application"</span>: <span class="o">[</span>
+                <span class="s2">"prep"</span>
+              <span class="o">]</span>,
+              <span class="s2">"dataPath"</span>: null,
+              <span class="s2">"attributesPath"</span>: null,
+              <span class="s2">"connectorType"</span>: <span class="s2">"wms"</span>,
+              <span class="s2">"provider"</span>: <span class="s2">"wms"</span>,
+              <span class="s2">"userId"</span>: <span class="s2">"586bc76036aacd381cb92b3a"</span>,
+              <span class="s2">"connectorUrl"</span>: <span class="s2">"https://raster.nationalmap.gov/arcgis/rest/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/25?f=pjson"</span>,
+              <span class="s2">"tableName"</span>: <span class="s2">"LandCoverUSGS_EROS_LandCover_NLCDMapServer25"</span>,
+              <span class="s2">"status"</span>: <span class="s2">"saved"</span>,
+              <span class="s2">"published"</span>: <span class="nb">false</span>,
+              <span class="s2">"overwrite"</span>: <span class="nb">false</span>,
+              <span class="s2">"verified"</span>: <span class="nb">false</span>,
+              <span class="s2">"blockchain"</span>: <span class="o">{}</span>,
+              <span class="s2">"mainDateField"</span>: null,
+              <span class="s2">"env"</span>: <span class="s2">"production"</span>,
+              <span class="s2">"geoInfo"</span>: <span class="nb">false</span>,
+              <span class="s2">"protected"</span>: <span class="nb">false</span>,
+              <span class="s2">"legend"</span>: <span class="o">{</span>
+                <span class="s2">"date"</span>: <span class="o">[]</span>,
+                <span class="s2">"region"</span>: <span class="o">[]</span>,
+                <span class="s2">"country"</span>: <span class="o">[]</span>,
+                <span class="s2">"nested"</span>: <span class="o">[]</span>,
+                <span class="s2">"integer"</span>: <span class="o">[]</span>,
+                <span class="s2">"short"</span>: <span class="o">[]</span>,
+                <span class="s2">"byte"</span>: <span class="o">[]</span>,
+                <span class="s2">"double"</span>: <span class="o">[]</span>,
+                <span class="s2">"float"</span>: <span class="o">[]</span>,
+                <span class="s2">"half_float"</span>: <span class="o">[]</span>,
+                <span class="s2">"scaled_float"</span>: <span class="o">[]</span>,
+                <span class="s2">"boolean"</span>: <span class="o">[]</span>,
+                <span class="s2">"binary"</span>: <span class="o">[]</span>,
+                <span class="s2">"text"</span>: <span class="o">[]</span>,
+                <span class="s2">"keyword"</span>: <span class="o">[]</span>
+              <span class="o">}</span>,
+              <span class="s2">"clonedHost"</span>: <span class="o">{}</span>,
+              <span class="s2">"errorMessage"</span>: null,
+              <span class="s2">"taskId"</span>: null,
+              <span class="s2">"createdAt"</span>: <span class="s2">"2016-09-01T16:59:30.294Z"</span>,
+              <span class="s2">"updatedAt"</span>: <span class="s2">"2018-01-03T17:36:18.509Z"</span>,
+              <span class="s2">"dataLastUpdated"</span>: null,
+              <span class="s2">"widgetRelevantProps"</span>: <span class="o">[]</span>,
+              <span class="s2">"layerRelevantProps"</span>: <span class="o">[]</span>
+            <span class="o">}</span>
+          <span class="o">}</span>
+        <span class="o">]</span>
+    <span class="o">}</span>
 </code></pre>
 <h2 id="creating-a-dataset">Creating a Dataset</h2>
 
@@ -1405,6 +1588,166 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 <p>The <code class="prettyprint">queryUrl</code> query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the <code class="prettyprint">queryUrl</code> will be pass to the microservice.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl<span class="o">=</span>/v1/query?sql<span class="o">=</span>Select%20<span class="k">*</span>%20from%20data&amp;geostore<span class="o">=</span>ungeostore
 </code></pre>
+<h3 id="include-related-entities">Include related entities</h3>
+
+<p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data. </p>
+
+<h4 id="vocabulary">Vocabulary</h4>
+
+<p>Loads related vocabularies. If none are found, an empty array is returned.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes<span class="o">=</span>vocabulary
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example Carto Dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be76f130-ed4e-4972-827d-aef8e0dc6b18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-carto-dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5820ad9469a0287982f4cd18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sourceUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"defaultEditableWidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"freeze"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"layerId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"vocabulary"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="user">User</h4>
+
+<p>Loads the name and email address of the author of the widget. If the data is not available (for example, the user has since been deleted), no <code class="prettyprint">user</code> property will be added to the widget object.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes<span class="o">=</span>user
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example Carto Dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be76f130-ed4e-4972-827d-aef8e0dc6b18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-carto-dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5820ad9469a0287982f4cd18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sourceUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"defaultEditableWidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"freeze"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"layerId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Sample"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.sample@vizzuality.com"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="metadata">Metadata</h4>
+
+<p>Loads the metadata available for the widget. If none are found, an empty array is returned.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes<span class="o">=</span>metadata
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example Carto Dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be76f130-ed4e-4972-827d-aef8e0dc6b18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-carto-dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5820ad9469a0287982f4cd18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sourceUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"defaultEditableWidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"freeze"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"layerId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aeb1c74a096b50010f3843f"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"86777822-d995-49cd-b9c3-d4ea4f82c0a3"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"caption"</span><span class="p">:</span><span class="w"> </span><span class="s2">"t"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"widgetLinks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T14:28:04.482Z"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-06-07T11:30:40.054Z"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="requesting-multiple-additional-entities">Requesting multiple additional entities</h4>
+
+<p>You can request multiple related entities in a single request using commas to separate multiple keywords</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes<span class="o">=</span>metadata,user,vocabulary
+</code></pre>
 <h2 id="how-to-obtain-all-widgets">How to obtain all widgets</h2>
 
 <p>To obtain all widgets:</p>
@@ -1623,6 +1966,166 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f06
 <p>Return the widgets from page 2, with 5 elements per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
+</code></pre>
+<h3 id="include-related-entities">Include related entities</h3>
+
+<p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data. </p>
+
+<h4 id="vocabulary">Vocabulary</h4>
+
+<p>Loads related vocabularies. If none are found, an empty array is returned.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?includes<span class="o">=</span>vocabulary
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example Carto Dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be76f130-ed4e-4972-827d-aef8e0dc6b18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-carto-dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5820ad9469a0287982f4cd18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sourceUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"defaultEditableWidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"freeze"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"layerId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"vocabulary"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="user">User</h4>
+
+<p>Loads the name and email address of the author of the widget. If the data is not available (for example, the user has since been deleted), no <code class="prettyprint">user</code> property will be added to the widget object.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?includes<span class="o">=</span>user
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example Carto Dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be76f130-ed4e-4972-827d-aef8e0dc6b18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-carto-dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5820ad9469a0287982f4cd18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sourceUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"defaultEditableWidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"freeze"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"layerId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Sample"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.sample@vizzuality.com"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="metadata">Metadata</h4>
+
+<p>Loads the metadata available for the widget. If none are found, an empty array is returned.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?includes<span class="o">=</span>metadata
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example Carto Dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be76f130-ed4e-4972-827d-aef8e0dc6b18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-carto-dataset6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5820ad9469a0287982f4cd18"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sourceUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authors"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"defaultEditableWidget"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"freeze"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"queryUrl"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"widgetConfig"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"layerId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-08T15:30:34.505Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aeb1c74a096b50010f3843f"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"86777822-d995-49cd-b9c3-d4ea4f82c0a3"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51851e22-1eda-4bf5-bbcc-cde3f9a3a943"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"caption"</span><span class="p">:</span><span class="w"> </span><span class="s2">"t"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"widgetLinks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T14:28:04.482Z"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-06-07T11:30:40.054Z"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="requesting-multiple-additional-entities">Requesting multiple additional entities</h4>
+
+<p>You can request multiple related entities in a single request using commas to separate multiple keywords</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?includes<span class="o">=</span>metadata,user,vocabulary
 </code></pre>
 <h2 id="how-to-obtain-a-widget-for-a-specific-dataset">How to obtain a widget for a specific dataset</h2>
 
