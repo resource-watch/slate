@@ -88,6 +88,184 @@ The `queryUrl` query parameter can be set if the user needs to modify the final 
 curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl=/v1/query?sql=Select%20*%20from%20data&geostore=ungeostore
 ```
 
+
+### Include related entities
+
+When loading widget data, you can optionally pass an `includes` query argument to load additional data. 
+
+#### Vocabulary
+
+Loads related vocabularies. If none are found, an empty array is returned.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=vocabulary
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "vocabulary": []
+        }
+    }
+}
+```
+
+#### User
+
+Loads the name and email address of the author of the widget. If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=user
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "user": {
+              "name": "John Sample",
+              "email": "john.sample@vizzuality.com"
+            }
+        }
+    }
+}
+```
+
+#### Metadata
+
+Loads the metadata available for the widget. If none are found, an empty array is returned.
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "metadata": [
+              {
+                "id": "5aeb1c74a096b50010f3843f",
+                "type": "metadata",
+                "attributes": {
+                  "dataset": "86777822-d995-49cd-b9c3-d4ea4f82c0a3",
+                  "application": "rw",
+                  "resource": {
+                    "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+                    "type": "widget"
+                  },
+                  "language": "en",
+                  "info": {
+                    "caption": "t",
+                    "widgetLinks": []
+                  },
+                  "createdAt": "2018-05-03T14:28:04.482Z",
+                  "updatedAt": "2018-06-07T11:30:40.054Z",
+                  "status": "published"
+                }
+              }
+            ]
+          }
+        }
+    }
+}
+```
+
+#### Requesting multiple additional entities
+
+You can request multiple related entities in a single request using commas to separate multiple keywords
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata,user,vocabulary
+```
+
+
 ## How to obtain all widgets
 
 To obtain all widgets:
@@ -243,6 +421,183 @@ page[number] |      Number of page      | Number
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2
+```
+
+
+### Include related entities
+
+When loading widget data, you can optionally pass an `includes` query argument to load additional data. 
+
+#### Vocabulary
+
+Loads related vocabularies. If none are found, an empty array is returned.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?includes=vocabulary
+```
+
+> Example response:
+
+```json
+{
+    "data": [{
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "vocabulary": []
+        }
+    }]
+}
+```
+
+#### User
+
+Loads the name and email address of the author of the widget. If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?includes=user
+```
+
+> Example response:
+
+```json
+{
+    "data": [{
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "user": {
+              "name": "John Sample",
+              "email": "john.sample@vizzuality.com"
+            }
+        }
+    }]
+}
+```
+
+#### Metadata
+
+Loads the metadata available for the widget. If none are found, an empty array is returned.
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?includes=metadata
+```
+
+> Example response:
+
+```json
+{
+    "data": [{
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "metadata": [
+              {
+                "id": "5aeb1c74a096b50010f3843f",
+                "type": "metadata",
+                "attributes": {
+                  "dataset": "86777822-d995-49cd-b9c3-d4ea4f82c0a3",
+                  "application": "rw",
+                  "resource": {
+                    "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+                    "type": "widget"
+                  },
+                  "language": "en",
+                  "info": {
+                    "caption": "t",
+                    "widgetLinks": []
+                  },
+                  "createdAt": "2018-05-03T14:28:04.482Z",
+                  "updatedAt": "2018-06-07T11:30:40.054Z",
+                  "status": "published"
+                }
+              }
+            ]
+          }
+        }]
+    }
+}
+```
+
+#### Requesting multiple additional entities
+
+You can request multiple related entities in a single request using commas to separate multiple keywords
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?includes=metadata,user,vocabulary
 ```
 
 ## How to obtain a widget for a specific dataset
