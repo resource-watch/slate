@@ -116,6 +116,7 @@ published |                   Filter layers on published status (true, false)   
 app       |                   Filter layers on application (prep, gfw, etc..)                    |    Text
 env       | Environment in witch the layer was published, one of `staging`, `preproduction` or `production` |    Text
 
+
 > Return the layers filtered by those whose name contains emissions
 
 ```shell
@@ -145,6 +146,21 @@ curl -X GET https://api.resourcewatch.org/v1/layer?status=failed
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/layer?published=false
+```
+
+> Filter layers by environment
+
+<aside class="notice">
+    Layers are implicitly filtered by `production` in the case there's no filter specified for the environment property.
+    Also, it's important to note that requests such as e.g.
+    ```shell
+    curl -X GET http://api.resourcewatch.org/dataset/c5fe87d6-49ca-4c68-ad7e-ea48145562e0/?includes=layer&env=preproduction
+    ```
+    do NOT filter layers by environment, only the datasets they belong to.
+</aside>
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?env=staging
 ```
 
 > Return the layers filtered by those whose applications contain rw
