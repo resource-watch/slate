@@ -446,6 +446,16 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer
 </code></pre>
+<aside class="notice">
+    If you include related entities (e.g. layers) with query filters, the filters will not
+    cascade to the related entities. For example, the following example will load layers for that dataset, not just the ones with env set to preproduction.
+</aside>
+
+<blockquote>
+<p>Loading all layers for the given dataset, not just the ones with env set to preproduction</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/c5fe87d6-49ca-4c68-ad7e-ea48145562e0?includes<span class="o">=</span>layer&amp;env<span class="o">=</span>preproduction
+</code></pre>
 <h3 id="verification">Verification</h3>
 
 <p>When available, the content of the <code class="prettyprint">blockchain</code> field is used to validate the dataset&rsquo;s information using <a href="https://stampery.com/">Stampery</a>.</p>
@@ -2784,7 +2794,7 @@ Remember — the response is jsonapi format
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">Environment in witch the layer was published, one of <code class="prettyprint">staging</code>, <code class="prettyprint">preproduction</code> or <code class="prettyprint">production</code></td>
+<td style="text-align: center">Environment in witch the layer was published, one of <code class="prettyprint">staging</code>, <code class="prettyprint">preproduction</code> or <code class="prettyprint">production</code>. Defaults to <code class="prettyprint">production</code></td>
 <td style="text-align: right">Text</td>
 </tr>
 </tbody></table>
@@ -2814,6 +2824,13 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaf
 <p>Filter layers by published status</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?published<span class="o">=</span><span class="nb">false</span>
+</code></pre>
+<blockquote>
+<p>Filter layers by environment</p>
+</blockquote>
+
+<p>If no <code class="prettyprint">env</code> is specified, <code class="prettyprint">production</code> is used as default.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?env<span class="o">=</span>staging
 </code></pre>
 <blockquote>
 <p>Return the layers filtered by those whose applications contain rw</p>
