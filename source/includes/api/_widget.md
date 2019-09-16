@@ -89,7 +89,7 @@ curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c23
 ```
 
 
-### Include related entities
+### Include related widget entities
 
 When loading widget data, you can optionally pass an `includes` query argument to load additional data. 
 
@@ -141,7 +141,9 @@ curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3
 
 #### User
 
-Loads the name and email address of the author of the widget. If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
+Loads the name and email address of the author of the widget. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
+
+If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=user

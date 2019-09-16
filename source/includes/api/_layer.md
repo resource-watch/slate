@@ -166,7 +166,151 @@ page[number] |      Number of page      | Number
 curl -X GET https://api.resourcewatch.org/v1/layer?page[size]=5&page[number]=2
 ```
 
-## How obtain a layer for specific dataset
+### Include related layer entities
+
+When loading layer data, you can optionally pass an `includes` query argument to load additional data. 
+
+#### Vocabulary
+
+Loads related vocabularies. If none are found, no `vocabulary` property will be added to the layer object.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?includes=vocabulary
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+      {
+        "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
+        "type": "layer",
+        "attributes": {
+          "slug": "total-co2-emissions-by-year",
+          "userId": "5858f37140621f11066fb2f7",
+          "application": [
+            "rw"
+          ],
+          "name": "Total CO2 emissions by year",
+          "default": false,
+          "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
+          "env": "production",
+          "provider": "cartodb",
+          "iso": [],
+          "description": null,
+          "layerConfig": {
+            "account": "rw",
+            "body": {
+              "maxzoom": 18,
+              "minzoom": 3,
+              "layers": [
+                {
+                  "type": "mapnik",
+                  "options": {
+                    "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
+                    "cartocss": "",
+                    "cartocss_version": "2.3.0"
+                  }
+                }
+              ]
+            }
+          },
+          "legendConfig": {
+            "marks": {
+              "type": "rect",
+              "from": {
+                "data": "table"
+              }
+            }
+          },
+          "applicationConfig": {},
+          "staticImageConfig": {},
+          "vocabulary": []      
+        }
+      }
+   ]
+}
+```
+
+#### User
+
+Loads the name and email address of the author of the layer. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
+
+If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?includes=user
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+      {
+        "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
+        "type": "layer",
+        "attributes": {
+          "slug": "total-co2-emissions-by-year",
+          "userId": "5858f37140621f11066fb2f7",
+          "application": [
+            "rw"
+          ],
+          "name": "Total CO2 emissions by year",
+          "default": false,
+          "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
+          "env": "production",
+          "provider": "cartodb",
+          "iso": [],
+          "description": null,
+          "layerConfig": {
+            "account": "rw",
+            "body": {
+              "maxzoom": 18,
+              "minzoom": 3,
+              "layers": [
+                {
+                  "type": "mapnik",
+                  "options": {
+                    "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
+                    "cartocss": "",
+                    "cartocss_version": "2.3.0"
+                  }
+                }
+              ]
+            }
+          },
+          "legendConfig": {
+            "marks": {
+              "type": "rect",
+              "from": {
+                "data": "table"
+              }
+            }
+          },
+          "applicationConfig": {},
+          "staticImageConfig": {},
+          "user": {
+              "name": "John Doe",
+              "email": "john.doe@vizzuality.com"
+          }
+        }
+      }
+   ]
+}
+```
+
+#### Requesting multiple additional entities
+
+You can request multiple related entities in a single request using commas to separate multiple keywords
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?includes=user,vocabulary
+```
+
+
+## How obtain specific layers
 
 To obtain the layer:
 
@@ -236,6 +380,11 @@ Remember — the response is jsonapi format
   }
 }
 ```
+
+### Include related entities
+
+You can load related `user` and `vocabulary` data in the same request. See [this section](#include-related-layer-entities) for more details.
+
 
 ## Create a Layer
 
