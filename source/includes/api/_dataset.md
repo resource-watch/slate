@@ -234,6 +234,17 @@ Available relationships: Any dataset relationship ['widget', 'layer', 'vocabular
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer
 ```
 
+<aside class="notice">
+    If you include related entities (e.g. layers) with query filters, the filters will not
+    cascade to the related entities. For example, the following example will load layers for that dataset, not just the ones with env set to preproduction.
+</aside>
+
+> Loading all layers for the given dataset, not just the ones with env set to preproduction
+
+```shell
+curl -X GET http://api.resourcewatch.org/dataset/c5fe87d6-49ca-4c68-ad7e-ea48145562e0?includes=layer&env=preproduction
+```
+
 ### Verification
 
 When available, the content of the `blockchain` field is used to validate the dataset's information using [Stampery](https://stampery.com/).
