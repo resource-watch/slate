@@ -114,7 +114,8 @@ sort      |                      Sort json response by specific attributes      
 status    |                Filter layers on status (pending, saved, failed, all)                 |    Text
 published |                   Filter layers on published status (true, false)                    | Boolean
 app       |                   Filter layers on application (prep, gfw, etc..)                    |    Text
-env       | Environment in witch the layer was published, one of `staging`, `preproduction` or `production` |    Text
+env       | Environment in witch the layer was published, one of `staging`, `preproduction` or `production`. Defaults to `production` |    Text
+
 
 > Return the layers filtered by those whose name contains emissions
 
@@ -145,6 +146,14 @@ curl -X GET https://api.resourcewatch.org/v1/layer?status=failed
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/layer?published=false
+```
+
+> Filter layers by environment
+
+If no `env` is specified, `production` is used as default.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?env=staging
 ```
 
 > Return the layers filtered by those whose applications contain rw
