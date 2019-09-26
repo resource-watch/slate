@@ -175,7 +175,11 @@ Endpoint used to validate email address upon password reset request.
 
 ### POST `<BASE API URL>/auth/reset-password/:token`
 
-Endpoint used to submit the new password.
+Endpoint used to submit the new password. 
+
+For HTML requests, it will redirect the user to the configured redirect URL on success, or return to the "Reset your password" form on error.
+
+For JSON requests, it will return the user object on success, or a JSON object containing details in case of error.
 
 ```bash
 # New password submission
