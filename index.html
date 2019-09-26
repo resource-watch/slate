@@ -7741,7 +7741,11 @@ curl -X POST http://api.resourcewatch.org/auth/reset-password <span class="se">\
 
 <h3 id="post-lt-base-api-url-gt-auth-reset-password-token">POST <code class="prettyprint">&lt;BASE API URL&gt;/auth/reset-password/:token</code></h3>
 
-<p>Endpoint used to submit the new password.</p>
+<p>Endpoint used to submit the new password. </p>
+
+<p>For HTML requests, it will redirect the user to the configured redirect URL on success, or return to the &ldquo;Reset your password&rdquo; form on error.</p>
+
+<p>For JSON requests, it will return the user object on success, or a JSON object containing details in case of error.</p>
 <pre class="highlight shell"><code><span class="c"># New password submission</span>
 curl -X POST http://api.resourcewatch.org/auth/reset-password/&lt;email token&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
