@@ -226,7 +226,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=relevance&status=saved
 
 ### Relationships
 
-Available relationships: Any dataset relationship ['widget', 'layer', 'vocabulary', 'metadata']
+Available relationships: Any dataset relationship ['widget', 'layer', 'vocabulary', 'metadata', 'user']. User data is only available to users with ADMIN role.
 
 > Including relationships
 
@@ -244,6 +244,88 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&
 ```shell
 curl -X GET http://api.resourcewatch.org/dataset/c5fe87d6-49ca-4c68-ad7e-ea48145562e0?includes=layer&env=preproduction
 ```
+
+#### User
+
+Loads the name, email address and role of the author of the dataset. If you do not issue this request as an ADMIN user, or if no user data is available, the `user` object will be empty.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?includes=user
+```
+
+> Example response:
+
+```json
+{
+    "data":  [{
+        "id": "8afcf415-ee0b-4d19-96f8-c7304c152e1b",
+        "type": "dataset",
+        "attributes": {
+            "name": "[delete] cit.005 Probabilities of Urban Expansion",
+            "slug": "Possibilities-of-Urban-Expansion",
+            "type": "raster",
+            "subtitle": "(SEDAC)",
+            "application": [
+                "rw"
+            ],
+            "dataPath": "",
+            "attributesPath": null,
+            "connectorType": "rest",
+            "provider": "cartodb",
+            "userId": "72a0aa1071e394dd3287e137",
+            "connectorUrl": "https://example.carto.com/tables/global_grid_prob_urban_expansion/public",
+            "sources": [],
+            "tableName": "global_grid_prob_urban_expansion",
+            "status": "saved",
+            "published": false,
+            "overwrite": false,
+            "verified": false,
+            "blockchain": {},
+            "subscribable": {},
+            "mainDateField": null,
+            "env": "production",
+            "geoInfo": true,
+            "protected": false,
+            "legend": {
+                "date": [],
+                "region": [],
+                "country": [],
+                "nested": [],
+                "integer": [],
+                "short": [],
+                "byte": [],
+                "double": [],
+                "float": [],
+                "half_float": [],
+                "scaled_float": [],
+                "boolean": [],
+                "binary": [],
+                "text": [],
+                "keyword": [],
+                "long": null,
+                "lat": null
+            },
+            "clonedHost": {},
+            "errorMessage": null,
+            "taskId": null,
+            "createdAt": "2017-04-06T11:09:56.242Z",
+            "updatedAt": "2018-01-18T15:41:48.408Z",
+            "dataLastUpdated": null,
+            "user": {
+                "name": "John",
+                "email": "john.doe@vizzuality.com",
+                "role": "MANAGER"
+            },
+            "widgetRelevantProps": [],
+            "layerRelevantProps": [
+                "the_raster_webmercator"
+            ]
+        }
+    }]
+}
+```
+
+
 
 ### Verification
 
