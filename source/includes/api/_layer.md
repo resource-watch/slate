@@ -484,6 +484,15 @@ Note: it is not possible to update the `env` property of a layer this way. If yo
 
 ## Delete a Layer
 
+In order to perform this operation, the following conditions must be met:
+
+- the layer's `protected` property must be set to `false`.
+- the user must be logged in and belong to the same application as the layer
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the layer's owner (through the `userId` field of the layer)
+
+
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id> \
 -H "Authorization: Bearer <your-token>" \

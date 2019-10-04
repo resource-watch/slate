@@ -921,6 +921,7 @@ Note: When updating the `env` property of a dataset the change will cascade down
 Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them. 
 
 In order to perform this operation, the following conditions must be met:
+
 - the dataset's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the dataset
 - the user must match one of the following:
