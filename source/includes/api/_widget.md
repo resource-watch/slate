@@ -90,6 +90,7 @@ curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c23
 
 
 ### Include related widget entities
+### Include related widget entities
 
 When loading widget data, you can optionally pass an `includes` query argument to load additional data. 
 
@@ -351,6 +352,7 @@ env       |   Environment can be one of `production` or `preproduction`  |    Te
 userId    |   Filter widgets created by a specific user                  |    Text
 favourite |   Filter favourited widgets of an user                       | Boolean
 collection |  Filter widgets based on an user collection                 |    Text
+user.role | The role of the user who created the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
 
 <aside class="notice">
    Using `userId` filter will return widgets created/cloned by the user. This filter is not compatible with `favourite` or `collection`. 

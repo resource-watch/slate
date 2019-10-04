@@ -154,7 +154,7 @@ app           | Applications to which this dataset is being used                
 connectorType |                                                                              | `rest` or `document`
 provider      | Dataset provider this include inner connectors and 3rd party ones            | [A valid dataset provider](##supported-dataset-sources)
 userId        | the user who registered the dataset                                          | valid id
-user.role     | the role of the user who registered the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+user.role     | The role of the user who registered the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
 status        | the internal dataset status at connection time                               | `pending`, `saved` or `failed`
 published     |                                                                              | `true`or `false`
 env           | If the dataset is in the staging, preproduction environment or in production one          | `staging`, `production` or `preproduction`. Defaults to `production`

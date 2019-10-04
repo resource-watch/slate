@@ -115,6 +115,7 @@ status    |                Filter layers on status (pending, saved, failed, all)
 published |                   Filter layers on published status (true, false)                    | Boolean
 app       |                   Filter layers on application (prep, gfw, etc..)                    |    Text
 env       | Environment in witch the layer was published, one of `staging`, `preproduction` or `production`. Defaults to `production` |    Text
+user.role | The role of the user who created the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
 
 
 > Return the layers filtered by those whose name contains emissions
