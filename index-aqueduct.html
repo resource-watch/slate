@@ -1326,12 +1326,18 @@ However, in some scenarios, it may be desirable to specify some or all of these 
 
 <p>Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them. </p>
 
-<p>In order to perform this operation, the following conditions must be met:
-- the dataset&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.
-- the user must be logged in and belong to the same application as the dataset
-- the user must match one of the following:
-  - have role <code class="prettyprint">ADMIN</code>
-  - have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</p>
+<p>In order to perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the dataset&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.</li>
+<li>the user must be logged in and belong to the same application as the dataset</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
+</ul></li>
+</ul>
 
 <p>Note that the deletion process cascades in a non-atomic way; deleting a dataset will also attempt to remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it. However, if one of these deletes fails (ie. attempting to delete a protected layer will fail), the dataset will still be deleted, and those resources will be left orphaned.</p>
 
@@ -3380,6 +3386,19 @@ Remember — the response is jsonapi format
 <p>Note: it is not possible to update the <code class="prettyprint">env</code> property of a layer this way. If you wish to alter the <code class="prettyprint">env</code> of a layer you must update its parent dataset - see <a href="#updating-a-dataset">Updating a Dataset</a>.</p>
 
 <h2 id="delete-a-layer">Delete a Layer</h2>
+
+<p>In order to perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the layer&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.</li>
+<li>the user must be logged in and belong to the same application as the layer</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the layer&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the layer)</li>
+</ul></li>
+</ul>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
