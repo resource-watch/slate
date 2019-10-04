@@ -348,7 +348,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </tr>
 <tr>
 <td>user.role</td>
-<td>the role of the user who registered the dataset. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
+<td>The role of the user who registered the dataset. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
 <td><code class="prettyprint">ADMIN</code>, <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code></td>
 </tr>
 <tr>
@@ -1681,6 +1681,8 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 </code></pre>
 <h3 id="include-related-widget-entities">Include related widget entities</h3>
 
+<h3 id="include-related-widget-entities">Include related widget entities</h3>
+
 <p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data. </p>
 
 <h4 id="vocabulary">Vocabulary</h4>
@@ -1980,6 +1982,11 @@ Remember — <strong>the resulting list is filtered by env=production</strong> u
 <td>collection</td>
 <td style="text-align: center">Filter widgets based on an user collection</td>
 <td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>user.role</td>
+<td style="text-align: center">The role of the user who created the layer. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
+<td style="text-align: right"><code class="prettyprint">ADMIN</code>, <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code></td>
 </tr>
 </tbody></table>
 
@@ -2877,6 +2884,11 @@ Remember — the response is jsonapi format
 <td>env</td>
 <td style="text-align: center">Environment in witch the layer was published, one of <code class="prettyprint">staging</code>, <code class="prettyprint">preproduction</code> or <code class="prettyprint">production</code>. Defaults to <code class="prettyprint">production</code></td>
 <td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>user.role</td>
+<td style="text-align: center">The role of the user who created the layer. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
+<td style="text-align: right"><code class="prettyprint">ADMIN</code>, <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code></td>
 </tr>
 </tbody></table>
 
