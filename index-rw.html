@@ -7745,28 +7745,48 @@ curl -X POST http://api.resourcewatch.org/auth/reset-password/&lt;email token&gt
 <ul>
 <li>Only users with role ADMIN have permissions to use this endpoint.</li>
 <li>Email+password based accounts that have not had their email address confirmed will not be listed by this endpoint.</li>
-<li>Only users belonging to the same apps as the requesting user will be shown. </li>
-</ul>
-
-<p>This endpoint supports the following optional filter params:</p>
-
-<ul>
-<li>name</li>
-<li>email</li>
-<li>provider</li>
-<li>role</li>
+<li>By default, only users belonging to the same apps as the requesting user will be shown. See <a href="#filter-by-app">Filter by app</a> for more options.</li>
 </ul>
 <pre class="highlight shell"><code><span class="c"># Lists all currently active users belonging to the same apps as the requester</span>
 curl -X GET http://api.resourcewatch.org/auth/user
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
-
-
-<span class="c"># User listing, filter by email address</span>
-curl -X GET http://api.resourcewatch.org/auth/user?email<span class="o">=</span>my.address@email.com
+</code></pre>
+<h4 id="filter-by-name">Filter by name</h4>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?name<span class="o">=</span>John
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
+<h4 id="filter-by-email">Filter by email</h4>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?email<span class="o">=</span>my.address@email.com
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre>
+<h4 id="filter-by-provider">Filter by provider</h4>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?provider<span class="o">=</span>facebook
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre>
+<h4 id="filter-by-role">Filter by role</h4>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?role<span class="o">=</span>ADMIN
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre>
+<h4 id="filter-by-app">Filter by app</h4>
+
+<p>By default, only users belonging to the same apps as the requesting user will be shown when listing users. You can change this behavior by explicitly identifying the apps you&rsquo;d like to filter by, even if they are not in the list of apps the requesting user belongs to. You can pass multiple apps this way by separating them with commas.</p>
+<pre class="highlight shell"><code><span class="c"># List users that belong to the gfw app</span>
+curl -X GET http://api.resourcewatch.org/auth/user?app<span class="o">=</span>gfw
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+
+<span class="c"># List users that belong to any app</span>
+curl -X GET http://api.resourcewatch.org/auth/user?app<span class="o">=</span>all
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre>
+<p>Additionally, you can pass the special <code class="prettyprint">all</code> value to this filter, to load users from all applications.</p>
+
 <h3 id="get-lt-base-api-url-gt-auth-user-id">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/:id</code></h3>
 <pre class="highlight shell"><code><span class="c"># shows info for user with the given id</span>
 curl -X GET http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
