@@ -199,27 +199,65 @@ Lists user accounts:
 
 - Only users with role ADMIN have permissions to use this endpoint.
 - Email+password based accounts that have not had their email address confirmed will not be listed by this endpoint.
-- Only users belonging to the same apps as the requesting user will be shown. 
-
-This endpoint supports the following optional filter params:
-
-- name
-- email
-- provider
-- role
+- By default, only users belonging to the same apps as the requesting user will be shown. See [Filter by app](#filter-by-app) for more options.
 
 ```bash
 # Lists all currently active users belonging to the same apps as the requester
 curl -X GET http://api.resourcewatch.org/auth/user
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
+```
 
+#### Filter by name
 
-# User listing, filter by email address
+```bash
+curl -X GET http://api.resourcewatch.org/auth/user?name=John
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+#### Filter by email
+
+```bash
 curl -X GET http://api.resourcewatch.org/auth/user?email=my.address@email.com
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
+
+#### Filter by provider
+
+```bash
+curl -X GET http://api.resourcewatch.org/auth/user?provider=facebook
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+#### Filter by role
+
+```bash
+curl -X GET http://api.resourcewatch.org/auth/user?role=ADMIN
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+#### Filter by app
+
+By default, only users belonging to the same apps as the requesting user will be shown when listing users. You can change this behavior by explicitly identifying the apps you'd like to filter by, even if they are not in the list of apps the requesting user belongs to. You can pass multiple apps this way by separating them with commas.
+
+```bash
+# List users that belong to the gfw app
+curl -X GET http://api.resourcewatch.org/auth/user?app=gfw
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+
+# List users that belong to any app
+curl -X GET http://api.resourcewatch.org/auth/user?app=all
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+Additionally, you can pass the special `all` value to this filter, to load users from all applications.
+
 
 ### GET `<BASE API URL>/auth/user/:id`
 
