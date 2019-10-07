@@ -448,7 +448,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer \
 }'
 ```
 
-## Update a Layer
+## Update a layer
 
 To update a layer, you need to define all of the required fields in the request body. The fields that compose a layer are:
 
@@ -463,8 +463,9 @@ applicationConfig |          Custom configuration          | Object |           
 staticImageConfig |          Custom configuration          | Object |                                    Valid object |       No
 iso               |  The isos to which the layer belongs   |  Array |                                         BRA, ES |       No
 dataset           |          UuId of the dataset           |   Text |                                 Uuid of Dataset |       No
+env               | The environment to which the layer belongs |   Text |                                    Any Text |       No
 
-> To create a layer, you have to do a POST requestwith the following body:
+> To create a layer, you have to do a POST request with the following body:
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id> \
@@ -480,7 +481,6 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer
    }
 }'
 ```
-Note: it is not possible to update the `env` property of a layer this way. If you wish to alter the `env` of a layer you must update its parent dataset - see [Updating a Dataset](#updating-a-dataset).
 
 ## Delete a Layer
 
