@@ -3289,7 +3289,7 @@ Remember — the response is jsonapi format
    }
 }'</span>
 </code></pre>
-<h2 id="update-a-layer">Update a Layer</h2>
+<h2 id="update-a-layer">Update a layer</h2>
 
 <p>To update a layer, you need to define all of the required fields in the request body. The fields that compose a layer are:</p>
 
@@ -3365,10 +3365,17 @@ Remember — the response is jsonapi format
 <td style="text-align: right">Uuid of Dataset</td>
 <td style="text-align: right">No</td>
 </tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">The environment to which the layer belongs</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Any Text</td>
+<td style="text-align: right">No</td>
+</tr>
 </tbody></table>
 
 <blockquote>
-<p>To create a layer, you have to do a POST requestwith the following body:</p>
+<p>To create a layer, you have to do a POST request with the following body:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -3383,8 +3390,6 @@ Remember — the response is jsonapi format
    }
 }'</span>
 </code></pre>
-<p>Note: it is not possible to update the <code class="prettyprint">env</code> property of a layer this way. If you wish to alter the <code class="prettyprint">env</code> of a layer you must update its parent dataset - see <a href="#updating-a-dataset">Updating a Dataset</a>.</p>
-
 <h2 id="delete-a-layer">Delete a Layer</h2>
 
 <p>In order to perform this operation, the following conditions must be met:</p>
