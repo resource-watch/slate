@@ -11,6 +11,7 @@ toc_footers:
 
 includes:
   - api/authentication
+  - api/contact
   - api/dataset
   - api/widget
   - api/layer
