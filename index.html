@@ -166,6 +166,25 @@
 </code></pre>
 <p>There are three allowed roles: <code class="prettyprint">USER</code>, <code class="prettyprint">MANAGER</code> and <code class="prettyprint">ADMIN</code>. The &#39;apps&rsquo; field only permits applications that are powered by the API: <code class="prettyprint">rw</code>, <code class="prettyprint">gfw</code>, <code class="prettyprint">prep</code>, etc.</p>
 
+          <h1 id="contact">Contact</h1>
+
+<p>The following contact endpoints are available</p>
+
+<h2 id="contact-us">Contact us</h2>
+
+<p>Sends a contact form including a topic, email address, and a message. </p>
+
+<h3 id="example">Example</h3>
+
+<p>Contact form sent using the type <code class="prettyprint">General question or feedback</code>, the email address <code class="prettyprint">example@example.com</code> and the message <code class="prettyprint">This is a text</code>:</p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/contact-us <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
+    <span class="s1">'{
+        "topic": "General question or feedback",
+        "email": "example.example@vizzuality.com",
+        "text": "This is a test"
+    }'</span>
+</code></pre>
           <h1 id="dataset">Dataset</h1>
 
 <h2 id="what-is-a-dataset">What is a Dataset?</h2>
