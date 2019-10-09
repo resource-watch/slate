@@ -45,6 +45,75 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
 }
 ```
 
+
+### Filters
+
+Available filters parameters:
+
+Field     |                         Description                          |    Type
+--------- | :----------------------------------------------------------: | ------:
+published |   Filter dashboards by publishing status (true, false)       | Boolean
+private   |   Filter dashboards by private status (true, false)          | Boolean
+user      |           Filter dashboards by author user id                | Text
+user.role | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+
+### Sorting
+
+There's currently no support for custom sorting of dashboards. The dashboards are listed on a pseudo-random order.
+
+### Include related entities
+
+When loading dashboards, you can optionally pass an `includes` query argument to load additional data.
+
+#### User
+
+Loads the name and email address of the author of the dashboard. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
+
+If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+      {
+        "id": "86",
+        "type": "dashboards",
+        "attributes": {
+          "name": "Test dashboard three",
+          "slug": "test-dashboard-three-cd4305e9-e3c8-456b-85a0-32eccb6100e6",
+          "summary": "test dashboard three summary",
+          "description": "test dashboard three description",
+          "content": "test dashboard three description",
+          "published": true,
+          "photo": "user",
+          "user-id": "57ac9f9e29309063404573a2",
+          "private": true,
+          "production": true,
+          "preproduction": false,
+          "staging": false,
+          "user": {
+            "id": "57ac9f9e29309063404573a2",
+            "name": null,
+            "role": "ADMIN",
+            "email": "john.doe@vizzuality.com",
+            "apps": [
+              "rw",
+              "gfw"
+            ]
+          }
+        }
+      }
+   ]
+}
+```
+ 
+
+
 ## Clone dashboard
 
 Clones an existing dashboard using its ID.

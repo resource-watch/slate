@@ -225,7 +225,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-most-favorited
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=relevance&status=saved&search=agriculture
 ```
 
-### Relationships
+### Include related entities
 
 Available relationships: Any dataset relationship ['widget', 'layer', 'vocabulary', 'metadata', 'user']. User data is only available to users with ADMIN role.
 

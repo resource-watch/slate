@@ -89,8 +89,7 @@ curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c23
 ```
 
 
-### Include related widget entities
-### Include related widget entities
+### Include related entities
 
 When loading widget data, you can optionally pass an `includes` query argument to load additional data. 
 
@@ -343,7 +342,7 @@ dataset   |              Filter the widgets by dataset uuid              |    Te
 sort      |          Sort json response by specific attributes           |    Text
 status    |    Filter widgets on status (pending, saved, failed, all)    |    Text
 published |       Filter widgets on published status (true, false)       | Boolean
-published |       Filter widgets on freeze status (true, false)          | Boolean
+freeze    |       Filter widgets on freeze status (true, false)          | Boolean
 verified  |           Filter by verified status (true, false)            | Boolean
 template  |           Filter by template status (true, false)            | Boolean
 default   |            Filter by default status (true, false)            | Boolean

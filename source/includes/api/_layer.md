@@ -176,7 +176,7 @@ page[number] |      Number of page      | Number
 curl -X GET https://api.resourcewatch.org/v1/layer?page[size]=5&page[number]=2
 ```
 
-### Include related layer entities
+### Include related entities
 
 When loading layer data, you can optionally pass an `includes` query argument to load additional data. 
 
