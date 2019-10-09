@@ -461,7 +461,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-most-favorited
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>relevance&amp;status<span class="o">=</span>saved&amp;search<span class="o">=</span>agriculture
 </code></pre>
-<h3 id="relationships">Relationships</h3>
+<h3 id="include-related-entities">Include related entities</h3>
 
 <p>Available relationships: Any dataset relationship [&lsquo;widget&rsquo;, &#39;layer&rsquo;, &#39;vocabulary&rsquo;, &#39;metadata&rsquo;, &#39;user&rsquo;]. User data is only available to users with ADMIN role.</p>
 
@@ -1704,9 +1704,7 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 <p>The <code class="prettyprint">queryUrl</code> query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the <code class="prettyprint">queryUrl</code> will be pass to the microservice.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl<span class="o">=</span>/v1/query?sql<span class="o">=</span>Select%20<span class="k">*</span>%20from%20data&amp;geostore<span class="o">=</span>ungeostore
 </code></pre>
-<h3 id="include-related-widget-entities">Include related widget entities</h3>
-
-<h3 id="include-related-widget-entities">Include related widget entities</h3>
+<h3 id="include-related-entities">Include related entities</h3>
 
 <p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data. </p>
 
@@ -1964,7 +1962,7 @@ Remember — <strong>the resulting list is filtered by env=production</strong> u
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
-<td>published</td>
+<td>freeze</td>
 <td style="text-align: center">Filter widgets on freeze status (true, false)</td>
 <td style="text-align: right">Boolean</td>
 </tr>
@@ -2981,7 +2979,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaf
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
 </code></pre>
-<h3 id="include-related-layer-entities">Include related layer entities</h3>
+<h3 id="include-related-entities">Include related entities</h3>
 
 <p>When loading layer data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data. </p>
 
