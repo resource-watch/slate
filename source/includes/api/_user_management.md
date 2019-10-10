@@ -193,7 +193,7 @@ curl -X POST http://api.resourcewatch.org/auth/reset-password/<email token> \
 
 ## User details management
 
-### GET `<BASE API URL>/auth/user`
+### Getting all users
 
 Lists user accounts:
 
@@ -259,7 +259,7 @@ curl -X GET http://api.resourcewatch.org/auth/user?app=all
 Additionally, you can pass the special `all` value to this filter, to load users from all applications.
 
 
-### GET `<BASE API URL>/auth/user/:id`
+### Get a user by id
 
 ```bash
 # shows info for user with the given id
@@ -268,11 +268,11 @@ curl -X GET http://api.resourcewatch.org/auth/user/<user_id>
 -H "Authorization: Bearer <your-token>" \
 ```
 
-### PATCH `<BASE API URL>/auth/user/me`
+### Update your user account details
 
 - Updates current user details.
 - Can be used by any user.
-- Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
+- Supported fields: `name` and `photo`. If the user has the `ADMIN` role, it additionally supports updating `extraUserData.apps` and `role`.
 - Returns the new state of the updated user object.
 
 ```bash
@@ -282,33 +282,77 @@ curl -X PATCH http://api.resourcewatch.org/auth/user/me
 -H "Authorization: Bearer <your-token>" \
  '{
     "name":"new-name",
-    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
-    ...
+    "photo": "https://photo-url.com",
+    "extraUserData" : {
+        apps: ["rw", "gfw"]
+    },
+    "role": "MANAGER"
 }'
 ```
 
-### PATCH `<BASE API URL>/auth/user/:id`
+> Response:
+
+```json
+{
+    "data": {
+        "id": "57bc2611f098ce9800798688",
+        "email": "test@example.com",
+        "name": "new-name",
+        "photo": "https://photo-url.com",
+        "createdAt": "2017-01-13T10:45:46.368Z",
+        "updatedAt": "2017-01-13T10:45:46.368Z",
+        "role": "MANAGER",
+        "extraUserData": {
+           "apps": ["rw", "gfw"]        
+        }  
+    }
+}
+```
+
+
+### Update another user's account details
 
 - Updates specified user details.
 - Can only be used by admins.
-- Supported fields: `name`, `photo` and `email` (except on 3rd party auth)
+- Supported fields: `name`, `photo`, `extraUserData.apps` and `role`
 - Returns the new state of the updated user object.
     
     
 ```bash
 # updates details of user given its id
-curl -X PATCH http://api.resourcewatch.org/auth/user/<user_id>
+curl -X PATCH http://api.resourcewatch.org/auth/user/57bc2611f098ce9800798688
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
  '{
     "name":"new-name",
-    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
-    ...
+    "photo": "https://photo-url.com",
+    "extraUserData" : {
+        apps: ["rw", "gfw"]
+    },
+    "role": "MANAGER"
 }'
 ```
 
+> Response:
 
-### DELETE `<BASE API URL>/auth/user/:id`
+```json
+{
+    "data": {
+        "id": "57bc2611f098ce9800798688",
+        "email": "test@example.com",
+        "name": "new-name",
+        "photo": "https://photo-url.com",
+        "createdAt": "2017-01-13T10:45:46.368Z",
+        "updatedAt": "2017-01-13T10:45:46.368Z",
+        "role": "MANAGER",
+        "extraUserData": {
+           "apps": ["rw", "gfw"]        
+        }  
+    }
+}
+```
+
+### Deleting a user
 
 - Deletes the specified user account.
 - Can only be used by admins.
