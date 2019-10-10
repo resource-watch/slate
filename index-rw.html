@@ -7844,7 +7844,7 @@ curl -X POST http://api.resourcewatch.org/auth/reset-password/&lt;email token&gt
 </code></pre>
 <h2 id="user-details-management">User details management</h2>
 
-<h3 id="get-lt-base-api-url-gt-auth-user">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/user</code></h3>
+<h3 id="getting-all-users">Getting all users</h3>
 
 <p>Lists user accounts:</p>
 
@@ -7893,18 +7893,18 @@ curl -X GET http://api.resourcewatch.org/auth/user?app<span class="o">=</span>al
 </code></pre>
 <p>Additionally, you can pass the special <code class="prettyprint">all</code> value to this filter, to load users from all applications.</p>
 
-<h3 id="get-lt-base-api-url-gt-auth-user-id">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/:id</code></h3>
+<h3 id="get-a-user-by-id">Get a user by id</h3>
 <pre class="highlight shell"><code><span class="c"># shows info for user with the given id</span>
 curl -X GET http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
-<h3 id="patch-lt-base-api-url-gt-auth-user-me">PATCH <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/me</code></h3>
+<h3 id="update-your-user-account-details">Update your user account details</h3>
 
 <ul>
 <li>Updates current user details.</li>
 <li>Can be used by any user.</li>
-<li>Supported fields: <code class="prettyprint">name</code>, <code class="prettyprint">photo</code> and <code class="prettyprint">email</code> (except on 3rd party auth)</li>
+<li>Supported fields: <code class="prettyprint">name</code> and <code class="prettyprint">photo</code>. If the user has the <code class="prettyprint">ADMIN</code> role, it additionally supports updating <code class="prettyprint">extraUserData.apps</code> and <code class="prettyprint">role</code>.</li>
 <li>Returns the new state of the updated user object.</li>
 </ul>
 <pre class="highlight shell"><code><span class="c"># updates current user details</span>
@@ -7913,29 +7913,71 @@ curl -X PATCH http://api.resourcewatch.org/auth/user/me
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
  <span class="s1">'{
     "name":"new-name",
-    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
-    ...
+    "photo": "https://photo-url.com",
+    "extraUserData" : {
+        apps: ["rw", "gfw"]
+    },
+    "role": "MANAGER"
 }'</span>
 </code></pre>
-<h3 id="patch-lt-base-api-url-gt-auth-user-id">PATCH <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/:id</code></h3>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2611f098ce9800798688"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test@example.com"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://photo-url.com"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-13T10:45:46.368Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-13T10:45:46.368Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MANAGER"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+           </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gfw"</span><span class="p">]</span><span class="w">        
+        </span><span class="p">}</span><span class="w">  
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="update-another-user-39-s-account-details">Update another user&rsquo;s account details</h3>
 
 <ul>
 <li>Updates specified user details.</li>
 <li>Can only be used by admins.</li>
-<li>Supported fields: <code class="prettyprint">name</code>, <code class="prettyprint">photo</code> and <code class="prettyprint">email</code> (except on 3rd party auth)</li>
+<li>Supported fields: <code class="prettyprint">name</code>, <code class="prettyprint">photo</code>, <code class="prettyprint">extraUserData.apps</code> and <code class="prettyprint">role</code></li>
 <li>Returns the new state of the updated user object.</li>
 </ul>
 <pre class="highlight shell"><code><span class="c"># updates details of user given its id</span>
-curl -X PATCH http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
+curl -X PATCH http://api.resourcewatch.org/auth/user/57bc2611f098ce9800798688
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
  <span class="s1">'{
     "name":"new-name",
-    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
-    ...
+    "photo": "https://photo-url.com",
+    "extraUserData" : {
+        apps: ["rw", "gfw"]
+    },
+    "role": "MANAGER"
 }'</span>
 </code></pre>
-<h3 id="delete-lt-base-api-url-gt-auth-user-id">DELETE <code class="prettyprint">&lt;BASE API URL&gt;/auth/user/:id</code></h3>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2611f098ce9800798688"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test@example.com"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://photo-url.com"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-13T10:45:46.368Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-13T10:45:46.368Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MANAGER"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+           </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gfw"</span><span class="p">]</span><span class="w">        
+        </span><span class="p">}</span><span class="w">  
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="deleting-a-user">Deleting a user</h3>
 
 <ul>
 <li>Deletes the specified user account.</li>
