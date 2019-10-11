@@ -992,7 +992,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 -H "Content-Type: application/json"  -d \
 '{
     "provider": "json",
-    "connectorUrl":"<csvUrl>",
+    "sources": ["<csv1Url>", "<csv2Url>", "<csv3Url>"],
     "dataPath": "data... etc"
 }'
 ```
