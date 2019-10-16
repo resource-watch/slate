@@ -309,6 +309,10 @@ curl -X PATCH http://api.resourcewatch.org/auth/user/me
 }
 ```
 
+<aside class="notice">
+Updating your account details may invalidate your token and cause your apps to stop working. 
+</aside>
+
 
 ### Update another user's account details
 
@@ -332,6 +336,10 @@ curl -X PATCH http://api.resourcewatch.org/auth/user/57bc2611f098ce9800798688
     "role": "MANAGER"
 }'
 ```
+
+<aside class="notice">
+Updating a user's account details may invalidate their token and cause their apps to stop working. 
+</aside>
 
 > Response:
 
