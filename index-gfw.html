@@ -5356,6 +5356,11 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </tr>
 </thead><tbody>
 <tr>
+<td>name</td>
+<td style="text-align: center">Filter dashboards by name (partial matches supported</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
 <td>published</td>
 <td style="text-align: center">Filter dashboards by publishing status (true, false)</td>
 <td style="text-align: right">Boolean</td>
@@ -5376,7 +5381,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <td style="text-align: right"><code class="prettyprint">ADMIN</code>, <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code></td>
 </tr>
 </tbody></table>
-
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?user<span class="o">=</span>57bc2608f098ce98007985e4&amp;private<span class="o">=</span><span class="nb">false</span>
+</code></pre>
 <h3 id="sorting">Sorting</h3>
 
 <p>There&rsquo;s currently no support for custom sorting of dashboards. The dashboards are listed on a pseudo-random order.</p>
