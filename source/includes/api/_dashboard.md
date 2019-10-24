@@ -52,10 +52,16 @@ Available filters parameters:
 
 Field     |                         Description                          |    Type
 --------- | :----------------------------------------------------------: | ------:
+name      |   Filter dashboards by name (partial matches supported       | Text
 published |   Filter dashboards by publishing status (true, false)       | Boolean
 private   |   Filter dashboards by private status (true, false)          | Boolean
 user      |           Filter dashboards by author user id                | Text
 user.role | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?user=57bc2608f098ce98007985e4&private=false
+```
 
 ### Sorting
 
