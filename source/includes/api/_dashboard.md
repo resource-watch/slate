@@ -2,7 +2,7 @@
 
 ## What is a Dashboard?
 
-A dashboard contains the information to display a web page belonging to a user. 
+A dashboard contains the information to display a web page belonging to a user.
 
 ## Getting all dashboards
 
@@ -48,6 +48,13 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
 
 
 ### Filters
+
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      The format <b><i>filter[filterName]=value</i></b> will be deprecated in future versions. It's recommended to move to <b><i>filterName=value</b></i> format. For example: <b><i>filter[name]=energy</b></i>=> <b><i>name=energy</b></i>, <b><i>filter[user.role]=ADMIN</b></i> => <b><i>user.role=ADMIN</b></i>, ...
+    </p>
+</aside>
 
 Available filters parameters:
 
