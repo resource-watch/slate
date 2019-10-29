@@ -119,6 +119,58 @@ curl -X GET https://api.resourcewatch.org/v1/topic?includes=user
 ```
 
 
+### Include related entities
+
+When loading topics, you can optionally pass an `includes` query argument to load additional data.
+
+#### User
+
+Loads the name and email address of the author of the topic. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
+
+If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/topic?includes=user
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+      {
+        "id": "86",
+        "type": "topics",
+        "attributes": {
+          "name": "Test topic three",
+          "slug": "test-topic-three-cd4305e9-e3c8-456b-85a0-32eccb6100e6",
+          "summary": "test topic three summary",
+          "description": "test topic three description",
+          "content": "test topic three description",
+          "published": true,
+          "photo": "user",
+          "user-id": "57ac9f9e29309063404573a2",
+          "private": true,
+          "production": true,
+          "preproduction": false,
+          "staging": false,
+          "user": {
+            "id": "57ac9f9e29309063404573a2",
+            "name": null,
+            "role": "ADMIN",
+            "email": "john.doe@vizzuality.com",
+            "apps": [
+              "rw",
+              "gfw"
+            ]
+          }
+        }
+      }
+   ]
+}
+```
+ 
+
 ## Clone topic
 
 Clones an existing topic using its ID.
