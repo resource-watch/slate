@@ -68,7 +68,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?user=57bc2608f098ce980079
 <aside class="warning">
     <span>Deprecation notice</span>
     <p>
-      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</b></i>.
+      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</i></b>.
     </p>
 </aside>
 
