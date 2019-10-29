@@ -49,13 +49,6 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
 
 ### Filters
 
-<aside class="warning">
-    <span>Deprecation notice</span>
-    <p>
-      The format <b><i>filter[filterName]=value</i></b> will be deprecated in future versions. It's recommended to move to <b><i>filterName=value</b></i> format. For example: <b><i>filter[name]=energy</b></i>=> <b><i>name=energy</b></i>, <b><i>filter[user.role]=ADMIN</b></i> => <b><i>user.role=ADMIN</b></i>, ...
-    </p>
-</aside>
-
 Available filters parameters:
 
 Field     |                         Description                          |    Type
@@ -70,6 +63,19 @@ application | The application to which the dashboard belongs             | Text 
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dashboard?user=57bc2608f098ce98007985e4&private=false
+```
+
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</b></i>.
+    </p>
+</aside>
+
+
+```shell
+# Deprecated syntax
+curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]=57bc2608f098ce98007985e4&filter[private]=false
 ```
 
 
