@@ -7236,6 +7236,31 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </tbody></table>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?user<span class="o">=</span>57bc2608f098ce98007985e4&amp;private<span class="o">=</span><span class="nb">false</span>
 </code></pre>
+<h3 id="pagination">Pagination</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page. The maximum allowed value is 100</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">10</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page number</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]<span class="o">=</span>15&amp;page[number]<span class="o">=</span>2
+</code></pre>
 <h3 id="sorting">Sorting</h3>
 
 <p>There&rsquo;s currently no support for custom sorting of dashboards. The dashboards are listed on a pseudo-random order.</p>
