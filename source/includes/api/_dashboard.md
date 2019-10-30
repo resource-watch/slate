@@ -63,6 +63,19 @@ user.role | The role of the user who created the dashboard. If the requesting us
 curl -X GET https://api.resourcewatch.org/v1/dashboard?user=57bc2608f098ce98007985e4&private=false
 ```
 
+
+### Pagination
+
+Field        |         Description          |   Type|   Default value
+------------ | :--------------------------: | -----:| -----:
+page[size]   | The number elements per page. The maximum allowed value is 100 | Number|   10
+page[number] |       The page number        | Number|   1
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]=15&page[number]=2
+```
+
 ### Sorting
 
 There's currently no support for custom sorting of dashboards. The dashboards are listed on a pseudo-random order.
