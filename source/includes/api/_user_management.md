@@ -99,16 +99,20 @@ curl -X GET http://api.resourcewatch.org/auth/sign-up
 
 
 ### Register a new user account
+
 Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.
 
 For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.
 
 For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.
 
+In both types of requests, on success, an email will be sent to the user, with a link to confirm the account. The email will have the identity of the `origin` app provided on the request, with a system-wide fallback (GFW) being used in case none is provided.
+
 While optional, it's highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user's apps match datasets, widgets, etc.
 
+> Account creation using email + password
+
 ```bash
-# Account creation using email + password
 curl -X POST http://api.resourcewatch.org/auth/sign-up \
 -H "Content-Type: application/json"  -d \
  '{
@@ -119,8 +123,10 @@ curl -X POST http://api.resourcewatch.org/auth/sign-up \
 }'
 ```
 
+
+> Response 
+
 ```
-// Response:
 {
   "data": {
     "id": "5bfd237767b3176dd63f2eb7",
@@ -132,8 +138,21 @@ curl -X POST http://api.resourcewatch.org/auth/sign-up \
     }
   }
 }
-
 ```
+
+> Account creation using email + password with a user defined origin app
+
+```bash
+curl -X POST http://api.resourcewatch.org/auth/sign-up?origin=rw \
+-H "Content-Type: application/json"  -d \
+ '{
+    "email":"your-email@provider.com",
+    "password":"potato",
+    "repeatPassword":"potato",
+    "apps": ["rw"]
+}'
+```
+
 #### Permissions
 
 Based on roles, different types of users can create new users with different roles:
