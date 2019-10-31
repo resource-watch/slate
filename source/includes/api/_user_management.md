@@ -89,10 +89,16 @@ Generates a JWT token for the current user session.
 
 Registration endpoints support both HTML and JSON output formats, depending on the `Content-type` provided in the request.
 
-### GET `<BASE API URL>/auth/sign-up`
+### View the registration page
+
 Account creation page, for accounts using email + password based login for HTML requests. Not supported on JSON requests.
 
-### POST `<BASE API URL>/auth/sign-up`
+```bash
+curl -X GET http://api.resourcewatch.org/auth/sign-up
+```
+
+
+### Register a new user account
 Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.
 
 For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.
@@ -100,14 +106,6 @@ For HTML requests, it will display a message informing about any validation erro
 For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.
 
 While optional, it's highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user's apps match datasets, widgets, etc.
-
-#### Permissions
-
-Based on roles, different types of users can create new users with different roles:
-
-- ADMIN: Can create any type of user
-- MANAGER: Can create a user of type `MANAGER` or `USER`.
-- Public users: Can register themselves in the API, being assigned the `USER` role.
 
 ```bash
 # Account creation using email + password
@@ -136,8 +134,17 @@ curl -X POST http://api.resourcewatch.org/auth/sign-up \
 }
 
 ```
+#### Permissions
 
-### GET `<BASE API URL>/auth/confirm/:token`
+Based on roles, different types of users can create new users with different roles:
+
+- ADMIN: Can create any type of user
+- MANAGER: Can create a user of type `MANAGER` or `USER`.
+- Public users: Can register themselves in the API, being assigned the `USER` role.
+
+
+### Confirm user account
+
 Endpoint used in the user validation email to confirm the address upon registration. 
 
 It accepts an optional `callbackUrl` query parameter with an URL to which the user will be redirect if the confirmation succeeds.
@@ -145,6 +152,36 @@ It accepts an optional `callbackUrl` query parameter with an URL to which the us
 Should no `callbackUrl` be provided, the user is redirected to an URL based on the first application associated to their user account - see `ct-oauth-plugin` configuration for more info.
 
 Should that application have no configured redirect URL, or the user have no configured app, they are redirect to a platform-wide default URL - see `ct-oauth-plugin` configuration for more info.
+
+> JSON Request:
+
+```bash
+curl -X GET http://api.resourcewatch.org/auth/confirm/:token \
+-H "Content-Type: application/json"
+```
+
+> JSON Response:
+
+```bash
+{
+    "data": {
+        "id": "5dbadc495eae7358322dd64b",
+        "email": "info@vizzuality.com",
+        "createdAt": "2019-10-31T13:06:17.676Z",
+        "updatedAt": "2019-10-31T13:06:17.676Z",
+        "role": "USER",
+        "extraUserData": {
+            "apps": []
+        }
+    }
+}
+```
+
+> Request with callback:
+
+```bash
+curl -X GET http://api.resourcewatch.org/auth/confirm/:token?callbackUrl=http://your-app.com
+```
 
 ## Password recovery
 
