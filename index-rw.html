@@ -7780,11 +7780,12 @@ curl -X POST http://api.resourcewatch.org/auth/login <span class="se">\</span>
 
 <p>Registration endpoints support both HTML and JSON output formats, depending on the <code class="prettyprint">Content-type</code> provided in the request.</p>
 
-<h3 id="get-lt-base-api-url-gt-auth-sign-up">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/sign-up</code></h3>
+<h3 id="view-the-registration-page">View the registration page</h3>
 
 <p>Account creation page, for accounts using email + password based login for HTML requests. Not supported on JSON requests.</p>
-
-<h3 id="post-lt-base-api-url-gt-auth-sign-up">POST <code class="prettyprint">&lt;BASE API URL&gt;/auth/sign-up</code></h3>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/sign-up
+</code></pre>
+<h3 id="register-a-new-user-account">Register a new user account</h3>
 
 <p>Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.</p>
 
@@ -7792,19 +7793,14 @@ curl -X POST http://api.resourcewatch.org/auth/login <span class="se">\</span>
 
 <p>For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.</p>
 
+<p>In both types of requests, on success, an email will be sent to the user, with a link to confirm the account. The email will have the identity of the <code class="prettyprint">origin</code> app provided on the request, with a system-wide fallback (GFW) being used in case none is provided.</p>
+
 <p>While optional, it&rsquo;s highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user&rsquo;s apps match datasets, widgets, etc.</p>
 
-<h4 id="permissions">Permissions</h4>
-
-<p>Based on roles, different types of users can create new users with different roles:</p>
-
-<ul>
-<li>ADMIN: Can create any type of user</li>
-<li>MANAGER: Can create a user of type <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code>.</li>
-<li>Public users: Can register themselves in the API, being assigned the <code class="prettyprint">USER</code> role.</li>
-</ul>
-<pre class="highlight shell"><code><span class="c"># Account creation using email + password</span>
-curl -X POST http://api.resourcewatch.org/auth/sign-up <span class="se">\</span>
+<blockquote>
+<p>Account creation using email + password</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/auth/sign-up <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
     "email":"your-email@provider.com",
@@ -7812,8 +7808,11 @@ curl -X POST http://api.resourcewatch.org/auth/sign-up <span class="se">\</span>
     "repeatPassword":"potato",
     "apps": ["rw"]
 }'</span>
-</code></pre><pre class="highlight plaintext"><code>// Response:
-{
+</code></pre>
+<blockquote>
+<p>Response </p>
+</blockquote>
+<pre class="highlight plaintext"><code>{
   "data": {
     "id": "5bfd237767b3176dd63f2eb7",
     "email": "your-email@provider.com",
@@ -7824,9 +7823,30 @@ curl -X POST http://api.resourcewatch.org/auth/sign-up <span class="se">\</span>
     }
   }
 }
-
 </code></pre>
-<h3 id="get-lt-base-api-url-gt-auth-confirm-token">GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/confirm/:token</code></h3>
+<blockquote>
+<p>Account creation using email + password with a user defined origin app</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST http://api.resourcewatch.org/auth/sign-up?origin<span class="o">=</span>rw <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "email":"your-email@provider.com",
+    "password":"potato",
+    "repeatPassword":"potato",
+    "apps": ["rw"]
+}'</span>
+</code></pre>
+<h4 id="permissions">Permissions</h4>
+
+<p>Based on roles, different types of users can create new users with different roles:</p>
+
+<ul>
+<li>ADMIN: Can create any type of user</li>
+<li>MANAGER: Can create a user of type <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code>.</li>
+<li>Public users: Can register themselves in the API, being assigned the <code class="prettyprint">USER</code> role.</li>
+</ul>
+
+<h3 id="confirm-user-account">Confirm user account</h3>
 
 <p>Endpoint used in the user validation email to confirm the address upon registration. </p>
 
@@ -7836,6 +7856,33 @@ curl -X POST http://api.resourcewatch.org/auth/sign-up <span class="se">\</span>
 
 <p>Should that application have no configured redirect URL, or the user have no configured app, they are redirect to a platform-wide default URL - see <code class="prettyprint">ct-oauth-plugin</code> configuration for more info.</p>
 
+<blockquote>
+<p>JSON Request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/confirm/:token <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>JSON Response:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="o">{</span>
+    <span class="s2">"data"</span>: <span class="o">{</span>
+        <span class="s2">"id"</span>: <span class="s2">"5dbadc495eae7358322dd64b"</span>,
+        <span class="s2">"email"</span>: <span class="s2">"info@vizzuality.com"</span>,
+        <span class="s2">"createdAt"</span>: <span class="s2">"2019-10-31T13:06:17.676Z"</span>,
+        <span class="s2">"updatedAt"</span>: <span class="s2">"2019-10-31T13:06:17.676Z"</span>,
+        <span class="s2">"role"</span>: <span class="s2">"USER"</span>,
+        <span class="s2">"extraUserData"</span>: <span class="o">{</span>
+            <span class="s2">"apps"</span>: <span class="o">[]</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre>
+<blockquote>
+<p>Request with callback:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/confirm/:token?callbackUrl<span class="o">=</span>http://your-app.com
+</code></pre>
 <h2 id="password-recovery">Password recovery</h2>
 
 <p>Password recovery endpoints support both HTML and JSON output formats, depending on the <code class="prettyprint">Content-type</code> provided in the request.</p>
