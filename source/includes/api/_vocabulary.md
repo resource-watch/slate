@@ -1,8 +1,12 @@
 # Vocabulary (and Tags)
 
+## Resource definition
+
+A Resource represents an external entity that will be related with a Vocabulary. The most common resources used when creating relationships with vocabulary are *datasets*, *layers* and *widgets*.
+
 ## Tags definition
 
-A way to categorize a resource within a vocabulary context.
+A Tag is a way to categorize a resource within a vocabulary context.
 
 ## Vocabulary definition
 
@@ -28,16 +32,20 @@ Some important points:
 - A **Resource** can have **M** associated **Vocabularies**.
 - The way of building these **relationships** is creating **Tags**.
 
-## Assign a Vocabulary to an existing Resource
+## Creating a Vocabulary-Resource relationship
 
-To create a relationship between a resource and a Vocabulary (even if the vocabulary doesn't exist yet) it is only required that you set the tags that define the relationship.
+To create a relationship between a Resource and a Vocabulary (even if the Vocabulary or the Resource doesn't exist yet) it is only required that you set the tags that define the relationship.
 
 Some writing operations can take a little more time than reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.
+
+Remember that you can create relationshipts between Vocabulary and datasets, widgets or layers (the supported Resources).
 
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
 If you don't know how to do this, please go to the <a href="#authentication">Authentication section</a>
 </aside>
+
+> Creating a relationship between a Vocabulary and a Dataset
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id> \
@@ -48,6 +56,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<v
   }'
 ```
 
+> Creating a relationship between a Vocabulary and a Widget
+
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
@@ -56,6 +66,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widge
    "tags": [<tags>]
   }'
 ```
+
+> Creating a relationship between a Vocabulary and a Layer
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id> \
@@ -66,7 +78,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
   }'
 ```
 
-> real example
+> Example of request with real data
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
@@ -77,7 +89,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
   }'
 ```
 
-> real Response
+> Example of response with real data
 
 ```json
 {
@@ -117,10 +129,12 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
 }
 ```
 
-## Updating Tags of an existing relationship
+## Updating an existing Vocabulary-Resource relationship
 
 If a relationship has to be updated, it's necessary to define it's new tags.
 The previous tags will be deleted in benefit of the new ones.
+
+> Updating a relationship between a Vocabulary and a Dataset
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id> \
@@ -131,6 +145,8 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<
   }'
 ```
 
+> Updating a relationship between a Vocabulary and a Widget
+
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
@@ -139,6 +155,8 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
    "tags": [<tags>]
   }'
 ```
+
+> Updating a relationship between a Vocabulary and a Layer
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id> \
@@ -149,7 +167,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer
   }'
 ```
 
-> real example
+> Example of request with real data
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
@@ -160,7 +178,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0
   }'
 ```
 
-> response
+> Example of response with real data
 
 ```json
 {
@@ -200,9 +218,11 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0
 }
 ```
 
-## Creating several relationships
+## Creating several Vocabulary-Resource relationships
 
-There is also an endpoint that allows you to create some relationships in the same request.
+There is also an endpoint that allows you to create multiple relationships in the same request.
+
+> Creating multiple relationships between a Vocabulary and a Dataset
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
@@ -219,6 +239,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
   }'
 ```
 
+> Creating multiple relationships between a Vocabulary and a Widget
+
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary\
 -H "Content-Type: application/json"  -d \
@@ -233,6 +255,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widge
   }
  }'
 ```
+
+> Creating multiple relationships between a Vocabulary and a Layer
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary \
@@ -249,7 +273,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
  }'
 ```
 
-> real example
+> Example of request with real data
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary?application=<application>
@@ -267,7 +291,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
   }'
 ```
 
-> response
+> Example of response with real data
 
 ```json
 {
@@ -365,25 +389,31 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
 
 ## Deleting relationships
 
+> Deleting relationships between a Vocabulary and a Dataset
+
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id>
 ```
+
+> Deleting relationships between a Vocabulary and a Widget
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id>
 ```
 
+> Deleting relationships between a Vocabulary and a Layer
+
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id>
 ```
 
-> real example
+> Example of request with real data
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 ```
 
-> response
+> Example of response with real data
 
 ```json
 {
@@ -414,29 +444,35 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-
 }
 ```
 
-## Getting vocabularies associated to a resource
+## Getting Vocabularies associated to a Resource
 
 You can be request all vocabularies that are associated to a particular resource.
+
+> Getting Vocabularies related with a Dataset
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary
 ```
 
+> Getting Vocabularies related with a Widget
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary
 ```
+
+> Getting Vocabularies related with a Layer
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary
 ```
 
-> real example
+> Example of request with real data
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
 ```
 
-> response
+> Example of response with real data
 
 ```json
 {
@@ -469,14 +505,19 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-044
 
 ## Getting a single relationship (broken now)
 
+> Getting a single relationship between a Vocabulary and a Dataset
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id>
 ```
 
+> Getting a single relationship between a Vocabulary and a Widget
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id>
 ```
+
+> Getting a single relationship between a Vocabulary and a Layer
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id>
@@ -504,7 +545,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/vocabul
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/vocabulary/find
 ```
 
-> real example
+> Example of response with real data
 
 ```shell
 curl -X GET http://api.resourcewatch.org/v1/dataset/vocabulary/find?legacy=cdi,coasts
@@ -549,7 +590,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/vocabul
   }'
 ```
 
-> real example
+> Example of request with real data
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids \
@@ -559,7 +600,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids \
   }'
 ```
 
-> response
+> Example of response with real data
 
 ```json
 {
