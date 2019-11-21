@@ -4090,9 +4090,13 @@ type: [dataset, widget, layer]
 </span></code></pre>
           <h1 id="vocabulary-and-tags">Vocabulary (and Tags)</h1>
 
+<h2 id="resource-definition">Resource definition</h2>
+
+<p>A Resource represents an external entity that will be related with a Vocabulary. The most common resources used when creating relationships with vocabulary are <em>datasets</em>, <em>layers</em> and <em>widgets</em>.</p>
+
 <h2 id="tags-definition">Tags definition</h2>
 
-<p>A way to categorize a resource within a vocabulary context.</p>
+<p>A Tag is a way to categorize a resource within a vocabulary context.</p>
 
 <h2 id="vocabulary-definition">Vocabulary definition</h2>
 
@@ -4134,29 +4138,23 @@ To do it, the only parameter that is required is the name of the Vocabulary.</p>
 <li>The way of building these <strong>relationships</strong> is creating <strong>Tags</strong>.</li>
 </ul>
 
-<h2 id="assign-a-vocabulary-to-an-existing-resource">Assign a Vocabulary to an existing Resource</h2>
+<h2 id="creating-a-vocabulary-resource-relationship">Creating a Vocabulary-Resource relationship</h2>
 
-<p>To create a relationship between a resource and a Vocabulary (even if the vocabulary doesn&rsquo;t exist yet) it is only required that you set the tags that define the relationship.</p>
+<p>To create a relationship between a Resource and a Vocabulary (even if the Vocabulary or the Resource doesn&rsquo;t exist yet) it is only required that you set the tags that define the relationship.</p>
 
 <p>Some writing operations can take a little more time than reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.</p>
+
+<p>Remember that you can create relationshipts between Vocabulary and datasets, widgets or layers (the supported Resources).</p>
 
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
 If you don&rsquo;t know how to do this, please go to the <a href="#authentication">Authentication section</a>
 </aside>
+
+<blockquote>
+<p>Creating a relationship between a Vocabulary and a Dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": [&lt;tags&gt;]
-  }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": [&lt;tags&gt;]
-  }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
  "application": &lt;application&gt;,
@@ -4164,7 +4162,27 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   }'</span>
 </code></pre>
 <blockquote>
-<p>real example</p>
+<p>Creating a relationship between a Vocabulary and a Widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+ "application": &lt;application&gt;,
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Creating a relationship between a Vocabulary and a Layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+ "application": &lt;application&gt;,
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example of request with real data</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -4174,7 +4192,7 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   }'</span>
 </code></pre>
 <blockquote>
-<p>real Response</p>
+<p>Example of response with real data</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -4212,23 +4230,15 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="updating-tags-of-an-existing-relationship">Updating Tags of an existing relationship</h2>
+<h2 id="updating-an-existing-vocabulary-resource-relationship">Updating an existing Vocabulary-Resource relationship</h2>
 
 <p>If a relationship has to be updated, it&rsquo;s necessary to define it&rsquo;s new tags.
 The previous tags will be deleted in benefit of the new ones.</p>
+
+<blockquote>
+<p>Updating a relationship between a Vocabulary and a Dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": [&lt;tags&gt;]
-  }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": [&lt;tags&gt;]
-  }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
  "application": &lt;application&gt;,
@@ -4236,7 +4246,27 @@ The previous tags will be deleted in benefit of the new ones.</p>
   }'</span>
 </code></pre>
 <blockquote>
-<p>real example</p>
+<p>Updating a relationship between a Vocabulary and a Widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+ "application": &lt;application&gt;,
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Updating a relationship between a Vocabulary and a Layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+ "application": &lt;application&gt;,
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example of request with real data</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -4246,7 +4276,7 @@ The previous tags will be deleted in benefit of the new ones.</p>
   }'</span>
 </code></pre>
 <blockquote>
-<p>response</p>
+<p>Example of response with real data</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -4284,9 +4314,13 @@ The previous tags will be deleted in benefit of the new ones.</p>
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="creating-several-relationships">Creating several relationships</h2>
+<h2 id="creating-several-vocabulary-resource-relationships">Creating several Vocabulary-Resource relationships</h2>
 
-<p>There is also an endpoint that allows you to create some relationships in the same request.</p>
+<p>There is also an endpoint that allows you to create multiple relationships in the same request.</p>
+
+<blockquote>
+<p>Creating multiple relationships between a Vocabulary and a Dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -4299,19 +4333,11 @@ The previous tags will be deleted in benefit of the new ones.</p>
        "tags": [&lt;tags&gt;]
    }
   }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary<span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{
-  "vocabularyOne": {
-  "application": &lt;application&gt;,
-      "tags": [&lt;tags&gt;]
-  },
-  "vocabularyTwo": {
-  "application": &lt;application&gt;,
-      "tags": [&lt;tags&gt;]
-  }
- }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary <span class="se">\</span>
+</code></pre>
+<blockquote>
+<p>Creating multiple relationships between a Vocabulary and a Widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary<span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
   "vocabularyOne": {
@@ -4325,7 +4351,23 @@ The previous tags will be deleted in benefit of the new ones.</p>
  }'</span>
 </code></pre>
 <blockquote>
-<p>real example</p>
+<p>Creating multiple relationships between a Vocabulary and a Layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+  "vocabularyOne": {
+  "application": &lt;application&gt;,
+      "tags": [&lt;tags&gt;]
+  },
+  "vocabularyTwo": {
+  "application": &lt;application&gt;,
+      "tags": [&lt;tags&gt;]
+  }
+ }'</span>
+</code></pre>
+<blockquote>
+<p>Example of request with real data</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary?application<span class="o">=</span>&lt;application&gt;
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -4342,7 +4384,7 @@ The previous tags will be deleted in benefit of the new ones.</p>
   }'</span>
 </code></pre>
 <blockquote>
-<p>response</p>
+<p>Example of response with real data</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -4437,17 +4479,29 @@ The previous tags will be deleted in benefit of the new ones.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="deleting-relationships">Deleting relationships</h2>
+
+<blockquote>
+<p>Deleting relationships between a Vocabulary and a Dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;
-</code></pre><pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
-</code></pre><pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
 </code></pre>
 <blockquote>
-<p>real example</p>
+<p>Deleting relationships between a Vocabulary and a Widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre>
+<blockquote>
+<p>Deleting relationships between a Vocabulary and a Layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre>
+<blockquote>
+<p>Example of request with real data</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 </code></pre>
 <blockquote>
-<p>response</p>
+<p>Example of response with real data</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -4476,20 +4530,32 @@ The previous tags will be deleted in benefit of the new ones.</p>
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="getting-vocabularies-associated-to-a-resource">Getting vocabularies associated to a resource</h2>
+<h2 id="getting-vocabularies-associated-to-a-resource">Getting Vocabularies associated to a Resource</h2>
 
 <p>You can be request all vocabularies that are associated to a particular resource.</p>
+
+<blockquote>
+<p>Getting Vocabularies related with a Dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary
 </code></pre>
 <blockquote>
-<p>real example</p>
+<p>Getting Vocabularies related with a Widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary
+</code></pre>
+<blockquote>
+<p>Getting Vocabularies related with a Layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary
+</code></pre>
+<blockquote>
+<p>Example of request with real data</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
 </code></pre>
 <blockquote>
-<p>response</p>
+<p>Example of response with real data</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -4519,9 +4585,21 @@ The previous tags will be deleted in benefit of the new ones.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="getting-a-single-relationship-broken-now">Getting a single relationship (broken now)</h2>
+
+<blockquote>
+<p>Getting a single relationship between a Vocabulary and a Dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre>
+<blockquote>
+<p>Getting a single relationship between a Vocabulary and a Widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
+</code></pre>
+<blockquote>
+<p>Getting a single relationship between a Vocabulary and a Layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
 </code></pre>
 <h2 id="getting-resources-common-use-case">Getting resources (COMMON USE CASE)</h2>
 
@@ -4537,7 +4615,7 @@ all resources that at least have one (or more) tags in a particular vocabulary. 
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/vocabulary/find
 </code></pre>
 <blockquote>
-<p>real example</p>
+<p>Example of response with real data</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/v1/dataset/vocabulary/find?legacy<span class="o">=</span>cdi,coasts
 </code></pre>
@@ -4569,7 +4647,7 @@ payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
   }'</span>
 </code></pre>
 <blockquote>
-<p>real example</p>
+<p>Example of request with real data</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -4578,7 +4656,7 @@ payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
   }'</span>
 </code></pre>
 <blockquote>
-<p>response</p>
+<p>Example of response with real data</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
