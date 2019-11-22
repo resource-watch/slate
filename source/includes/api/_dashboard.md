@@ -133,6 +133,67 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
  
 
 
+## Creating a dashboard
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dashboards \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+      "data": {
+          "type": "dashboards",
+          "attributes": {
+              "name": "Cities",
+              "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+              "description": "",
+              "content": "[{...}]",
+              "published": false,
+              "photo": {
+                  "cover": "...",
+                  "thumb": "...",
+                  "original": "..."
+              },
+              "user-id": "eb63867922e16e34ef3ce862",
+              "private": true,
+              "production": true,
+              "preproduction": false,
+              "staging": false
+          }
+      }
+  }' 
+```
+
+
+```json
+{
+    "data": {
+        "id": "243",
+        "type": "dashboards",
+        "attributes": {
+            "name": "Cities",
+            "slug": "cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0",
+            "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+            "description": "",
+            "content": "[{...}]",
+            "published": false,
+            "photo": {
+                "cover": "...",
+                "thumb": "...",
+                "original": "..."
+            },
+            "user-id": "eb63867922e16e34ef3ce862",
+            "private": true,
+            "production": true,
+            "preproduction": false,
+            "staging": false,
+            "user": null
+        }
+    }
+}
+```
+ 
+
+
 ## Clone dashboard
 
 Clones an existing dashboard using its ID.
