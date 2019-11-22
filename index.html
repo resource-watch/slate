@@ -5631,6 +5631,72 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="creating-a-dashboard">Creating a dashboard</h2>
+
+<p>Supported fields:</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Accepted values</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>Short name for the dashboard</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>summary</td>
+<td>Summary of the content of the dashboard</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>description</td>
+<td>Description of the dashboard</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>content</td>
+<td>Content of the dashboard, typically encoded as a JSON string</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>published</td>
+<td>If the dashboard is in a publishable state</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>photo</td>
+<td>Object containing a set of image urls associated with the dashboard</td>
+<td>object</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>Id of the user who created the dashboard</td>
+<td>string with valid user id (not validated)</td>
+</tr>
+<tr>
+<td>private</td>
+<td></td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>production</td>
+<td></td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>preproduction</td>
+<td></td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>staging</td>
+<td></td>
+<td>boolean</td>
+</tr>
+</tbody></table>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboards <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
