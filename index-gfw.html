@@ -130,23 +130,13 @@
 
 <h2 id="how-to-generate-your-private-token">How to generate your private token</h2>
 
-<p>To generate your own token, perform the following steps:</p>
-
 <ol>
-<li>Navigate to <a href="http://ui.resourcewatch.org/">here</a>. If you are not logged in yet, the application will redirect you to the login page. You will see the login page:</li>
+<li>On the browser, visit the API&rsquo;s login page at <a href="https://api.resourcewatch.org/auth/login">https://api.resourcewatch.org/auth/login</a>.</li>
+<li>Login using your account.</li>
+<li>Once you are at <code class="prettyprint">auth/success</code>, go to <a href="https://api.resourcewatch.org/auth/generate-token">https://api.resourcewatch.org/auth/generate-token</a> to generate a new token.</li>
 </ol>
 
-<p><img src="images/authentication/login.png" alt="Control Tower login page" /></p>
-
-<p>You can login with your WRI credentials (email and password) or with other auth providers (a Google, Facebook, or Twitter account). If you can&rsquo;t remember your password (don&rsquo;t worry! it happens to everyone!) you can reset your password clicking on &lsquo;Recover password&rsquo;.</p>
-
-<ol>
-<li><p>After logging in you will be redirected to the Control Tower application and you will see its front page:
-<img src="images/authentication/control-tower.png" alt="Control Tower Dashboard" /></p></li>
-<li><p>To obtain your token, click in the Profile menu item and you will see the token:
-<img src="images/authentication/profile.png" alt="Control Tower Profile" /></p></li>
-<li><p>Copy your token clicking the Copy button. Remember to add the header <code class="prettyprint">Authorization: Bearer: &lt;yourToken&gt;</code> to any API call to authenticate yourself.</p></li>
-</ol>
+<p><img src="images/authentication/auth-success.png" alt="Auth success" /></p>
 
 <h2 id="how-to-create-a-new-user">How to create a new user</h2>
 
@@ -164,7 +154,7 @@
     }
 }'</span>
 </code></pre>
-<p>There are three allowed roles: <code class="prettyprint">USER</code>, <code class="prettyprint">MANAGER</code> and <code class="prettyprint">ADMIN</code>. The &#39;apps&rsquo; field only permits applications that are powered by the API: <code class="prettyprint">rw</code>, <code class="prettyprint">gfw</code>, <code class="prettyprint">prep</code>, etc.</p>
+<p>There are three allowed roles: <code class="prettyprint">USER</code>, <code class="prettyprint">MANAGER</code> and <code class="prettyprint">ADMIN</code>. The &lsquo;apps&rsquo; field only permits applications that are powered by the API: <code class="prettyprint">rw</code>, <code class="prettyprint">gfw</code>, <code class="prettyprint">prep</code>, etc.</p>
 
           <h1 id="contact">Contact</h1>
 
@@ -5535,6 +5525,58 @@ If the original topic contains functioning widgets, they will be duplicated and 
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="creating-a-dashboard">Creating a dashboard</h2>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboards <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+      "data": {
+          "type": "dashboards",
+          "attributes": {
+              "name": "Cities",
+              "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+              "description": "",
+              "content": "[{...}]",
+              "published": false,
+              "photo": {
+                  "cover": "...",
+                  "thumb": "...",
+                  "original": "..."
+              },
+              "user-id": "eb63867922e16e34ef3ce862",
+              "private": true,
+              "production": true,
+              "preproduction": false,
+              "staging": false
+          }
+      }
+  }'</span> 
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboards"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ..."</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[{...}]"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="clone-dashboard">Clone dashboard</h2>
