@@ -6,29 +6,9 @@ However, in order to perform GET requests for content that is not private, there
 
 ## How to generate your private token
 
-**Given that CT UI is no longer maintained, visit the next section to know how to get a token from the browser, without using CT UI**
-
-<s>To generate your own token, perform the following steps:</s>
-
-1. <s>Navigate to [here](http://ui.resourcewatch.org/). If you are not logged in yet, the application will redirect you to the login page. You will see the login page:</s>
-
-![Control Tower login page](images/authentication/login.png)
-
-<s>You can login with your WRI credentials (email and password) or with other auth providers (a Google, Facebook, or Twitter account). If you can't remember your password (don't worry! it happens to everyone!) you can reset your password clicking on 'Recover password'.</s>
-
-2. <s>After logging in you will be redirected to the Control Tower application and you will see its front page:</s>
-![Control Tower Dashboard](images/authentication/control-tower.png)
-
-3. <s>To obtain your token, click in the Profile menu item and you will see the token:</s>
-![Control Tower Profile](images/authentication/profile.png)
-
-4. <s>Copy your token clicking the Copy button. Remember to add the header `Authorization: Bearer: <yourToken>` to any API call to authenticate yourself.</s>
-
-## How to get a token from the browser (without using CT UI)
-
-1. On the browser, go to [the API URL](https://staging-api.globalforestwatch.org/auth/login) (in this case, GFW staging API).
+1. On the browser, visit the API's login page at [https://api.resourcewatch.org/auth/login](https://api.resourcewatch.org/auth/login).
 2. Login using your account.
-3. Once you are at `auth/success`, go to [the `/auth/generate-token` endpoint](https://staging-api.globalforestwatch.org/auth/generate-token).
+3. Once you are at `auth/success`, go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
 
 ![Auth success](images/authentication/auth-success.png)
 
