@@ -192,6 +192,51 @@ curl -X POST https://api.resourcewatch.org/v1/dashboards \
 }
 ```
  
+ 
+## Editing a dashboard
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/dashboards/<id of the dashboard> \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+      "data": {
+          "attributes": {
+              "description": "Dashboard that uses cities"
+          }
+      }
+  }' 
+```
+
+
+```json
+{
+    "data": {
+        "id": "243",
+        "type": "dashboards",
+        "attributes": {
+            "name": "Cities",
+            "slug": "cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0",
+            "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+            "description": "Dashboard that uses cities",
+            "content": "[{...}]",
+            "published": false,
+            "photo": {
+                "cover": "...",
+                "thumb": "...",
+                "original": "..."
+            },
+            "user-id": "eb63867922e16e34ef3ce862",
+            "private": true,
+            "production": true,
+            "preproduction": false,
+            "staging": false,
+            "user": null
+        }
+    }
+}
+```
+ 
 
 
 ## Clone dashboard
