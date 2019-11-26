@@ -5301,14 +5301,52 @@ To import the geojson in geostore, you need to define all of the required fields
                     </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.amazonaws.com/image.jpg"</span><span class="w">
                 </span><span class="p">},</span><span class="w">
                 </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">},</span><span class="w">
         </span><span class="err">...</span><span class="w">
       </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="sorting">Sorting</h3>
+
+<p>There&rsquo;s currently no support for custom sorting of topics. The topics are listed on a pseudo-random order.</p>
+
+<h3 id="include-related-entities">Include related entities</h3>
+
+<p>When loading topics, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data.</p>
+
+<h4 id="user">User</h4>
+
+<p>Loads the name and email address of the author of the topic. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author&rsquo;s role.</p>
+
+<p>If the data is not available (for example, the user has since been deleted), no <code class="prettyprint">user</code> property will be added to the layer object.</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/topic?includes<span class="o">=</span>user
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"86"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"topics"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test topic three"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test-topic-three-cd4305e9-e3c8-456b-85a0-32eccb6100e6"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test topic three summary"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test topic three description"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test topic three description"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57ac9f9e29309063404573a2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADMIN"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@vizzuality.com"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="clone-topic">Clone topic</h2>
@@ -5333,22 +5371,19 @@ If the original topic contains functioning widgets, they will be duplicated and 
                 </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/topics/photos/data?1523301918"</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="clone-dashboard">Clone dashboard</h2>
+<h2 id="clone-topic">Clone topic</h2>
 
-<p>Creates a new dashboard with the information of the provided topic</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/topics/10/clone-dashboard -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
+<p>Creates a new topic with the information of the provided topic</p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/topics/10/clone-topic -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"333"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboards"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"topics"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities"</span><span class="p">,</span><span class="w">
@@ -5357,15 +5392,12 @@ If the original topic contains functioning widgets, they will be duplicated and 
             </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[{</span><span class="se">\"</span><span class="s2">id</span><span class="se">\"</span><span class="s2">:1511952250652,</span><span class="se">\"</span><span class="s2">type</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">widget</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">content</span><span class="se">\"</span><span class="s2">:{</span><span class="se">\"</span><span class="s2">widgetId</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">b9186ce9-78ae-418b-a6d3-d521283ce485</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">categories</span><span class="se">\"</span><span class="s2">:[]}},...}]"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/dashboards/photos/data?1523301918"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/dashboards/photos/data?1523301918"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/dashboards/photos/data?1523301918"</span><span class="w">
+                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/topics/photos/data?1523301918"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/topics/photos/data?1523301918"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/topics/photos/data?1523301918"</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -5520,14 +5552,9 @@ If the original topic contains functioning widgets, they will be duplicated and 
           </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
           </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
           </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57ac9f9e29309063404573a2"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADMIN"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@vizzuality.com"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"gfw"</span><span class="w">
-            </span><span class="p">]</span><span class="w">
+            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@vizzuality.com"</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
