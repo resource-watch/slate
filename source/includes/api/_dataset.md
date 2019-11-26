@@ -859,7 +859,7 @@ For more details on the characteristics of each of the basic data types, refer t
 
 ## Uploading a Dataset (Binary)
 
-To create a dataset, you will need to provide a valid authorization token. If a valid token is not provided, a **401 Unauthorized** will be returned. Follow the steps of [this guide to get your token](#how-to-generate-your-private-token).
+To upload a dataset, you will need to provide a valid authorization token. If a valid token is not provided, a **401 Unauthorized** will be returned. Follow the steps of [this guide to get your token](#how-to-generate-your-private-token).
 
 You can upload your raw data directly to S3 making use of the "upload" endpoint. This endpoint accepts a file in the property "dataset" and returns a valid connectorUrl. With this connectorUrl you can create or update a "document" dataset, or a raster dataset in the Rasdaman adapter.
 
