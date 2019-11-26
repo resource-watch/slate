@@ -31,6 +31,7 @@ includes:
   - api/tasks
   - api/user_management
   - api/microservices
+  - api/troubleshooting
   - errors
   - attribution
 

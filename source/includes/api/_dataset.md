@@ -599,7 +599,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids \
 
 ## Creating a Dataset
 
-To create a dataset, you will need an authorization token. Follow the steps of this [guide](#generate-your-own-oauth-token) to get yours.
+To create a dataset, you will need to be authenticated. Additionally, your user account needs to be associated with all `application` you specify for the dataset.
 
 To create a dataset, you need to define all of the required fields in the request body. The fields that compose a dataset are:
 
@@ -858,6 +858,8 @@ keyword  | In beta, not fully supported |
 For more details on the characteristics of each of the basic data types, refer to the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_field_datatypes).
 
 ## Uploading a Dataset (Binary)
+
+To upload a dataset, you will need to be authenticated.
 
 You can upload your raw data directly to S3 making use of the "upload" endpoint. This endpoint accepts a file in the property "dataset" and returns a valid connectorUrl. With this connectorUrl you can create or update a "document" dataset, or a raster dataset in the Rasdaman adapter.
 
