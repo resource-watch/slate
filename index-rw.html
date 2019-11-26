@@ -817,7 +817,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 </code></pre>
 <h2 id="creating-a-dataset">Creating a Dataset</h2>
 
-<p>To create a dataset, you will need an authorization token. Follow the steps of this <a href="#generate-your-own-oauth-token">guide</a> to get yours.</p>
+<p>To create a dataset, you will need to be authenticated. Additionally, your user account needs to be associated with all <code class="prettyprint">application</code> you specify for the dataset.</p>
 
 <p>To create a dataset, you need to define all of the required fields in the request body. The fields that compose a dataset are:</p>
 
@@ -1281,6 +1281,8 @@ However, in some scenarios, it may be desirable to specify some or all of these 
 <p>For more details on the characteristics of each of the basic data types, refer to the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_field_datatypes">Elasticsearch documentation</a>.</p>
 
 <h2 id="uploading-a-dataset-binary">Uploading a Dataset (Binary)</h2>
+
+<p>To upload a dataset, you will need to be authenticated.</p>
 
 <p>You can upload your raw data directly to S3 making use of the &ldquo;upload&rdquo; endpoint. This endpoint accepts a file in the property &ldquo;dataset&rdquo; and returns a valid connectorUrl. With this connectorUrl you can create or update a &ldquo;document&rdquo; dataset, or a raster dataset in the Rasdaman adapter.</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/upload <span class="se">\</span>
@@ -8493,6 +8495,29 @@ curl -X DELETE http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
 
 <p>Keep in mind that this does not actually delete the microservice, instead it schedules it for being removed. 
 There&rsquo;s a cron task that does the actual deleting, so the process is async.</p>
+
+          <h1 id="troubleshooting">Troubleshooting</h1>
+
+<p>This section is meant to help you deal with common pitfalls of everyday usage of the API.</p>
+
+<h2 id="authentication-and-authorization">Authentication and authorization</h2>
+
+<h3 id="401-unauthorized">401 Unauthorized</h3>
+
+<p><code class="prettyprint">401 Unauthorized</code> errors mean that the API did not receive the necessary data to identify who you are. You may not be logged in, there may be an issue with your usage of the user token, or the token you are using may be in the wrong header.</p>
+
+<p>Start by following the steps <a href="#how-to-generate-your-private-token">detailed here for obtaining your private token</a>. At the end you should have your <a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JWT token</a>, a large string of random-looking characters.</p>
+
+<p>If you are sure you have an up-to-date token but are still experiencing <code class="prettyprint">401 Unauthorized</code> errors, there may be an issue with the way the token is transmitted to the API. Be sure to use in <code class="prettyprint">Authorization</code> header and <code class="prettyprint">Bearer &lt;your token goes here&gt;</code> value.</p>
+
+<h3 id="403-forbidden">403 Forbidden</h3>
+
+<p>A <code class="prettyprint">403 Forbidden</code> error means that you are identified as a valid user, but you do not have the required permissions for the action you are trying to perform. Common scenarios where this happens are:
+- You do not have the required user <code class="prettyprint">ROLE</code> to carry out that operation.
+- You may be trying to operate on a resource that belongs to a different <code class="prettyprint">application</code> than the ones you are associated with.
+- Certain resources have a concept of <code class="prettyprint">owner</code> with certain actions being exclusively available to that particular user.</p>
+
+<p>Check the specific documentation for the endpoint you are trying to use for more details on its behavior. Conditions that trigger a <code class="prettyprint">403 Forbidden</code> error will often vary beyond the ones listed above.</p>
 
           <h1 id="errors">Errors</h1>
 
