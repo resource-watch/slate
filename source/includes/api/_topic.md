@@ -42,6 +42,37 @@ curl -X GET https://api.resourcewatch.org/v1/topic -H 'Authorization: Bearer exa
 }
 ```
 
+
+
+### Filters
+
+Available filters parameters:
+
+Field     |                         Description                          |    Type
+--------- | :----------------------------------------------------------: | ------:
+published |   Filter topics by publishing status (true, false)       | Boolean
+private   |   Filter topics by private status (true, false)          | Boolean
+user      |           Filter topics by author user id                | Text
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/topic?user=57bc2608f098ce98007985e4&private=false
+```
+
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</i></b>.
+    </p>
+</aside>
+
+
+```shell
+# Deprecated syntax
+curl -X GET https://api.resourcewatch.org/v1/topic?filter[user]=57bc2608f098ce98007985e4&filter[private]=false
+```
+
+
 ### Sorting
 
 There's currently no support for custom sorting of topics. The topics are listed on a pseudo-random order.
@@ -86,6 +117,7 @@ curl -X GET https://api.resourcewatch.org/v1/topic?includes=user
    ]
 }
 ```
+
 ## Clone topic
 
 Clones an existing topic using its ID.

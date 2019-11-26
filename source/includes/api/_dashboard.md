@@ -2,7 +2,7 @@
 
 ## What is a Dashboard?
 
-A dashboard contains the information to display a web page belonging to a user. 
+A dashboard contains the information to display a web page belonging to a user.
 
 ## Getting all dashboards
 
@@ -63,6 +63,19 @@ application | The application to which the dashboard belongs             | Text 
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dashboard?user=57bc2608f098ce98007985e4&private=false
+```
+
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</i></b>.
+    </p>
+</aside>
+
+
+```shell
+# Deprecated syntax
+curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]=57bc2608f098ce98007985e4&filter[private]=false
 ```
 
 
