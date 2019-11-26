@@ -25,6 +25,7 @@ includes:
   - api/subscriptions
   - api/tasks
   - api/microservices
+  - api/troubleshooting
   - errors
 
 logo: logo-gfw.png

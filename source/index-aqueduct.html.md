@@ -22,6 +22,7 @@ includes:
   - api/geostore
   - api/tasks
   - api/microservices
+  - api/troubleshooting
   - errors
 
 logo: logo-aqueduct.png
