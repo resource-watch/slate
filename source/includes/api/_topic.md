@@ -34,10 +34,7 @@ curl -X GET https://api.resourcewatch.org/v1/topic -H 'Authorization: Bearer exa
                     "original": "https://s3.amazonaws.com/image.jpg"
                 },
                 "user-id": "eb63867922e16e34ef3ce862",
-                "private": true,
-                "production": true,
-                "preproduction": false,
-                "staging": false
+                "private": true
             }
         },
         ...
@@ -45,6 +42,50 @@ curl -X GET https://api.resourcewatch.org/v1/topic -H 'Authorization: Bearer exa
 }
 ```
 
+### Sorting
+
+There's currently no support for custom sorting of topics. The topics are listed on a pseudo-random order.
+
+### Include related entities
+
+When loading topics, you can optionally pass an `includes` query argument to load additional data.
+
+#### User
+
+Loads the name and email address of the author of the topic. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
+
+If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/topic?includes=user
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+      {
+        "id": "86",
+        "type": "topics",
+        "attributes": {
+          "name": "Test topic three",
+          "slug": "test-topic-three-cd4305e9-e3c8-456b-85a0-32eccb6100e6",
+          "summary": "test topic three summary",
+          "description": "test topic three description",
+          "content": "test topic three description",
+          "published": true,
+          "user-id": "57ac9f9e29309063404573a2",
+          "user": {
+            "name": "John Doe",
+            "role": "ADMIN",
+            "email": "john.doe@vizzuality.com"
+          }
+        }
+      }
+   ]
+}
+```
 ## Clone topic
 
 Clones an existing topic using its ID.
@@ -72,28 +113,25 @@ curl -X POST https://api.resourcewatch.org/v1/topics/10/clone -H 'Authorization:
                 "original": "/system/topics/photos/data?1523301918"
             },
             "user-id": "eb63867922e16e34ef3ce862",
-            "private": true,
-            "production": true,
-            "preproduction": false,
-            "staging": false
+            "private": true
         }
     }
 }
 ```
 
-## Clone dashboard
+## Clone topic
 
-Creates a new dashboard with the information of the provided topic
+Creates a new topic with the information of the provided topic
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/topics/10/clone-dashboard -H 'Authorization: Bearer exampleToken' 
+curl -X POST https://api.resourcewatch.org/v1/topics/10/clone-topic -H 'Authorization: Bearer exampleToken' 
 ```
 
 ```json
 {
     "data": {
         "id": "333",
-        "type": "dashboards",
+        "type": "topics",
         "attributes": {
             "name": "Cities",
             "slug": "cities",
@@ -102,15 +140,12 @@ curl -X POST https://api.resourcewatch.org/v1/topics/10/clone-dashboard -H 'Auth
             "content": "[{\"id\":1511952250652,\"type\":\"widget\",\"content\":{\"widgetId\":\"b9186ce9-78ae-418b-a6d3-d521283ce485\",\"categories\":[]}},...}]",
             "published": false,
             "photo": {
-                "cover": "/system/dashboards/photos/data?1523301918",
-                "thumb": "/system/dashboards/photos/data?1523301918",
-                "original": "/system/dashboards/photos/data?1523301918"
+                "cover": "/system/topics/photos/data?1523301918",
+                "thumb": "/system/topics/photos/data?1523301918",
+                "original": "/system/topics/photos/data?1523301918"
             },
             "user-id": "eb63867922e16e34ef3ce862",
-            "private": true,
-            "production": true,
-            "preproduction": false,
-            "staging": false
+            "private": true
         }
     }
 }

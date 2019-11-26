@@ -119,14 +119,9 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
           "staging": false,
           "application":  ["rw"],
           "user": {
-            "id": "57ac9f9e29309063404573a2",
-            "name": null,
+            "name": "John Doe",
             "role": "ADMIN",
-            "email": "john.doe@vizzuality.com",
-            "apps": [
-              "rw",
-              "gfw"
-            ]
+            "email": "john.doe@vizzuality.com"
           }
         }
       }
