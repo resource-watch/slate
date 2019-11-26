@@ -37,7 +37,8 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
                 "private": true,
                 "production": true,
                 "preproduction": false,
-                "staging": false
+                "staging": false,
+                "application":  ["rw"]
             }
         },
         ...
@@ -57,6 +58,7 @@ published |   Filter dashboards by publishing status (true, false)       | Boole
 private   |   Filter dashboards by private status (true, false)          | Boolean
 user      |           Filter dashboards by author user id                | Text
 user.role | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+application | The application to which the dashboard belongs             | Text (single value)
 
 
 ```shell
@@ -115,6 +117,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
           "production": true,
           "preproduction": false,
           "staging": false,
+          "application":  ["rw"],
           "user": {
             "id": "57ac9f9e29309063404573a2",
             "name": null,
@@ -135,6 +138,8 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
 
 ## Creating a dashboard
 
+When creating a dashboard, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Any role can create a dashboard.
+
 Supported fields:
 
 Name          | Description                                                                  | Accepted values
@@ -150,6 +155,7 @@ private       |                                                                 
 production    |                                                                              | boolean
 preproduction |                                                                              | boolean
 staging       |                                                                              | boolean
+application   | Application(s) to which the dashboard belongs. Defaults to `["rw"]`.         | array of strings
 
 
 ```shell
@@ -174,7 +180,8 @@ curl -X POST https://api.resourcewatch.org/v1/dashboards \
               "private": true,
               "production": true,
               "preproduction": false,
-              "staging": false
+              "staging": false,
+              "application":  ["rw"]
           }
       }
   }' 
@@ -203,7 +210,8 @@ curl -X POST https://api.resourcewatch.org/v1/dashboards \
             "production": true,
             "preproduction": false,
             "staging": false,
-            "user": null
+            "user": null,
+            "application":  ["rw"]
         }
     }
 }
@@ -211,6 +219,16 @@ curl -X POST https://api.resourcewatch.org/v1/dashboards \
  
  
 ## Editing a dashboard
+
+In order to perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the dashboard
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
+  
+When updating the `application` field of a dashboard, a user cannot add values not associated with their user account.
+
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dashboards/<id of the dashboard> \
@@ -248,7 +266,8 @@ curl -X PATCH https://api.resourcewatch.org/v1/dashboards/<id of the dashboard> 
             "production": true,
             "preproduction": false,
             "staging": false,
-            "user": null
+            "user": null,
+            "application":  ["rw"]
         }
     }
 }
@@ -286,7 +305,8 @@ curl -X POST https://api.resourcewatch.org/v1/dashboards/10/clone -H 'Authorizat
             "private": true,
             "production": true,
             "preproduction": false,
-            "staging": false
+            "staging": false,
+            "application":  ["rw"]
         }
     }
 }
