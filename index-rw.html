@@ -7258,7 +7258,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
                 </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">},</span><span class="w">
         </span><span class="err">...</span><span class="w">
@@ -7300,6 +7301,11 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <td>user.role</td>
 <td style="text-align: center">The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
 <td style="text-align: right"><code class="prettyprint">ADMIN</code>, <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code></td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application to which the dashboard belongs</td>
+<td style="text-align: right">Text (single value)</td>
 </tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?user<span class="o">=</span>57bc2608f098ce98007985e4&amp;private<span class="o">=</span><span class="nb">false</span>
@@ -7365,6 +7371,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
           </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
           </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
           </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
           </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57ac9f9e29309063404573a2"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
@@ -7381,6 +7388,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="creating-a-dashboard">Creating a dashboard</h2>
+
+<p>When creating a dashboard, the <code class="prettyprint">application</code> field should be present and cannot contain any values that are not associated with the creating user&rsquo;s account. If an <code class="prettyprint">application</code> value is not provided, <code class="prettyprint">[&quot;rw&quot;]</code> is used by default, and the process will fail if the user account does not belong to it. Any role can create a dashboard.</p>
 
 <p>Supported fields:</p>
 
@@ -7446,6 +7455,11 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <td></td>
 <td>boolean</td>
 </tr>
+<tr>
+<td>application</td>
+<td>Application(s) to which the dashboard belongs. Defaults to <code class="prettyprint">[&quot;rw&quot;]</code>.</td>
+<td>array of strings</td>
+</tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboards <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -7468,7 +7482,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
               "private": true,
               "production": true,
               "preproduction": false,
-              "staging": false
+              "staging": false,
+              "application":  ["rw"]
           }
       }
   }'</span> 
@@ -7493,12 +7508,27 @@ If the original topic contains functioning widgets, they will be duplicated and 
             </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="editing-a-dashboard">Editing a dashboard</h2>
+
+<p>In order to perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the dashboard</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dashboard&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the dashboard)</li>
+</ul></li>
+</ul>
+
+<p>When updating the <code class="prettyprint">application</code> field of a dashboard, a user cannot add values not associated with their user account.</p>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dashboards/&lt;id of the dashboard&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -7530,7 +7560,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
             </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -7560,7 +7591,8 @@ If the original dashboard contains functioning widgets, they will be duplicated 
             </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
