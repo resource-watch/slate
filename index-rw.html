@@ -7163,6 +7163,44 @@ This endpoint does not validate the existence of the widget - you will not get a
       </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<h3 id="filters">Filters</h3>
+
+<p>Available filters parameters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>published</td>
+<td style="text-align: center">Filter topics by publishing status (true, false)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>private</td>
+<td style="text-align: center">Filter topics by private status (true, false)</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>user</td>
+<td style="text-align: center">Filter topics by author user id</td>
+<td style="text-align: right">Text</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/topic?user<span class="o">=</span>57bc2608f098ce98007985e4&amp;private<span class="o">=</span><span class="nb">false</span>
+</code></pre>
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</i></b>.
+    </p>
+</aside>
+<pre class="highlight shell"><code><span class="c"># Deprecated syntax</span>
+curl -X GET https://api.resourcewatch.org/v1/topic?filter[user]<span class="o">=</span>57bc2608f098ce98007985e4&amp;filter[private]<span class="o">=</span><span class="nb">false</span>
+</code></pre>
 <h3 id="sorting">Sorting</h3>
 
 <p>There&rsquo;s currently no support for custom sorting of topics. The topics are listed on a pseudo-random order.</p>
@@ -7261,7 +7299,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
 
 <h2 id="what-is-a-dashboard">What is a Dashboard?</h2>
 
-<p>A dashboard contains the information to display a web page belonging to a user. </p>
+<p>A dashboard contains the information to display a web page belonging to a user.</p>
 
 <h2 id="getting-all-dashboards">Getting all dashboards</h2>
 
@@ -7343,6 +7381,15 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?user<span class="o">=</span>57bc2608f098ce98007985e4&amp;private<span class="o">=</span><span class="nb">false</span>
+</code></pre>
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</i></b>.
+    </p>
+</aside>
+<pre class="highlight shell"><code><span class="c"># Deprecated syntax</span>
+curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="o">=</span>57bc2608f098ce98007985e4&amp;filter[private]<span class="o">=</span><span class="nb">false</span>
 </code></pre>
 <h3 id="pagination">Pagination</h3>
 
