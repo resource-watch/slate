@@ -162,6 +162,7 @@ overwritted   | If the data can be overwritten (only for being able to make data
 verify        | If this dataset contains data that is verified using blockchain              | `true`or `false`
 protected     | If it's a protected layer                                                    | `true`or `false`
 geoInfo       | If it contains interceptable geographical info                               | `true`or `false`
+subscribable  | If the dataset is subscribable (i.e. contains a non-empty object in the subscribable field) | `true` or `false`
 
 > Filtering datasets
 
