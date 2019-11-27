@@ -5280,12 +5280,12 @@ To import the geojson in geostore, you need to define all of the required fields
 
 <h2 id="what-is-a-topic">What is a Topic?</h2>
 
-<p>A topic contains the information to display a web page belonging to a user. </p>
+<p>A topic contains the information to display a web page belonging to a user.</p>
 
 <h2 id="getting-all-topics">Getting all topics</h2>
 
 <p>This endpoint will allow to get all topics belonging to a user:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/topic -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/topic -H <span class="s1">'Authorization: Bearer exampleToken'</span>
 </code></pre>
 <blockquote>
 <p>Response:</p>
@@ -5308,7 +5308,8 @@ To import the geojson in geostore, you need to define all of the required fields
                     </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.amazonaws.com/image.jpg"</span><span class="w">
                 </span><span class="p">},</span><span class="w">
                 </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+                </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">},</span><span class="w">
         </span><span class="err">...</span><span class="w">
@@ -5340,6 +5341,11 @@ To import the geojson in geostore, you need to define all of the required fields
 <td>user</td>
 <td style="text-align: center">Filter topics by author user id</td>
 <td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application to which the topic belongs</td>
+<td style="text-align: right">Text (single value)</td>
 </tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/topic?user<span class="o">=</span>57bc2608f098ce98007985e4&amp;private<span class="o">=</span><span class="nb">false</span>
@@ -5384,6 +5390,7 @@ curl -X GET https://api.resourcewatch.org/v1/topic?filter[user]<span class="o">=
           </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test topic three description"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
           </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57ac9f9e29309063404573a2"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
           </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADMIN"</span><span class="p">,</span><span class="w">
@@ -5394,11 +5401,171 @@ curl -X GET https://api.resourcewatch.org/v1/topic?filter[user]<span class="o">=
    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="clone-topic">Clone topic</h2>
+<h2 id="creating-a-topic">Creating a topic</h2>
+
+<p>When creating a topic, the <code class="prettyprint">application</code> field should be present and cannot contain any values that are not associated with the creating user&rsquo;s account. If an <code class="prettyprint">application</code> value is not provided, <code class="prettyprint">[&quot;rw&quot;]</code> is used by default, and the process will fail if the user account does not belong to it. Any role can create a topic.</p>
+
+<p>Supported fields:</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Accepted values</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>Short name for the topic</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>slug</td>
+<td>Unique identifier for the topic</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>summary</td>
+<td>Summary of the content of the topic</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>description</td>
+<td>Description of the topic</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>content</td>
+<td>Content of the topic, typically encoded as a JSON string</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>published</td>
+<td>If the topic is in a publishable state</td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>photo</td>
+<td>Object containing a set of image urls associated with the topic</td>
+<td>object</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>Id of the user who created the topic</td>
+<td>string with valid user id (not validated)</td>
+</tr>
+<tr>
+<td>private</td>
+<td></td>
+<td>boolean</td>
+</tr>
+<tr>
+<td>application</td>
+<td>Application(s) to which the topic belongs. Defaults to <code class="prettyprint">[&quot;rw&quot;]</code>.</td>
+<td>array of strings</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/topics <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+      "data": {
+          "type": "topics",
+          "attributes": {
+              "name": "Cities",
+              "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+              "description": "",
+              "content": "[{...}]",
+              "published": false,
+              "photo": {
+                  "cover": "...",
+                  "thumb": "...",
+                  "original": "..."
+              },
+              "user-id": "eb63867922e16e34ef3ce862",
+              "private": true,
+              "application":  ["rw"]
+          }
+      }
+  }'</span>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"topics"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ..."</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[{...}]"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="editing-a-topic">Editing a topic</h2>
+
+<p>In order to perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the topic</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the topic&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the topic)</li>
+</ul></li>
+</ul>
+
+<p>When updating the <code class="prettyprint">application</code> field of a topic, a user cannot add values not associated with their user account.</p>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/topics/&lt;id of the topic&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+      "data": {
+          "attributes": {
+              "description": "Topic related with cities."
+          }
+      }
+  }'</span>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"topics"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ..."</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Topic related with cities."</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[{...}]"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="clone-a-topic">Clone a topic</h2>
 
 <p>Clones an existing topic using its ID.
 If the original topic contains functioning widgets, they will be duplicated and the new ids will be used by the new topic.</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/topics/10/clone -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/topics/10/clone -H <span class="s1">'Authorization: Bearer exampleToken'</span>
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"224"</span><span class="p">,</span><span class="w">
@@ -5416,33 +5583,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
                 </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/topics/photos/data?1523301918"</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h2 id="clone-topic">Clone topic</h2>
-
-<p>Creates a new topic with the information of the provided topic</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/topics/10/clone-topic -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
-</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"333"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"topics"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ..."</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[{</span><span class="se">\"</span><span class="s2">id</span><span class="se">\"</span><span class="s2">:1511952250652,</span><span class="se">\"</span><span class="s2">type</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">widget</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">content</span><span class="se">\"</span><span class="s2">:{</span><span class="se">\"</span><span class="s2">widgetId</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">b9186ce9-78ae-418b-a6d3-d521283ce485</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">categories</span><span class="se">\"</span><span class="s2">:[]}},...}]"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/topics/photos/data?1523301918"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/topics/photos/data?1523301918"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/topics/photos/data?1523301918"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
