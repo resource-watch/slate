@@ -2,15 +2,14 @@
 
 ## What is a Topic?
 
-A topic contains the information to display a web page belonging to a user. 
+A topic contains the information to display a web page belonging to a user.
 
 ## Getting all topics
 
 This endpoint will allow to get all topics belonging to a user:
 
-
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/topic -H 'Authorization: Bearer exampleToken' 
+curl -X GET https://api.resourcewatch.org/v1/topic -H 'Authorization: Bearer exampleToken'
 ```
 
 > Response:
@@ -34,15 +33,14 @@ curl -X GET https://api.resourcewatch.org/v1/topic -H 'Authorization: Bearer exa
                     "original": "https://s3.amazonaws.com/image.jpg"
                 },
                 "user-id": "eb63867922e16e34ef3ce862",
-                "private": true
+                "private": true,
+                "application":  ["rw"]
             }
         },
         ...
       ]
 }
 ```
-
-
 
 ### Filters
 
@@ -53,7 +51,7 @@ Field     |                         Description                          |    Ty
 published |   Filter topics by publishing status (true, false)       | Boolean
 private   |   Filter topics by private status (true, false)          | Boolean
 user      |           Filter topics by author user id                | Text
-
+application | The application to which the topic belongs             | Text (single value)
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/topic?user=57bc2608f098ce98007985e4&private=false
@@ -66,12 +64,10 @@ curl -X GET https://api.resourcewatch.org/v1/topic?user=57bc2608f098ce98007985e4
     </p>
 </aside>
 
-
 ```shell
 # Deprecated syntax
 curl -X GET https://api.resourcewatch.org/v1/topic?filter[user]=57bc2608f098ce98007985e4&filter[private]=false
 ```
-
 
 ### Sorting
 
@@ -107,6 +103,7 @@ curl -X GET https://api.resourcewatch.org/v1/topic?includes=user
           "content": "test topic three description",
           "published": true,
           "user-id": "57ac9f9e29309063404573a2",
+          "application":  ["rw"],
           "user": {
             "name": "John Doe",
             "role": "ADMIN",
@@ -118,13 +115,134 @@ curl -X GET https://api.resourcewatch.org/v1/topic?includes=user
 }
 ```
 
-## Clone topic
+## Creating a topic
+
+When creating a topic, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Any role can create a topic.
+
+Supported fields:
+
+Name          | Description                                                                  | Accepted values
+------------- | ---------------------------------------------------------------------------- | ----------------------------
+name          | Short name for the topic                                                 | any valid text
+slug          | Unique identifier for the topic                                                 | any valid text
+summary       | Summary of the content of the topic                                      | any valid text
+description   | Description of the topic                                                 | any valid text
+content       | Content of the topic, typically encoded as a JSON string                 | any valid text
+published     | If the topic is in a publishable state                                   | boolean
+photo         | Object containing a set of image urls associated with the topic          | object
+user_id       | Id of the user who created the topic                                     | string with valid user id (not validated)
+private       |                                                                              | boolean
+application   | Application(s) to which the topic belongs. Defaults to `["rw"]`.         | array of strings
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/topics \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+      "data": {
+          "type": "topics",
+          "attributes": {
+              "name": "Cities",
+              "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+              "description": "",
+              "content": "[{...}]",
+              "published": false,
+              "photo": {
+                  "cover": "...",
+                  "thumb": "...",
+                  "original": "..."
+              },
+              "user-id": "eb63867922e16e34ef3ce862",
+              "private": true,
+              "application":  ["rw"]
+          }
+      }
+  }'
+```
+
+```json
+{
+    "data": {
+        "id": "243",
+        "type": "topics",
+        "attributes": {
+            "name": "Cities",
+            "slug": "cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0",
+            "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+            "description": "",
+            "content": "[{...}]",
+            "published": false,
+            "photo": {
+                "cover": "...",
+                "thumb": "...",
+                "original": "..."
+            },
+            "user-id": "eb63867922e16e34ef3ce862",
+            "private": true,
+            "user": null,
+            "application":  ["rw"]
+        }
+    }
+}
+```
+
+## Editing a topic
+
+In order to perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the topic
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the topic's owner (through the `user-id` field of the topic)
+  
+When updating the `application` field of a topic, a user cannot add values not associated with their user account.
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/topics/<id of the topic> \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+      "data": {
+          "attributes": {
+              "description": "Topic related with cities."
+          }
+      }
+  }'
+```
+
+```json
+{
+    "data": {
+        "id": "243",
+        "type": "topics",
+        "attributes": {
+            "name": "Cities",
+            "slug": "cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0",
+            "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+            "description": "Topic related with cities.",
+            "content": "[{...}]",
+            "published": false,
+            "photo": {
+                "cover": "...",
+                "thumb": "...",
+                "original": "..."
+            },
+            "user-id": "eb63867922e16e34ef3ce862",
+            "private": true,
+            "user": null,
+            "application":  ["rw"]
+        }
+    }
+}
+```
+
+## Clone a topic
 
 Clones an existing topic using its ID.
 If the original topic contains functioning widgets, they will be duplicated and the new ids will be used by the new topic.
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/topics/10/clone -H 'Authorization: Bearer exampleToken' 
+curl -X POST https://api.resourcewatch.org/v1/topics/10/clone -H 'Authorization: Bearer exampleToken'
 ```
 
 ```json
@@ -145,39 +263,8 @@ curl -X POST https://api.resourcewatch.org/v1/topics/10/clone -H 'Authorization:
                 "original": "/system/topics/photos/data?1523301918"
             },
             "user-id": "eb63867922e16e34ef3ce862",
-            "private": true
-        }
-    }
-}
-```
-
-## Clone topic
-
-Creates a new topic with the information of the provided topic
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/topics/10/clone-topic -H 'Authorization: Bearer exampleToken' 
-```
-
-```json
-{
-    "data": {
-        "id": "333",
-        "type": "topics",
-        "attributes": {
-            "name": "Cities",
-            "slug": "cities",
-            "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
-            "description": "",
-            "content": "[{\"id\":1511952250652,\"type\":\"widget\",\"content\":{\"widgetId\":\"b9186ce9-78ae-418b-a6d3-d521283ce485\",\"categories\":[]}},...}]",
-            "published": false,
-            "photo": {
-                "cover": "/system/topics/photos/data?1523301918",
-                "thumb": "/system/topics/photos/data?1523301918",
-                "original": "/system/topics/photos/data?1523301918"
-            },
-            "user-id": "eb63867922e16e34ef3ce862",
-            "private": true
+            "private": true,
+            "application":  ["rw"]
         }
     }
 }
