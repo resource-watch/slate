@@ -59,6 +59,20 @@ curl -X POST https://api.resourcewatch.org/v1/collection \
   }'
 ```
 
+## Update Collection
+
+> To update a collection, you should perform a PATCH request including the collection ID in the url. Here's an example:
+
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/collection/<collection-id> \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+   "name": "<name>"
+  }'
+```
+
 ## Add Resource to Collection
 
 To create a collection, you need to define all next fields in the request body. The required fields that compose a collection are:
