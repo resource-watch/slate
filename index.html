@@ -1432,7 +1432,7 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
     "provider": "json",
-    "connectorUrl":"&lt;csvUrl&gt;",
+    "sources": ["&lt;csvUrl&gt;"],
     "dataPath": "data... etc"
 }'</span>
 </code></pre>
@@ -1448,12 +1448,12 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 }'</span>
 </code></pre>
 <aside class="notice">
-    These are authenticated endpoints.
+    Using the previous <code class="prettyprint">url</code> field to pass the url of a single file is still permitted but is now deprecated in favor of <code class="prettyprint">sources</code>.
 </aside>
 
 <h2 id="overwrite-data">Overwrite Data</h2>
 
-<p>Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.</p>
+<p>Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.</p>
 
 <p>This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset&rsquo;s <code class="prettyprint">status</code> to be set to <code class="prettyprint">pending</code>, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to <code class="prettyprint">saved</code> and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.</p>
 
@@ -1471,7 +1471,7 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-   "url":"&lt;url&gt;",
+   "sources": ["&lt;url of the data source&gt;"],
    "provider": "csv"
 }'</span>
 </code></pre>
@@ -8141,9 +8141,45 @@ Remember — the response is jsonapi format
                 </span><span class="p">]</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/doc-importer/task?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/doc-importer/task?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/doc-importer/task?page[number]=23&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"prev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/doc-importer/task?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/doc-importer/task?page[number]=2&amp;page[size]=10"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"total-pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"total-items"</span><span class="p">:</span><span class="w"> </span><span class="mi">227</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<h3 id="pagination">Pagination</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page. The maximum allowed value is 100</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">10</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page number</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
+
 <h3 id="filter-params">Filter params</h3>
 
 <p>Available filters:</p>
