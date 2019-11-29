@@ -137,9 +137,30 @@ Remember — the response is jsonapi format
                 ]
             }
         }
-    ]
+    ],
+    "links": {
+        "self": "https://api.resourcewatch.org/v1/doc-importer/task?page[number]=1&page[size]=10",
+        "first": "https://api.resourcewatch.org/v1/doc-importer/task?page[number]=1&page[size]=10",
+        "last": "https://api.resourcewatch.org/v1/doc-importer/task?page[number]=23&page[size]=10",
+        "prev": "https://api.resourcewatch.org/v1/doc-importer/task?page[number]=1&page[size]=10",
+        "next": "https://api.resourcewatch.org/v1/doc-importer/task?page[number]=2&page[size]=10"
+    },
+    "meta": {
+        "total-pages": 23,
+        "total-items": 227,
+        "size": 10
+    }
 }
 ```
+
+
+### Pagination
+
+Field        |         Description          |   Type|   Default value
+------------ | :--------------------------: | -----:| -----:
+page[size]   | The number elements per page. The maximum allowed value is 100 | Number|   10
+page[number] |       The page number        | Number|   1
+
 
 ### Filter params
 
