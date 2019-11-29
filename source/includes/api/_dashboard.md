@@ -38,7 +38,8 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
                 "production": true,
                 "preproduction": false,
                 "staging": false,
-                "application":  ["rw"]
+                "application":  ["rw"],
+                "is-highlighted": false,
             }
         },
         ...
@@ -59,6 +60,7 @@ private   |   Filter dashboards by private status (true, false)          | Boole
 user      |           Filter dashboards by author user id                | Text
 user.role | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
 application | The application to which the dashboard belongs             | Text (single value)
+isHighlighted | Filter dashboards by highlighted ones (true,false)       | Boolean
 
 
 ```shell
@@ -148,23 +150,25 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
 
 When creating a dashboard, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Any role can create a dashboard.
 
+**The field `is-highlighted` can only be provided on creation by ADMIN users.** If you provide this field and the token does not match an ADMIN user, the request will fail with status code **403 Forbidden** and the message `You need to be an ADMIN to create/update the is_highlighted attribute of the dashboard.`
+
 Supported fields:
 
-Name          | Description                                                                  | Accepted values
-------------- | ---------------------------------------------------------------------------- | ----------------------------
-name          | Short name for the dashboard                                                 | any valid text
-summary       | Summary of the content of the dashboard                                      | any valid text
-description   | Description of the dashboard                                                 | any valid text
-content       | Content of the dashboard, typically encoded as a JSON string                 | any valid text
-published     | If the dashboard is in a publishable state                                   | boolean
-photo         | Object containing a set of image urls associated with the dashboard          | object
-user_id       | Id of the user who created the dashboard                                     | string with valid user id (not validated)
-private       |                                                                              | boolean
-production    |                                                                              | boolean
-preproduction |                                                                              | boolean
-staging       |                                                                              | boolean
-application   | Application(s) to which the dashboard belongs. Defaults to `["rw"]`.         | array of strings
-
+Name            | Description                                                                  | Accepted values
+-------------   | ---------------------------------------------------------------------------- | ----------------------------
+name            | Short name for the dashboard                                                 | any valid text
+summary         | Summary of the content of the dashboard                                      | any valid text
+description     | Description of the dashboard                                                 | any valid text
+content         | Content of the dashboard, typically encoded as a JSON string                 | any valid text
+published       | If the dashboard is in a publishable state                                   | boolean
+photo           | Object containing a set of image urls associated with the dashboard          | object
+user_id         | Id of the user who created the dashboard                                     | string with valid user id (not validated)
+private         |                                                                              | boolean
+production      |                                                                              | boolean
+preproduction   |                                                                              | boolean
+staging         |                                                                              | boolean
+application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`.         | array of strings
+is-highlighted  | If this dashboard is highlighted (true/false). Defaults to `false`.          | boolean
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dashboards \
@@ -219,7 +223,8 @@ curl -X POST https://api.resourcewatch.org/v1/dashboards \
             "preproduction": false,
             "staging": false,
             "user": null,
-            "application":  ["rw"]
+            "application":  ["rw"],
+            "is-highlighted": false,
         }
     }
 }
@@ -237,6 +242,7 @@ In order to perform this operation, the following conditions must be met:
   
 When updating the `application` field of a dashboard, a user cannot add values not associated with their user account.
 
+**The field `is-highlighted` can only be provided on edition by ADMIN users.** If you provide this field and the token does not match an ADMIN user, the request will fail with status code **403 Forbidden** and the message `You need to be an ADMIN to create/update the is_highlighted attribute of the dashboard.`
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dashboards/<id of the dashboard> \
