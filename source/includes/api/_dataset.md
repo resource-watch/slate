@@ -757,7 +757,7 @@ Here's a breakdown of the fields specific to the creation of a document-based da
 
 Field        |                        Description                                |   Type |        Values | Required
 ------------ | :-----------------------------------------------------------:     | -----: | ------------: | -------:
-sources      |                        List of URLs from which to source data     |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
+sources      | List of URLs from which to source data                            |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
 data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
 legend       | See section below                                                 | Object |               |       No
 connectorUrl | URL from which to source data. Deprecated - use `sources` instead |   Text |           URL |       No
@@ -1008,7 +1008,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/append \
 -H "Content-Type: application/json"  -d \
 '{
     "provider": "json",
-    "connectorUrl":"<csvUrl>",
+    "sources": ["<csvUrl>"],
     "dataPath": "data... etc"
 }'
 ```
@@ -1026,12 +1026,12 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 ```
 
 <aside class="notice">
-    These are authenticated endpoints.
+    Using the previous <code class="prettyprint">url</code> field to pass the url of a single file is still permitted but is now deprecated in favor of <code class="prettyprint">sources</code>.
 </aside>
 
 ## Overwrite Data
 
-Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
+Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
 
 This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
  
@@ -1049,7 +1049,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
-   "url":"<url>",
+   "sources": ["<url of the data source>"],
    "provider": "csv"
 }'
 ```
