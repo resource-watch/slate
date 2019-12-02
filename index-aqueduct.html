@@ -175,6 +175,178 @@
         "text": "This is a test"
     }'</span>
 </code></pre>
+          <h1 id="collections">Collections</h1>
+
+<p>The users can save a collection of resources in the API.</p>
+
+<aside class="notice">
+Remember — All favorite endpoints need to be authenticated.
+</aside>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of collection owner</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>ownerId</td>
+<td style="text-align: center">Id of the owner</td>
+<td style="text-align: right">Text</td>
+</tr>
+<tr>
+<td>resources</td>
+<td style="text-align: center">Resources in the collection</td>
+<td style="text-align: right">Array of Objects</td>
+</tr>
+<tr>
+<td>&mdash; type</td>
+<td style="text-align: center">The type of resource</td>
+<td style="text-align: right">Text (dataset, layer, widget)</td>
+</tr>
+<tr>
+<td>&mdash; id</td>
+<td style="text-align: center">The id of the resource</td>
+<td style="text-align: right">Text</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-collection">Create Collection</h2>
+
+<p>To create a collection, you need to define all next fields in the request body. The required fields that compose a collection are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of collection owner</td>
+<td style="text-align: right">Text</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To create an empty collection, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>You can also add a resource in the body of the request when creating a new collection with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;",
+   "resources": [
+     {
+      "type": "&lt;type&gt;",
+      "id": "&lt;id&gt;"
+      }
+   ]
+  }'</span>
+</code></pre>
+<h2 id="update-collection">Update Collection</h2>
+
+<blockquote>
+<p>To update a collection, you should perform a PATCH request including the collection ID in the url. Here&rsquo;s an example:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/collection/&lt;collection-id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "name": "&lt;name&gt;"
+  }'</span>
+</code></pre>
+<h2 id="add-resource-to-collection">Add Resource to Collection</h2>
+
+<p>To create a collection, you need to define all next fields in the request body. The required fields that compose a collection are:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td style="text-align: center">Type of resource being added</td>
+<td style="text-align: right">Text (dataset, layer, widget)</td>
+</tr>
+<tr>
+<td>id</td>
+<td style="text-align: center">Id of the resource</td>
+<td style="text-align: right">Text</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>To add a resource to a collection, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection/:id/resource <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "type": "&lt;type&gt;",
+   "id": "&lt;id&gt;"
+  }'</span>
+</code></pre>
+<h2 id="get-collections">Get Collections</h2>
+
+<p>This endpoint returns the collections of the logged user.</p>
+
+<blockquote>
+<p>To get all collections of the logged user, you have to do a GET request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="get-collection-by-id">Get Collection by id</h2>
+
+<p>This endpoint returns the collection with id of the param. If the collection belongs to other user or not exist, the endpoint returns 400.</p>
+
+<blockquote>
+<p>To get the collection by id, you have to do a GET request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="delete-collection">Delete Collection</h2>
+
+<p>This endpoint deletes the collection with id of the param. If the collection belongs to other user or not exist, the endpoint returns 400.</p>
+
+<blockquote>
+<p>To delete the collection by id, you have to do a DELETE request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/collection/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="delete-collection-resource">Delete Collection Resource</h2>
+
+<p>Using this endpoint you can also delete a resource in a collection with the id, resource type and resource id of the param. If the collection belongs to other user or not exist, the endpoint returns 400.</p>
+
+<blockquote>
+<p>To delete the resource you have to do a DELETE request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/collection/:id/resource/:resourceType/:resourceId <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
           <h1 id="dataset">Dataset</h1>
 
 <h2 id="what-is-a-dataset">What is a Dataset?</h2>
