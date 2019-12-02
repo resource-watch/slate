@@ -5278,6 +5278,13 @@ To import the geojson in geostore, you need to define all of the required fields
 </span></code></pre>
           <h1 id="topic">Topic</h1>
 
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      Topics are deprecated. Use Dashboards instead.
+    </p>
+</aside>
+
 <h2 id="what-is-a-topic">What is a Topic?</h2>
 
 <p>A topic contains the information to display a web page belonging to a user.</p>
@@ -5403,6 +5410,13 @@ curl -X GET https://api.resourcewatch.org/v1/topic?filter[user]<span class="o">=
 </span></code></pre>
 <h2 id="creating-a-topic">Creating a topic</h2>
 
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      Topics are deprecated. Use Dashboards instead.
+    </p>
+</aside>
+
 <p>When creating a topic, the <code class="prettyprint">application</code> field should be present and cannot contain any values that are not associated with the creating user&rsquo;s account. If an <code class="prettyprint">application</code> value is not provided, <code class="prettyprint">[&quot;rw&quot;]</code> is used by default, and the process will fail if the user account does not belong to it. Any role can create a topic.</p>
 
 <p>Supported fields:</p>
@@ -5513,6 +5527,13 @@ curl -X GET https://api.resourcewatch.org/v1/topic?filter[user]<span class="o">=
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="editing-a-topic">Editing a topic</h2>
+
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      Topics are deprecated. Use Dashboards instead.
+    </p>
+</aside>
 
 <p>In order to perform this operation, the following conditions must be met:</p>
 
