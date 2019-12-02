@@ -24,7 +24,6 @@ To create a collection, you need to define all next fields in the request body. 
 | Field             | Description                                                                     | Type
 | ------------------|:-----------------------------------------:                                      | -----:
 | name              | Name of collection owner                                                        | Text
-| ownerId           | The id of the owner                                                             | Text
 
 
 > To create an empty collection, you have to do a POST with the following body:
@@ -35,8 +34,7 @@ curl -X POST https://api.resourcewatch.org/v1/collection \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
-   "name": "<name>",
-   "ownerId": "<ownerId>"
+   "name": "<name>"
   }'
 ```
 
@@ -49,7 +47,6 @@ curl -X POST https://api.resourcewatch.org/v1/collection \
 -H "Content-Type: application/json"  -d \
  '{
    "name": "<name>",
-   "ownerId": "<ownerId>",
    "resources": [
      {
       "type": "<type>",
