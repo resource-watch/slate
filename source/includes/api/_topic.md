@@ -1,5 +1,12 @@
 # Topic
 
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      Topics are deprecated. Use Dashboards instead.
+    </p>
+</aside>
+
 ## What is a Topic?
 
 A topic contains the information to display a web page belonging to a user.
@@ -117,6 +124,13 @@ curl -X GET https://api.resourcewatch.org/v1/topic?includes=user
 
 ## Creating a topic
 
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      Topics are deprecated. Use Dashboards instead.
+    </p>
+</aside>
+
 When creating a topic, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Any role can create a topic.
 
 Supported fields:
@@ -187,6 +201,13 @@ curl -X POST https://api.resourcewatch.org/v1/topics \
 ```
 
 ## Editing a topic
+
+<aside class="warning">
+    <span>Deprecation notice</span>
+    <p>
+      Topics are deprecated. Use Dashboards instead.
+    </p>
+</aside>
 
 In order to perform this operation, the following conditions must be met:
 
