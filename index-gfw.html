@@ -5625,7 +5625,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
                 </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
+                </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">},</span><span class="w">
         </span><span class="err">...</span><span class="w">
@@ -5672,6 +5673,11 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <td>application</td>
 <td style="text-align: center">The application to which the dashboard belongs</td>
 <td style="text-align: right">Text (single value)</td>
+</tr>
+<tr>
+<td>is-highlighted</td>
+<td style="text-align: center">Filter dashboards by highlighted ones (true,false)</td>
+<td style="text-align: right">Boolean</td>
 </tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?user<span class="o">=</span>57bc2608f098ce98007985e4&amp;private<span class="o">=</span><span class="nb">false</span>
@@ -5830,6 +5836,11 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 <td>Application(s) to which the dashboard belongs. Defaults to <code class="prettyprint">[&quot;rw&quot;]</code>.</td>
 <td>array of strings</td>
 </tr>
+<tr>
+<td>is-highlighted</td>
+<td>If this dashboard is highlighted (<code class="prettyprint">true</code>/<code class="prettyprint">false</code>). Defaults to <code class="prettyprint">false</code>. Only accessible to users with <code class="prettyprint">ADMIN</code> role.</td>
+<td>boolean</td>
+</tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboards <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -5879,7 +5890,8 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
             </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
+            </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
