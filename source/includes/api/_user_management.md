@@ -264,6 +264,34 @@ curl -X GET http://api.resourcewatch.org/auth/user
 -H "Authorization: Bearer <your-token>" \
 ```
 
+```json
+{
+    "data": {
+         "id": "5d2fadb3adf1dc74d2ad05dfb",
+        "email": "john.doe@vizzuality.com",
+        "createdAt": "2019-10-31T13:00:58.191Z",
+        "updatedAt": "2019-10-31T13:00:58.191Z",
+        "role": "USER",
+        "extraUserData": {
+            "apps": []
+        }
+    },
+     "links": {
+         "self": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
+         "first": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
+         "last": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
+         "prev": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
+         "next": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10"
+     },
+     "meta": {
+         "total-pages": 1,
+         "total-items": 3,
+         "size": 10
+     }
+}
+```
+
+
 #### Filter by name
 
 ```bash
