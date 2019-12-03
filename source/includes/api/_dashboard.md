@@ -233,7 +233,7 @@ In order to perform this operation, the following conditions must be met:
 - the user must be logged in and belong to the same application as the dashboard
 - the user must match one of the following:
   - have role `ADMIN`
-  - have role `MANAGER` or `USER` and be the dashboard's owner (through the `user-id` field of the dashboard)
+  - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
   
 When updating the `application` field of a dashboard, a user cannot add values not associated with their user account.
 
@@ -288,7 +288,7 @@ In order to perform this operation, the following conditions must be met:
 - the user must be logged in and belong to the same application as the dashboard
 - the user must match one of the following:
   - have role `ADMIN`
-  - have role `MANAGER` or `USER` and be the dashboard's owner (through the `user-id` field of the dashboard)
+  - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
 
 
 ```shell
