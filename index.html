@@ -8789,7 +8789,31 @@ curl -X POST http://api.resourcewatch.org/auth/reset-password/&lt;email token&gt
 curl -X GET http://api.resourcewatch.org/auth/user
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
-</code></pre>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d2fadb3adf1dc74d2ad05dfb"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@vizzuality.com"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+     </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"prev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="w">
+     </span><span class="p">},</span><span class="w">
+     </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"total-pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"total-items"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h4 id="filter-by-name">Filter by name</h4>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?name<span class="o">=</span>John
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
