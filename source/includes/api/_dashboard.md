@@ -43,7 +43,19 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
             }
         },
         ...
-      ]
+    ],
+    "links": {
+        "self": "http://staging-api.globalforestwatch.org/v1/dashboard?page%5Bnumber%5D=1&page%5Bsize%5D=10",
+        "first": "http://staging-api.globalforestwatch.org/v1/dashboard?page%5Bnumber%5D=1&page%5Bsize%5D=10",
+        "prev": null,
+        "next": "http://staging-api.globalforestwatch.org/v1/dashboard?page%5Bnumber%5D=2&page%5Bsize%5D=10",
+        "last": "http://staging-api.globalforestwatch.org/v1/dashboard?page%5Bnumber%5D=14&page%5Bsize%5D=10"
+    },
+    "meta": {
+        "total-pages": 14,
+        "total-items": 140,
+        "size": 10
+    }
 }
 ```
 
