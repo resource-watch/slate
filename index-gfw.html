@@ -6035,7 +6035,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 <td>boolean</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboards <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboard <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -6104,7 +6104,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 </ul>
 
 <p>When updating the <code class="prettyprint">application</code> field of a dashboard, a user cannot add values not associated with their user account.</p>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dashboards/&lt;id of the dashboard&gt; <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dashboard/&lt;id of the dashboard&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -6141,6 +6141,23 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<h2 id="delete-dashboard">Delete dashboard</h2>
+
+<p>In order to perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the dashboard</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dashboard&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the dashboard)</li>
+</ul></li>
+</ul>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dashboard/&lt;id of the dashboard&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
 <h2 id="clone-dashboard">Clone dashboard</h2>
 
 <p>Clones an existing dashboard using its ID.
