@@ -155,7 +155,44 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
    ]
 }
 ```
- 
+
+## Getting a dashboard by its ID
+
+> How to get a dashboard by its ID:
+
+```shell
+curl -X GET http://api.resourcewatch.org/dashboard/24
+```
+
+> Response:
+
+```shell
+{
+"data": {
+"id": "24",
+"type": "dashboards",
+"attributes": {
+"name": "Cities",
+"slug": "cities",
+"summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, connected, and efficient growth can help ensure more competitive cities, and provide a better quality of life for citizens.  The decisions that national leaders, local officials, developers, and planners make today will determine how billions of urban cities will live over the next century. Already, half the global population resides in cities. That figure is set to increase to 70 percent by 2050.",
+"description": "",
+"content": "[{\"id\":1511952250652,\"type\":\"widget\",\"content\":{\"widgetId\":\"b9186ce9-78ae-418b-a6d3-d521283ce485\",\"categories\":[]}},{\"id\":1512381447629,\"type\":\"text\",\"content\":\"\\u003cp\\u003e\\u003cspan style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"\\u003eUrbanized areas in 2014 occupied \\u003c/span\\u003e\\u003cstrong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"\\u003e2.84 millions sq km\\u003c/strong\\u003e\\u003cspan style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"\\u003e, up from\\u003c/span\\u003e\\u003cstrong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"\\u003e 2.26 millions sq km\\u003c/strong\\u003e\\u003cspan style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"\\u003e in 2000, an increase of\\u003c/span\\u003e\\u003cstrong style=\\\"color: rgb(0, 0, 0); background-color: transparent;\\\"\\u003e 25.6 %\\u003c/strong\\u003e\\u003c/p\\u003e\"},{\"id\":1511952286724,\"type\":\"grid\",\"content\":[{\"id\":1511952306751,\"type\":\"widget\",\"content\":{\"widgetId\":\"2c613f97-973b-4b33-8906-a904396ab7d5\",\"categories\":[]}},{\"id\":1511952319137,\"type\":\"widget\",\"content\":{\"widgetId\":\"5ab7cfe5-73b1-433d-82dc-351f9f08d51c\",\"categories\":[]}}]},{\"id\":1511952325253,\"type\":\"grid\",\"content\":[{\"id\":1511952328051,\"type\":\"text\",\"content\":\"\\u003cp\\u003e\\u003cspan style=\\\"background-color: transparent; color: rgb(0, 0, 0);\\\"\\u003eThere are over 5,600 kilometers of Bus Rapid Transit (BRT) systems globally. These 10 countries have the most BRT infrastructure by population.\\u003c/span\\u003e\\u003c/p\\u003e\\u003cp\\u003e\\u003cbr\\u003e\\u003c/p\\u003e\\u003cp\\u003e\\u003cspan style=\\\"background-color: transparent; color: rgb(0, 0, 0);\\\"\\u003e\\u003cspan class=\\\"ql-cursor\\\"\\u003e﻿\\u003c/span\\u003eThis widget shows the Bus Rapid Transit System Length by country normalized by population.\\u003c/span\\u003e\\u003c/p\\u003e\"},{\"id\":1511952330008,\"type\":\"text\",\"content\":\"\\u003cp\\u003e\\u003cspan style=\\\"background-color: transparent; color: rgb(0, 0, 0);\\\"\\u003eOver 34 million people use Bus Rapid Transit (BRT) systems each day. These 10 countries have the highest rates of passengers by population. \\u003c/span\\u003e\\u003c/p\\u003e\\u003cp\\u003e\\u003cbr\\u003e\\u003c/p\\u003e\\u003cp\\u003e\\u003cspan style=\\\"background-color: transparent; color: rgb(0, 0, 0);\\\"\\u003eThis widget shows the Bus Rapid Transit System ridership by country normalized for population.\\u0026nbsp;\\u003c/span\\u003e\\u003c/p\\u003e\"}]},{\"id\":1511952437683,\"type\":\"widget\",\"content\":{\"widgetId\":\"f6d1919a-f4fc-4f08-a7a5-7fe3cb497354\",\"categories\":[]}},{\"id\":1511952456564,\"type\":\"text\",\"content\":\"\\u003cp\\u003e\\u003cspan style=\\\"color: rgb(0, 0, 0);\\\"\\u003eThe proportion of the urban population living in slum households. A slum household is defined as a group of individuals living under the same roof lacking one or more of the following conditions: access to improved water, access to improved sanitation, sufficient living area, and durability of housing.﻿\\u003c/span\\u003e\\u003c/p\\u003e\"},{\"id\":1511952492108,\"type\":\"widget\",\"content\":{\"widgetId\":\"52a03b39-c826-48c0-b57e-e2d1d033221c\",\"categories\":[]}},{\"id\":1511952496186,\"type\":\"text\",\"content\":\"\\u003cp\\u003e\\u003cspan style=\\\"color: rgb(0, 0, 0);\\\"\\u003eThe percentage of the Urban Population with Access to an improved water source in 2015.\\u003c/span\\u003e\\u003c/p\\u003e\"},{\"id\":1512381390724,\"type\":\"widget\",\"content\":{\"widgetId\":\"bb11f652-2467-4ac1-b310-b7c4fd791b86\",\"categories\":[]}},{\"id\":1512381398799,\"type\":\"text\",\"content\":\"\\u003cp\\u003e\\u003cstrong style=\\\"color: rgb(0, 0, 0);\\\"\\u003e18%\\u003c/strong\\u003e\\u003cspan style=\\\"color: rgb(0, 0, 0);\\\"\\u003e of the world’s urban population does not have access to improved sanitation facilities.\\u003c/span\\u003e\\u003c/p\\u003e\"},{\"id\":1511952583440,\"type\":\"widget\",\"content\":{\"widgetId\":\"c4bb527c-fcea-405b-a763-d39c5741a87d\",\"categories\":[]}},{\"id\":1511952631446,\"type\":\"widget\",\"content\":{\"widgetId\":\"c4bac72c-04b4-44d8-b220-40b0779e8ffb\",\"categories\":[]}},{\"id\":1511952634228,\"type\":\"text\",\"content\":\"\\u003cp\\u003e\\u003cspan style=\\\"color: rgb(0, 0, 0);\\\"\\u003eEstimated road traffic fatal injury deaths per 100,000 population.\\u003c/span\\u003e\\u003c/p\\u003e\"}]",
+"published": false,
+"photo": {
+"cover": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/staging/dashboards/photos/000/000/024/cover/data?1523301918",
+"thumb": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/staging/dashboards/photos/000/000/024/thumb/data?1523301918",
+"original": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/staging/dashboards/photos/000/000/024/original/data?1523301918"
+},
+"user-id": "58f63c81bd32c60206ed6b12",
+"private": true,
+"production": true,
+"preproduction": false,
+"staging": false,
+"user": null
+}
+}
+}
+```
 
 
 ## Creating a dashboard
