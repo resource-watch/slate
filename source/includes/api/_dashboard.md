@@ -155,7 +155,44 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
    ]
 }
 ```
- 
+
+## Getting a dashboard by its ID
+
+> How to get a dashboard by its ID:
+
+```shell
+curl -X GET http://api.resourcewatch.org/dashboard/24
+```
+
+> Response:
+
+```json
+{
+  "data": {
+    "id": "24",
+    "type": "dashboards",
+    "attributes": {
+      "name": "Cities",
+      "slug": "cities",
+      "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, connected, and efficient growth can help ensure more competitive cities, and provide a better quality of life for citizens.  The decisions that national leaders, local officials, developers, and planners make today will determine how billions of urban cities will live over the next century. Already, half the global population resides in cities. That figure is set to increase to 70 percent by 2050.",
+      "description": "",
+      "content": "[]",
+      "published": false,
+      "photo": {
+        "cover": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/staging/dashboards/photos/000/000/024/cover/data?1523301918",
+        "thumb": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/staging/dashboards/photos/000/000/024/thumb/data?1523301918",
+        "original": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/staging/dashboards/photos/000/000/024/original/data?1523301918"
+      },
+      "user-id": "58f63c81bd32c60206ed6b12",
+      "private": true,
+      "production": true,
+      "preproduction": false,
+      "staging": false,
+      "user": null
+    }
+  }
+}
+```
 
 
 ## Creating a dashboard
