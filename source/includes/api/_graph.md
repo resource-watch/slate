@@ -738,3 +738,17 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
 	]
 }
 ```
+
+## Count dataset view
+
+Updates the view count for the corresponding dataset. 
+
+<aside class="notice">
+    This is an authenticated endpoint!
+</aside>
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/dataset/<dataset-id>/visited
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"     \
+```
