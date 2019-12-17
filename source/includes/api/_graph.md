@@ -749,6 +749,5 @@ Updates the view count for the corresponding dataset.
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/graph/dataset/<dataset-id>/visited
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"     \
+-H "Authorization: Bearer <your-token>"
 ```
