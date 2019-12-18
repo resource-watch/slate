@@ -533,6 +533,12 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
 
 This endpoint returns the list of the most viewed datasets in descending order of total views.
 
+### Parameters
+
+Parameter        |               Description               |    Type |                                          Values | Required
+------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
+limit         |           Maximum number of results            |    Number |                                        Any positive number |      No
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed
 ```
