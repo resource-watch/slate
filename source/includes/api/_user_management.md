@@ -4,7 +4,7 @@ The following endpoints expose the API's functionality regarding user management
 For more information or implementation details, see [the source code](https://github.com/control-tower/ct-oauth-plugin).
 
 
-## A note on UI elements 
+## A note on UI elements
 
 Unlike the other parts of the API, this section covers endpoints that provide end-user interaction, rendering HTML pages or sending emails to reset passwords and such. Some elements of these interfaces can be configured to match specific projects identities (RW, GFW, etc). To specify which project your requests come from, you can add an optional `origin` query parameter to your requests, with the name of the application. If matching visual elements exist, they will be used in the resulting interfaces displayed to the user.
 
@@ -23,7 +23,7 @@ Convenience URL that redirects to `<BASE API URL>/auth/login`
 Basic API auth login page. Only supported for HTML requests.
 
 
-### POST `<BASE API URL>/auth/login` 
+### POST `<BASE API URL>/auth/login`
 Endpoint for email + password based login.
 
 For HTML requests, it will redirect to either `<BASE API URL>/auth/success` or `<BASE API URL>/auth/fail` depending on whether the login was successful or not. An optional `callbackUrl` query parameter can be provided, in which case the user will be redirected to that URL in case of login success.
@@ -124,7 +124,7 @@ curl -X POST http://api.resourcewatch.org/auth/sign-up \
 ```
 
 
-> Response 
+> Response
 
 ```
 {
@@ -164,7 +164,7 @@ Based on roles, different types of users can create new users with different rol
 
 ### Confirm user account
 
-Endpoint used in the user validation email to confirm the address upon registration. 
+Endpoint used in the user validation email to confirm the address upon registration.
 
 It accepts an optional `callbackUrl` query parameter with an URL to which the user will be redirect if the confirmation succeeds.
 
@@ -206,7 +206,7 @@ curl -X GET http://api.resourcewatch.org/auth/confirm/:token?callbackUrl=http://
 
 Password recovery endpoints support both HTML and JSON output formats, depending on the `Content-type` provided in the request.
 
-### GET `<BASE API URL>/auth/reset-password` 
+### GET `<BASE API URL>/auth/reset-password`
 
 Displays the password reset form page.
 
@@ -231,7 +231,7 @@ Endpoint used to validate email address upon password reset request.
 
 ### POST `<BASE API URL>/auth/reset-password/:token`
 
-Endpoint used to submit the new password. 
+Endpoint used to submit the new password.
 
 For HTML requests, it will redirect the user to the configured redirect URL on success, or return to the "Reset your password" form on error.
 
@@ -342,6 +342,67 @@ curl -X GET http://api.resourcewatch.org/auth/user?app=all
 
 Additionally, you can pass the special `all` value to this filter, to load users from all applications.
 
+## Finding users by ids
+
+To retrieve the information of multiple users by ids, use the `/auth/user/find-by-ids` endpoint. This endpoint requires authentication.
+
+```shell
+# retrieve info for multiple users with the given ids
+curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+'{
+    "ids": [
+        "0706f055b929453eb1547392123ae99e",
+        "0c630aeb81464fcca9bebe5adcb731c8",
+    ]
+}'
+```
+
+> Example response:
+
+```shell
+    {
+        "data": [
+            {
+                "provider": "local",
+                "role": "USER",
+                "_id": "0706f055b929453eb1547392123ae99e",
+                "email": "example@user.com",
+                "createdAt": "2016-08-22T11:48:51.163Z",
+                "extraUserData": {
+                    "apps": [
+                        "rw",
+                        "gfw"
+                    ]
+                },
+                "updatedAt": "2019-12-18T15:59:57.333Z"
+            },
+            {
+                "provider": "local",
+                "role": "ADMIN",
+                "_id": "0c630aeb81464fcca9bebe5adcb731c8",
+                "email": "example2@user.com",
+                "createdAt": "2016-08-22T11:48:51.163Z",
+                "extraUserData": {
+                    "apps": [
+                        "rw",
+                        "gfw",
+                        "prep",
+                        "aqueduct",
+                        "forest-atlas",
+                        "data4sdgs",
+                        "gfw-climate",
+                        "gfw-pro",
+                        "ghg-gdp"
+                    ]
+                },
+                "updatedAt": "2019-12-18T15:59:57.333Z"
+            }
+        ]
+    }
+```
+
 
 ### Get a user by id
 
@@ -387,14 +448,14 @@ curl -X PATCH http://api.resourcewatch.org/auth/user/me
         "updatedAt": "2017-01-13T10:45:46.368Z",
         "role": "MANAGER",
         "extraUserData": {
-           "apps": ["rw", "gfw"]        
-        }  
+           "apps": ["rw", "gfw"]
+        }
     }
 }
 ```
 
 <aside class="notice">
-Updating your account details may invalidate your token and cause your apps to stop working. 
+Updating your account details may invalidate your token and cause your apps to stop working.
 </aside>
 
 
@@ -404,8 +465,8 @@ Updating your account details may invalidate your token and cause your apps to s
 - Can only be used by admins.
 - Supported fields: `name`, `photo`, `extraUserData.apps` and `role`
 - Returns the new state of the updated user object.
-    
-    
+
+
 ```bash
 # updates details of user given its id
 curl -X PATCH http://api.resourcewatch.org/auth/user/57bc2611f098ce9800798688
@@ -422,7 +483,7 @@ curl -X PATCH http://api.resourcewatch.org/auth/user/57bc2611f098ce9800798688
 ```
 
 <aside class="notice">
-Updating a user's account details may invalidate their token and cause their apps to stop working. 
+Updating a user's account details may invalidate their token and cause their apps to stop working.
 </aside>
 
 > Response:
@@ -438,8 +499,8 @@ Updating a user's account details may invalidate their token and cause their app
         "updatedAt": "2017-01-13T10:45:46.368Z",
         "role": "MANAGER",
         "extraUserData": {
-           "apps": ["rw", "gfw"]        
-        }  
+           "apps": ["rw", "gfw"]
+        }
     }
 }
 ```
@@ -454,7 +515,7 @@ Updating a user's account details may invalidate their token and cause their app
 This action only deletes the user account. Any resources that may be associated with this given user account are not modified or deleted.
 </aside>
 
-    
+
 ```bash
 # updates details of user given its id
 curl -X DELETE http://api.resourcewatch.org/auth/user/<user_id>
