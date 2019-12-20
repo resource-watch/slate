@@ -360,6 +360,71 @@ All subscriptions are created unconfirmed. The user needs confirm his subscripti
 curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
 ```
 
+## Get a subscription by its ID
+
+You can get the data from a specific subscription using the following `GET` request:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/<subscription-id> \
+-H "Authorization: Bearer <your-token>"
+```
+
+<aside class="notice">
+Remember — this endpoint is authenticated.
+</aside>
+<aside class="success">
+Remember — the response is in JSONApi format.
+</aside>
+
+> Example
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/5d9c933c04c106001056d2a1 \
+-H "Authorization: Bearer xxxxxx"
+```
+
+> Response:
+
+```json
+
+{
+    "data":
+    {
+        "type": "subscription",
+        "id": "5d9c933c04c106001056d2a1",
+        "attributes":
+        {
+            "name": "",
+            "createdAt": "2019-10-08T13:46:36.894Z",
+            "userId": "58e22f662071c01c02f76a0f",
+            "resource":
+            {
+                "type": "EMAIL",
+                "content": "aaa@aaa.com"
+            },
+            "datasets":
+            [
+                "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"
+            ],
+            "params": {},
+            "confirmed": false,
+            "language": "en",
+            "datasetsQuery":
+            [
+                {
+                    "threshold": 1,
+                    "lastSentDate": "2019-10-08T13:46:36.895Z",
+                    "historical": [],
+                    "type": "COUNT"
+                }
+            ],
+            "env": "production"
+        }
+    }
+}
+```
+
+
 ## Obtain the subscriptions for a user
 
 You can get a list of the current user's subscriptions using the following endpoint. In order to use this endpoint, you need to be logged in.
