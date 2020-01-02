@@ -425,7 +425,7 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/5d9c933c04c106001056d
 ```
 
 
-## Obtain the subscriptions for a user
+## Get subscriptions for a user
 
 You can get a list of the current user's subscriptions using the following endpoint. In order to use this endpoint, you need to be logged in.
 
