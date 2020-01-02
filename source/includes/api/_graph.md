@@ -738,3 +738,12 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
 	]
 }
 ```
+
+## Update view counter for dataset and user
+
+Updates the total view counter for the corresponding dataset. If the request is authenticated, it will also increment the counter of number of times the user has viewed the dataset. 
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/dataset/<dataset-id>/visited
+-H "Authorization: Bearer <your-token>"
+```
