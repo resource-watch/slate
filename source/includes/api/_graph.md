@@ -739,13 +739,9 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
 }
 ```
 
-## Count dataset view
+## Update view counter for dataset and user
 
-Updates the view count for the corresponding dataset - as well as the corresponding count for the authenticated user in case a valid Authorization header is passed. 
-
-<aside class="notice">
-    This endpoint can be used providing a valid authentication token as well as without adding it. The effect would vary depending on the option chosen in the sense that, when passing a valid authentication token, the specific count for the authenticated user will also be updated.
-</aside>
+Updates the total view counter for the corresponding dataset. If the request is authenticated, it will also increment the counter of number of times the user has viewed the dataset. 
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/graph/dataset/<dataset-id>/visited
