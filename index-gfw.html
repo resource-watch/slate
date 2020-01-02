@@ -5791,7 +5791,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <h2 id="getting-all-dashboards">Getting all dashboards</h2>
 
 <p>This endpoint will allow to get all dashboards belonging to a user:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard -H <span class="s1">'Authorization: Bearer exampleToken'</span>
 </code></pre>
 <blockquote>
 <p>Response:</p>
@@ -6108,7 +6108,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
               "application":  ["rw"]
           }
       }
-  }'</span> 
+  }'</span>
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
@@ -6161,7 +6161,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
               "description": "Dashboard that uses cities"
           }
       }
-  }'</span> 
+  }'</span>
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
@@ -6210,13 +6210,25 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 
 <p>Clones an existing dashboard using its ID.
 If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard.</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboards/10/clone -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
+
+<p>The data provided in the body of the request will override the data of the original dashboard. In the example on the side, the <code class="prettyprint">name</code> and the <code class="prettyprint">user-id</code> of the dashboard will be overridden.</p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboard/&lt;id&gt;/clone <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "data": {
+        "attributes": {
+            "name": "Copy of Cities dashboard",
+            "user-id": "1111167922e16e34ef3ce872"
+        }
+    }
+  }'</span>
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"224"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboards"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Copy of Cities dashboard"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities-a9cb2c87-f6b6-48cf-9b52-9e0de4fd8d6f"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ..."</span><span class="p">,</span><span class="w">
             </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
@@ -6227,7 +6239,7 @@ If the original dashboard contains functioning widgets, they will be duplicated 
                 </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/dashboards/photos/data?1523301918"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/dashboards/photos/data?1523301918"</span><span class="w">
             </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1111167922e16e34ef3ce872"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
@@ -6729,7 +6741,67 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
 <p>All subscriptions are created unconfirmed. The user needs confirm his subscription with this endpoint.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
 </code></pre>
-<h2 id="obtain-the-subscriptions-for-a-user">Obtain the subscriptions for a user</h2>
+<h2 id="get-a-subscription-by-its-id">Get a subscription by its ID</h2>
+
+<p>You can get the data from a specific subscription using the following <code class="prettyprint">GET</code> request:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/&lt;subscription-id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<aside class="notice">
+Remember — this endpoint is authenticated.
+</aside>
+
+<aside class="success">
+Remember — the response is in JSONApi format.
+</aside>
+
+<blockquote>
+<p>Example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/5d9c933c04c106001056d2a1 <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer xxxxxx"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d9c933c04c106001056d2a1"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-08T13:46:36.894Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58e22f662071c01c02f76a0f"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"resource"</span><span class="p">:</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa@aaa.com"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w">
+            </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w">
+            </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"lastSentDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-08T13:46:36.895Z"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"historical"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COUNT"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="get-subscriptions-for-a-user">Get subscriptions for a user</h2>
 
 <p>You can get a list of the current user&rsquo;s subscriptions using the following endpoint. In order to use this endpoint, you need to be logged in.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>

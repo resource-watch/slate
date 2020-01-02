@@ -6043,7 +6043,67 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
 <p>All subscriptions are created unconfirmed. The user needs confirm his subscription with this endpoint.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
 </code></pre>
-<h2 id="obtain-the-subscriptions-for-a-user">Obtain the subscriptions for a user</h2>
+<h2 id="get-a-subscription-by-its-id">Get a subscription by its ID</h2>
+
+<p>You can get the data from a specific subscription using the following <code class="prettyprint">GET</code> request:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/&lt;subscription-id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<aside class="notice">
+Remember — this endpoint is authenticated.
+</aside>
+
+<aside class="success">
+Remember — the response is in JSONApi format.
+</aside>
+
+<blockquote>
+<p>Example</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/5d9c933c04c106001056d2a1 <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer xxxxxx"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d9c933c04c106001056d2a1"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-08T13:46:36.894Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58e22f662071c01c02f76a0f"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"resource"</span><span class="p">:</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa@aaa.com"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w">
+            </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w">
+            </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"lastSentDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-08T13:46:36.895Z"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"historical"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COUNT"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="get-subscriptions-for-a-user">Get subscriptions for a user</h2>
 
 <p>You can get a list of the current user&rsquo;s subscriptions using the following endpoint. In order to use this endpoint, you need to be logged in.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
@@ -6262,43 +6322,43 @@ Remember — All favorite endpoints need to be authenticated.
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
 </code></pre>
 <h3 id="query-example">Query example</h3>
-<pre class="highlight plaintext"><code>{
-  "data": [
-    {
-      "id": "europe",
-      "label": "Europe",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ],
-      "numberOfDatasetsTagged": 0
-    },
-    {
-      "id": "damage",
-      "label": "Damage",
-      "synonyms": [
-        "destruction"
-      ],
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ],
-      "numberOfDatasetsTagged": 2
-    },
-    {
-      "id": "guernsey",
-      "label": "Guernsey",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ],
-      "numberOfDatasetsTagged": 0
-    }
-  ]
-}
-</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"europe"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfDatasetsTagged"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"damage"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Damage"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"destruction"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfDatasetsTagged"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"guernsey"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Guernsey"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfDatasetsTagged"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h2 id="get-inferred-concepts">Get inferred concepts</h2>
 
 <p>This endpoint returns the set of concepts that are inferred from the set passed as a parameter</p>
@@ -6328,123 +6388,123 @@ Remember — All favorite endpoints need to be authenticated.
 
 <p>Concepts inferred from the set: [&lsquo;spain&rsquo;, &#39;raster&rsquo;]</p>
 <pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=spain,raster
-</code></pre><pre class="highlight plaintext"><code>{
-  "data": [
-    {
-      "id": "location",
-      "label": "Location",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "eu",
-      "label": "EU",
-      "synonyms": [
-        "European Union"
-      ],
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "raster",
-      "label": "Raster",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "DATA_TYPE"
-      ]
-    },
-    {
-      "id": "oecd",
-      "label": "OECD",
-      "synonyms": [
-        "Organisation for Economic Co-operation and Development"
-      ],
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "schengen_area",
-      "label": "Schengen Area",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "country",
-      "label": "Country",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "continent",
-      "label": "Continent",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "global",
-      "label": "Global",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "general",
-      "label": "General",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "spain",
-      "label": "Spain",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "dataset",
-      "label": "Dataset",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "DATA_TYPE"
-      ]
-    },
-    {
-      "id": "europe",
-      "label": "Europe",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    }
-  ]
-}
-</code></pre>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"location"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Location"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EU"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"European Union"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Raster"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"DATA_TYPE"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oecd"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OECD"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Organisation for Economic Co-operation and Development"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"schengen_area"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Schengen Area"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Country"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"continent"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Continent"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Global"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"general"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"General"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"spain"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dataset"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"DATA_TYPE"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"europe"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h2 id="concepts-39-ancestors">Concepts&rsquo; ancestors</h2>
 
 <p>This endpoint returns the ancestors from the list of concepts provided</p>
@@ -6474,47 +6534,47 @@ Remember — All favorite endpoints need to be authenticated.
 
 <p>Ancestors of the concepts from the set: [&#39;forest_cover&rsquo;, &#39;landslide&rsquo;]</p>
 <pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=forest_cover,landslide
-</code></pre><pre class="highlight plaintext"><code>{
-  "data": [
-    {
-      "id": "indicator",
-      "label": "Indicator",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "forest",
-      "label": "Forest",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "natural_disaster",
-      "label": "Natural disaster",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "natural_phenomena",
-      "label": "Natural phenomena",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    }
-  ]
-}
-</code></pre>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"indicator"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Indicator"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forest"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Forest"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"natural_disaster"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Natural disaster"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"natural_phenomena"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Natural phenomena"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"TOPIC"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h2 id="similar-datasets">Similar datasets</h2>
 
 <p>Returns a set of datasets that are similar to the dataset provider sorted by their degree of similarity.</p>
@@ -6565,55 +6625,55 @@ Remember — All favorite endpoints need to be authenticated.
 
 <p>Datasets that are similar to the dataset with id <code class="prettyprint">63a7a997-695d-4629-b6e9-9b169f5c69b</code> including only those that are <strong>published</strong> with a <strong>limit of 6 results</strong> in total, datasets from both <code class="prettyprint">production</code> and <code class="prettyprint">preproduction</code> environments are included.</p>
 <pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/similar-dataset/63a7a997-695d-4629-b6e9-9b169f5c69bf?published=true&amp;env=production,preproduction&amp;app=rw&amp;limit=6
-</code></pre><pre class="highlight plaintext"><code>{
-  "data": [
-    {
-      "dataset": "0a59f415-ee0b-4d19-96f7-c7304c152e1b",
-      "concepts": [
-        "global",
-        "raster",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "0087944f-871c-44bc-b4d9-cd5acfc27023",
-      "concepts": [
-        "global",
-        "raster",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "0303127a-70b0-4164-9251-d8162615d058",
-      "concepts": [
-        "raster",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "05b7c688-09ba-4f33-90ea-185a1039df43",
-      "concepts": [
-        "global",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "050f4146-566c-4a6d-9aaa-b49ab66a3090",
-      "concepts": [
-        "global",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
-      "concepts": [
-        "global",
-        "geospatial"
-      ]
-    }
-  ]
-}
-</code></pre>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0a59f415-ee0b-4d19-96f7-c7304c152e1b"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0087944f-871c-44bc-b4d9-cd5acfc27023"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0303127a-70b0-4164-9251-d8162615d058"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05b7c688-09ba-4f33-90ea-185a1039df43"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"050f4146-566c-4a6d-9aaa-b49ab66a3090"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00abb46f-34e2-4bf7-be30-1fb0b1de022f"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h2 id="similar-datasets-including-ancestors">Similar datasets including ancestors</h2>
 
 <p>Returns a set of datasets that are similar to the dataset provider sorted by their degree of similarity as well as taking into account ancestor concepts.</p>
@@ -6664,63 +6724,63 @@ Remember — All favorite endpoints need to be authenticated.
 
 <p>Datasets that are similar to the dataset with id <code class="prettyprint">03bfb30e-829f-4299-bab9-b2be1b66b5d4</code> including only those that are <strong>published</strong> with a <strong>limit of 6 results</strong> in total, datasets from both <code class="prettyprint">production</code> and <code class="prettyprint">preproduction</code> environments are included.</p>
 <pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendent/03bfb30e-829f-4299-bab9-b2be1b66b5d4?published=true&amp;env=production,preproduction&amp;app=rw&amp;limit=6
-</code></pre><pre class="highlight plaintext"><code>{
-  "data": [
-    {
-      "dataset": "05b7c688-09ba-4f33-90ea-185a1039df43",
-      "concepts": [
-        "country",
-        "forest",
-        "geospatial",
-        "table"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "0448c79d-0ee0-42ff-9331-aeee70cef301",
-      "concepts": [
-        "forest_cover",
-        "forest_gain",
-        "forest_loss",
-        "geospatial"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "098b33df-6871-4e53-a5ff-b56a7d989f9a",
-      "concepts": [
-        "country",
-        "geospatial"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "0be2ce12-79b3-434b-b557-d6ea92d787fe",
-      "concepts": [
-        "geospatial",
-        "table"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "050f4146-566c-4a6d-9aaa-b49ab66a3090",
-      "concepts": [
-        "geospatial",
-        "table"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
-      "concepts": [
-        "geospatial",
-        "table"
-      ],
-      "numberOfOcurrences": 1
-    }
-  ]
-}
-</code></pre>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05b7c688-09ba-4f33-90ea-185a1039df43"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"forest"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"table"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0448c79d-0ee0-42ff-9331-aeee70cef301"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"forest_cover"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"forest_gain"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"forest_loss"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"098b33df-6871-4e53-a5ff-b56a7d989f9a"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0be2ce12-79b3-434b-b557-d6ea92d787fe"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"table"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"050f4146-566c-4a6d-9aaa-b49ab66a3090"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"table"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00abb46f-34e2-4bf7-be30-1fb0b1de022f"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"geospatial"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"table"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h2 id="search-datasets-by-concepts">Search datasets by concepts</h2>
 
 <p>This endpoint performs a dataset search based on the concepts provided and the tags that have been associated to all the different datasets that are part of the
@@ -6788,281 +6848,132 @@ Given the following sets of concepts:</p>
 <p>Search for datasets with the tag <code class="prettyprint">global</code> and <code class="prettyprint">water</code> and at least one of the two tags: <code class="prettyprint">raster</code>, <code class="prettyprint">geospatial</code>. The resulting datasets should also be published and be categorized either as <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code> and belong to the application <code class="prettyprint">rw</code>. The total number of results returned won&rsquo;t be limited since a very high number has been provided as limit <em>(999999)</em>.</p>
 
 <p><code class="prettyprint">https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=global&amp;concepts[1][0]=water&amp;concepts[2][0]=raster&amp;concepts[2][1]=geospatial&amp;published=true&amp;env=production,preproduction&amp;app=rw&amp;page[size]=999999</code></p>
-<pre class="highlight plaintext"><code>{
-  "data": [
-    "11f43558-d703-4b9d-aff0-f2354a11b359",
-    "1b97e47e-ca18-4e50-9aae-a2853acca3f0",
-    "20c70a51-4ddf-4f6c-ad2c-1a6729b95fa4",
-    "21ac3cd2-9c19-47c7-ad18-4bcad118870f",
-    "33bed1fb-9261-41bf-8b50-127a4d0c80c5",
-    "3624554e-b240-4edb-9110-1f010642c3f3",
-    "36803484-c413-49a9-abe2-2286ee99b624",
-    "371e700e-bc9a-4526-af92-335d888de309",
-    "60be01b0-99fb-459c-8a08-b934270f8c4b",
-    "63a7a997-695d-4629-b6e9-9b169f5c69bf",
-    "894f43a8-ce8e-43a5-a4c7-fa80faa43d63",
-    "99075509-df36-461e-abb0-659cee555bd0",
-    "9e9a5c50-b825-4f12-838f-1650943c2be1",
-    "c17fab24-f71a-4c3e-bb87-6b753a944e6b",
-    "c9eadefd-4a06-4f3b-a2eb-3e3f45624c24",
-    "d7c3d954-ac86-4d1a-bb6a-c8c432a94e26",
-    "e63bb157-4b98-4ecb-81d6-c1b15e79895a",
-    "e7582657-9c16-4eb1-89e8-0211d94015c6",
-    "e94f0e2d-2b5f-41ed-967f-d97e54dd81ea",
-    "ede84747-0116-45c2-accb-1dfe141c00ff",
-    "f717ac77-6f06-493f-8336-4e660a18f74c",
-    "fa6443ff-eb95-4d0f-84d2-f0c91682efdf"
-  ]
-}
-</code></pre>
-<h2 id="most-liked-datasets">Most liked datasets</h2>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"11f43558-d703-4b9d-aff0-f2354a11b359"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"1b97e47e-ca18-4e50-9aae-a2853acca3f0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"20c70a51-4ddf-4f6c-ad2c-1a6729b95fa4"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"21ac3cd2-9c19-47c7-ad18-4bcad118870f"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"33bed1fb-9261-41bf-8b50-127a4d0c80c5"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"3624554e-b240-4edb-9110-1f010642c3f3"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"36803484-c413-49a9-abe2-2286ee99b624"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"371e700e-bc9a-4526-af92-335d888de309"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"60be01b0-99fb-459c-8a08-b934270f8c4b"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"63a7a997-695d-4629-b6e9-9b169f5c69bf"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"894f43a8-ce8e-43a5-a4c7-fa80faa43d63"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"99075509-df36-461e-abb0-659cee555bd0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"9e9a5c50-b825-4f12-838f-1650943c2be1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"c17fab24-f71a-4c3e-bb87-6b753a944e6b"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"c9eadefd-4a06-4f3b-a2eb-3e3f45624c24"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"d7c3d954-ac86-4d1a-bb6a-c8c432a94e26"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"e63bb157-4b98-4ecb-81d6-c1b15e79895a"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"e7582657-9c16-4eb1-89e8-0211d94015c6"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"e94f0e2d-2b5f-41ed-967f-d97e54dd81ea"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ede84747-0116-45c2-accb-1dfe141c00ff"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"f717ac77-6f06-493f-8336-4e660a18f74c"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fa6443ff-eb95-4d0f-84d2-f0c91682efdf"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="get-most-liked-datasets">Get most liked datasets</h2>
 
 <p>This endpoint returns the list of the most liked datasets in descending order.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
 </code></pre>
-<h3 id="example-of-result">Example of result</h3>
-<pre class="highlight plaintext"><code>{
-    "data": [
-        {
-            "id": "e2971008-029f-441b-97cd-ee0555728182",
-            "count": {
-                "low": 2,
-                "high": 0
-            }
-        },
-        {
-            "id": "f6bb99af-541a-4d41-9e47-cc36cb479d4b",
-            "count": {
-                "low": 2,
-                "high": 0
-            }
-        },
-        {
-            "id": "223b936e-06b8-4970-abd9-4f123904d95d",
-            "count": {
-                "low": 2,
-                "high": 0
-            }
-        },
-        {
-            "id": "0b9f0100-ce5b-430f-ad8f-3363efa05481",
-            "count": {
-                "low": 2,
-                "high": 0
-            }
-        },
-        {
-            "id": "93ee443e-cb39-424a-9aa4-1d16af813418",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "7bcf2f48-8ebd-4900-a485-57a75f9f4e85",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "c18a38cd-94ff-48cd-818f-6ffb05992abb",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "5b5a21ac-0835-43fb-86b9-64b93d472e10",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "fc8cf356-f4be-4635-a896-fb468aaaa832",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "b8307c16-fd77-4e35-9b68-8726a025f401",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "e7c9251c-d39e-4b48-88c5-b2783bb7afdc",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "6e05a9e8-ba07-4e6f-8337-31c5362d07fe",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "3ac5a895-b8ab-4480-b7eb-0fbb452ea76f",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "e2aa09eb-c82e-4977-b614-ef71da5936ce",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "60be01b0-99fb-459c-8a08-b934270f8c4b",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "1ef55baf-bbbe-480d-85e9-7132c742f196",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "3a46f6b4-0eec-49d4-bbfc-e2e8f64e6117",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "d8a45b34-4cc0-42f4-957d-e13b37e9182e",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "80c31f61-6e12-47a0-865d-f33a48bfdebb",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "048b2140-9d4b-433e-a2dd-8d4122eb157b",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "4338471d-881a-475f-8bd9-60c4d48b8e12",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "f84b559f-1eb1-43f2-871f-93fea669bf93",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "9ea634db-53af-445e-a767-60ec9efc321e",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "c02da519-12f3-4c6a-86e7-648afac80b23",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "0a59f415-ee0b-4d19-96f7-c7304c152e1b",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "a07f1bed-ca16-4fbf-b14b-d3a0344cab74",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "f8d3e79c-c3d0-4f9a-9b68-9c5ad1f025e4",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "cefd2836-3cc1-43dc-a9d1-bfecf79a6252",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "63a7a997-695d-4629-b6e9-9b169f5c69bf",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "1b97e47e-ca18-4e50-9aae-a2853acca3f0",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "de452a4c-a55c-464d-9037-8c3e9fe48365",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "c36c3108-2581-4b68-852a-c929fc758001",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "05b7c688-09ba-4f33-90ea-185a1039df43",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        },
-        {
-            "id": "134caa0a-21f7-451d-a7fe-30db31a424aa",
-            "count": {
-                "low": 1,
-                "high": 0
-            }
-        }
-    ]
-}
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e2971008-029f-441b-97cd-ee0555728182"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f6bb99af-541a-4d41-9e47-cc36cb479d4b"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"223b936e-06b8-4970-abd9-4f123904d95d"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0b9f0100-ce5b-430f-ad8f-3363efa05481"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="get-most-viewed-datasets-list">Get most viewed datasets list</h2>
+
+<p>This endpoint returns the list of the most viewed datasets in descending order of total views.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>limit</td>
+<td style="text-align: center">Maximum number of results</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">Any positive number</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0087944f-871c-44bc-b4d9-cd5acfc27023"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">172</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00abb46f-34e2-4bf7-be30-1fb0b1de022f"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">68</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01b0b8cf-6638-4a9b-9896-d919d0656a64"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01ae2fd7-b818-429f-a27e-a36c8def971a"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00b5c224-8a78-41c4-89a6-8299dec8609e"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="update-view-counter-for-dataset-and-user">Update view counter for dataset and user</h2>
+
+<p>Updates the total view counter for the corresponding dataset. If the request is authenticated, it will also increment the counter of number of times the user has viewed the dataset. </p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/dataset/&lt;dataset-id&gt;/visited
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
           <h1 id="areas">Areas</h1>
 
@@ -7644,7 +7555,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <h2 id="getting-all-dashboards">Getting all dashboards</h2>
 
 <p>This endpoint will allow to get all dashboards belonging to a user:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard -H <span class="s1">'Authorization: Bearer exampleToken'</span>
 </code></pre>
 <blockquote>
 <p>Response:</p>
@@ -7961,7 +7872,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
               "application":  ["rw"]
           }
       }
-  }'</span> 
+  }'</span>
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
@@ -8014,7 +7925,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
               "description": "Dashboard that uses cities"
           }
       }
-  }'</span> 
+  }'</span>
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
@@ -8063,13 +7974,25 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 
 <p>Clones an existing dashboard using its ID.
 If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard.</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboards/10/clone -H <span class="s1">'Authorization: Bearer exampleToken'</span> 
+
+<p>The data provided in the body of the request will override the data of the original dashboard. In the example on the side, the <code class="prettyprint">name</code> and the <code class="prettyprint">user-id</code> of the dashboard will be overridden.</p>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboard/&lt;id&gt;/clone <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "data": {
+        "attributes": {
+            "name": "Copy of Cities dashboard",
+            "user-id": "1111167922e16e34ef3ce872"
+        }
+    }
+  }'</span>
 </code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"224"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboards"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Copy of Cities dashboard"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities-a9cb2c87-f6b6-48cf-9b52-9e0de4fd8d6f"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ..."</span><span class="p">,</span><span class="w">
             </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
@@ -8080,7 +8003,7 @@ If the original dashboard contains functioning widgets, they will be duplicated 
                 </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/dashboards/photos/data?1523301918"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/dashboards/photos/data?1523301918"</span><span class="w">
             </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1111167922e16e34ef3ce872"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
