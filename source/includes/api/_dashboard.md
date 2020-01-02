@@ -10,7 +10,7 @@ This endpoint will allow to get all dashboards belonging to a user:
 
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer exampleToken' 
+curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer exampleToken'
 ```
 
 > Response:
@@ -243,7 +243,7 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
               "application":  ["rw"]
           }
       }
-  }' 
+  }'
 ```
 
 
@@ -276,8 +276,8 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
     }
 }
 ```
- 
- 
+
+
 ## Editing a dashboard
 
 In order to perform this operation, the following conditions must be met:
@@ -286,7 +286,7 @@ In order to perform this operation, the following conditions must be met:
 - the user must match one of the following:
   - have role `ADMIN`
   - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
-  
+
 When updating the `application` field of a dashboard, a user cannot add values not associated with their user account.
 
 ```shell
@@ -299,7 +299,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
               "description": "Dashboard that uses cities"
           }
       }
-  }' 
+  }'
 ```
 
 
@@ -331,7 +331,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
     }
 }
 ```
- 
+
 ## Delete dashboard
 
 In order to perform this operation, the following conditions must be met:
@@ -354,7 +354,7 @@ Clones an existing dashboard using its ID.
 If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard.
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dashboards/10/clone -H 'Authorization: Bearer exampleToken' 
+curl -X POST https://api.resourcewatch.org/v1/dashboard/10/clone -H 'Authorization: Bearer exampleToken'
 ```
 
 ```json
