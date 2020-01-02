@@ -353,8 +353,20 @@ curl -X DELETE https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> 
 Clones an existing dashboard using its ID.
 If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard.
 
+The data provided in the body of the request will override the data of the original dashboard. In the example on the side, the `name` and the `user-id` of the dashboard will be overridden.
+
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dashboard/10/clone -H 'Authorization: Bearer exampleToken'
+curl -X POST https://api.resourcewatch.org/v1/dashboard/<id>/clone \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "data": {
+        "attributes": {
+            "name": "Copy of Cities dashboard",
+            "user-id": "1111167922e16e34ef3ce872"
+        }
+    }
+  }'
 ```
 
 ```json
@@ -363,7 +375,7 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard/10/clone -H 'Authorizati
         "id": "224",
         "type": "dashboards",
         "attributes": {
-            "name": "Cities",
+            "name": "Copy of Cities dashboard",
             "slug": "cities-a9cb2c87-f6b6-48cf-9b52-9e0de4fd8d6f",
             "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
             "description": "",
@@ -374,7 +386,7 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard/10/clone -H 'Authorizati
                 "thumb": "/system/dashboards/photos/data?1523301918",
                 "original": "/system/dashboards/photos/data?1523301918"
             },
-            "user-id": "eb63867922e16e34ef3ce862",
+            "user-id": "1111167922e16e34ef3ce872",
             "private": true,
             "production": true,
             "preproduction": false,
