@@ -14,6 +14,7 @@ includes:
   - dev/control_tower
   - dev/control_tower_plugin_development
   - dev/microservice
+  - dev/endpoints
   - api/microservices
 
 logo: logo-rw.png
