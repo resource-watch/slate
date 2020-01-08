@@ -402,7 +402,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&
 
 Field        |         Description          |   Type
 ------------ | :--------------------------: | -----:
-page[size]   | The number elements per page | Number
+page[size]   | The number elements per page. There's a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit. | Number
 page[number] |       The page number        | Number
 
 > Paginating the output
