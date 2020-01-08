@@ -167,7 +167,7 @@ curl -X GET https://api.resourcewatch.org/v1/layer?app=rw
 
 Field        |       Description        |   Type
 ------------ | :----------------------: | -----:
-page[size]   | Number elements per page | Number
+page[size]   | Number elements per page. There's a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit. | Number
 page[number] |      Number of page      | Number
 
 > Return the layers of page 2 with 5 elements per page
