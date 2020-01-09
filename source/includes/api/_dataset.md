@@ -207,12 +207,14 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
 
 #### Special sorting criteria
 
-There are four special sorting criteria:
+There are some criteria for special sorting in datasets:
 
 - `metadata`: delegates sorting to the metadata component, sorting by the name field of the metadata.
 - `most-viewed` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.
 - `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.
 - `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order.
+- `user.name`: sorts the datasets according to the name of the user who owns the dashboard. Supports ascending/descending order.
+- `user.role`: sorts the datasets according to the role of the user who owns the dashboard. Supports ascending/descending order.
 
 Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria.
 
