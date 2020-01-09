@@ -176,6 +176,47 @@ page[number] |      Number of page      | Number
 curl -X GET https://api.resourcewatch.org/v1/layer?page[size]=5&page[number]=2
 ```
 
+### Sorting
+
+#### Basics of sorting
+
+The API currently supports sorting by means of the `sort` parameter.
+
+> Sorting layers
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?sort=name
+```
+
+Multiple sorting criteria can be used, separating them by commas.
+
+> Sorting layers by multiple criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?sort=name,slug
+```
+
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+
+> Explicit order of sorting
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?sort=-name,+slug
+```
+
+#### Special sorting criteria
+
+There are some criteria for special sorting in layers:
+
+- `user.name`: sorts the layers according to the name of the user who owns the layer. Supports ascending/descending order.
+- `user.role`: sorts the layers according to the role of the user who owns the layer. Supports ascending/descending order.
+
+> Sorting layers with special criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?sort=user.role,name
+```
+
 ### Include related entities
 
 When loading layer data, you can optionally pass an `includes` query argument to load additional data. 
