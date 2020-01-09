@@ -107,7 +107,44 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]=15&page[number
 
 ### Sorting
 
-There's currently no support for custom sorting of dashboards. The dashboards are listed on a pseudo-random order.
+#### Basics of sorting
+
+The API currently supports sorting by means of the `sort` parameter.
+
+> Sorting dashboards
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=name
+```
+
+Multiple sorting criteria can be used, separating them by commas.
+
+> Sorting dashboards by multiple criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=name,slug
+```
+
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+
+> Explicit order of sorting
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=-name,+slug
+```
+
+#### Special sorting criteria
+
+There are some criteria for special sorting in dashboards:
+
+- `user.name`: sorts the dashboards according to the name of the user who owns the dashboard. Supports ascending/descending order.
+- `user.role`: sorts the dashboards according to the role of the user who owns the dashboard. Supports ascending/descending order.
+
+> Sorting dashboards with special criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=user.role,name
+```
 
 ### Include related entities
 
