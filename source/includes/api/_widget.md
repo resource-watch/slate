@@ -426,6 +426,47 @@ page[number] |      Number of page      | Number
 curl -X GET https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2
 ```
 
+### Sorting
+
+#### Basics of sorting
+
+The API currently supports sorting by means of the `sort` parameter.
+
+> Sorting widgets
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?sort=name
+```
+
+Multiple sorting criteria can be used, separating them by commas.
+
+
+> Sorting widgets by multiple criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?sort=name,slug
+```
+
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+
+> Explicit order of sorting
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?sort=-name,+slug
+```
+
+#### Special sorting criteria
+
+There are some criteria for special sorting in widgets:
+
+- `user.name`: sorts the widgets according to the name of the user who owns the widget. Supports ascending/descending order.
+- `user.role`: sorts the widgets according to the role of the user who owns the widget. Supports ascending/descending order.
+
+> Sorting widgets with special criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?sort=user.role,name
+```
 
 ### Include related entities
 
