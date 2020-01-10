@@ -209,13 +209,14 @@ description     | Description of the dashboard                                  
 content         | Content of the dashboard, typically encoded as a JSON string                 | any valid text
 published       | If the dashboard is in a publishable state                                   | boolean
 photo           | Object containing a set of image urls associated with the dashboard          | object
-user_id         | Id of the user who created the dashboard                                     | string with valid user id (not validated)
+user_id         | Id of the user who created the dashboard. This field is automatically set using the id of the user who performed the request. | -
 private         |                                                                              | boolean
 production      |                                                                              | boolean
 preproduction   |                                                                              | boolean
 staging         |                                                                              | boolean
 application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`.         | array of strings
 is-highlighted  | If this dashboard is highlighted (`true`/`false`). Defaults to `false`. Only accessible to users with `ADMIN` role. | boolean
+is-featured     | If this dashboard is featured (`true`/`false`). Defaults to `false`. Only accessible to users with `ADMIN` role. | boolean
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dashboard \
@@ -235,7 +236,6 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
                   "thumb": "...",
                   "original": "..."
               },
-              "user-id": "eb63867922e16e34ef3ce862",
               "private": true,
               "production": true,
               "preproduction": false,
@@ -350,10 +350,17 @@ curl -X DELETE https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> 
 
 ## Clone dashboard
 
-Clones an existing dashboard using its ID.
-If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard.
+Clones an existing dashboard using its ID. If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to override the data of the original dashboard. In the example on the side, the `name` of the dashboard will be overridden.
 
-The data provided in the body of the request will override the data of the original dashboard. In the example on the side, the `name` and the `user-id` of the dashboard will be overridden.
+The following attributes will always be ignored when provided in the request body:
+
+- `id`
+- `slug`
+- `is_highlighted`
+- `is_featured`
+- `application`
+- `user_id` (set as the id of the user who performed the request)
+
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dashboard/<id>/clone \
@@ -363,7 +370,6 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard/<id>/clone \
     "data": {
         "attributes": {
             "name": "Copy of Cities dashboard",
-            "user-id": "1111167922e16e34ef3ce872"
         }
     }
   }'
