@@ -209,7 +209,6 @@ description     | Description of the dashboard                                  
 content         | Content of the dashboard, typically encoded as a JSON string                 | any valid text
 published       | If the dashboard is in a publishable state                                   | boolean
 photo           | Object containing a set of image urls associated with the dashboard          | object
-user_id         | Id of the user who created the dashboard. This field is automatically set using the id of the user who performed the request. | -
 private         |                                                                              | boolean
 production      |                                                                              | boolean
 preproduction   |                                                                              | boolean
@@ -350,16 +349,21 @@ curl -X DELETE https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> 
 
 ## Clone dashboard
 
-Clones an existing dashboard using its ID. If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to override the data of the original dashboard. In the example on the side, the `name` of the dashboard will be overridden.
+Clones an existing dashboard using its ID. If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to overwrite the data of the original dashboard. In the example on the side, the `name` of the dashboard will be overwritten.
 
-The following attributes will always be ignored when provided in the request body:
+The following attributes can be overwritten by providing new values in the request body:
 
-- `id`
-- `slug`
-- `is_highlighted`
-- `is_featured`
-- `application`
-- `user_id` (set as the id of the user who performed the request)
+- `name`
+- `description`
+- `content`
+- `published`
+- `summary`
+- `photo`
+- `user_id`
+- `private`
+- `production`
+- `preproduction`
+- `staging`
 
 
 ```shell
