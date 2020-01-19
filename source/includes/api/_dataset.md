@@ -949,6 +949,22 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 
 ## Cloning a Dataset
 
+This endpoint returns a new dataset that is a replica of the dataset provided.
+It can take the optional query parameter `fullCloning=true` to force the cloning of the metadata.
+
+Two keys are mandatory in the payload: 
+- `datasetUrl`:  The connectorUrl for the new dataset.
+- `application`: A list of the new dataset applications.
+And two keys are optional: `legend` an `applicationConfig`.
+
+The cloned dataset has the same attributes as the source one, except for the following ones:
+- `name`: The current timestamp is added to the original name
+- `published`: will be false unless specified   
+
+The field `clonedHost` will contain the host information about the original dataset.
+
+A user can only clone datasets from and to apps he belongs to.
+
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2ff464ab28be/clone \
 -H "Authorization: Bearer <your-token>"
