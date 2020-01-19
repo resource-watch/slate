@@ -102,6 +102,8 @@ curl -X GET http://api.resourcewatch.org/auth/sign-up
 
 Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.
 
+The combination of both `user email` and `provider` must be unique.
+
 For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.
 
 For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.
