@@ -180,7 +180,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
 
 #### Basics of sorting
 
-The API currently supports sorting by means of the `sort` parameter.
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dataset, as well as `user.name` and `user.role`.
 
 > Sorting datasets
 
@@ -205,6 +205,12 @@ You can specify the sorting order by prepending the criteria with either `-` or 
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
 ```
 
+> Sorting datasets by the role of the user who owns the dataset
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=user.role
+```
+
 #### Special sorting criteria
 
 There are some criteria for special sorting in datasets:
@@ -213,8 +219,6 @@ There are some criteria for special sorting in datasets:
 - `most-viewed` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.
 - `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.
 - `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order.
-- `user.name`: sorts the datasets according to the name of the user who owns the dataset. Supports ascending/descending order.
-- `user.role`: sorts the datasets according to the role of the user who owns the dataset. Supports ascending/descending order.
 
 Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria.
 
@@ -923,7 +927,7 @@ Note: When updating the `env` property of a dataset the change will cascade down
 
 **When a dataset is deleted the user's applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.**
 
-Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them. 
+Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them.
 
 In order to perform this operation, the following conditions must be met:
 
@@ -987,7 +991,7 @@ In order to perform these operation, the following conditions must be met:
 While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.
 
 - The concatenate process relies on a slower approach to ensure the operation is atomic. Until the operation is completed, you will see the dataset data as it was before the concatenate operation was triggered. If the operation fails, the old version of the data is kept accessible as it was before the concatenation process was started. There's a known issue where concatenating new data to already existing large datasets may result in failure.
-- The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones. 
+- The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones.
 
 > Concatenate data using external data source:
 
@@ -1036,7 +1040,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
 
 This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
- 
+
 In order to perform this operation, the following conditions must be met:
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
