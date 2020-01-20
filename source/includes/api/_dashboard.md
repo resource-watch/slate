@@ -349,7 +349,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> 
 
 ## Clone dashboard
 
-Clones an existing dashboard using its ID. If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to overwrite the data of the original dashboard. In the example on the side, the `name` of the dashboard will be overwritten.
+Clones an existing dashboard using its ID. If the original dashboard contains widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to overwrite the data of the original dashboard. In the example on the side, the `name` of the dashboard will be overwritten.
 
 The following attributes can be overwritten by providing new values in the request body:
 
@@ -359,7 +359,6 @@ The following attributes can be overwritten by providing new values in the reque
 - `published`
 - `summary`
 - `photo`
-- `user_id`
 - `private`
 - `production`
 - `preproduction`
