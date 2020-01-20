@@ -102,7 +102,7 @@ curl -X GET http://api.resourcewatch.org/auth/sign-up
 
 Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.
 
-The combination of both `user email` and `provider` must be unique.
+The combination of both `user email` and `provider` must be unique - a given email address may be associated with multiple, non-related user accounts by using different authentication providers (email+password, facebook, twitter, etc).
 
 For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.
 
