@@ -1047,6 +1047,69 @@ This section is completely implementation specific and opinionated, and does not
 </code></pre>
 <p>In here you&rsquo;ll find the already existing routes. As you can see from the rather explicit syntax, you need to call the method that matches the desired HTTP verb on the <code class="prettyprint">router</code> object, and pass it a variable number of arguments - more on this in the next section. One thing to keep in mind is that all the routes in a file are typically prefixed, as defined in the <code class="prettyprint">router</code> object declaration.</p>
 
+          <h1 id="endpoints">Endpoints</h1>
+
+<p>This section of the documentation refers to endpoints that can only be used for the purposes of development. These endpoints can only be called by other micro services via Control Tower.</p>
+
+<h2 id="finding-users-by-ids">Finding users by ids</h2>
+
+<p>To retrieve the information of multiple users by ids, use the <code class="prettyprint">/auth/user/find-by-ids</code> endpoint.</p>
+
+<p>This endpoint requires authentication, and can only be called from another micro service.</p>
+<pre class="highlight shell"><code><span class="c"># retrieve info for multiple users with the given ids</span>
+curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+    "ids": [
+        "0706f055b929453eb1547392123ae99e",
+        "0c630aeb81464fcca9bebe5adcb731c8",
+    ]
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight shell"><code>    <span class="o">{</span>
+        <span class="s2">"data"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"provider"</span>: <span class="s2">"local"</span>,
+                <span class="s2">"role"</span>: <span class="s2">"USER"</span>,
+                <span class="s2">"_id"</span>: <span class="s2">"0706f055b929453eb1547392123ae99e"</span>,
+                <span class="s2">"email"</span>: <span class="s2">"example@user.com"</span>,
+                <span class="s2">"createdAt"</span>: <span class="s2">"2016-08-22T11:48:51.163Z"</span>,
+                <span class="s2">"extraUserData"</span>: <span class="o">{</span>
+                    <span class="s2">"apps"</span>: <span class="o">[</span>
+                        <span class="s2">"rw"</span>,
+                        <span class="s2">"gfw"</span>
+                    <span class="o">]</span>
+                <span class="o">}</span>,
+                <span class="s2">"updatedAt"</span>: <span class="s2">"2019-12-18T15:59:57.333Z"</span>
+            <span class="o">}</span>,
+            <span class="o">{</span>
+                <span class="s2">"provider"</span>: <span class="s2">"local"</span>,
+                <span class="s2">"role"</span>: <span class="s2">"ADMIN"</span>,
+                <span class="s2">"_id"</span>: <span class="s2">"0c630aeb81464fcca9bebe5adcb731c8"</span>,
+                <span class="s2">"email"</span>: <span class="s2">"example2@user.com"</span>,
+                <span class="s2">"createdAt"</span>: <span class="s2">"2016-08-22T11:48:51.163Z"</span>,
+                <span class="s2">"extraUserData"</span>: <span class="o">{</span>
+                    <span class="s2">"apps"</span>: <span class="o">[</span>
+                        <span class="s2">"rw"</span>,
+                        <span class="s2">"gfw"</span>,
+                        <span class="s2">"prep"</span>,
+                        <span class="s2">"aqueduct"</span>,
+                        <span class="s2">"forest-atlas"</span>,
+                        <span class="s2">"data4sdgs"</span>,
+                        <span class="s2">"gfw-climate"</span>,
+                        <span class="s2">"gfw-pro"</span>,
+                        <span class="s2">"ghg-gdp"</span>
+                    <span class="o">]</span>
+                <span class="o">}</span>,
+                <span class="s2">"updatedAt"</span>: <span class="s2">"2019-12-18T15:59:57.333Z"</span>
+            <span class="o">}</span>
+        <span class="o">]</span>
+    <span class="o">}</span>
+</code></pre>
           <h1 id="microservices">Microservices</h1>
 
 <p>A list of information related to the microservices</p>

@@ -796,7 +796,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </thead><tbody>
 <tr>
 <td>page[size]</td>
-<td style="text-align: center">The number elements per page</td>
+<td style="text-align: center">The number elements per page. There&rsquo;s a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit.</td>
 <td style="text-align: right">Number</td>
 </tr>
 <tr>
@@ -1541,6 +1541,26 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
 </aside>
 
 <h2 id="cloning-a-dataset">Cloning a Dataset</h2>
+
+<p>This endpoint returns a new dataset that is a replica of the dataset provided.
+It can take the optional query parameter <code class="prettyprint">fullCloning=true</code> to force the cloning of the metadata.</p>
+
+<p>The POST payload expects a <code class="prettyprint">dataset</code> object containing at least these 2 required keys:
+- <code class="prettyprint">datasetUrl</code>:  The connectorUrl for the new dataset.
+- <code class="prettyprint">application</code>: A list of the new dataset applications.</p>
+
+<p>Optionally, the following values can also be provided, which will be used to overwrite the
+original dataset&rsquo;s values when cloning:
+- <code class="prettyprint">legend</code>
+- <code class="prettyprint">applicationConfig</code></p>
+
+<p>The cloned dataset has the same attributes as the source one, except for the following ones:
+- <code class="prettyprint">name</code>: The current timestamp is added to the original name
+- <code class="prettyprint">published</code>: will be false unless specified   </p>
+
+<p>The field <code class="prettyprint">clonedHost</code> will contain the host information about the original dataset.</p>
+
+<p>A user can only clone datasets from and to apps they belong to.</p>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2ff464ab28be/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 -H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
@@ -1550,7 +1570,9 @@ Deleting a dataset removes it permanently! It is recommended that you save a loc
     "application": [
       "your",
       "apps"
-    ]
+    ],
+    "legend": {...},
+    "applicationConfig" : {...}
   }
 }'</span>
 </code></pre>
@@ -2244,7 +2266,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f06
 </thead><tbody>
 <tr>
 <td>page[size]</td>
-<td style="text-align: center">Number elements per page</td>
+<td style="text-align: center">Number elements per page. There&rsquo;s a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit.</td>
 <td style="text-align: right">Number</td>
 </tr>
 <tr>
@@ -3133,7 +3155,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaf
 </thead><tbody>
 <tr>
 <td>page[size]</td>
-<td style="text-align: center">Number elements per page</td>
+<td style="text-align: center">Number elements per page. There&rsquo;s a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit.</td>
 <td style="text-align: right">Number</td>
 </tr>
 <tr>
