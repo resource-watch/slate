@@ -588,7 +588,9 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 
 <h4 id="basics-of-sorting">Basics of sorting</h4>
 
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter.</p>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the dataset, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code>.</p>
+
+<p>Sorting by nested fields is not supported at the moment.</p>
 
 <blockquote>
 <p>Sorting datasets</p>
@@ -609,9 +611,14 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-name,+description
 </code></pre>
+<blockquote>
+<p>Sorting datasets by the role of the user who owns the dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>user.role
+</code></pre>
 <h4 id="special-sorting-criteria">Special sorting criteria</h4>
 
-<p>There are four special sorting criteria:</p>
+<p>There are some criteria for special sorting in datasets:</p>
 
 <ul>
 <li><code class="prettyprint">metadata</code>: delegates sorting to the metadata component, sorting by the name field of the metadata.</li>
@@ -1512,7 +1519,7 @@ However, in some scenarios, it may be desirable to specify some or all of these 
 
 <p><strong>When a dataset is deleted the user&rsquo;s applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.</strong></p>
 
-<p>Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them. </p>
+<p>Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them.</p>
 
 <p>In order to perform this operation, the following conditions must be met:</p>
 
@@ -1603,7 +1610,7 @@ original dataset&rsquo;s values when cloning:
 
 <ul>
 <li>The concatenate process relies on a slower approach to ensure the operation is atomic. Until the operation is completed, you will see the dataset data as it was before the concatenate operation was triggered. If the operation fails, the old version of the data is kept accessible as it was before the concatenation process was started. There&rsquo;s a known issue where concatenating new data to already existing large datasets may result in failure.</li>
-<li>The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones. </li>
+<li>The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones.</li>
 </ul>
 
 <blockquote>
@@ -1897,7 +1904,7 @@ original dataset&rsquo;s values when cloning:
 </code></pre>
 <h3 id="include-related-entities">Include related entities</h3>
 
-<p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data. </p>
+<p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data.</p>
 
 <h4 id="vocabulary">Vocabulary</h4>
 
@@ -2205,7 +2212,7 @@ Remember — <strong>the resulting list is filtered by env=production</strong> u
 </tbody></table>
 
 <aside class="notice">
-   Using `userId` filter will return widgets created/cloned by the user. This filter is not compatible with `favourite` or `collection`. 
+   Using `userId` filter will return widgets created/cloned by the user. This filter is not compatible with `favourite` or `collection`.
    If you want to fetch favourited widgets, or specific ones from a collection, do not include the `userId` param.
 </aside>
 
@@ -2281,9 +2288,39 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f06
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
 </code></pre>
+<h3 id="sorting">Sorting</h3>
+
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the widget, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code>.</p>
+
+<p>Sorting by nested fields is not supported at the moment.</p>
+
+<blockquote>
+<p>Sorting widgets</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?sort<span class="o">=</span>name
+</code></pre>
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<blockquote>
+<p>Sorting widgets by multiple criteria</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?sort<span class="o">=</span>name,slug
+</code></pre>
+<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> or <code class="prettyprint">+</code>. By default, <code class="prettyprint">asc</code> order is assumed.</p>
+
+<blockquote>
+<p>Explicit order of sorting</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?sort<span class="o">=</span>-name,+slug
+</code></pre>
+<blockquote>
+<p>Sorting widgets by the role of the user who owns the widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/widget?sort<span class="o">=</span>user.role
+</code></pre>
 <h3 id="include-related-entities">Include related entities</h3>
 
-<p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data. </p>
+<p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data.</p>
 
 <h4 id="vocabulary">Vocabulary</h4>
 
@@ -2640,7 +2677,7 @@ Remember — the response is jsonapi format
 </tr>
 </tbody></table>
 
-<p>It is possible to create a widget that has a different <code class="prettyprint">env</code> property to its parent dataset. </p>
+<p>It is possible to create a widget that has a different <code class="prettyprint">env</code> property to its parent dataset.</p>
 
 <blockquote>
 <p>To create a widget, you have to do a POST request with the following body:</p>
@@ -3170,9 +3207,39 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaf
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?page[size]<span class="o">=</span>5&amp;page[number]<span class="o">=</span>2
 </code></pre>
+<h3 id="sorting">Sorting</h3>
+
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the layer, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code>.</p>
+
+<p>Sorting by nested fields is not supported at the moment.</p>
+
+<blockquote>
+<p>Sorting layers</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?sort<span class="o">=</span>name
+</code></pre>
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<blockquote>
+<p>Sorting layers by multiple criteria</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?sort<span class="o">=</span>name,slug
+</code></pre>
+<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> or <code class="prettyprint">+</code>. By default, <code class="prettyprint">asc</code> order is assumed.</p>
+
+<blockquote>
+<p>Explicit order of sorting</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?sort<span class="o">=</span>-name,+slug
+</code></pre>
+<blockquote>
+<p>Sorting layers by the role of the user who owns the layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/layer?sort<span class="o">=</span>user.role
+</code></pre>
 <h3 id="include-related-entities">Include related entities</h3>
 
-<p>When loading layer data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data. </p>
+<p>When loading layer data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data.</p>
 
 <h4 id="vocabulary">Vocabulary</h4>
 
@@ -3227,7 +3294,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaf
           </span><span class="p">},</span><span class="w">
           </span><span class="s2">"applicationConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
           </span><span class="s2">"staticImageConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-          </span><span class="s2">"vocabulary"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">      
+          </span><span class="s2">"vocabulary"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
    </span><span class="p">]</span><span class="w">
@@ -3465,7 +3532,7 @@ Remember — the response is jsonapi format
 </tr>
 </tbody></table>
 
-<p>It is possible to create a layer that has a different <code class="prettyprint">env</code> property to its parent dataset. </p>
+<p>It is possible to create a layer that has a different <code class="prettyprint">env</code> property to its parent dataset.</p>
 
 <blockquote>
 <p>To create a layer, you have to do a POST request with the following body:</p>
@@ -6048,8 +6115,34 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 </code></pre>
 <h3 id="sorting">Sorting</h3>
 
-<p>There&rsquo;s currently no support for custom sorting of dashboards. The dashboards are listed on a pseudo-random order.</p>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the dashboard, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code>.</p>
 
+<p>Sorting by nested fields is not supported at the moment.</p>
+
+<blockquote>
+<p>Sorting dashboards</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>name
+</code></pre>
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<blockquote>
+<p>Sorting dashboards by multiple criteria</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>name,slug
+</code></pre>
+<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> or <code class="prettyprint">+</code>. By default, <code class="prettyprint">asc</code> order is assumed.</p>
+
+<blockquote>
+<p>Explicit order of sorting</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>-name,+slug
+</code></pre>
+<blockquote>
+<p>Sorting dashboards by the role of the user who owns the dashboard</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>user.role
+</code></pre>
 <h3 id="include-related-entities">Include related entities</h3>
 
 <p>When loading dashboards, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data.</p>
@@ -6173,11 +6266,6 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 <td>object</td>
 </tr>
 <tr>
-<td>user_id</td>
-<td>Id of the user who created the dashboard</td>
-<td>string with valid user id (not validated)</td>
-</tr>
-<tr>
 <td>private</td>
 <td></td>
 <td>boolean</td>
@@ -6207,6 +6295,11 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 <td>If this dashboard is highlighted (<code class="prettyprint">true</code>/<code class="prettyprint">false</code>). Defaults to <code class="prettyprint">false</code>. Only accessible to users with <code class="prettyprint">ADMIN</code> role.</td>
 <td>boolean</td>
 </tr>
+<tr>
+<td>is-featured</td>
+<td>If this dashboard is featured (<code class="prettyprint">true</code>/<code class="prettyprint">false</code>). Defaults to <code class="prettyprint">false</code>. Can only be set by user with <code class="prettyprint">ADMIN</code> role.</td>
+<td>boolean</td>
+</tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboard <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -6225,7 +6318,6 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
                   "thumb": "...",
                   "original": "..."
               },
-              "user-id": "eb63867922e16e34ef3ce862",
               "private": true,
               "production": true,
               "preproduction": false,
@@ -6333,10 +6425,22 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 </code></pre>
 <h2 id="clone-dashboard">Clone dashboard</h2>
 
-<p>Clones an existing dashboard using its ID.
-If the original dashboard contains functioning widgets, they will be duplicated and the new ids will be used by the new dashboard.</p>
+<p>Clones an existing dashboard using its ID. If the original dashboard contains widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to overwrite the data of the original dashboard. In the example on the side, the <code class="prettyprint">name</code> of the dashboard will be overwritten.</p>
 
-<p>The data provided in the body of the request will override the data of the original dashboard. In the example on the side, the <code class="prettyprint">name</code> and the <code class="prettyprint">user-id</code> of the dashboard will be overridden.</p>
+<p>The following attributes can be overwritten by providing new values in the request body:</p>
+
+<ul>
+<li><code class="prettyprint">name</code></li>
+<li><code class="prettyprint">description</code></li>
+<li><code class="prettyprint">content</code></li>
+<li><code class="prettyprint">published</code></li>
+<li><code class="prettyprint">summary</code></li>
+<li><code class="prettyprint">photo</code></li>
+<li><code class="prettyprint">private</code></li>
+<li><code class="prettyprint">production</code></li>
+<li><code class="prettyprint">preproduction</code></li>
+<li><code class="prettyprint">staging</code></li>
+</ul>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboard/&lt;id&gt;/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -6344,7 +6448,6 @@ If the original dashboard contains functioning widgets, they will be duplicated 
     "data": {
         "attributes": {
             "name": "Copy of Cities dashboard",
-            "user-id": "1111167922e16e34ef3ce872"
         }
     }
   }'</span>
@@ -6430,18 +6533,18 @@ Mind the string format: double quotes and curly braces need to be properly escap
 </tr>
 <tr>
 <td>resource</td>
-<td style="text-align: center">This field contains the subscription is of type email or hook</td>
+<td style="text-align: center">Details on the resource that will be notified for the subscription.</td>
 <td style="text-align: right">Object</td>
 </tr>
 <tr>
 <td>&ndash; type</td>
-<td style="text-align: center">Type</td>
-<td style="text-align: right">EMAIL or URL</td>
+<td style="text-align: center">The type of resource to notify. If <code class="prettyprint">EMAIL</code>, an email is sent to the email saved in the resource content. If <code class="prettyprint">URL</code>, a POST is requested to the web-hook URL in the resource content.</td>
+<td style="text-align: right">String</td>
 </tr>
 <tr>
 <td>&ndash; content</td>
-<td style="text-align: center">Email or url</td>
-<td style="text-align: right">Text</td>
+<td style="text-align: center">The email or URL that will be notified (according to the type).</td>
+<td style="text-align: right">String</td>
 </tr>
 <tr>
 <td>datasets</td>
