@@ -215,7 +215,7 @@ preproduction   |                                                               
 staging         |                                                                              | boolean
 application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`.         | array of strings
 is-highlighted  | If this dashboard is highlighted (`true`/`false`). Defaults to `false`. Only accessible to users with `ADMIN` role. | boolean
-is-featured     | If this dashboard is featured (`true`/`false`). Defaults to `false`. Only accessible to users with `ADMIN` role. | boolean
+is-featured     | If this dashboard is featured (`true`/`false`). Defaults to `false`. Can only be set by user with `ADMIN` role. | boolean
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dashboard \
