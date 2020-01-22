@@ -64,15 +64,16 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
 
 Available filters parameters:
 
-Field     |                         Description                          |    Type
---------- | :----------------------------------------------------------: | ------:
-name      |   Filter dashboards by name (partial matches supported       | Text
-published |   Filter dashboards by publishing status (true, false)       | Boolean
-private   |   Filter dashboards by private status (true, false)          | Boolean
-user      |           Filter dashboards by author user id                | Text
-user.role | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
-application | The application to which the dashboard belongs             | Text (single value)
-is-highlighted | Filter dashboards by highlighted ones (true,false)       | Boolean
+Field          |                         Description                                               | Type
+-------------- | :-------------------------------------------------------------------------------: | ------:
+name           | Filter dashboards by name (partial matches and case-insensitive supported).       | Text
+published      | Filter dashboards by publishing status (true, false).                             | Boolean
+private        | Filter dashboards by private status (true, false).                                | Boolean
+user           | Filter dashboards by author user id.                                              | Text
+user.role      | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+application    | The application to which the dashboard belongs.                                   | Text (single value)
+is-highlighted | Filter dashboards by highlighted ones (true,false).                               | Boolean
+is-featured    | Filter dashboards by featured ones (true,false).                                  | Boolean
 
 
 ```shell
