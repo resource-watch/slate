@@ -1061,7 +1061,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 
 ## Overwrite Data
 
-Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
+Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object. There are no requirements regarding similarity of the data structure between existing and new data - your overwrite data can have a completely different data schema.
 
 This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
 
@@ -1071,6 +1071,14 @@ In order to perform this operation, the following conditions must be met:
 - the user must be logged in and match one of the following:
   - have role `ADMIN` and belong to the same application as the dataset
   - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+
+
+Field        |                        Description                                |   Type |        Values | Required
+------------ | :-----------------------------------------------------------:     | -----: | ------------: | -------:
+provider     | Dataset provider this include inner connectors and 3rd party ones | String | [A valid dataset provider](##supported-dataset-sources) | Yes
+sources      | List of URLs from which to source data                            |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
+data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
+legend       | The schema of the new data. If none is provided, a guessing mechanism will be used. The existing `legend` value of the dataset will be ignored and overwritten in all `overwrite` operations. See [the legend section](#legend) above for more details.                                                | Object |               |       No
 
 > Overwrite data using external data source:
 
