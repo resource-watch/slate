@@ -39,7 +39,7 @@ name          |                               Name                              
 application   | Application of the subscription. Set to 'gfw' by default          |      gfw, rw, prep
 language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh
 resource      | Details on the resource that will be notified for the subscription. |           Object
--- type       | The type of resource to notify. <br>If `EMAIL`, an email is sent to the email saved in the resource content. <br>If `URL`, a POST is requested to the web-hook URL in the resource content. | String
+-- type       | The type of resource to notify. If `EMAIL`, an email is sent to the email saved in the resource content. If `URL`, a POST is requested to the web-hook URL in the resource content. | String
 -- content    |  The email or URL that will be notified (according to the type).  |             String
 datasets      |               Array of datasets of the subscription               |              Array
 datasetsQuery |              Subscriptions to subscribable datasets               |              Array
