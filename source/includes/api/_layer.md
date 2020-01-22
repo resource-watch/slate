@@ -176,9 +176,43 @@ page[number] |      Number of page      | Number
 curl -X GET https://api.resourcewatch.org/v1/layer?page[size]=5&page[number]=2
 ```
 
+### Sorting
+
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the layer, as well as `user.name` and `user.role`.
+
+Sorting by nested fields is not supported at the moment.
+
+> Sorting layers
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?sort=name
+```
+
+Multiple sorting criteria can be used, separating them by commas.
+
+> Sorting layers by multiple criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?sort=name,slug
+```
+
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+
+> Explicit order of sorting
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?sort=-name,+slug
+```
+
+> Sorting layers by the role of the user who owns the layer
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/layer?sort=user.role
+```
+
 ### Include related entities
 
-When loading layer data, you can optionally pass an `includes` query argument to load additional data. 
+When loading layer data, you can optionally pass an `includes` query argument to load additional data.
 
 #### Vocabulary
 
@@ -236,7 +270,7 @@ curl -X GET https://api.resourcewatch.org/v1/layer?includes=vocabulary
           },
           "applicationConfig": {},
           "staticImageConfig": {},
-          "vocabulary": []      
+          "vocabulary": []
         }
       }
    ]
@@ -414,7 +448,7 @@ dataset           |                                                             
 protected         |                                            If it's a protected layer (not is possible to delete if it's true)                                               |   Boolean |                                 true-false |       No
 env         |                                            Environment of the Layer. Set to 'production' by default                                               |   String |                                 Valid string |       No
 
-It is possible to create a layer that has a different `env` property to its parent dataset. 
+It is possible to create a layer that has a different `env` property to its parent dataset.
 
 > To create a layer, you have to do a POST request with the following body:
 

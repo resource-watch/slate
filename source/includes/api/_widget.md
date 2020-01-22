@@ -91,7 +91,7 @@ curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c23
 
 ### Include related entities
 
-When loading widget data, you can optionally pass an `includes` query argument to load additional data. 
+When loading widget data, you can optionally pass an `includes` query argument to load additional data.
 
 #### Vocabulary
 
@@ -354,7 +354,7 @@ collection |  Filter widgets based on an user collection                 |    Te
 user.role | The role of the user who created the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
 
 <aside class="notice">
-   Using `userId` filter will return widgets created/cloned by the user. This filter is not compatible with `favourite` or `collection`. 
+   Using `userId` filter will return widgets created/cloned by the user. This filter is not compatible with `favourite` or `collection`.
    If you want to fetch favourited widgets, or specific ones from a collection, do not include the `userId` param.
 </aside>
 
@@ -426,10 +426,44 @@ page[number] |      Number of page      | Number
 curl -X GET https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2
 ```
 
+### Sorting
+
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the widget, as well as `user.name` and `user.role`.
+
+Sorting by nested fields is not supported at the moment.
+
+> Sorting widgets
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?sort=name
+```
+
+Multiple sorting criteria can be used, separating them by commas.
+
+
+> Sorting widgets by multiple criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?sort=name,slug
+```
+
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+
+> Explicit order of sorting
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?sort=-name,+slug
+```
+
+> Sorting widgets by the role of the user who owns the widget
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/widget?sort=user.role
+```
 
 ### Include related entities
 
-When loading widget data, you can optionally pass an `includes` query argument to load additional data. 
+When loading widget data, you can optionally pass an `includes` query argument to load additional data.
 
 #### Vocabulary
 
@@ -690,7 +724,7 @@ layerId      |   UuId of the relationship with layer   |    Text |              
 dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
 env         |                                            Environment of the Widget. Set to 'production' by default                                               |   String |                                 Valid string |       No
 
-It is possible to create a widget that has a different `env` property to its parent dataset. 
+It is possible to create a widget that has a different `env` property to its parent dataset.
 
 > To create a widget, you have to do a POST request with the following body:
 
