@@ -430,6 +430,8 @@ curl -X GET https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2
 
 The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the widget, as well as `user.name` and `user.role`.
 
+Sorting by nested fields is not supported at the moment.
+
 > Sorting widgets
 
 ```shell

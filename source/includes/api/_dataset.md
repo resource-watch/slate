@@ -182,6 +182,8 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
 
 The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dataset, as well as `user.name` and `user.role`.
 
+Sorting by nested fields is not supported at the moment.
+
 > Sorting datasets
 
 ```shell
