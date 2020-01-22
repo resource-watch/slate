@@ -1654,7 +1654,7 @@ original dataset&rsquo;s values when cloning:
 
 <h2 id="overwrite-data">Overwrite Data</h2>
 
-<p>Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.</p>
+<p>Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object. There are no requirements regarding similarity of the data structure between existing and new data - your overwrite data can have a completely different data schema.</p>
 
 <p>This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset&rsquo;s <code class="prettyprint">status</code> to be set to <code class="prettyprint">pending</code>, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to <code class="prettyprint">saved</code> and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.</p>
 
@@ -1664,6 +1664,45 @@ original dataset&rsquo;s values when cloning:
 - the user must be logged in and match one of the following:
   - have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset
   - have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>provider</td>
+<td style="text-align: center">Dataset provider this include inner connectors and 3rd party ones</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right"><a href="##supported-dataset-sources">A valid dataset provider</a></td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>sources</td>
+<td style="text-align: center">List of URLs from which to source data</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">URL array</td>
+<td style="text-align: right">Yes, unless JSON data is provided using the <code class="prettyprint">data</code> field</td>
+</tr>
+<tr>
+<td>data</td>
+<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">[{},{},{}]</td>
+<td style="text-align: right">Yes for JSON if <code class="prettyprint">sources</code> is not present</td>
+</tr>
+<tr>
+<td>legend</td>
+<td style="text-align: center">The schema of the new data. If none is provided, a guessing mechanism will be used. The existing <code class="prettyprint">legend</code> value of the dataset will be ignored and overwritten in all <code class="prettyprint">overwrite</code> operations. See <a href="#legend">the legend section</a> above for more details.</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right"></td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
 
 <blockquote>
 <p>Overwrite data using external data source:</p>
