@@ -108,7 +108,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]=15&page[number
 
 ### Sorting
 
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dashboard, as well as `user.name` and `user.role`.
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dashboard, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
 
 Sorting by nested fields is not supported at the moment.
 

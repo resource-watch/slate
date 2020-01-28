@@ -180,7 +180,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
 
 #### Basics of sorting
 
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dataset, as well as `user.name` and `user.role`.
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dataset, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
 
 Sorting by nested fields is not supported at the moment.
 
@@ -971,7 +971,7 @@ original dataset's values when cloning:
 
 The cloned dataset has the same attributes as the source one, except for the following ones:
 - `name`: The current timestamp is added to the original name
-- `published`: will be false unless specified   
+- `published`: will be false unless specified
 
 The field `clonedHost` will contain the host information about the original dataset.
 
