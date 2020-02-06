@@ -5979,22 +5979,22 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </thead><tbody>
 <tr>
 <td>name</td>
-<td style="text-align: center">Filter dashboards by name (partial matches supported</td>
+<td style="text-align: center">Filter dashboards by name (partial matches and case-insensitive supported).</td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
 <td>published</td>
-<td style="text-align: center">Filter dashboards by publishing status (true, false)</td>
+<td style="text-align: center">Filter dashboards by publishing status (true, false).</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
 <td>private</td>
-<td style="text-align: center">Filter dashboards by private status (true, false)</td>
+<td style="text-align: center">Filter dashboards by private status (true, false).</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 <tr>
 <td>user</td>
-<td style="text-align: center">Filter dashboards by author user id</td>
+<td style="text-align: center">Filter dashboards by author user id.</td>
 <td style="text-align: right">Text</td>
 </tr>
 <tr>
@@ -6004,12 +6004,17 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </tr>
 <tr>
 <td>application</td>
-<td style="text-align: center">The application to which the dashboard belongs</td>
+<td style="text-align: center">The application to which the dashboard belongs.</td>
 <td style="text-align: right">Text (single value)</td>
 </tr>
 <tr>
 <td>is-highlighted</td>
-<td style="text-align: center">Filter dashboards by highlighted ones (true,false)</td>
+<td style="text-align: center">Filter dashboards by highlighted ones (true,false).</td>
+<td style="text-align: right">Boolean</td>
+</tr>
+<tr>
+<td>is-featured</td>
+<td style="text-align: center">Filter dashboards by featured ones (true,false).</td>
 <td style="text-align: right">Boolean</td>
 </tr>
 </tbody></table>
@@ -6443,78 +6448,91 @@ Remember — All subscription endpoints need to be authenticated.
 Mind the string format: double quotes and curly braces need to be properly escaped.
 </aside>
 
-<h2 id="create-subscription">Create Subscription</h2>
+<h2 id="creating-a-subscription">Creating a Subscription</h2>
 
 <table><thead>
 <tr>
 <th>Field</th>
 <th style="text-align: center">Description</th>
 <th style="text-align: right">Type</th>
+<th style="text-align: right">Required</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>name</td>
 <td style="text-align: center">Name</td>
 <td style="text-align: right">Text</td>
+<td style="text-align: right">No</td>
 </tr>
 <tr>
 <td>application</td>
-<td style="text-align: center">Application of the subscription. Set to &lsquo;gfw&rsquo; by default</td>
-<td style="text-align: right">gfw, rw, prep</td>
+<td style="text-align: center">Application of the subscription. Set to <code class="prettyprint">gfw</code> by default</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">No</td>
 </tr>
 <tr>
 <td>language</td>
 <td style="text-align: center">Language of the subscriptions (used to select the email template)</td>
 <td style="text-align: right">en, es, fr, pt, zh</td>
+<td style="text-align: right">Yes</td>
 </tr>
 <tr>
 <td>resource</td>
 <td style="text-align: center">Details on the resource that will be notified for the subscription.</td>
 <td style="text-align: right">Object</td>
+<td style="text-align: right">Yes</td>
 </tr>
 <tr>
 <td>&ndash; type</td>
 <td style="text-align: center">The type of resource to notify. If <code class="prettyprint">EMAIL</code>, an email is sent to the email saved in the resource content. If <code class="prettyprint">URL</code>, a POST is requested to the web-hook URL in the resource content.</td>
 <td style="text-align: right">String</td>
+<td style="text-align: right">Yes</td>
 </tr>
 <tr>
 <td>&ndash; content</td>
 <td style="text-align: center">The email or URL that will be notified (according to the type).</td>
 <td style="text-align: right">String</td>
+<td style="text-align: right">Yes</td>
 </tr>
 <tr>
 <td>datasets</td>
 <td style="text-align: center">Array of datasets of the subscription</td>
 <td style="text-align: right">Array</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasetsQuery</code> is specified)</td>
 </tr>
 <tr>
 <td>datasetsQuery</td>
 <td style="text-align: center">Subscriptions to subscribable datasets</td>
 <td style="text-align: right">Array</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
 </tr>
 <tr>
 <td>&ndash; id</td>
 <td style="text-align: center">Id of dataset</td>
 <td style="text-align: right">ObjectId</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
 </tr>
 <tr>
 <td>&ndash; type</td>
 <td style="text-align: center">Type of subscription defined in the dataset</td>
 <td style="text-align: right">Text</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
 </tr>
 <tr>
 <td>&ndash; params</td>
 <td style="text-align: center">Geographic area of the subscription</td>
 <td style="text-align: right">Object</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">Environment of the subscription. Set to &#39;production&rsquo; by default</td>
+<td style="text-align: center">Environment of the subscription. Set to <code class="prettyprint">production</code> by default</td>
 <td style="text-align: right">String</td>
+<td style="text-align: right">No</td>
 </tr>
 </tbody></table>
 
-<p>You only require one of <code class="prettyprint">datasets</code>  or <code class="prettyprint">datasetsQuery</code>, but not both.</p>
+<aside class="warning">The <code>application</code> field will soon be made required when creating a subscription.</aside>
 
 <aside class="notice">
 Remember — Subscriptions are created unconfirmed. A link for confirmation will be sent to the subscription email.
@@ -7028,7 +7046,7 @@ Remember — the response is in JSONApi format.
 <td>application</td>
 <td style="text-align: center">Application to which the subscription is associated.</td>
 <td style="text-align: right">String</td>
-<td style="text-align: right">&#39;gfw&rsquo;</td>
+<td style="text-align: right">&lsquo;gfw&rsquo;</td>
 </tr>
 <tr>
 <td>env</td>
@@ -7037,6 +7055,8 @@ Remember — the response is in JSONApi format.
 <td style="text-align: right">&#39;production&rsquo;</td>
 </tr>
 </tbody></table>
+
+<aside class="warning">The <code>application</code> filter, which defaults to <code>gfw</code>, will soon be modified. We recommend reviewing your application to ensure you set and load the correct <code>application</code> explicitly</aside>
 
 <h2 id="resend-confirmation">Resend confirmation</h2>
 
