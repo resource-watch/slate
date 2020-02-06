@@ -31,24 +31,25 @@ Inside the `subscribable` object, one (or several) sub-objects can be declared. 
 Mind the string format: double quotes and curly braces need to be properly escaped.
 </aside>
 
-## Create Subscription
+## Creating a Subscription
 
-Field         |                            Description                            |               Type
-------------- | :---------------------------------------------------------------: | -----------------:
-name          |                               Name                                |               Text
-application   | Application of the subscription. Set to 'gfw' by default          |      gfw, rw, prep
-language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh
-resource      | Details on the resource that will be notified for the subscription. |           Object
--- type       | The type of resource to notify. If `EMAIL`, an email is sent to the email saved in the resource content. If `URL`, a POST is requested to the web-hook URL in the resource content. | String
--- content    |  The email or URL that will be notified (according to the type).  |             String
-datasets      |               Array of datasets of the subscription               |              Array
-datasetsQuery |              Subscriptions to subscribable datasets               |              Array
--- id         |                           Id of dataset                           |           ObjectId
--- type       | Type of subscription defined in the dataset                       |               Text 
--- params     | Geographic area of the subscription                               |             Object
-env           |  Environment of the subscription. Set to 'production' by default  |             String 
 
-You only require one of `datasets`  or `datasetsQuery`, but not both.
+Field         |                            Description                            |               Type | Required 
+------------- | :---------------------------------------------------------------: | -----------------: |-----------:
+name          |                               Name                                |               Text | No
+application   | Application of the subscription. Set to `gfw` by default          |             String | No 
+language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh | Yes
+resource      | Details on the resource that will be notified for the subscription. |           Object | Yes
+-- type       | The type of resource to notify. If `EMAIL`, an email is sent to the email saved in the resource content. If `URL`, a POST is requested to the web-hook URL in the resource content. | String | Yes
+-- content    |  The email or URL that will be notified (according to the type).  |             String | Yes
+datasets      |               Array of datasets of the subscription               |              Array | Yes (unless `datasetsQuery` is specified) 
+datasetsQuery |              Subscriptions to subscribable datasets               |              Array | Yes (unless `datasets` is specified)
+-- id         |                           Id of dataset                           |           ObjectId | Yes (unless `datasets` is specified)
+-- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
+-- params     | Geographic area of the subscription                               |             Object | Yes (unless `datasets` is specified)
+env           |  Environment of the subscription. Set to `production` by default  |             String | No
+
+<aside class="warning">The <code>application</code> field will soon be made required when creating a subscription.</aside>
 
 <aside class="notice">
 Remember — Subscriptions are created unconfirmed. A link for confirmation will be sent to the subscription email.
