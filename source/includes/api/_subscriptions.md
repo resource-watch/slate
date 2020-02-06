@@ -487,6 +487,8 @@ Field       |             Description                              |   Type | De
 application | Application to which the subscription is associated. | String | 'gfw'
 env         |           Id of geostore                             | String | 'production'
 
+<aside class="warning">The <code>application</code> filter, which defaults to <code>gfw</code>, will soon be modified. We recommend reviewing your application to ensure you set and load the correct <code>application</code> explicitly</aside>
+
 ## Resend confirmation
 
 To resend the confirmation:
