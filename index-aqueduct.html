@@ -588,7 +588,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 
 <h4 id="basics-of-sorting">Basics of sorting</h4>
 
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the dataset, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code>.</p>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the dataset, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users).</p>
 
 <p>Sorting by nested fields is not supported at the moment.</p>
 
@@ -1563,7 +1563,7 @@ original dataset&rsquo;s values when cloning:
 
 <p>The cloned dataset has the same attributes as the source one, except for the following ones:
 - <code class="prettyprint">name</code>: The current timestamp is added to the original name
-- <code class="prettyprint">published</code>: will be false unless specified   </p>
+- <code class="prettyprint">published</code>: will be false unless specified</p>
 
 <p>The field <code class="prettyprint">clonedHost</code> will contain the host information about the original dataset.</p>
 
@@ -2329,7 +2329,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f06
 </code></pre>
 <h3 id="sorting">Sorting</h3>
 
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the widget, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code>.</p>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the widget, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users).</p>
 
 <p>Sorting by nested fields is not supported at the moment.</p>
 
@@ -3248,7 +3248,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaf
 </code></pre>
 <h3 id="sorting">Sorting</h3>
 
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the layer, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code>.</p>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the layer, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users).</p>
 
 <p>Sorting by nested fields is not supported at the moment.</p>
 
