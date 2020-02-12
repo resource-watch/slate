@@ -9055,8 +9055,7 @@ curl -X DELETE http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
                 </span><span class="p">},</span><span class="w">
                 </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/find-by-ids"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="err">...</span><span class="w">
+            </span><span class="p">}</span><span class="w">
         </span><span class="p">],</span><span class="w">
         </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-01-24T13:04:46.728Z"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
@@ -9108,14 +9107,75 @@ curl -X DELETE http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
                 </span><span class="p">},</span><span class="w">
                 </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="err">...</span><span class="w">
+            </span><span class="p">}</span><span class="w">
         </span><span class="p">],</span><span class="w">
         </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-08T12:07:38.014Z"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<h2 id="get-a-microservice-by-id">Get a microservice by id</h2>
+
+<p>To obtain the details of a single microservice, use:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice/5aa667d1aee7ae16fb419c23 <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aa667d1aee7ae16fb419c23"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.778Z"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="err">...</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+    </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"layer"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"dataset"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"layer"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Layer"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://layer.default.svc.cluster.local:6000"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/layer"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-08T12:07:38.014Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="delete-microservice">Delete microservice</h2>
@@ -9124,10 +9184,7 @@ curl -X DELETE http://api.resourcewatch.org/auth/user/&lt;user_id&gt;
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/api/v1/microservice/:id <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<h4 id="notes">Notes</h4>
-
-<p>Keep in mind that this does not actually delete the microservice, instead it schedules it for being removed. 
-There&rsquo;s a cron task that does the actual deleting, so the process is async.</p>
+<p>This will delete the microservice and its associated endpoints from the gateway&rsquo;s database. It does not remove the actual running microservice application instance, which may re-register and become available once again.</p>
 
           <h1 id="troubleshooting">Troubleshooting</h1>
 
