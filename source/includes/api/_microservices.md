@@ -113,6 +113,23 @@ curl -X GET https://api.resourcewatch.org/api/v1/microservice \
     }
 ]
 ```
+
+### Filters
+
+The microservice list provided by the endpoint can be filtered with the following attributes:
+
+Filter        | Description                                                  | Accepted values
+------------- | -------------------------------------------------------------| ------------------------
+status        | Status of the microservice                                   | `pending`, `active` or `error`
+url           | Internal URL of the microservice within the cluster          | String
+
+> Filtering by status
+
+```shell
+curl -X GET https://api.resourcewatch.org/api/v1/microservice?status=active \
+-H "Authorization: Bearer <your-token>"
+```
+
 ## Get a microservice by id
 
 To obtain the details of a single microservice, use:
