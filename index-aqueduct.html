@@ -6075,6 +6075,35 @@ be considered a &ldquo;only do it if you know what you are doing&rdquo; operatio
     </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
+<h3 id="filters">Filters</h3>
+
+<p>The microservice list provided by the endpoint can be filtered with the following attributes:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Accepted values</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>Status of the microservice</td>
+<td><code class="prettyprint">pending</code>, <code class="prettyprint">active</code> or <code class="prettyprint">error</code></td>
+</tr>
+<tr>
+<td>url</td>
+<td>Internal URL of the microservice within the cluster</td>
+<td>String</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>Filtering by status</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice?status<span class="o">=</span>active <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
 <h2 id="get-a-microservice-by-id">Get a microservice by id</h2>
 
 <p>To obtain the details of a single microservice, use:</p>
