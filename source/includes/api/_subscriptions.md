@@ -8,7 +8,7 @@ Remember — All subscription endpoints need to be authenticated.
 
 ## Subscribable datasets
 
-In order to create a subscription, a dataset must be prepared to accept them. This is achieved by declaring some queries in the dataset json object sent to the `/v1/dataset` endpoint under the `subscribable`property. 
+In order to create a subscription, a dataset must be prepared to accept them. This is achieved by declaring some queries in the dataset json object sent to the `/v1/dataset` endpoint under the `subscribable`property.
 
 ```json
 {
@@ -34,15 +34,15 @@ Mind the string format: double quotes and curly braces need to be properly escap
 ## Creating a Subscription
 
 
-Field         |                            Description                            |               Type | Required 
+Field         |                            Description                            |               Type | Required
 ------------- | :---------------------------------------------------------------: | -----------------: |-----------:
 name          |                               Name                                |               Text | No
-application   | Application of the subscription. Set to `gfw` by default          |             String | No 
+application   | Application of the subscription. Set to `gfw` by default          |             String | No
 language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh | Yes
 resource      | Details on the resource that will be notified for the subscription. |           Object | Yes
 -- type       | The type of resource to notify. If `EMAIL`, an email is sent to the email saved in the resource content. If `URL`, a POST is requested to the web-hook URL in the resource content. | String | Yes
 -- content    |  The email or URL that will be notified (according to the type).  |             String | Yes
-datasets      |               Array of datasets of the subscription               |              Array | Yes (unless `datasetsQuery` is specified) 
+datasets      |               Array of datasets of the subscription               |              Array | Yes (unless `datasetsQuery` is specified)
 datasetsQuery |              Subscriptions to subscribable datasets               |              Array | Yes (unless `datasets` is specified)
 -- id         |                           Id of dataset                           |           ObjectId | Yes (unless `datasets` is specified)
 -- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
@@ -96,7 +96,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 ```
 
 In this case, a subscription is being created in reference to the `subscribable` field present in the previously defined dataset. After confirming the subscription the `subscriptionQuery` will be ran and its result will be compared against the `threshold`. If the query result is at least equal to the threshold, a new alert will be sent to the subscription's email.
- 
+
 ### From country
 
 Field        |             Description             |   Type
@@ -348,7 +348,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
    "datasets" : ["<dataset>"],
    "params": {
        "geostore": "<idGeostore>"
-    },	
+    },
    "datasetsQuery": [{}]
   }'
 ```
@@ -480,7 +480,7 @@ Remember — the response is in JSONApi format.
 }
 ```
 
-This endpoint supports the following optional query parameters as filters: 
+This endpoint supports the following optional query parameters as filters:
 
 Field       |             Description                              |   Type | Default value
 ----------- | :--------------------------------------------------: | -----: | -----:
@@ -525,4 +525,158 @@ To unsubscribe (delete a subscription):
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 -H "Authorization: Bearer <your-token>"
+```
+
+## Subscription statistics
+
+<aside class="notice">Remember — Statistics endpoints require authentication by an ADMIN user.</aside>
+
+The following endpoints can be used to access data regarding the subscription notifications that have been sent.
+
+This endpoint supports the following query parameters as filters:
+
+Field       |             Description                                                          | Type   | Default value |
+----------- | :------------------------------------------------------------------------------: | -----: | --------------:
+start       | The start of the date range to fetch the statistics. This parameter is required. | String | None
+end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None
+application | The application for which the statistics will be fetched.                        | String | 'gfw'
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=01-01-2020&end=08-04-2020 \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```json
+
+{
+    "topSubscriptions": {
+        "geostore": 1000,
+        "country": 30,
+        "region": 20,
+        "wdpa": 10,
+        "use": 1
+    },
+    "info": {
+        "numSubscriptions": 1000,
+        "totalSubscriptions": 6000,
+        "usersWithSubscriptions": 1000,
+        "totalEmailsSentInThisQ": 0,
+        "totalEmailsSended": 0
+    },
+    "usersWithSubscription": 119,
+    "newUsers": 210,
+    "groupStatistics": {
+        "glad-alerts": {
+            "country": 15,
+            "region": 28,
+            "use": 1,
+            "wdpa": 9,
+            "geostore": 1305,
+            "countries": {
+                "CHL": 1,
+                "IDN": 3,
+                ...
+            },
+            "regions": {
+                "1": 1,
+                "2": 2,
+                ...
+            },
+            "wdpas": {
+                "130": 1,
+                "34043": 5,
+                ...
+            },
+            "countryTop": {
+                "name": "IDN",
+                "value": 3
+            },
+            "regionTop": {
+                "nameRegion": 12,
+                "nameCountry": "IDN",
+                "value": 2
+            },
+            "wdpaTop": {
+                "id": 34043,
+                "value": 5
+            }
+        },
+        "prodes-loss": {...},
+        "umd-loss-gain": {...},
+        "terrai-alerts": {...},
+        "viirs-active-fires": {...},
+        "imazon-alerts": {...},
+        "forma250GFW": {...},
+        "forma-alerts": {...},
+        "story": {...},
+        "63f34231-7369-4622-81f1-28a144d17835": {...}
+    }
+}
+```
+
+To access subscription statistics grouped by the the dataset of the subscription, you can use the `statistics-group` endpoint. This endpoint accepts the following filters as query parameters:
+
+Field       |             Description                                                          | Type   | Default value |
+----------- | :------------------------------------------------------------------------------: | -----: | --------------:
+start       | The start of the date range to fetch the statistics. This parameter is required. | String | None
+end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None
+application | The application for which the statistics will be fetched.                        | String | 'gfw'
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=01-01-2020&end=08-04-2020 \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```json
+
+{
+    "glad-alerts": {
+        "country": 15,
+        "region": 28,
+        "use": 1,
+        "wdpa": 9,
+        "geostore": 1305,
+        "countries": {
+            "CHL": 1,
+            "IDN": 3,
+            ...
+        },
+        "regions": {
+            "1": 1,
+            "2": 2,
+            ...
+        },
+        "wdpas": {
+            "130": 1,
+            "34043": 5,
+            ...
+        },
+        "countryTop": {
+            "name": "IDN",
+            "value": 3
+        },
+        "regionTop": {
+            "nameRegion": 12,
+            "nameCountry": "IDN",
+            "value": 2
+        },
+        "wdpaTop": {
+            "id": 34043,
+            "value": 5
+        }
+    },
+    "prodes-loss": {...},
+    "umd-loss-gain": {...},
+    "terrai-alerts": {...},
+    "viirs-active-fires": {...},
+    "imazon-alerts": {...},
+    "forma250GFW": {...},
+    "forma-alerts": {...},
+    "story": {...},
+    "63f34231-7369-4622-81f1-28a144d17835": {...}
+}
 ```
