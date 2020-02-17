@@ -529,22 +529,24 @@ curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 
 ## Subscription statistics
 
-<aside class="notice">Remember — Statistics endpoints require authentication by an ADMIN user.</aside>
+Statistics endpoints require authentication by an ADMIN user.
 
-The following endpoints can be used to access data regarding the subscription notifications that have been sent.
-
-This endpoint supports the following query parameters as filters:
-
-Field       |             Description                                                          | Type   | Default value |
------------ | :------------------------------------------------------------------------------: | -----: | --------------:
-start       | The start of the date range to fetch the statistics. This parameter is required. | String | None
-end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None
-application | The application for which the statistics will be fetched.                        | String | 'gfw'
+### General subscription statistics
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=01-01-2020&end=08-04-2020 \
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=:start&end=:end \
 -H "Authorization: Bearer <your-token>"
 ```
+
+The `subscription/statistics` endpoint can be used to access all data regarding the subscription notifications that have been sent.
+
+This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):
+
+Field       |             Description                                                          | Type   | Default | Example    |
+----------- | :------------------------------------------------------------------------------: | -----: | ------: | ---------: |
+start       | The start of the date range to fetch the statistics. This parameter is required. | String | None    | 01-01-2020 |
+end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None    | 02-20-2020 |
+application | The application for which the statistics will be fetched.                        | String | 'gfw'   | 'rw'       |
 
 > Response:
 
@@ -616,18 +618,22 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=01-0
 }
 ```
 
-To access subscription statistics grouped by the the dataset of the subscription, you can use the `statistics-group` endpoint. This endpoint accepts the following filters as query parameters:
-
-Field       |             Description                                                          | Type   | Default value |
------------ | :------------------------------------------------------------------------------: | -----: | --------------:
-start       | The start of the date range to fetch the statistics. This parameter is required. | String | None
-end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None
-application | The application for which the statistics will be fetched.                        | String | 'gfw'
+### Grouped subscription statistics
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=01-01-2020&end=08-04-2020 \
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=:start&end=:end \
 -H "Authorization: Bearer <your-token>"
 ```
+
+The `subscription/statistics-group` endpoint can be used to access data regarding the subscription notifications that have been sent, grouped by the the dataset of the subscription.
+
+This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):
+
+Field       |             Description                                                          | Type   | Default | Example    |
+----------- | :------------------------------------------------------------------------------: | -----: | ------: | ---------: |
+start       | The start of the date range to fetch the statistics. This parameter is required. | String | None    | 01-01-2020 |
+end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None    | 02-20-2020 |
+application | The application for which the statistics will be fetched.                        | String | 'gfw'   | 'rw'       |
 
 > Response:
 
