@@ -533,10 +533,7 @@ Statistics endpoints require authentication by an ADMIN user.
 
 ### General subscription statistics
 
-```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=:start&end=:end \
--H "Authorization: Bearer <your-token>"
-```
+
 
 The `subscription/statistics` endpoint can be used to access all data regarding the subscription notifications that have been sent.
 
@@ -547,6 +544,12 @@ Field       |             Description                                           
 start       | The start of the date range to fetch the statistics. This parameter is required. | String | None    | 01-01-2020 |
 end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None    | 02-20-2020 |
 application | The application for which the statistics will be fetched.                        | String | 'gfw'   | 'rw'       |
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=:start&end=:end \
+-H "Authorization: Bearer <your-token>"
+```
 
 > Response:
 
@@ -620,11 +623,6 @@ application | The application for which the statistics will be fetched.         
 
 ### Grouped subscription statistics
 
-```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=:start&end=:end \
--H "Authorization: Bearer <your-token>"
-```
-
 The `subscription/statistics-group` endpoint can be used to access data regarding the subscription notifications that have been sent, grouped by the the dataset of the subscription.
 
 This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):
@@ -634,6 +632,11 @@ Field       |             Description                                           
 start       | The start of the date range to fetch the statistics. This parameter is required. | String | None    | 01-01-2020 |
 end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None    | 02-20-2020 |
 application | The application for which the statistics will be fetched.                        | String | 'gfw'   | 'rw'       |
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=:start&end=:end \
+-H "Authorization: Bearer <your-token>"
+```
 
 > Response:
 
