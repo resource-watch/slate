@@ -6531,7 +6531,7 @@ Remember — All subscription endpoints need to be authenticated.
 
 <h2 id="subscribable-datasets">Subscribable datasets</h2>
 
-<p>In order to create a subscription, a dataset must be prepared to accept them. This is achieved by declaring some queries in the dataset json object sent to the <code class="prettyprint">/v1/dataset</code> endpoint under the <code class="prettyprint">subscribable</code>property. </p>
+<p>In order to create a subscription, a dataset must be prepared to accept them. This is achieved by declaring some queries in the dataset json object sent to the <code class="prettyprint">/v1/dataset</code> endpoint under the <code class="prettyprint">subscribable</code>property.</p>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset name"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"app"</span><span class="p">],</span><span class="w">
@@ -7017,7 +7017,7 @@ Remember — Subscriptions are created unconfirmed. A link for confirmation will
    "datasets" : ["&lt;dataset&gt;"],
    "params": {
        "geostore": "&lt;idGeostore&gt;"
-    },  
+    },
    "datasetsQuery": [{}]
   }'</span>
 </code></pre>
@@ -7135,7 +7135,7 @@ Remember — the response is in JSONApi format.
    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint supports the following optional query parameters as filters: </p>
+<p>This endpoint supports the following optional query parameters as filters:</p>
 
 <table><thead>
 <tr>
@@ -7187,6 +7187,210 @@ Remember — the response is in JSONApi format.
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
+<h2 id="subscription-statistics">Subscription statistics</h2>
+
+<p>Statistics endpoints require authentication by an ADMIN user.</p>
+
+<h3 id="general-subscription-statistics">General subscription statistics</h3>
+
+<p>The <code class="prettyprint">subscription/statistics</code> endpoint can be used to access all data regarding the subscription notifications that have been sent.</p>
+
+<p>This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+<th style="text-align: right">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start</td>
+<td style="text-align: center">The start of the date range to fetch the statistics. This parameter is required.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">None</td>
+<td style="text-align: right">01-01-2020</td>
+</tr>
+<tr>
+<td>end</td>
+<td style="text-align: center">The end of the date range to fetch the statistics. This parameter is required.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">None</td>
+<td style="text-align: right">02-20-2020</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application for which the statistics will be fetched.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;gfw&rsquo;</td>
+<td style="text-align: right">&#39;rw&rsquo;</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start<span class="o">=</span>:start&amp;end<span class="o">=</span>:end <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"topSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"numSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"totalSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"usersWithSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"totalEmailsSentInThisQ"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"totalEmailsSended"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"usersWithSubscription"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"newUsers"</span><span class="p">:</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"groupStatistics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"glad-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1305</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"countries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"CHL"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"IDN"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+                </span><span class="err">...</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"regions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="err">...</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"wdpas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"130"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"34043"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+                </span><span class="err">...</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"countryTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"regionTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"nameRegion"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"nameCountry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"wdpaTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34043</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"prodes-loss"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="s2">"umd-loss-gain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="s2">"terrai-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="s2">"viirs-active-fires"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="s2">"imazon-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="s2">"forma250GFW"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="s2">"forma-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="s2">"story"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="s2">"63f34231-7369-4622-81f1-28a144d17835"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="grouped-subscription-statistics">Grouped subscription statistics</h3>
+
+<p>The <code class="prettyprint">subscription/statistics-group</code> endpoint can be used to access data regarding the subscription notifications that have been sent, grouped by the the dataset of the subscription.</p>
+
+<p>This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+<th style="text-align: right">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start</td>
+<td style="text-align: center">The start of the date range to fetch the statistics. This parameter is required.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">None</td>
+<td style="text-align: right">01-01-2020</td>
+</tr>
+<tr>
+<td>end</td>
+<td style="text-align: center">The end of the date range to fetch the statistics. This parameter is required.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">None</td>
+<td style="text-align: right">02-20-2020</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application for which the statistics will be fetched.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;gfw&rsquo;</td>
+<td style="text-align: right">&#39;rw&rsquo;</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start<span class="o">=</span>:start&amp;end<span class="o">=</span>:end <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"glad-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1305</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"countries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"CHL"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"IDN"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"regions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"wdpas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"130"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"34043"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+            </span><span class="err">...</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"countryTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"regionTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"nameRegion"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"nameCountry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"wdpaTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34043</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"prodes-loss"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+    </span><span class="s2">"umd-loss-gain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+    </span><span class="s2">"terrai-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+    </span><span class="s2">"viirs-active-fires"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+    </span><span class="s2">"imazon-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+    </span><span class="s2">"forma250GFW"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+    </span><span class="s2">"forma-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+    </span><span class="s2">"story"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+    </span><span class="s2">"63f34231-7369-4622-81f1-28a144d17835"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
           <h1 id="favorites">Favorites</h1>
 
 <p>The users can save their own favorites resources of the API.</p>
