@@ -7540,6 +7540,16 @@ This process is computational demanding and may be slow at times, depeding on se
   -H 'Authorization: Bearer &lt;your-token&gt;' \
   -H 'Content-Type: application/json' \
 </code></pre>
+<p>The endpoint accepts the following optional parameters:</p>
+
+<ul>
+<li><code class="prettyprint">height</code> - Configure the height of the generated screenshot.</li>
+<li><code class="prettyprint">width</code> - Configure the width of the generated screenshot.</li>
+<li><code class="prettyprint">format</code> - Configure the format of the generated screenshot, admiting two values: <code class="prettyprint">png</code> and <code class="prettyprint">pdf</code>. <code class="prettyprint">pdf</code> is the default value.</li>
+</ul>
+
+<p>It is important to take into account that this endpoint works by rendering the <code class="prettyprint">https://resourcewatch.org/embed/widget/&lt;widget id&gt;</code> URL with those dimensions applied to the viewport. So the resulting screenshot will have the proportional size of the corresponding DOM element within that viewport, and not the exact <code class="prettyprint">height</code> and <code class="prettyprint">width</code> specified.</p>
+
 <h3 id="widget">Widget</h3>
 
 <p>This endpoint generates a thumbnail image for the provided widget and stores it on AWS S3.</p>
