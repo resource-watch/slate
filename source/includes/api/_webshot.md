@@ -20,6 +20,7 @@ curl -X GET \
 ```
 
 The endpoint accepts the following optional parameters:
+
 - `height` - Configure the height of the generated screenshot.
 - `width` - Configure the width of the generated screenshot.
 - `format` - Configure the format of the generated screenshot, admiting two values: `png` and `pdf`. `pdf` is the default value.
