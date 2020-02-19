@@ -8,7 +8,7 @@ Remember — All subscription endpoints need to be authenticated.
 
 ## Subscribable datasets
 
-In order to create a subscription, a dataset must be prepared to accept them. This is achieved by declaring some queries in the dataset json object sent to the `/v1/dataset` endpoint under the `subscribable`property. 
+In order to create a subscription, a dataset must be prepared to accept them. This is achieved by declaring some queries in the dataset json object sent to the `/v1/dataset` endpoint under the `subscribable`property.
 
 ```json
 {
@@ -34,20 +34,21 @@ Mind the string format: double quotes and curly braces need to be properly escap
 ## Creating a Subscription
 
 
-Field         |                            Description                            |               Type | Required 
+Field         |                            Description                            |               Type | Required
 ------------- | :---------------------------------------------------------------: | -----------------: |-----------:
 name          |                               Name                                |               Text | No
-application   | Application of the subscription. Set to `gfw` by default          |             String | No 
+application   | Application of the subscription. Set to `gfw` by default          |             String | No
 language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh | Yes
 resource      | Details on the resource that will be notified for the subscription. |           Object | Yes
 -- type       | The type of resource to notify. If `EMAIL`, an email is sent to the email saved in the resource content. If `URL`, a POST is requested to the web-hook URL in the resource content. | String | Yes
 -- content    |  The email or URL that will be notified (according to the type).  |             String | Yes
-datasets      |               Array of datasets of the subscription               |              Array | Yes (unless `datasetsQuery` is specified) 
+datasets      |               Array of datasets of the subscription               |              Array | Yes (unless `datasetsQuery` is specified)
 datasetsQuery |              Subscriptions to subscribable datasets               |              Array | Yes (unless `datasets` is specified)
 -- id         |                           Id of dataset                           |           ObjectId | Yes (unless `datasets` is specified)
 -- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
 -- params     | Geographic area of the subscription                               |             Object | Yes (unless `datasets` is specified)
 env           |  Environment of the subscription. Set to `production` by default  |             String | No
+userId        | Id of the user owner of the subscription. This parameter can only be provided when creating subscriptions in requests from other MSs. Otherwise, the id of the user in the token of the request is set as the owner. | String | No
 
 <aside class="warning">The <code>application</code> field will soon be made required when creating a subscription.</aside>
 
@@ -96,7 +97,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 ```
 
 In this case, a subscription is being created in reference to the `subscribable` field present in the previously defined dataset. After confirming the subscription the `subscriptionQuery` will be ran and its result will be compared against the `threshold`. If the query result is at least equal to the threshold, a new alert will be sent to the subscription's email.
- 
+
 ### From country
 
 Field        |             Description             |   Type
@@ -348,7 +349,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
    "datasets" : ["<dataset>"],
    "params": {
        "geostore": "<idGeostore>"
-    },	
+    },
    "datasetsQuery": [{}]
   }'
 ```
@@ -480,7 +481,7 @@ Remember — the response is in JSONApi format.
 }
 ```
 
-This endpoint supports the following optional query parameters as filters: 
+This endpoint supports the following optional query parameters as filters:
 
 Field       |             Description                              |   Type | Default value
 ----------- | :--------------------------------------------------: | -----: | -----:
@@ -500,14 +501,14 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmati
 
 ## Modify subscription
 
-To modify a subscription:
-
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
 -H "Authorization: Bearer <your-token>"
 ```
 
-With a body with the same format as before.
+To modify a subscription, use the following PATCH endpoint. The body should be formatted in the same way as when creating a subscription.
+
+If the request comes from another micro service, then it is possible to modify subscriptions belonging to other users. Otherwise, you can only modify subscriptions if you are the owner of the subscription.
 
 ## Unsubscribe
 
@@ -520,9 +521,118 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 
 ## Delete subscription
 
-To unsubscribe (delete a subscription):
-
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 -H "Authorization: Bearer <your-token>"
 ```
+
+To delete a subscription, use the following DELETE endpoint.
+
+If the request comes from another micro service, then it is possible to delete subscriptions belonging to other users. Otherwise, you can only delete subscriptions if you are the owner of the subscription.
+
+## Finding subscriptions by ids
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions/find-by-ids \
+-H "Authorization: Bearer <your-token>"
+-H "Content-Type: application/json"  -d \
+ '{ "ids": ["5e4d273dce77c53768bc24f9"] }'
+```
+
+> Example response:
+
+```json
+
+{
+    "data": [
+        {
+            "type": "subscription",
+            "id": "5e4d273dce77c53768bc24f9",
+            "attributes": {
+                "createdAt": "2020-02-19T12:17:01.176Z",
+                "userId": "5e2f0eaf9de40a6c87dd9b7d",
+                "resource": {
+                    "type": "EMAIL",
+                    "content": "henrique.pacheco@vizzuality.com"
+                },
+                "datasets": [
+                    "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"
+                ],
+                "params": {},
+                "confirmed": false,
+                "language": "en",
+                "datasetsQuery": [
+                    {
+                        "threshold": 1,
+                        "lastSentDate": "2020-02-19T12:17:01.175Z",
+                        "historical": [],
+                        "id": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
+                        "type": "COUNT"
+                    }
+                ],
+                "env": "production"
+            }
+        }
+    ]
+}
+```
+
+You can find a set of subscriptions given their ids using the following endpoint.
+
+This endpoint is restricted to usage by other micro services.
+
+## Finding subscriptions for a given user
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions/user/5e2f0eaf9de40a6c87dd9b7d \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+
+{
+    "data": [
+        {
+            "type": "subscription",
+            "id": "5e4d273dce77c53768bc24f9",
+            "attributes": {
+                "createdAt": "2020-02-19T12:17:01.176Z",
+                "userId": "5e2f0eaf9de40a6c87dd9b7d",
+                "resource": {
+                    "type": "EMAIL",
+                    "content": "henrique.pacheco@vizzuality.com"
+                },
+                "datasets": [
+                    "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"
+                ],
+                "params": {},
+                "confirmed": false,
+                "language": "en",
+                "datasetsQuery": [
+                    {
+                        "threshold": 1,
+                        "lastSentDate": "2020-02-19T12:17:01.175Z",
+                        "historical": [],
+                        "id": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
+                        "type": "COUNT"
+                    }
+                ],
+                "env": "production"
+            }
+        }
+    ]
+}
+```
+
+You can find all the subscriptions associated with a given user id using the following endpoint.
+
+This endpoint is restricted to usage by other micro services.
+
+This endpoint supports the following optional query parameters as filters:
+
+Field       |             Description                              |   Type |
+----------- | :--------------------------------------------------: | -----: |
+application | Application to which the subscription is associated. | String |
+env         | Environment to which the subscription is associated. | String |
