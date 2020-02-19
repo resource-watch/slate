@@ -636,3 +636,166 @@ Field       |             Description                              |   Type |
 ----------- | :--------------------------------------------------: | -----: |
 application | Application to which the subscription is associated. | String |
 env         | Environment to which the subscription is associated. | String |
+
+## Subscription statistics
+
+Statistics endpoints require authentication by an ADMIN user.
+
+### General subscription statistics
+
+
+
+The `subscription/statistics` endpoint can be used to access all data regarding the subscription notifications that have been sent.
+
+This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):
+
+Field       |             Description                                                          | Type   | Default | Example    |
+----------- | :------------------------------------------------------------------------------: | -----: | ------: | ---------: |
+start       | The start of the date range to fetch the statistics. This parameter is required. | String | None    | 01-01-2020 |
+end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None    | 02-20-2020 |
+application | The application for which the statistics will be fetched.                        | String | 'gfw'   | 'rw'       |
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=:start&end=:end \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```json
+
+{
+    "topSubscriptions": {
+        "geostore": 1000,
+        "country": 30,
+        "region": 20,
+        "wdpa": 10,
+        "use": 1
+    },
+    "info": {
+        "numSubscriptions": 1000,
+        "totalSubscriptions": 6000,
+        "usersWithSubscriptions": 1000,
+        "totalEmailsSentInThisQ": 0,
+        "totalEmailsSended": 0
+    },
+    "usersWithSubscription": 119,
+    "newUsers": 210,
+    "groupStatistics": {
+        "glad-alerts": {
+            "country": 15,
+            "region": 28,
+            "use": 1,
+            "wdpa": 9,
+            "geostore": 1305,
+            "countries": {
+                "CHL": 1,
+                "IDN": 3,
+                ...
+            },
+            "regions": {
+                "1": 1,
+                "2": 2,
+                ...
+            },
+            "wdpas": {
+                "130": 1,
+                "34043": 5,
+                ...
+            },
+            "countryTop": {
+                "name": "IDN",
+                "value": 3
+            },
+            "regionTop": {
+                "nameRegion": 12,
+                "nameCountry": "IDN",
+                "value": 2
+            },
+            "wdpaTop": {
+                "id": 34043,
+                "value": 5
+            }
+        },
+        "prodes-loss": {...},
+        "umd-loss-gain": {...},
+        "terrai-alerts": {...},
+        "viirs-active-fires": {...},
+        "imazon-alerts": {...},
+        "forma250GFW": {...},
+        "forma-alerts": {...},
+        "story": {...},
+        "63f34231-7369-4622-81f1-28a144d17835": {...}
+    }
+}
+```
+
+### Grouped subscription statistics
+
+The `subscription/statistics-group` endpoint can be used to access data regarding the subscription notifications that have been sent, grouped by the the dataset of the subscription.
+
+This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):
+
+Field       |             Description                                                          | Type   | Default | Example    |
+----------- | :------------------------------------------------------------------------------: | -----: | ------: | ---------: |
+start       | The start of the date range to fetch the statistics. This parameter is required. | String | None    | 01-01-2020 |
+end         | The end of the date range to fetch the statistics. This parameter is required.   | String | None    | 02-20-2020 |
+application | The application for which the statistics will be fetched.                        | String | 'gfw'   | 'rw'       |
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=:start&end=:end \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```json
+
+{
+    "glad-alerts": {
+        "country": 15,
+        "region": 28,
+        "use": 1,
+        "wdpa": 9,
+        "geostore": 1305,
+        "countries": {
+            "CHL": 1,
+            "IDN": 3,
+            ...
+        },
+        "regions": {
+            "1": 1,
+            "2": 2,
+            ...
+        },
+        "wdpas": {
+            "130": 1,
+            "34043": 5,
+            ...
+        },
+        "countryTop": {
+            "name": "IDN",
+            "value": 3
+        },
+        "regionTop": {
+            "nameRegion": 12,
+            "nameCountry": "IDN",
+            "value": 2
+        },
+        "wdpaTop": {
+            "id": 34043,
+            "value": 5
+        }
+    },
+    "prodes-loss": {...},
+    "umd-loss-gain": {...},
+    "terrai-alerts": {...},
+    "viirs-active-fires": {...},
+    "imazon-alerts": {...},
+    "forma250GFW": {...},
+    "forma-alerts": {...},
+    "story": {...},
+    "63f34231-7369-4622-81f1-28a144d17835": {...}
+}
+```

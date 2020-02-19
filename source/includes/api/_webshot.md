@@ -19,6 +19,14 @@ curl -X GET \
   -H 'Content-Type: application/json' \
 ```
 
+The endpoint accepts the following optional parameters:
+
+- `height` - Configure the height of the generated screenshot.
+- `width` - Configure the width of the generated screenshot.
+- `format` - Configure the format of the generated screenshot, admiting two values: `png` and `pdf`. `pdf` is the default value.
+
+It is important to take into account that this endpoint works by rendering the `https://resourcewatch.org/embed/widget/<widget id>` URL with those dimensions applied to the viewport. So the resulting screenshot will have the proportional size of the corresponding DOM element within that viewport, and not the exact `height` and `width` specified.
+
 ### Widget
 
 This endpoint generates a thumbnail image for the provided widget and stores it on AWS S3.
