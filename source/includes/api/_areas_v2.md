@@ -97,7 +97,7 @@ curl -X GET https://api.resourcewatch.org/v2/area/:id
 
 Returns the information for the area with the id provided. This endpoint requires authentication.
 
-If the area has the `public` attribute set to `false`, you will only be able to fetch its information if you are the owner of the area. Otherwise, a 401 Unauthorized response will be returned.
+If the area has the `public` attribute set to `false`, you will only be able to fetch its information if you are the owner of the area. Otherwise, a `401 Unauthorized` response will be returned.
 
 If the area has the `public` attribute set to `true` and the user who requests it is not the owner, some information will be hidden for privacy reasons.
 
@@ -109,7 +109,7 @@ Try to find an area with the id provided:
    1. If the area has an associated subscription, the subscription is fetched, its data is merged over the area and the result is returned.
    2. If the area has no subscription associated, the area data is returned.
 2. If the area does not exist:
-   1. Try to find a subscription with the id provided. If it exists, it is returned as an area object, if not, a 404 Not Found error is returned.
+   1. Try to find a subscription with the id provided. If it exists, it is returned as an area object, if not, a `404 Not Found` error is returned.
 
 ## Creating an area
 
