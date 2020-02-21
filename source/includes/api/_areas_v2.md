@@ -1,6 +1,6 @@
 # Areas v2
 
-The following endpoints merge together **areas of interest** and **subscriptions**. This means they can be used to transition away from subscriptions without the users loosing the subscriptions that they have already created.
+The following endpoints merge together **areas of interest** and **subscriptions**. This means they can be used to transition away from subscriptions without the users losing the subscriptions that they have already created.
 
 Please ensure that you are using `v2` in the URL when requesting these endpoints.
 
@@ -243,9 +243,25 @@ curl -X PATCH https://api.resourcewatch.org/v2/area/:id
 }
 ```
 
-Use this endpoint to update an existing area. This endpoint requires authentication.
+Use this endpoint to update an existing area. This endpoint requires authentication and, in order to PATCH an area, you need to be either the owner of the area or be an ADMIN user.
 
-This endpoint supports the same request body parameters as the `POST area` endpoint.
+This endpoint supports the following request body parameters:
+
+Field                |             Description                                                                            | Type    | Example    |
+-------------------- | :------------------------------------------------------------------------------------------------: | ------: | ---------: |
+name                 | The name of the area being created.                                                                | String  | 'Example'  |
+image                | Image associated with the dataset - in GET areas, this attribute will have the URL for the image.  | String  | https://www.google.com/example.jpg |
+application          | The application to which this area is associated with. Defaults to 'gfw'.                          | String  | 'gfw'      |
+language             | The language of this area. Defaults to 'en'.                                                       | String  | 'es'       |
+geostore             | An ID of a geostore to which this area relates to.                                                 | String  | '123'      |
+public               | If the area is public or not. Defaults to false.                                                   | Boolean | true       |
+fireAlerts           | If the area is intended to subscribe to fire alerts. Defaults to false.                            | Boolean | true       |
+deforestationAlerts  | If the area is intended to subscribe to deforestation alerts. Defaults to false.                   | Boolean | true       |
+monthlySummary       | If the area is intended to subscribe to monthly summaries. Defaults to false.                      | Boolean | true       |
+email                | Email to be provided to the subscription.                                                          | String  | youremail@resourcewatch.org |
+webhookUrl           | Webhook URL to be provided to the subscription (only used in case the email is not set).           | String  | https://www.google.com/ |
+status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
+subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
 
 **Implementation details**
 
@@ -271,7 +287,7 @@ curl -X DELETE https://api.resourcewatch.org/v2/area/:id
 
 > Returns 204 No Content in case of success.
 
-Use this endpoint to delete an existing area. This endpoint requires authentication.
+Use this endpoint to delete an existing area. This endpoint requires authentication and, in order to DELETE an area, you need to be either the owner of the area or be an ADMIN user.
 
 **Implementation details**
 
