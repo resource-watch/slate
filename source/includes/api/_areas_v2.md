@@ -182,6 +182,11 @@ webhookUrl           | Webhook URL to be provided to the subscription (only used
 status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
 subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
 
+After creating an area, if the `email` field of the area has a valid email, an email is sent to the user. The email content varies according to the status of the area:
+
+* If the area has status `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
+* If the area has status `pending`, an email is sent to let the user know the area of interest is being generated and will be available later.
+
 **Implementation details**
 
 POST of a new area always starts by creating the area and, taking into account the area attributes, it might also create a subscription which will then be associated with the area. The area's `subscriptionId` attribute will then be updated with the id of the created subscription if that's the case. The created area is then returned.
@@ -263,6 +268,8 @@ webhookUrl           | Webhook URL to be provided to the subscription (only used
 status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
 subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
 
+After updating an area, if if has status `saved` and if the `email` field of the area has a valid email, an email is sent to the user, to let him know the area of interest is ready to be viewed.
+
 **Implementation details**
 
 PATCHing an area is a bit more complex, and it comes down to 3 major cases:
@@ -294,3 +301,58 @@ Use this endpoint to delete an existing area. This endpoint requires authenticat
 DELETing an area deletes the area if it exists, and then if an associated subscription exists, it is also deleted.
 
 If the ID of a subscription is provided, then that subscription is deleted.
+
+## Update areas by geostore
+
+```shell
+curl -X POST https://api.resourcewatch.org/v2/area/update
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json" -d \
+ '{
+    "geostores": ["123", "234"],
+    "update_params": {
+        "status": "saved",
+        "name": "Updated Area"
+    }
+}'
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+        {
+            "type": "area",
+            "id": "5e4d74c3ef240412c2d56a71",
+            "attributes": {
+                "application": "gfw",
+                "userId": "5e2f0eaf9de40a6c87dd9b7d",
+                "createdAt": "2020-02-19T12:17:01.176Z",
+                "datasets": [],
+                "use": {},
+                "iso": {},
+                "admin": {},
+                "tags": [],
+                "status": "saved",
+                "public": false,
+                "fireAlerts": false,
+                "deforestationAlerts": false,
+                "webhookUrl": "",
+                "monthlySummary": false,
+                "subscriptionId": "5e4d273dce77c53768bc24f9",
+                "email": "tiago.garcia@vizzuality.com",
+                "language": "en"
+            }
+        }
+    ]
+}
+```
+
+Use this endpoint to batch update multiple areas that are associated with one of the geostore ids provided in the request body. In order to use this endpoint, you need to be authenticated as an ADMIN user.
+
+You can use the `update_params` field of the request body to specify multiple fields to update on the areas that belong to the geostore ids provided in the body. Keep in mind that the same validations as when updating an area are applied. If a validation fails, the request will fail with `400 Bad Request` and no area will be updated.
+
+In case of success a 200 OK response is returned, and all the areas that match the update criteria (belonging to one of the geostores provided in the request body) will be returned.
+
+After updating the areas, for each area that was updated (if it has a valid email associated), an email will be sent to the user to let him/her know that the area is ready to be viewed.
