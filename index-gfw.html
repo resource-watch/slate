@@ -3970,7 +3970,7 @@ curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span
 
 <h2 id="metadata-definition">Metadata definition</h2>
 
-<p>Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget). Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per <code class="prettyprint">application</code> and <code class="prettyprint">language</code> pair. As such, the <code class="prettyprint">application</code> and <code class="prettyprint">language</code> attributes are required and it is mandatory to include them in when creating/updating metadata.</p>
+<p>Metadata is data concerning another resource available on this API. It only exists when associated with another resource - currently supported resource types are datasets, widgets or layers. Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per <code class="prettyprint">application</code> and <code class="prettyprint">language</code> pair. As such, the <code class="prettyprint">application</code> and <code class="prettyprint">language</code> attributes are required and it is mandatory to include them in when creating/updating metadata.</p>
 
 <p>Some fields are important to identify the entity properly; others are just optional and give extra information about it.</p>
 
@@ -4050,7 +4050,17 @@ curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span
 
 <h2 id="creating-a-metadata-object">Creating a metadata object</h2>
 
-<p>Only <code class="prettyprint">ADMIN</code>s and <code class="prettyprint">MANAGER</code>s can create metadata for an app (as long as they belong to that app).</p>
+<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when creating a new metadata entity.</p>
+
+<p>In all scenarios, you must be authenticated to be able to create a metadata entity, and meet the following requirements:</p>
+
+<ul>
+<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
+<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
+</ul>
+
+<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
 
 <table><thead>
 <tr>
@@ -4100,13 +4110,35 @@ curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span
 </tr>
 </tbody></table>
 
-<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
-
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
 If you don&rsquo;t know how to do this, please go to the <a href="#authentication">Authentication section</a>
 </aside>
+
+<blockquote>
+<p>Create metadata for a dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Create metadata for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Create metadata for a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
    "application": &lt;app&gt;,
@@ -4124,7 +4156,7 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   }'</span>
 </code></pre>
 <blockquote>
-<p>Response: 200 OK HTTP RESPONSE + JSON-API-LIKE BODY</p>
+<p>Response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -4147,25 +4179,6 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<blockquote>
-<p>It could respond with a <strong>401</strong> status code if the request is not authenticated, <strong>403</strong> if the request is not allowed to do that operation,
-<strong>400</strong> if the request is not well formatted, or <strong>5XX</strong> HTTP codes in other cases.</p>
-
-<p>The same operation applies to Widget and Layer just changing the endpoint for the appropriate one.</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
-  }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
-  }'</span>
-</code></pre>
 <h2 id="getting-metadata">Getting metadata</h2>
 
 <p>application filter:
@@ -4198,10 +4211,44 @@ type: [dataset, widget, layer]
 </code></pre>
 <h2 id="updating-a-metadata">Updating a metadata</h2>
 
-<p>Partial update:</p>
+<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when updating a metadata entity.</p>
 
-<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
+<p>In all scenarios, you must be authenticated to be able to update a metadata entity, and meet the following requirements:</p>
+
+<ul>
+<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
+<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
+</ul>
+
+<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
+
+<p>When updating a metadata, you must always specify both <code class="prettyprint">language</code> and <code class="prettyprint">application</code>, those will be used to determine which metadata entity will be updated.</p>
+
+<blockquote>
+<p>Update metadata for a dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Update metadata for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Update metadata for a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;metadata <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
    "application": &lt;app&gt;,
@@ -4260,8 +4307,35 @@ type: [dataset, widget, layer]
 </span></code></pre>
 <h2 id="deleting-a-metadata">Deleting a metadata</h2>
 
-<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the query params.</p>
+<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when deleting a metadata entity.</p>
+
+<p>In all scenarios, you must be authenticated to be able to delete a metadata entity, and meet the following requirements:</p>
+
+<ul>
+<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
+<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
+</ul>
+
+<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
+
+<p>When deleting a metadata, you must always specify both <code class="prettyprint">language</code> and <code class="prettyprint">application</code>, those will be used to determine which metadata entity will be deleted.</p>
+
+<blockquote>
+<p>Delete metadata for a dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
+</code></pre>
+<blockquote>
+<p>Delete metadata for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
+
+</code></pre>
+<blockquote>
+<p>Delete metadata for a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
 </code></pre>
 <blockquote>
 <p>Real example</p>

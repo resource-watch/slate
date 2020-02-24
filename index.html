@@ -4073,7 +4073,7 @@ Remember — It is mandatory to set a limit value. If you do not set it and the 
 
 <h2 id="metadata-definition">Metadata definition</h2>
 
-<p>Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget). Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per <code class="prettyprint">application</code> and <code class="prettyprint">language</code> pair. As such, the <code class="prettyprint">application</code> and <code class="prettyprint">language</code> attributes are required and it is mandatory to include them in when creating/updating metadata.</p>
+<p>Metadata is data concerning another resource available on this API. It only exists when associated with another resource - currently supported resource types are datasets, widgets or layers. Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per <code class="prettyprint">application</code> and <code class="prettyprint">language</code> pair. As such, the <code class="prettyprint">application</code> and <code class="prettyprint">language</code> attributes are required and it is mandatory to include them in when creating/updating metadata.</p>
 
 <p>Some fields are important to identify the entity properly; others are just optional and give extra information about it.</p>
 
@@ -4153,7 +4153,17 @@ Remember — It is mandatory to set a limit value. If you do not set it and the 
 
 <h2 id="creating-a-metadata-object">Creating a metadata object</h2>
 
-<p>Only <code class="prettyprint">ADMIN</code>s and <code class="prettyprint">MANAGER</code>s can create metadata for an app (as long as they belong to that app).</p>
+<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when creating a new metadata entity.</p>
+
+<p>In all scenarios, you must be authenticated to be able to create a metadata entity, and meet the following requirements:</p>
+
+<ul>
+<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
+<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
+</ul>
+
+<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
 
 <table><thead>
 <tr>
@@ -4203,13 +4213,35 @@ Remember — It is mandatory to set a limit value. If you do not set it and the 
 </tr>
 </tbody></table>
 
-<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
-
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
 If you don&rsquo;t know how to do this, please go to the <a href="#authentication">Authentication section</a>
 </aside>
+
+<blockquote>
+<p>Create metadata for a dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Create metadata for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Create metadata for a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
    "application": &lt;app&gt;,
@@ -4227,7 +4259,7 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   }'</span>
 </code></pre>
 <blockquote>
-<p>Response: 200 OK HTTP RESPONSE + JSON-API-LIKE BODY</p>
+<p>Response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -4250,25 +4282,6 @@ If you don&rsquo;t know how to do this, please go to the <a href="#authenticatio
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<blockquote>
-<p>It could respond with a <strong>401</strong> status code if the request is not authenticated, <strong>403</strong> if the request is not allowed to do that operation,
-<strong>400</strong> if the request is not well formatted, or <strong>5XX</strong> HTTP codes in other cases.</p>
-
-<p>The same operation applies to Widget and Layer just changing the endpoint for the appropriate one.</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
-  }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
-  }'</span>
-</code></pre>
 <h2 id="getting-metadata">Getting metadata</h2>
 
 <p>application filter:
@@ -4301,10 +4314,44 @@ type: [dataset, widget, layer]
 </code></pre>
 <h2 id="updating-a-metadata">Updating a metadata</h2>
 
-<p>Partial update:</p>
+<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when updating a metadata entity.</p>
 
-<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the payload.</p>
+<p>In all scenarios, you must be authenticated to be able to update a metadata entity, and meet the following requirements:</p>
+
+<ul>
+<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
+<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
+</ul>
+
+<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
+
+<p>When updating a metadata, you must always specify both <code class="prettyprint">language</code> and <code class="prettyprint">application</code>, those will be used to determine which metadata entity will be updated.</p>
+
+<blockquote>
+<p>Update metadata for a dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Update metadata for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;metadata <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;app&gt;,
+   "language": &lt;language&gt;
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Update metadata for a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;metadata <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
    "application": &lt;app&gt;,
@@ -4363,8 +4410,35 @@ type: [dataset, widget, layer]
 </span></code></pre>
 <h2 id="deleting-a-metadata">Deleting a metadata</h2>
 
-<p>The &ldquo;application&rdquo; and &ldquo;language&rdquo; attributes are required and it is mandatory to include them in the query params.</p>
+<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when deleting a metadata entity.</p>
+
+<p>In all scenarios, you must be authenticated to be able to delete a metadata entity, and meet the following requirements:</p>
+
+<ul>
+<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
+<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
+</ul>
+
+<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
+
+<p>When deleting a metadata, you must always specify both <code class="prettyprint">language</code> and <code class="prettyprint">application</code>, those will be used to determine which metadata entity will be deleted.</p>
+
+<blockquote>
+<p>Delete metadata for a dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
+</code></pre>
+<blockquote>
+<p>Delete metadata for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
+
+</code></pre>
+<blockquote>
+<p>Delete metadata for a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
 </code></pre>
 <blockquote>
 <p>Real example</p>
@@ -8536,6 +8610,481 @@ Given the following sets of concepts:</p>
     }
 }
 </code></pre>
+          <h1 id="areas-v2">Areas v2</h1>
+
+<p>The following endpoints merge together <strong>areas of interest</strong> and <strong>subscriptions</strong>. This means they can be used to transition away from subscriptions without the users losing the subscriptions that they have already created.</p>
+
+<p>Please ensure that you are using <code class="prettyprint">v2</code> in the URL when requesting these endpoints.</p>
+
+<h2 id="getting-all-user-areas">Getting all user areas</h2>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/area
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"area"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d74c3ef240412c2d56a71"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e2f0eaf9de40a6c87dd9b7d"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T12:17:01.176Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"fireAlerts"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"deforestationAlerts"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"webhookUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"monthlySummary"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"subscriptionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d273dce77c53768bc24f9"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tiago.garcia@vizzuality.com"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Returns the list of areas for the user who made the request. This endpoint requires authentication.</p>
+
+<p>This endpoint supports the following query parameters as filters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td style="text-align: center">Filter results by the application associated with the areas.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&lsquo;gfw&rsquo;</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">Filter results by the status of the area.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;saved&rsquo;</td>
+</tr>
+<tr>
+<td>public</td>
+<td style="text-align: center">Filter results by the privacy status of the area.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>all</td>
+<td style="text-align: center">Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+</tbody></table>
+
+<p><strong>Implementation details</strong></p>
+
+<p>Finds all areas for the user who requested the list of areas. For each area, if it has an associated subscription (i.e. the <code class="prettyprint">subscriptionId</code> field of the area is not empty), it merges the subscription data over the area data, returning it as a single object. After that, the remaining user subscriptions are converted to area objects and returned.</p>
+
+<h2 id="getting-a-single-user-area">Getting a single user area</h2>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/area/:id
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"area"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d787bef240412c2d56a74"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e2f0eaf9de40a6c87dd9b7d"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T12:17:01.176Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"admin"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fireAlerts"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"deforestationAlerts"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"webhookUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"monthlySummary"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"subscriptionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d273dce77c53768bc24f9"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tiago.garcia@vizzuality.com"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Returns the information for the area with the id provided. This endpoint requires authentication.</p>
+
+<p>If the area has the <code class="prettyprint">public</code> attribute set to <code class="prettyprint">false</code>, you will only be able to fetch its information if you are the owner of the area. Otherwise, a <code class="prettyprint">401 Unauthorized</code> response will be returned.</p>
+
+<p>If the area has the <code class="prettyprint">public</code> attribute set to <code class="prettyprint">true</code> and the user who requests it is not the owner, some information will be hidden for privacy reasons.</p>
+
+<p><strong>Implementation details</strong></p>
+
+<p>Try to find an area with the id provided:</p>
+
+<ol>
+<li>If the area exists:
+
+<ol>
+<li>If the area has an associated subscription, the subscription is fetched, its data is merged over the area and the result is returned.</li>
+<li>If the area has no subscription associated, the area data is returned.</li>
+</ol></li>
+<li>If the area does not exist:
+
+<ol>
+<li>Try to find a subscription with the id provided. If it exists, it is returned as an area object, if not, a <code class="prettyprint">404 Not Found</code> error is returned.</li>
+</ol></li>
+</ol>
+
+<h2 id="creating-an-area">Creating an area</h2>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v2/area
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
+ <span class="s1">'{
+    "name": "Example area",
+    "application": "gfw",
+    "image": "",
+    "tags": [],
+    "public": false,
+    "fireAlerts": true,
+    "deforestationAlerts": true,
+    "webhookUrl": "http://example.com",
+    "monthlySummary": true,
+    "email": "youremail@resourcewatch.org",
+    "language": "en"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"area"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d7c47ef240412c2d56a78"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example area"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"wdpaid"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e2f0eaf9de40a6c87dd9b7d"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T18:19:51.485Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fireAlerts"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"deforestationAlerts"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"webhookUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"monthlySummary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"subscriptionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d7c47dd8fa31290d548ae"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"youremail@resourcewatch.org"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Use this endpoint to create new areas. This endpoint requires authentication.</p>
+
+<p>This endpoint supports the following request body parameters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">The name of the area being created.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;Example&rsquo;</td>
+</tr>
+<tr>
+<td>image</td>
+<td style="text-align: center">Image associated with the dataset - in GET areas, this attribute will have the URL for the image.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">https://www.google.com/example.jpg</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application to which this area is associated with. Defaults to &#39;gfw&rsquo;.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;gfw&rsquo;</td>
+</tr>
+<tr>
+<td>language</td>
+<td style="text-align: center">The language of this area. Defaults to &#39;en&rsquo;.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;es&rsquo;</td>
+</tr>
+<tr>
+<td>geostore</td>
+<td style="text-align: center">An ID of a geostore to which this area relates to.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;123&rsquo;</td>
+</tr>
+<tr>
+<td>public</td>
+<td style="text-align: center">If the area is public or not. Defaults to false.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>fireAlerts</td>
+<td style="text-align: center">If the area is intended to subscribe to fire alerts. Defaults to false.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>deforestationAlerts</td>
+<td style="text-align: center">If the area is intended to subscribe to deforestation alerts. Defaults to false.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>monthlySummary</td>
+<td style="text-align: center">If the area is intended to subscribe to monthly summaries. Defaults to false.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>email</td>
+<td style="text-align: center">Email to be provided to the subscription.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">youremail@resourcewatch.org</td>
+</tr>
+<tr>
+<td>webhookUrl</td>
+<td style="text-align: center">Webhook URL to be provided to the subscription (only used in case the email is not set).</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">https://www.google.com/</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">The status of the area - either &#39;saved&rsquo; or &#39;pending&rsquo;. Read-only attribute.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;saved&rsquo;</td>
+</tr>
+<tr>
+<td>subscriptionId</td>
+<td style="text-align: center">The ID of the subscription associated with this area. Read-only attribute.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">5e4d7c47dd8fa31290d548ae</td>
+</tr>
+</tbody></table>
+
+<p><strong>Implementation details</strong></p>
+
+<p>POST of a new area always starts by creating the area and, taking into account the area attributes, it might also create a subscription which will then be associated with the area. The area&rsquo;s <code class="prettyprint">subscriptionId</code> attribute will then be updated with the id of the created subscription if that&rsquo;s the case. The created area is then returned.</p>
+
+<p>The subscription is created only if the area has selected set to <code class="prettyprint">true</code> at least one of the following attributes:</p>
+
+<ul>
+<li>deforestationAlerts</li>
+<li>fireAlerts</li>
+<li>monthlySummary</li>
+</ul>
+
+<h2 id="updating-an-area">Updating an area</h2>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v2/area/:id
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
+ <span class="s1">'{
+    "name": "Example area",
+    "application": "gfw",
+    "image": "",
+    "tags": [],
+    "public": false,
+    "fireAlerts": true,
+    "deforestationAlerts": true,
+    "webhookUrl": "http://example.com",
+    "monthlySummary": true,
+    "email": "youremail@resourcewatch.org",
+    "language": "en"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"area"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d7c47ef240412c2d56a78"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example area"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"wdpaid"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e2f0eaf9de40a6c87dd9b7d"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T18:19:51.485Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fireAlerts"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"deforestationAlerts"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"webhookUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"monthlySummary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"subscriptionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d7c47dd8fa31290d548ae"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"youremail@resourcewatch.org"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Use this endpoint to update an existing area. This endpoint requires authentication and, in order to PATCH an area, you need to be either the owner of the area or be an ADMIN user.</p>
+
+<p>This endpoint supports the following request body parameters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">The name of the area being created.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;Example&rsquo;</td>
+</tr>
+<tr>
+<td>image</td>
+<td style="text-align: center">Image associated with the dataset - in GET areas, this attribute will have the URL for the image.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">https://www.google.com/example.jpg</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application to which this area is associated with. Defaults to &#39;gfw&rsquo;.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;gfw&rsquo;</td>
+</tr>
+<tr>
+<td>language</td>
+<td style="text-align: center">The language of this area. Defaults to &#39;en&rsquo;.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;es&rsquo;</td>
+</tr>
+<tr>
+<td>geostore</td>
+<td style="text-align: center">An ID of a geostore to which this area relates to.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;123&rsquo;</td>
+</tr>
+<tr>
+<td>public</td>
+<td style="text-align: center">If the area is public or not. Defaults to false.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>fireAlerts</td>
+<td style="text-align: center">If the area is intended to subscribe to fire alerts. Defaults to false.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>deforestationAlerts</td>
+<td style="text-align: center">If the area is intended to subscribe to deforestation alerts. Defaults to false.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>monthlySummary</td>
+<td style="text-align: center">If the area is intended to subscribe to monthly summaries. Defaults to false.</td>
+<td style="text-align: right">Boolean</td>
+<td style="text-align: right">true</td>
+</tr>
+<tr>
+<td>email</td>
+<td style="text-align: center">Email to be provided to the subscription.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">youremail@resourcewatch.org</td>
+</tr>
+<tr>
+<td>webhookUrl</td>
+<td style="text-align: center">Webhook URL to be provided to the subscription (only used in case the email is not set).</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">https://www.google.com/</td>
+</tr>
+<tr>
+<td>status</td>
+<td style="text-align: center">The status of the area - either &#39;saved&rsquo; or &#39;pending&rsquo;. Read-only attribute.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;saved&rsquo;</td>
+</tr>
+<tr>
+<td>subscriptionId</td>
+<td style="text-align: center">The ID of the subscription associated with this area. Read-only attribute.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">5e4d7c47dd8fa31290d548ae</td>
+</tr>
+</tbody></table>
+
+<p><strong>Implementation details</strong></p>
+
+<p>PATCHing an area is a bit more complex, and it comes down to 3 major cases:</p>
+
+<ol>
+<li>The area already exists and has subscriptions preference (<code class="prettyprint">deforestationAlerts</code>, <code class="prettyprint">fireAlerts</code> or <code class="prettyprint">monthlySummary</code> set to true) in the request data:
+
+<ol>
+<li>If the area doesn&rsquo;t have a subscription associated, a new one is created and associated.</li>
+<li>If the area already had a subscription, then the subscription is PATCHed according to the data provided in the request body.</li>
+</ol></li>
+<li>The area already exists and doesn’t has subscription preferences (<code class="prettyprint">deforestationAlerts</code>, <code class="prettyprint">fireAlerts</code> or <code class="prettyprint">monthlySummary</code> set to true) in the request data:
+
+<ol>
+<li>If the area had a subscription associated, then the subscription associated is deleted.</li>
+<li>Otherwise, just save the area.</li>
+</ol></li>
+<li>The area doesn’t exist because on the fetch it returned a mapped subscription (meaning we are PATCHing an area using the ID of a subscription):
+
+<ol>
+<li>First, create a new area, and then:
+
+<ol>
+<li>If the request data has subscriptions preference (<code class="prettyprint">deforestationAlerts</code>, <code class="prettyprint">fireAlerts</code> or <code class="prettyprint">monthlySummary</code> set to true), also PATCH the subscription.</li>
+<li>If the request data doesn&rsquo;t have subscriptions preference (<code class="prettyprint">deforestationAlerts</code>, <code class="prettyprint">fireAlerts</code> or <code class="prettyprint">monthlySummary</code> set to true), delete the associated subscription.</li>
+</ol></li>
+</ol></li>
+</ol>
+
+<h2 id="deleting-an-area">Deleting an area</h2>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v2/area/:id
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre>
+<blockquote>
+<p>Returns 204 No Content in case of success.</p>
+</blockquote>
+
+<p>Use this endpoint to delete an existing area. This endpoint requires authentication and, in order to DELETE an area, you need to be either the owner of the area or be an ADMIN user.</p>
+
+<p><strong>Implementation details</strong></p>
+
+<p>DELETing an area deletes the area if it exists, and then if an associated subscription exists, it is also deleted.</p>
+
+<p>If the ID of a subscription is provided, then that subscription is deleted.</p>
+
           <h1 id="tasks">Tasks</h1>
 
 <h2 id="what-is-a-task">What is a task?</h2>
