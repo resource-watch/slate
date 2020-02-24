@@ -2,7 +2,7 @@
 
 ## Metadata definition
 
-Metadata can be any kind of data associated to an existing resource (i.e. Dataset, Layer or Widget). Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per `application` and `language` pair. As such, the `application` and `language` attributes are required and it is mandatory to include them in when creating/updating metadata.
+Metadata is data concerning another resource available on this API. It only exists when associated with another resource - currently supported resource types are datasets, widgets or layers. Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per `application` and `language` pair. As such, the `application` and `language` attributes are required and it is mandatory to include them in when creating/updating metadata.
 
 Some fields are important to identify the entity properly; others are just optional and give extra information about it.
 
@@ -26,7 +26,16 @@ Some fields are important to identify the entity properly; others are just optio
 
 ## Creating a metadata object
 
-Only `ADMIN`s and `MANAGER`s can create metadata for an app (as long as they belong to that app).
+As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when creating a new metadata entity.
+
+In all scenarios, you must be authenticated to be able to create a metadata entity, and meet the following requirements:
+
+- Have the `ADMIN` or `MANAGER` role.
+- Belong to the same `application` as the metadata being created. 
+
+Any of these conditions are not met, the API will generate a 403 `Forbidden` error message.
+
 
 | Field             | Required/Optional                                                      
 | ------------------|:-----------------------------------------:     
@@ -41,15 +50,39 @@ Only `ADMIN`s and `MANAGER`s can create metadata for an app (as long as they bel
 | info              | optional                                      
 | units             | optional                                             
 
-The "application" and "language" attributes are required and it is mandatory to include them in the payload.
-
 <aside class="notice">
 Please, be sure that the request is properly authenticated and the current user has permission to the resource.
 If you don't know how to do this, please go to the <a href="#authentication">Authentication section</a>
 </aside>
 
+> Create metadata for a dataset
+
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
+-H "Content-Type: application/json"  -d \
+ '{
+   "application": <app>,
+   "language": <language>
+  }'
+```
+
+> Create metadata for a widget
+
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata \
+-H "Content-Type: application/json"  -d \
+ '{
+   "application": <app>,
+   "language": <language>
+  }'
+```
+
+> Create metadata for a layer
+
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata \
 -H "Content-Type: application/json"  -d \
  '{
    "application": <app>,
@@ -69,7 +102,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
   }'
 ```
 
-> Response: 200 OK HTTP RESPONSE + JSON-API-LIKE BODY
+> Response
 
 ```json
 {
@@ -94,28 +127,6 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
 }
 ```
 
-> It could respond with a **401** status code if the request is not authenticated, **403** if the request is not allowed to do that operation,
-**400** if the request is not well formatted, or **5XX** HTTP codes in other cases.
-
-> The same operation applies to Widget and Layer just changing the endpoint for the appropriate one.
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata \
--H "Content-Type: application/json"  -d \
- '{
-   "application": <app>,
-   "language": <language>
-  }'
-```
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata \
--H "Content-Type: application/json"  -d \
- '{
-   "application": <app>,
-   "language": <language>
-  }'
-```
 
 ## Getting metadata
 
@@ -159,12 +170,44 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-044
 
 ## Updating a metadata
 
-Partial update:
+As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when updating a metadata entity.
 
-The "application" and "language" attributes are required and it is mandatory to include them in the payload.
+In all scenarios, you must be authenticated to be able to update a metadata entity, and meet the following requirements:
+
+- Have the `ADMIN` or `MANAGER` role.
+- Belong to the same `application` as the metadata being created. 
+
+Any of these conditions are not met, the API will generate a 403 `Forbidden` error message.
+
+When updating a metadata, you must always specify both `language` and `application`, those will be used to determine which metadata entity will be updated.
+
+> Update metadata for a dataset
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
+-H "Content-Type: application/json"  -d \
+ '{
+   "application": <app>,
+   "language": <language>
+  }'
+```
+
+> Update metadata for a widget
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>metadata \
+-H "Content-Type: application/json"  -d \
+ '{
+   "application": <app>,
+   "language": <language>
+  }'
+```
+
+> Update metadata for a layer
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>metadata \
 -H "Content-Type: application/json"  -d \
  '{
    "application": <app>,
@@ -226,10 +269,35 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0
 
 ## Deleting a metadata
 
-The "application" and "language" attributes are required and it is mandatory to include them in the query params.
+As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
+to dictates which of 3 endpoints you should use when deleting a metadata entity.
+
+In all scenarios, you must be authenticated to be able to delete a metadata entity, and meet the following requirements:
+
+- Have the `ADMIN` or `MANAGER` role.
+- Belong to the same `application` as the metadata being created. 
+
+Any of these conditions are not met, the API will generate a 403 `Forbidden` error message.
+
+When deleting a metadata, you must always specify both `language` and `application`, those will be used to determine which metadata entity will be deleted.
+
+> Delete metadata for a dataset
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata?application=<app-id>&language=<language>
+```
+
+> Delete metadata for a widget
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata?application=<app-id>&language=<language>
+
+```
+
+> Delete metadata for a layer
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata?application=<app-id>&language=<language>
 ```
 
 > Real example
