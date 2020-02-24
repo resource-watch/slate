@@ -29,6 +29,7 @@ includes:
   - api/collections
   - api/graph
   - api/areas
+  - api/areas_v2
   - api/tasks
   - api/user_management
   - api/microservices

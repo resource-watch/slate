@@ -26,6 +26,7 @@ includes:
   - api/favourites
   - api/graph
   - api/areas
+  - api/areas_v2
   - api/webshot
   - api/topic
   - api/dashboard
