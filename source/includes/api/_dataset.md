@@ -357,11 +357,10 @@ curl -X GET https://api.resourcewatch.org/v1/:datasetID/verification
     }
 ]
 ```
+ 
+### Flush dataset cache
 
-### Flush
-
-Flushes the cache for specified dataset. Take into account only the dataset itself, query results and fields will be flushed. Any other relation
-like metadata, layers, widgets linked to the specified dataset will not be affected by this action.
+Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.
 
 Only users with the `ADMIN` role can use this endpoint.
 
