@@ -182,6 +182,8 @@ webhookUrl           | Webhook URL to be provided to the subscription (only used
 status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
 subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
 
+According to multiple factors (including the `geostore` that is associated with the area, if the area subscribes to `fireAlerts`, `deforestationAlerts`, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have `status` set to `'pending'`. Once the area data is ready, the `status` of the area will be updated to `'saved'`.
+
 After creating an area, if the `email` field of the area has a valid email, an email is sent to the user. The email content varies according to the status of the area:
 
 * If the area has status `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
@@ -267,6 +269,8 @@ email                | Email to be provided to the subscription.                
 webhookUrl           | Webhook URL to be provided to the subscription (only used in case the email is not set).           | String  | https://www.google.com/ |
 status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
 subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
+
+According to multiple factors (including the `geostore` that is associated with the area, if the area subscribes to `fireAlerts`, `deforestationAlerts`, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have `status` set to `'pending'`. Once the area data is ready, the `status` of the area will be updated to `'saved'`.
 
 After updating an area, if it has status `saved` and if the `email` field of the area has a valid email, an email is sent to the user, to let him know the area of interest is ready to be viewed.
 
@@ -355,4 +359,4 @@ You can use the `update_params` field of the request body to specify multiple fi
 
 In case of success a 200 OK response is returned, and all the areas that match the update criteria (belonging to one of the geostores provided in the request body) will be returned.
 
-After updating the areas, for each area that was updated (if it has a valid email associated), an email will be sent to the user to let him/her know that the area is ready to be viewed.
+After updating the areas, for each area that was updated (if it has a valid email associated), an email will be sent to the user to let them know that the area is ready to be viewed.
