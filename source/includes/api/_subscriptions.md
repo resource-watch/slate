@@ -506,9 +506,27 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
 -H "Authorization: Bearer <your-token>"
 ```
 
-To modify a subscription, use the following PATCH endpoint. The body should be formatted in the same way as when creating a subscription.
+To modify a subscription, use the following PATCH endpoint. This endpoint requires authentication, and also you must be the owner of the subscription in order to edit it, otherwise the request will fail with `404 Not Found`.
 
 If the request comes from another micro service, then it is possible to modify subscriptions belonging to other users. Otherwise, you can only modify subscriptions if you are the owner of the subscription.
+
+The following fields are available to be provided when modifying a subscription:
+
+Field         |                            Description                            |               Type | Required
+------------- | :---------------------------------------------------------------: | -----------------: |-----------:
+name          |                               Name                                |               Text | No
+application   | Application of the subscription. Set to `gfw` by default          |             String | No
+language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh | Yes
+resource      | Details on the resource that will be notified for the subscription. |           Object | Yes
+-- type       | The type of resource to notify. If `EMAIL`, an email is sent to the email saved in the resource content. If `URL`, a POST is requested to the web-hook URL in the resource content. | String | Yes
+-- content    |  The email or URL that will be notified (according to the type).  |             String | Yes
+datasets      |               Array of datasets of the subscription               |              Array | Yes (unless `datasetsQuery` is specified)
+datasetsQuery |              Subscriptions to subscribable datasets               |              Array | Yes (unless `datasets` is specified)
+-- id         |                           Id of dataset                           |           ObjectId | Yes (unless `datasets` is specified)
+-- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
+-- params     | Geographic area of the subscription                               |             Object | Yes (unless `datasets` is specified)
+env           |  Environment of the subscription. Set to `production` by default  |             String | No
+userId        | Id of the user owner of the subscription. This parameter can only be provided when creating subscriptions in requests from other MSs. Otherwise, the id of the user in the token of the request is set as the owner. | String | No
 
 ## Unsubscribe
 
