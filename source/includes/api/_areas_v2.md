@@ -268,7 +268,7 @@ webhookUrl           | Webhook URL to be provided to the subscription (only used
 status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
 subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
 
-After updating an area, if if has status `saved` and if the `email` field of the area has a valid email, an email is sent to the user, to let him know the area of interest is ready to be viewed.
+After updating an area, if it has status `saved` and if the `email` field of the area has a valid email, an email is sent to the user, to let him know the area of interest is ready to be viewed.
 
 **Implementation details**
 
