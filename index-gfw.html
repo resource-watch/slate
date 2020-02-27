@@ -749,9 +749,9 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
     }
 ]
 </span></code></pre>
-<h3 id="flush">Flush</h3>
+<h3 id="flush-dataset-cache">Flush dataset cache</h3>
 
-<p>Flushes the cache for specified dataset.</p>
+<p>Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.</p>
 
 <p>Only users with the <code class="prettyprint">ADMIN</code> role can use this endpoint.</p>
 
@@ -4355,33 +4355,60 @@ to dictates which of 3 endpoints you should use when deleting a metadata entity.
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?application<span class="o">=</span>rw,gfw&amp;language<span class="o">=</span>en&amp;type<span class="o">=</span>dataset
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?language<span class="o">=</span>en
 </code></pre>
-<h2 id="finding-getting-by-ids">Finding (getting) by ids</h2>
+<h2 id="finding-metadata-by-ids">Finding metadata by ids</h2>
 
-<p>The &ldquo;ids&rdquo; property is required in the payload, and in other case the endpoint responds with a 400 HTTP ERROR (Bad Request)
-This property can be an Array or a String (comma-separated)
-payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
-payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
+<p>The <code class="prettyprint">ids</code> property is required in the body of the request. It can be either an array of ids or a string of comma-separated ids:</p>
 
-<p>application filter:
-<code class="prettyprint">
-application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
-</code></p>
+<ul>
+<li><code class="prettyprint">{&quot;ids&quot;: [&quot;112313&quot;, &quot;111123&quot;]}</code></li>
+<li><code class="prettyprint">{&quot;ids&quot;: &quot;112313, 111123&quot;}</code></li>
+</ul>
 
-<p>language filter:
-<code class="prettyprint">
-language: select between available languages (select one or some of them)
-</code></p>
+<h3 id="filters">Filters</h3>
 
-<p>limit filter:
-<code class="prettyprint">
-limit: the desired number
-</code></p>
+<p>The metadata list provided by the endpoint can be filtered with the following attributes:</p>
 
-<p>Custom param for the metadata endpoint:
-<code class="prettyprint">
-type: [dataset, widget, layer]
-</code></p>
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Accepted values</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>Application associated with the metadata entity</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>language</td>
+<td>Language of the metadata entity</td>
+<td>any valid text</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>Finding metadata by ids for a dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/metadata/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Finding metadata by ids for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Finding metadata by ids for a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/layer/metadata/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
    "ids": [&lt;ids&gt;]
@@ -4995,12 +5022,14 @@ all resources that at least have one (or more) tags in a particular vocabulary. 
 <p>This endpoint is quite useful to have a quick overview of all existing vocabularies and resources.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/vocabulary
 </code></pre>
-<h2 id="finding-getting-by-ids">Finding (getting) by ids</h2>
+<h2 id="finding-vocabularies-by-ids">Finding vocabularies by ids</h2>
 
-<p>The &ldquo;ids&rdquo; property is required in the payload. In other cases the endpoint responds with a 400 HTTP ERROR (Bad Request)
-This property can be an Array or a String (comma-separated)
-payload -&gt; {&ldquo;ids&rdquo;: [&ldquo;112313&rdquo;, &ldquo;111123&rdquo;]}
-payload -&gt; {&ldquo;ids&rdquo;: &ldquo;112313, 111123&rdquo;}</p>
+<p>The <code class="prettyprint">ids</code> property is required in the body of the request. It can be either an array of ids or a string of comma-separated ids:</p>
+
+<ul>
+<li><code class="prettyprint">{&quot;ids&quot;: [&quot;112313&quot;, &quot;111123&quot;]}</code></li>
+<li><code class="prettyprint">{&quot;ids&quot;: &quot;112313, 111123&quot;}</code></li>
+</ul>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
