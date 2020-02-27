@@ -166,16 +166,6 @@ page[number] |       The page number        | Number|   1
 
 Available filters:
 
-            type: 'type',
-            status: 'status',
-            createdAt: 'createdAt',
-            updatedAt: 'updatedAt',
-            createdBefore: 'createdAt',
-            createdAfter: 'createdAt',
-            updatedBefore: 'updatedAt',
-            updatedAfter: 'updatedAt'
-
-
 Field           |                                     Description                                      |    Type
 --------------- | :----------------------------------------------------------------------------------: | ------:
 type            |  Task type                                                                           |    Text
