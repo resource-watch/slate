@@ -597,7 +597,7 @@ Handles response formats other than the default JSON, setting headers and format
 
 ### Statistics
 
-Collects and stores statistics about the API usage. You can find more details on [this repo](https://github.com/control-tower/ct-stadistics-plugin).
+Collects and stores statistics about the API usage.
 
 
 ### MongoDB sessions
@@ -607,12 +607,12 @@ Adds support for storing session data on MongoDB
 
 ### Oauth plugin
 
-User management and authentication plugin. Supports email+password based registration, as well as Facebook, Twitter and Google+ oauth-based authentication. You can find more details on [this repo](https://github.com/control-tower/ct-oauth-plugin).
+User management and authentication plugin. Supports email+password based registration, as well as Facebook, Twitter and Google+ oauth-based authentication.
 
 
 ### Redis cache
 
-Redis-based caching for Control Tower. You can find more details on [this repo](https://github.com/control-tower/ct-redis-cache).
+Redis-based caching for Control Tower. 
 
 <aside class="notice">
 This plugin is disabled and is no longer supported.
