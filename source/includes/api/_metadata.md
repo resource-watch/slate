@@ -339,36 +339,49 @@ curl -X GET https://api.resourcewatch.org/v1/metadata?application=rw,gfw&languag
 curl -X GET https://api.resourcewatch.org/v1/metadata?language=en
 ```
 
-## Finding (getting) by ids
+## Finding metadata by ids
 
-The "ids" property is required in the payload, and in other case the endpoint responds with a 400 HTTP ERROR (Bad Request)
-This property can be an Array or a String (comma-separated)
-payload -> {"ids": ["112313", "111123"]}
-payload -> {"ids": "112313, 111123"}
+The `ids` property is required in the body of the request. It can be either an array of ids or a string of comma-separated ids:
 
-application filter:
-```
-application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
-```
+- `{"ids": ["112313", "111123"]}`
+- `{"ids": "112313, 111123"}`
 
-language filter:
-```
-language: select between available languages (select one or some of them)
-```
 
-limit filter:
-```
-limit: the desired number
-```
+### Filters
 
-Custom param for the metadata endpoint:
-```
-type: [dataset, widget, layer]
-```
+The metadata list provided by the endpoint can be filtered with the following attributes:
 
+Filter        | Description                                                                  | Accepted values
+------------- | ---------------------------------------------------------------------------- | -------------------------------------------
+application   | Application associated with the metadata entity                              | any valid text
+language      | Language of the metadata entity                                              | any valid text
+
+> Finding metadata by ids for a dataset
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/metadata/find-by-ids \
+-H "Content-Type: application/json"  -d \
+ '{
+   "ids": [<ids>]
+  }'
+```
+
+> Finding metadata by ids for a widget
+
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/find-by-ids \
+-H "Content-Type: application/json"  -d \
+ '{
+   "ids": [<ids>]
+  }'
+```
+
+> Finding metadata by ids for a layer
+
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/layer/metadata/find-by-ids \
 -H "Content-Type: application/json"  -d \
  '{
    "ids": [<ids>]

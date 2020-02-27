@@ -559,12 +559,13 @@ This endpoint is quite useful to have a quick overview of all existing vocabular
 curl -X GET https://api.resourcewatch.org/v1/vocabulary
 ```
 
-## Finding (getting) by ids
+## Finding vocabularies by ids
 
-The "ids" property is required in the payload. In other cases the endpoint responds with a 400 HTTP ERROR (Bad Request)
-This property can be an Array or a String (comma-separated)
-payload -> {"ids": ["112313", "111123"]}
-payload -> {"ids": "112313, 111123"}
+The `ids` property is required in the body of the request. It can be either an array of ids or a string of comma-separated ids:
+
+- `{"ids": ["112313", "111123"]}`
+- `{"ids": "112313, 111123"}`
+
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids \
