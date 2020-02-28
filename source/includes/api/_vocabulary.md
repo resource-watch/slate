@@ -691,4 +691,4 @@ In order to use these endpoints, you need to meet one of the following criteria:
 - being authenticated as an ADMIN who has access to the apps of the resource associated (dataset/widget/layer);
 - being authenticated as a MANAGER who has access to the apps of the resource associated AND own the resource.
 
-All endpoints return `200 OK` in case of success, along with the list of deleted vocabulary entities.
+All endpoints return `200 OK` in case of success, along with the list of the deleted entities.
