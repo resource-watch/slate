@@ -658,3 +658,37 @@ curl -X POST https://api.resourcewatch.org/v1/vocabulary/vocabularyName \
 It is also possible to update and delete an entire vocabulary. Said that, because
 it's necessary to keep consistency between entities with weak relationship, these
 operations are only available to SUPERADMINS.
+
+## Bulk delete of resource's vocabulary
+
+> Deleting all Vocabulary associated with a Dataset
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/:datasetId/vocabulary \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Deleting all Vocabulary associated with a Widget
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/widget/:widgetId/vocabulary \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Deleting all Vocabulary associated with a Layer
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/layer/:layerId/vocabulary \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your-token>"
+```
+
+In order to use these endpoints, you need to meet one of the following criteria:
+
+- being authenticated as a SUPERADMIN;
+- being authenticated as an ADMIN who has access to the apps of the resource associated (dataset/widget/layer);
+- being authenticated as a MANAGER who has access to the apps of the resource associated AND own the resource.
+
+All endpoints return `200 OK` in case of success, along with the list of the deleted entities.
