@@ -5109,6 +5109,39 @@ all resources that at least have one (or more) tags in a particular vocabulary. 
 it&rsquo;s necessary to keep consistency between entities with weak relationship, these
 operations are only available to SUPERADMINS.</p>
 
+<h2 id="bulk-delete-of-resource-39-s-vocabulary">Bulk delete of resource&rsquo;s vocabulary</h2>
+
+<blockquote>
+<p>Deleting all Vocabulary associated with a Dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/:datasetId/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Deleting all Vocabulary associated with a Widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/widget/:widgetId/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Deleting all Vocabulary associated with a Layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/layer/:layerId/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<p>In order to use these endpoints, you need to meet one of the following criteria:</p>
+
+<ul>
+<li>being authenticated as a SUPERADMIN;</li>
+<li>being authenticated as an ADMIN who has access to the apps of the resource associated (dataset/widget/layer);</li>
+<li>being authenticated as a MANAGER who has access to the apps of the resource associated AND own the resource.</li>
+</ul>
+
+<p>All endpoints return <code class="prettyprint">200 OK</code> in case of success, along with the list of the deleted entities.</p>
+
           <h1 id="geostore">Geostore</h1>
 
 <h2 id="what-is-geostore">What is Geostore?</h2>
