@@ -182,6 +182,8 @@ webhookUrl           | Webhook URL to be provided to the subscription (only used
 status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
 subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
 
+### Email notification
+
 According to multiple factors (including the `geostore` that is associated with the area, if the area subscribes to `fireAlerts`, `deforestationAlerts`, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have `status` set to `'pending'`. Once the area data is ready, the `status` of the area will be updated to `'saved'`.
 
 After creating an area, if the `email` field of the area has a valid email, an email is sent to the user. The email content varies according to the status of the area:
@@ -189,7 +191,21 @@ After creating an area, if the `email` field of the area has a valid email, an e
 * If the area has status `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
 * If the area has status `pending`, an email is sent to let the user know the area of interest is being generated and will be available later.
 
-**Implementation details**
+### Email substitution parameters
+
+The following parameters are provided to the email service and can be used in the construction of the email:
+
+* `id` : the ID of the area.
+* `name` : the name of the area.
+* `location` : an alias for the name of the area (contains the same as the `name` parameter).
+* `subscriptions_url` : the URL to manage the areas in the frontend (example: [https://staging.globalforestwatch.org/my-gfw](https://staging.globalforestwatch.org/my-gfw)).
+* `dashboard_link` : the link to the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
+* `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
+* `image_url` : the URL for the image associated with the area.
+
+(`5d517b3fb8cfd4001061d0b2` is an example of an area ID).
+
+### Implementation details
 
 POST of a new area always starts by creating the area and, taking into account the area attributes, it might also create a subscription which will then be associated with the area. The area's `subscriptionId` attribute will then be updated with the id of the created subscription if that's the case. The created area is then returned.
 
@@ -270,11 +286,27 @@ webhookUrl           | Webhook URL to be provided to the subscription (only used
 status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
 subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
 
+### Email notification
+
 According to multiple factors (including the `geostore` that is associated with the area, if the area subscribes to `fireAlerts`, `deforestationAlerts`, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have `status` set to `'pending'`. Once the area data is ready, the `status` of the area will be updated to `'saved'`.
 
 After updating an area, if it has status `saved` and if the `email` field of the area has a valid email, an email is sent to the user, to let him know the area of interest is ready to be viewed.
 
-**Implementation details**
+### Email substitution parameters
+
+The following parameters are provided to the email service and can be used in the construction of the email:
+
+* `id` : the ID of the area.
+* `name` : the name of the area.
+* `location` : an alias for the name of the area (contains the same as the `name` parameter).
+* `subscriptions_url` : the URL to manage the areas in the frontend (example: [https://staging.globalforestwatch.org/my-gfw](https://staging.globalforestwatch.org/my-gfw)).
+* `dashboard_link` : the link to the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
+* `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
+* `image_url` : the URL for the image associated with the area.
+
+(`5d517b3fb8cfd4001061d0b2` is an example of an area ID).
+
+### Implementation details
 
 PATCHing an area is a bit more complex, and it comes down to 3 major cases:
 
