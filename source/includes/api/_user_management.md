@@ -296,21 +296,37 @@ curl -X GET http://api.resourcewatch.org/auth/user
 
 #### Filter by name
 
+You can filter by name by using the `name` query parameter and a regex value. 
+
 ```bash
 curl -X GET http://api.resourcewatch.org/auth/user?name=John
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
 
+If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.
+
 #### Filter by email
 
+You can filter by name by using the `email` query parameter and a regex value.
+
+If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.
+
 ```bash
+# Filter users by email address
 curl -X GET http://api.resourcewatch.org/auth/user?email=my.address@email.com
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+
+# Filter users by the "email+with+plus+sign@email.com" email address, that requires escaping
+curl -X GET http://localhost:9000/auth/user?app=all&email=email%5C%2Bwith%5C%2Bplus%5C%2Bsign@email.com
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
 
 #### Filter by provider
+
+You can filter by name by using the `provider` query parameter and a regex value.
 
 ```bash
 curl -X GET http://api.resourcewatch.org/auth/user?provider=facebook
@@ -318,13 +334,19 @@ curl -X GET http://api.resourcewatch.org/auth/user?provider=facebook
 -H "Authorization: Bearer <your-token>" \
 ```
 
+If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.
+
 #### Filter by role
+
+You can filter by name by using the `role` query parameter and a regex value. 
 
 ```bash
 curl -X GET http://api.resourcewatch.org/auth/user?role=ADMIN
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
+
+If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.
 
 #### Filter by app
 
