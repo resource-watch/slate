@@ -5212,39 +5212,6 @@ all resources that at least have one (or more) tags in a particular vocabulary. 
 it&rsquo;s necessary to keep consistency between entities with weak relationship, these
 operations are only available to SUPERADMINS.</p>
 
-<h2 id="bulk-delete-of-resource-39-s-vocabulary">Bulk delete of resource&rsquo;s vocabulary</h2>
-
-<blockquote>
-<p>Deleting all Vocabulary associated with a Dataset</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/:datasetId/vocabulary <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Deleting all Vocabulary associated with a Widget</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/widget/:widgetId/vocabulary <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Deleting all Vocabulary associated with a Layer</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/layer/:layerId/vocabulary <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<p>In order to use these endpoints, you need to meet one of the following criteria:</p>
-
-<ul>
-<li>being authenticated as a SUPERADMIN;</li>
-<li>being authenticated as an ADMIN who has access to the apps of the resource associated (dataset/widget/layer);</li>
-<li>being authenticated as a MANAGER who has access to the apps of the resource associated AND own the resource.</li>
-</ul>
-
-<p>All endpoints return <code class="prettyprint">200 OK</code> in case of success, along with the list of the deleted entities.</p>
-
           <h1 id="geostore">Geostore</h1>
 
 <h2 id="what-is-geostore">What is Geostore?</h2>
@@ -9859,25 +9826,47 @@ curl -X GET http://api.resourcewatch.org/auth/user
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h4 id="filter-by-name">Filter by name</h4>
+
+<p>You can filter by name by using the <code class="prettyprint">name</code> query parameter and a regex value. </p>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?name<span class="o">=</span>John
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
+<p>If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.</p>
+
 <h4 id="filter-by-email">Filter by email</h4>
-<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?email<span class="o">=</span>my.address@email.com
+
+<p>You can filter by name by using the <code class="prettyprint">email</code> query parameter and a regex value.</p>
+
+<p>If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.</p>
+<pre class="highlight shell"><code><span class="c"># Filter users by email address</span>
+curl -X GET http://api.resourcewatch.org/auth/user?email<span class="o">=</span>my.address@email.com
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+
+<span class="c"># Filter users by the "email+with+plus+sign@email.com" email address, that requires escaping</span>
+curl -X GET http://localhost:9000/auth/user?app<span class="o">=</span>all&amp;email<span class="o">=</span>email%5C%2Bwith%5C%2Bplus%5C%2Bsign@email.com
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
 <h4 id="filter-by-provider">Filter by provider</h4>
+
+<p>You can filter by name by using the <code class="prettyprint">provider</code> query parameter and a regex value.</p>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?provider<span class="o">=</span>facebook
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
+<p>If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.</p>
+
 <h4 id="filter-by-role">Filter by role</h4>
+
+<p>You can filter by name by using the <code class="prettyprint">role</code> query parameter and a regex value. </p>
 <pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/auth/user?role<span class="o">=</span>ADMIN
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
+<p>If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.</p>
+
 <h4 id="filter-by-app">Filter by app</h4>
 
 <p>By default, only users belonging to the same apps as the requesting user will be shown when listing users. You can change this behavior by explicitly identifying the apps you&rsquo;d like to filter by, even if they are not in the list of apps the requesting user belongs to. You can pass multiple apps this way by separating them with commas.</p>
