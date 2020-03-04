@@ -202,6 +202,7 @@ The following parameters are provided to the email service and can be used in th
 * `dashboard_link` : the link to the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
 * `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
 * `image_url` : the URL for the image associated with the area.
+* `tags` : a string containing the AOI tags, comma-separated.
 
 (`5d517b3fb8cfd4001061d0b2` is an example of an area ID).
 
@@ -303,6 +304,7 @@ The following parameters are provided to the email service and can be used in th
 * `dashboard_link` : the link to the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
 * `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
 * `image_url` : the URL for the image associated with the area.
+* `tags` : a string containing the AOI tags, comma-separated.
 
 (`5d517b3fb8cfd4001061d0b2` is an example of an area ID).
 
@@ -392,3 +394,14 @@ You can use the `update_params` field of the request body to specify multiple fi
 In case of success a 200 OK response is returned, and all the areas that match the update criteria (belonging to one of the geostores provided in the request body) will be returned.
 
 After updating the areas, for each area that was updated (if it has a valid email associated), an email will be sent to the user to let them know that the area is ready to be viewed.
+
+The following parameters are provided to the email service and can be used in the construction of the email:
+
+* `id` : the ID of the area.
+* `name` : the name of the area.
+* `location` : an alias for the name of the area (contains the same as the `name` parameter).
+* `subscriptions_url` : the URL to manage the areas in the frontend (example: [https://staging.globalforestwatch.org/my-gfw](https://staging.globalforestwatch.org/my-gfw)).
+* `dashboard_link` : the link to the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
+* `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
+* `image_url` : the URL for the image associated with the area.
+* `tags` : a string containing the AOI tags, comma-separated.
