@@ -8951,6 +8951,8 @@ Given the following sets of concepts:</p>
 </tr>
 </tbody></table>
 
+<h3 id="email-notification">Email notification</h3>
+
 <p>According to multiple factors (including the <code class="prettyprint">geostore</code> that is associated with the area, if the area subscribes to <code class="prettyprint">fireAlerts</code>, <code class="prettyprint">deforestationAlerts</code>, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have <code class="prettyprint">status</code> set to <code class="prettyprint">&#39;pending&#39;</code>. Once the area data is ready, the <code class="prettyprint">status</code> of the area will be updated to <code class="prettyprint">&#39;saved&#39;</code>.</p>
 
 <p>After creating an area, if the <code class="prettyprint">email</code> field of the area has a valid email, an email is sent to the user. The email content varies according to the status of the area:</p>
@@ -8960,7 +8962,24 @@ Given the following sets of concepts:</p>
 <li>If the area has status <code class="prettyprint">pending</code>, an email is sent to let the user know the area of interest is being generated and will be available later.</li>
 </ul>
 
-<p><strong>Implementation details</strong></p>
+<h3 id="email-substitution-parameters">Email substitution parameters</h3>
+
+<p>The following parameters are provided to the email service and can be used in the construction of the email:</p>
+
+<ul>
+<li><code class="prettyprint">id</code> : the ID of the area.</li>
+<li><code class="prettyprint">name</code> : the name of the area.</li>
+<li><code class="prettyprint">location</code> : an alias for the name of the area (contains the same as the <code class="prettyprint">name</code> parameter).</li>
+<li><code class="prettyprint">subscriptions_url</code> : the URL to manage the areas in the frontend (example: <a href="https://staging.globalforestwatch.org/my-gfw">https://staging.globalforestwatch.org/my-gfw</a>).</li>
+<li><code class="prettyprint">dashboard_link</code> : the link to the area dashboard (example: <a href="https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2">https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2</a>).</li>
+<li><code class="prettyprint">map_link</code> : the &ldquo;view on map&rdquo; for the area (example: <a href="https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2">https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2</a>).</li>
+<li><code class="prettyprint">image_url</code> : the URL for the image associated with the area.</li>
+<li><code class="prettyprint">tags</code> : a string containing the AOI tags, comma-separated.</li>
+</ul>
+
+<p>(<code class="prettyprint">5d517b3fb8cfd4001061d0b2</code> is an example of an area ID).</p>
+
+<h3 id="implementation-details">Implementation details</h3>
 
 <p>POST of a new area always starts by creating the area and, taking into account the area attributes, it might also create a subscription which will then be associated with the area. The area&rsquo;s <code class="prettyprint">subscriptionId</code> attribute will then be updated with the id of the created subscription if that&rsquo;s the case. The created area is then returned.</p>
 
@@ -9111,11 +9130,30 @@ Given the following sets of concepts:</p>
 </tr>
 </tbody></table>
 
+<h3 id="email-notification">Email notification</h3>
+
 <p>According to multiple factors (including the <code class="prettyprint">geostore</code> that is associated with the area, if the area subscribes to <code class="prettyprint">fireAlerts</code>, <code class="prettyprint">deforestationAlerts</code>, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have <code class="prettyprint">status</code> set to <code class="prettyprint">&#39;pending&#39;</code>. Once the area data is ready, the <code class="prettyprint">status</code> of the area will be updated to <code class="prettyprint">&#39;saved&#39;</code>.</p>
 
 <p>After updating an area, if it has status <code class="prettyprint">saved</code> and if the <code class="prettyprint">email</code> field of the area has a valid email, an email is sent to the user, to let him know the area of interest is ready to be viewed.</p>
 
-<p><strong>Implementation details</strong></p>
+<h3 id="email-substitution-parameters">Email substitution parameters</h3>
+
+<p>The following parameters are provided to the email service and can be used in the construction of the email:</p>
+
+<ul>
+<li><code class="prettyprint">id</code> : the ID of the area.</li>
+<li><code class="prettyprint">name</code> : the name of the area.</li>
+<li><code class="prettyprint">location</code> : an alias for the name of the area (contains the same as the <code class="prettyprint">name</code> parameter).</li>
+<li><code class="prettyprint">subscriptions_url</code> : the URL to manage the areas in the frontend (example: <a href="https://staging.globalforestwatch.org/my-gfw">https://staging.globalforestwatch.org/my-gfw</a>).</li>
+<li><code class="prettyprint">dashboard_link</code> : the link to the area dashboard (example: <a href="https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2">https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2</a>).</li>
+<li><code class="prettyprint">map_link</code> : the &ldquo;view on map&rdquo; for the area (example: <a href="https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2">https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2</a>).</li>
+<li><code class="prettyprint">image_url</code> : the URL for the image associated with the area.</li>
+<li><code class="prettyprint">tags</code> : a string containing the AOI tags, comma-separated.</li>
+</ul>
+
+<p>(<code class="prettyprint">5d517b3fb8cfd4001061d0b2</code> is an example of an area ID).</p>
+
+<h3 id="implementation-details">Implementation details</h3>
 
 <p>PATCHing an area is a bit more complex, and it comes down to 3 major cases:</p>
 
@@ -9210,6 +9248,19 @@ Given the following sets of concepts:</p>
 <p>In case of success a 200 OK response is returned, and all the areas that match the update criteria (belonging to one of the geostores provided in the request body) will be returned.</p>
 
 <p>After updating the areas, for each area that was updated (if it has a valid email associated), an email will be sent to the user to let them know that the area is ready to be viewed.</p>
+
+<p>The following parameters are provided to the email service and can be used in the construction of the email:</p>
+
+<ul>
+<li><code class="prettyprint">id</code> : the ID of the area.</li>
+<li><code class="prettyprint">name</code> : the name of the area.</li>
+<li><code class="prettyprint">location</code> : an alias for the name of the area (contains the same as the <code class="prettyprint">name</code> parameter).</li>
+<li><code class="prettyprint">subscriptions_url</code> : the URL to manage the areas in the frontend (example: <a href="https://staging.globalforestwatch.org/my-gfw">https://staging.globalforestwatch.org/my-gfw</a>).</li>
+<li><code class="prettyprint">dashboard_link</code> : the link to the area dashboard (example: <a href="https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2">https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2</a>).</li>
+<li><code class="prettyprint">map_link</code> : the &ldquo;view on map&rdquo; for the area (example: <a href="https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2">https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2</a>).</li>
+<li><code class="prettyprint">image_url</code> : the URL for the image associated with the area.</li>
+<li><code class="prettyprint">tags</code> : a string containing the AOI tags, comma-separated.</li>
+</ul>
 
           <h1 id="tasks">Tasks</h1>
 
