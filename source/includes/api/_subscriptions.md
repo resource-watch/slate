@@ -48,7 +48,7 @@ datasetsQuery |              Subscriptions to subscribable datasets             
 -- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
 -- params     | Geographic area of the subscription                               |             Object | Yes (unless `datasets` is specified)
 env           |  Environment of the subscription. Set to `production` by default  |             String | No
-userId        | Id of the user owner of the subscription. This parameter can only be provided when creating subscriptions in requests from other MSs. Otherwise, the id of the user in the token of the request is set as the owner. | String | No
+userId        | [Check here for more info](/developer.html#creating-a-subscription-for-another-user) | String | No
 
 <aside class="warning">The <code>application</code> field will soon be made required when creating a subscription.</aside>
 
@@ -508,8 +508,6 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
 
 To modify a subscription, use the following PATCH endpoint. This endpoint requires authentication, and also you must be the owner of the subscription in order to edit it, otherwise the request will fail with `404 Not Found`.
 
-If the request comes from another micro service, then it is possible to modify subscriptions belonging to other users. Otherwise, you can only modify subscriptions if you are the owner of the subscription.
-
 The following fields are available to be provided when modifying a subscription:
 
 Field         |                            Description                            |               Type | Required
@@ -526,7 +524,7 @@ datasetsQuery |              Subscriptions to subscribable datasets             
 -- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
 -- params     | Geographic area of the subscription                               |             Object | Yes (unless `datasets` is specified)
 env           |  Environment of the subscription. Set to `production` by default  |             String | No
-userId        | Id of the user owner of the subscription. This parameter can only be provided when creating subscriptions in requests from other MSs. Otherwise, the id of the user in the token of the request is set as the owner. | String | No
+userId        | [Check here for more info](/developer.html#updating-a-subscription-for-another-user) | String | No
 
 ## Unsubscribe
 
