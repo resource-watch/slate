@@ -499,7 +499,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmati
 -H "Authorization: Bearer <your-token>"
 ```
 
-## Modify subscription
+## Modify a subscription
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
@@ -524,7 +524,6 @@ datasetsQuery |              Subscriptions to subscribable datasets             
 -- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
 -- params     | Geographic area of the subscription                               |             Object | Yes (unless `datasets` is specified)
 env           |  Environment of the subscription. Set to `production` by default  |             String | No
-userId        | [Check here for more info](/developer.html#updating-a-subscription-for-another-user) | String | No
 
 ## Unsubscribe
 
@@ -544,114 +543,9 @@ curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 
 To delete a subscription, use the following DELETE endpoint.
 
-If the request comes from another micro service, then it is possible to delete subscriptions belonging to other users. Otherwise, you can only delete subscriptions if you are the owner of the subscription.
+If the request comes from another microservice, then it is possible to delete subscriptions belonging to other users. Otherwise, you can only delete subscriptions if you are the owner of the subscription.
 
-## Finding subscriptions by ids
 
-```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions/find-by-ids \
--H "Authorization: Bearer <your-token>"
--H "Content-Type: application/json"  -d \
- '{ "ids": ["5e4d273dce77c53768bc24f9"] }'
-```
-
-> Example response:
-
-```json
-
-{
-    "data": [
-        {
-            "type": "subscription",
-            "id": "5e4d273dce77c53768bc24f9",
-            "attributes": {
-                "createdAt": "2020-02-19T12:17:01.176Z",
-                "userId": "5e2f0eaf9de40a6c87dd9b7d",
-                "resource": {
-                    "type": "EMAIL",
-                    "content": "henrique.pacheco@vizzuality.com"
-                },
-                "datasets": [
-                    "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"
-                ],
-                "params": {},
-                "confirmed": false,
-                "language": "en",
-                "datasetsQuery": [
-                    {
-                        "threshold": 1,
-                        "lastSentDate": "2020-02-19T12:17:01.175Z",
-                        "historical": [],
-                        "id": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
-                        "type": "COUNT"
-                    }
-                ],
-                "env": "production"
-            }
-        }
-    ]
-}
-```
-
-You can find a set of subscriptions given their ids using the following endpoint.
-
-This endpoint is restricted to usage by other micro services.
-
-## Finding subscriptions for a given user
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions/user/5e2f0eaf9de40a6c87dd9b7d \
--H "Authorization: Bearer <your-token>"
-```
-
-> Example response:
-
-```json
-
-{
-    "data": [
-        {
-            "type": "subscription",
-            "id": "5e4d273dce77c53768bc24f9",
-            "attributes": {
-                "createdAt": "2020-02-19T12:17:01.176Z",
-                "userId": "5e2f0eaf9de40a6c87dd9b7d",
-                "resource": {
-                    "type": "EMAIL",
-                    "content": "henrique.pacheco@vizzuality.com"
-                },
-                "datasets": [
-                    "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"
-                ],
-                "params": {},
-                "confirmed": false,
-                "language": "en",
-                "datasetsQuery": [
-                    {
-                        "threshold": 1,
-                        "lastSentDate": "2020-02-19T12:17:01.175Z",
-                        "historical": [],
-                        "id": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
-                        "type": "COUNT"
-                    }
-                ],
-                "env": "production"
-            }
-        }
-    ]
-}
-```
-
-You can find all the subscriptions associated with a given user id using the following endpoint.
-
-This endpoint is restricted to usage by other micro services.
-
-This endpoint supports the following optional query parameters as filters:
-
-Field       |             Description                              |   Type |
------------ | :--------------------------------------------------: | -----: |
-application | Application to which the subscription is associated. | String |
-env         | Environment to which the subscription is associated. | String |
 
 ## Subscription statistics
 
