@@ -2,72 +2,13 @@
 
 ## What is a Dataset?
 
-A dataset abstracts the data that can be obtained from several sources into a common interface. There are several data providers supported in the API, and each of those has a different provider. Datasets can belong to several applications.
+If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the [dataset concept](#dataset) documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you. 
 
-## Supported dataset sources
-
-### Third party Dataset connectors
-
-For data stored on third party services.
-
-#### Carto
-
-**`(connectorType: 'rest', provider: 'cartodb')`**<br>
-[![](images/dataset/carto.png)](https://www.carto.com) CARTO is an open, powerful, and intuitive map platform for discovering and predicting the key insights underlying the location data in our world.
-
-### ArcGIS Feature service
-
-**`(connectorType: 'rest', provider: 'featureservice')`** [![](https://www.arcgis.com/features/img/logo-esri.png)](https://www.arcgis.com/features/index.html)<br>
-ArcGIS for server is a Complete, Cloud-Based Mapping Platform.
-
-### Google Earth Engine
-
-**`(connectorType: 'rest', provider: 'gee')`** [![](https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png)](https://earthengine.google.com/)<br>
-Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth's surface.
-
-#### Web Map Services ([WMS](http://www.opengeospatial.org/standards/wms))
-
-**`(connectorType: 'wms', provider: 'wms')`**
-
-WMS connector provides access to data served through [OGC WMS](http://www.opengeospatial.org/standards/wms) protocol standard.
-
-#### Rasdaman (Raster Data Manager)
-
-**`(connectorType: 'rest', provider: 'rasdaman')`**<br>
-[Rasdaman](http://www.rasdaman.com/) is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.
-
-### Internal storage connectors
-
-For data stored in our system.
-
-#### NEX-GDDP
-
-**`(connectorType: 'rest', provider: 'nexgddp')`**<br>
-The NASA Earth Exchange Global Daily Downscaled Projections ([NEX-GDDP](https://nex.nasa.gov/nex/projects/1356/)) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).
-
-#### Comma-Separated Values (CSV)
-
-**`(connectorType: 'document', provider: 'csv')`**<br>
-Arbitrary Comma-Separated Values data
-
-#### Tab-Separated Values (TSV)
-
-**`(connectorType: 'document', provider: 'tsv')`**<br>
-Arbitrary tab-Separated Values data
-
-#### JavaScript Object Notation (JSON)
-
-**`(connectorType: 'document', provider: 'json')`**<br>
-Arbitrary [json](http://www.json.org/) structured data
-
-#### XML
-
-**`(connectorType: 'document', provider: 'xml')`**<br>
-Arbitrary [XML](https://www.w3.org/TR/2006/REC-xml11-20060816/) data documents
+Once you've read that section, you can come back here to learn more details about [using existing datasets](#getting-all-datasets) or [creating your own](#creating-a-dataset).
 
 ## Getting all datasets
 
-This endpoint will allow to get all datasets available in the API:
+This endpoint will allow to get a list of the datasets available in the API. You can customize the result in multiple ways, using the options described below.
 
 
 ```shell
@@ -114,8 +55,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
             "widgetRelevantProps": [],
             "layerRelevantProps": []
             }
-        },
-    ...
+        }
   ],
   "links": {
     "self": "http://api.resourcewatch.org/v1/dataset?page[number]=1&page[size]=10",
@@ -132,15 +72,23 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
 }
 ```
 
-### Slug & dataset-id
+### Pagination
 
-Datasets have an auto-generated and unique slug and id that allows the user to get, create, update, query or clone that dataset.
 
-The dataset slug and the id cannot be updated even if the name changes.
 
-### Error Message
+Field        |         Description          |   Type |   Default
+------------ | :--------------------------: | -----: | ----------:
+page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 10
+page[number] |       The page number        | Number | 1
 
-When a dataset is created the status is set to "pending" by default. Once the adapter validates the dataset, the status is changed to "saved". If the validation fails, the status will be set to "failed" and the adapter will also set an error message indicating the reason.
+> Paginating the output
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=1
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=2
+```
+
+
 
 ### Filters
 
@@ -406,19 +354,6 @@ By vocabulary-tag matching
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=umd
 ```
 
-### Pagination
-
-Field        |         Description          |   Type
------------- | :--------------------------: | -----:
-page[size]   | The number elements per page. There's a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit. | Number
-page[number] |       The page number        | Number
-
-> Paginating the output
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=1
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=2
-```
 
 ## How to get a dataset by id
 
@@ -636,7 +571,14 @@ layerRelevantProps  |                                           Group of relevan
 subscribable        | Available dataset queries for subscriptions parameters accepted: `{{begin}}` for date begin and `{{end}}` for date end |  Object |                                                                             `{" <queryname>": "<querybodytemplate>"}` | No (just for json if connectorUrl is not present)
 env                 | The environment you want the dataset to be accessible on. Defaults to production |  Text | `staging`, `production` or `preproduction` | No
 
-There are some differences between datasets types.
+
+Once created, datasets have an auto-generated and unique slug and id that allows the user to get, create, update, query or clone that dataset. The dataset slug and the id cannot be modified.
+
+When a dataset is created, the `status` is set to "pending" by default, meaning the dataset is not ready for usage just yet. Once the creation process is finished, the status will change to "saved", meaning you can now access the dataset and its data. This process is asynchronous and its duration will depend on the provider of the dataset as well as the amount of data it contains. You should use [check your dataset](#how-to-get-a-dataset-by-id) manually to see when the `status` is updated.
+
+In case the dataset creation process fails, the `status` value will be set to `failed`, and the `errorMessage` field will have a short description of what went wrong.
+
+When creating a dataset, depending on the provider you are using, there are slight differences that must be reflected in your request:
 
 ### Carto datasets
 
