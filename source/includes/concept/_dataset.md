@@ -22,40 +22,40 @@ Each dataset has a **provider** (json/carto/GEE/...) that must specified on crea
 
 #### Carto
 
-Carto is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world. In order to create a dataset based on CartoDB data, you should create a dataset providing:
+Carto is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world.
 
 #### ArcGIS Feature Service
 
-ArcGIS for server is a complete, cloud-based mapping platform. In order to create a dataset based on ArcGIS Feature Service data, you should create a dataset providing:
+ArcGIS for server is a complete, cloud-based mapping platform.
 
 #### Google Earth Engine
 
-Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth’s surface. In order to create a dataset based on Google Earth Engine data, you should create a dataset providing:
+Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth’s surface.
 
 #### Web Map Services
 
-WMS connector provides access to data served through OGC WMS protocol standard. In order to create a dataset based on WMS data, you should create a dataset providing:
+WMS connector provides access to data served through OGC WMS protocol standard.
 
 #### Rasdaman (Raster Data Manager)
 
-Rasdaman is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays. In order to create a dataset based on Rasdaman data, you should create a dataset providing:
+Rasdaman is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.
 
 #### NEX-GDDP
 
-The NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs). In order to create a dataset based on NEX-GDDP data, you should create a dataset providing:
+The NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).
 
 #### Comma-Separated Values (CSV)
 
-Data provided in the form of a Comma-Separated Values (CSV) document. In order to create a dataset based on a CSV document, you should create a dataset providing:
+Data provided in the form of a Comma-Separated Values (CSV) document.
 
 #### Tab-Separated Values (TSV)
 
-Data provided in the form of a Tab-Separated Values (TSV) document. In order to create a dataset based on a TSV document, you should create a dataset providing:
+Data provided in the form of a Tab-Separated Values (TSV) document.
 
 #### JavaScript Object Notation (JSON)
 
-Data provided in the form of a JSON document. In order to create a dataset based on a JSON document, you should create a dataset providing:
+Data provided in the form of a JSON document.
 
 #### Extensible (X) Markup Language (XML)
 
-Data provided in the form of a XML document. In order to create a dataset based on a XML document, you should create a dataset providing:
+Data provided in the form of a XML document.
