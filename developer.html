@@ -1323,6 +1323,187 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 </code></pre>
 <p>This will delete the microservice and its associated endpoints from the gateway&rsquo;s database. It does not remove the actual running microservice application instance, which may re-register and become available once again.</p>
 
+          <h1 id="subscriptions">Subscriptions</h1>
+
+<p>When communicating with the Subscriptions microservice from other microservices, you have access to special actions that are not available when using the public API. This section concerns subscriptions endpoints that offer special functionality when handling requests from other microservices.</p>
+
+<h2 id="creating-a-subscription-for-another-user">Creating a subscription for another user</h2>
+
+<blockquote>
+<p>Creating a subscription for user with ID 123 - only works when called by other MS!</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "name": "&lt;name&gt;",
+    "datasets": ["&lt;dataset&gt;"],
+    "params": { "geostore": "35a6d982388ee5c4e141c2bceac3fb72" },
+    "datasetsQuery": [
+        {
+            "id": ":subscription_dataset_id",
+            "type": "test_subscription",
+            "threshold": 1
+        }
+    ],
+    "application": "rw",
+    "language": "en",
+    "env": &lt;environment&gt;,
+    "resource": { "type": "EMAIL", "content": "email@address.com" },
+    "userId": "123"
+}'</span>
+</code></pre>
+<p>You can create a subscription for another user by providing the user id in the body of the request.</p>
+
+<p>This can only be done when performing requests from another microservice.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>userId</td>
+<td style="text-align: center">Id of the owner of the subscription - if not provided, it&rsquo;s set as the id of the user in the token.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+
+<h2 id="updating-a-subscription-for-another-user">Updating a subscription for another user</h2>
+
+<p>If the request comes from another microservice, then it is possible to modify subscriptions belonging to other users. Otherwise, you can only modify subscriptions if you are the owner of the subscription.</p>
+
+<p>The following fields are available to be provided when modifying a subscription:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>userId</td>
+<td style="text-align: center"><a href="developer.html#updating-a-subscription-for-another-user">Check here for more info</a></td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+
+<h2 id="finding-subscriptions-by-ids">Finding subscriptions by ids</h2>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{ "ids": ["5e4d273dce77c53768bc24f9"] }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d273dce77c53768bc24f9"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T12:17:01.176Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e2f0eaf9de40a6c87dd9b7d"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"henrique.pacheco@vizzuality.com"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"lastSentDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T12:17:01.175Z"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"historical"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COUNT"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can find a set of subscriptions given their ids using the following endpoint.</p>
+
+<h2 id="finding-subscriptions-for-a-given-user">Finding subscriptions for a given user</h2>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions/user/5e2f0eaf9de40a6c87dd9b7d <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d273dce77c53768bc24f9"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T12:17:01.176Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e2f0eaf9de40a6c87dd9b7d"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"henrique.pacheco@vizzuality.com"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"lastSentDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T12:17:01.175Z"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"historical"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COUNT"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can find all the subscriptions associated with a given user id using the following endpoint.</p>
+
+<p>This endpoint supports the following optional query parameters as filters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the subscription is associated.</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">Environment to which the subscription is associated.</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">

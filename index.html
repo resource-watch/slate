@@ -6769,6 +6769,12 @@ Mind the string format: double quotes and curly braces need to be properly escap
 <td style="text-align: right">String</td>
 <td style="text-align: right">No</td>
 </tr>
+<tr>
+<td>userId</td>
+<td style="text-align: center"><a href="developer.html#creating-a-subscription-for-another-user">Check here for more info</a></td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">No</td>
+</tr>
 </tbody></table>
 
 <aside class="warning">The <code>application</code> field will soon be made required when creating a subscription.</aside>
@@ -7303,13 +7309,95 @@ Remember — the response is in JSONApi format.
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmation <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<h2 id="modify-subscription">Modify subscription</h2>
-
-<p>To modify a subscription:</p>
+<h2 id="modify-a-subscription">Modify a subscription</h2>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<p>With a body with the same format as before.</p>
+<p>To modify a subscription, use the following PATCH endpoint. This endpoint requires authentication, and also you must be the owner of the subscription in order to edit it, otherwise the request will fail with <code class="prettyprint">404 Not Found</code>.</p>
+
+<p>The following fields are available to be provided when modifying a subscription:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application of the subscription. Set to <code class="prettyprint">gfw</code> by default</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">No</td>
+</tr>
+<tr>
+<td>language</td>
+<td style="text-align: center">Language of the subscriptions (used to select the email template)</td>
+<td style="text-align: right">en, es, fr, pt, zh</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>resource</td>
+<td style="text-align: center">Details on the resource that will be notified for the subscription.</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>&ndash; type</td>
+<td style="text-align: center">The type of resource to notify. If <code class="prettyprint">EMAIL</code>, an email is sent to the email saved in the resource content. If <code class="prettyprint">URL</code>, a POST is requested to the web-hook URL in the resource content.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>&ndash; content</td>
+<td style="text-align: center">The email or URL that will be notified (according to the type).</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>datasets</td>
+<td style="text-align: center">Array of datasets of the subscription</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasetsQuery</code> is specified)</td>
+</tr>
+<tr>
+<td>datasetsQuery</td>
+<td style="text-align: center">Subscriptions to subscribable datasets</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
+</tr>
+<tr>
+<td>&ndash; id</td>
+<td style="text-align: center">Id of dataset</td>
+<td style="text-align: right">ObjectId</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
+</tr>
+<tr>
+<td>&ndash; type</td>
+<td style="text-align: center">Type of subscription defined in the dataset</td>
+<td style="text-align: right">Text</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
+</tr>
+<tr>
+<td>&ndash; params</td>
+<td style="text-align: center">Geographic area of the subscription</td>
+<td style="text-align: right">Object</td>
+<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
+</tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">Environment of the subscription. Set to <code class="prettyprint">production</code> by default</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
 
 <h2 id="unsubscribe">Unsubscribe</h2>
 
@@ -7318,11 +7406,13 @@ Remember — the response is in JSONApi format.
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
 <h2 id="delete-subscription">Delete subscription</h2>
-
-<p>To unsubscribe (delete a subscription):</p>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
+<p>To delete a subscription, use the following DELETE endpoint.</p>
+
+<p>If the request comes from another microservice, then it is possible to delete subscriptions belonging to other users. Otherwise, you can only delete subscriptions if you are the owner of the subscription.</p>
+
 <h2 id="subscription-statistics">Subscription statistics</h2>
 
 <p>Statistics endpoints require authentication by an ADMIN user.</p>
