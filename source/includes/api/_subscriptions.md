@@ -48,6 +48,7 @@ datasetsQuery |              Subscriptions to subscribable datasets             
 -- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
 -- params     | Geographic area of the subscription                               |             Object | Yes (unless `datasets` is specified)
 env           |  Environment of the subscription. Set to `production` by default  |             String | No
+userId        | [Check here for more info](/developer.html#creating-a-subscription-for-another-user) | String | No
 
 <aside class="warning">The <code>application</code> field will soon be made required when creating a subscription.</aside>
 
@@ -498,16 +499,31 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmati
 -H "Authorization: Bearer <your-token>"
 ```
 
-## Modify subscription
-
-To modify a subscription:
+## Modify a subscription
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
 -H "Authorization: Bearer <your-token>"
 ```
 
-With a body with the same format as before.
+To modify a subscription, use the following PATCH endpoint. This endpoint requires authentication, and also you must be the owner of the subscription in order to edit it, otherwise the request will fail with `404 Not Found`.
+
+The following fields are available to be provided when modifying a subscription:
+
+Field         |                            Description                            |               Type | Required
+------------- | :---------------------------------------------------------------: | -----------------: |-----------:
+name          |                               Name                                |               Text | No
+application   | Application of the subscription. Set to `gfw` by default          |             String | No
+language      | Language of the subscriptions (used to select the email template) | en, es, fr, pt, zh | Yes
+resource      | Details on the resource that will be notified for the subscription. |           Object | Yes
+-- type       | The type of resource to notify. If `EMAIL`, an email is sent to the email saved in the resource content. If `URL`, a POST is requested to the web-hook URL in the resource content. | String | Yes
+-- content    |  The email or URL that will be notified (according to the type).  |             String | Yes
+datasets      |               Array of datasets of the subscription               |              Array | Yes (unless `datasetsQuery` is specified)
+datasetsQuery |              Subscriptions to subscribable datasets               |              Array | Yes (unless `datasets` is specified)
+-- id         |                           Id of dataset                           |           ObjectId | Yes (unless `datasets` is specified)
+-- type       | Type of subscription defined in the dataset                       |               Text | Yes (unless `datasets` is specified)
+-- params     | Geographic area of the subscription                               |             Object | Yes (unless `datasets` is specified)
+env           |  Environment of the subscription. Set to `production` by default  |             String | No
 
 ## Unsubscribe
 
@@ -520,12 +536,16 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 
 ## Delete subscription
 
-To unsubscribe (delete a subscription):
-
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 -H "Authorization: Bearer <your-token>"
 ```
+
+To delete a subscription, use the following DELETE endpoint.
+
+If the request comes from another microservice, then it is possible to delete subscriptions belonging to other users. Otherwise, you can only delete subscriptions if you are the owner of the subscription.
+
+
 
 ## Subscription statistics
 
