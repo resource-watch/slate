@@ -921,9 +921,7 @@ For more details on the characteristics of each of the basic data types, refer t
 
 ## Uploading a Dataset (Binary)
 
-To upload a dataset, you will need to be authenticated.
-
-You can upload your raw data directly to S3 making use of the "upload" endpoint. This endpoint accepts a file in the property "dataset" and returns a valid connectorUrl. With this connectorUrl you can create or update a "document" dataset, or a raster dataset in the Rasdaman adapter.
+> Upload raw data for using in a dataset
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/upload \
@@ -932,15 +930,15 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/upload \
 -F dataset=@<your-file>
 ```
 
-It returns the following information:
-
-> Response
+> Example response
 
 ```json
 {
   "connectorUrl": "rw.dataset.raw/tmp/upload_75755182b1ceda30abed717f655c077d-observed_temp.csv"
 }
 ```
+
+> Using the returned connectorUrl to create a new dataset
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -957,9 +955,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-## Updating a Dataset
+You can upload your raw data directly to S3 making use of the `upload` endpoint. This endpoint accepts a file in the property "dataset" and returns a valid connectorUrl. With this connectorUrl you can create or update a "document" dataset, or a raster dataset in the Rasdaman adapter.
 
-In order to modify the dataset, you can PATCH a request. It accepts the same parameters as the _create dataset_ endpoint, and you will need an authentication token.
+*Note: Uploading raw data for using in a dataset requires authentication.*
+
+## Updating a Dataset
 
 To perform this operation, the following conditions must be met:
 
@@ -968,7 +968,7 @@ To perform this operation, the following conditions must be met:
   - have role `ADMIN`
   - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
 
-> An example update request:
+> Example request for updating the name of a dataset
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id> \
@@ -979,31 +979,39 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 }'
 ```
 
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+In order to modify the dataset, you can PATCH a request. The following fields are available (only the fields provided in the request body will be updated, the remaining fields will be left as they are) for updating the dataset, providing them in the request body:
 
-Note: When updating the `env` property of a dataset the change will cascade down to all associated layer and widget entities.
+Field               |                                                      Description                                                       |    Type | Values   |
+------------------- | :--------------------------------------------------------------------------------------------------------------------: | ------: | -------: |
+name                |                                                      Dataset name                                                      |    Text | Any Text |
+type                |                                                      Dataset type                                                      |    Text | Any Text |
+subtitle            |                                                    Dataset subtitle                                                    |    Text | Any Text |
+application         |                     Applications the dataset belongs to                                           |   Array | Any valid application name(s) |
+connectorType       |                                          Connector type                                                     |    Text | rest, document, wms |
+provider            |      The connectorType provider                                     |    Text | cartodb, feature service, gee, csv, tsv, xml, json, nexgddp |
+connectorUrl        |                                                 Url of the data source                                                 |     Url | Any url  |
+sources             |                                                Urls of the data sources                                                |   Array | Array of URLs |
+tableName           |                                                       Table name                                                       |    Text | Any valid table name |
+data                |                             JSON DATA only for json connector if connectorUrl not present                              |    JSON | [{},{},{}] |
+dataPath            |                                           Path to the data in a json dataset                                           |    Text | Any valid JSON key |
+legend              |                                      Legend for dataset. Keys for special fields                                       |  Object | "legend": {"long": "123", "lat": "123", "country": ["pais"], "region": ["barrio"], "date": ["startDate", "endDate"]}} |
+overwrite           |                                          It allows to overwrite dataset data                                           | Boolean | true/false |
+published           |                                           To set a public or private dataset                                           | Boolean | true/false |
+protected           |                           If it's a protected layer (not is possible to delete if it's true)                           | Boolean | true/false |
+verified            |                                    To generate a verified blockchain of the dataset                                    | Boolean | true/false |
+vocabularies        |                                                    Cluster of tags                                                     |  Object | `{"vocabularyOne": {"tags": [<tags>]},"vocabularyTwo": {"tags": [<tags>]}}` |
+widgetRelevantProps |                                          Group of relevant props of a widget                                           |   Array | Any Text |
+layerRelevantProps  |                                           Group of relevant props of a layer                                           |   Array | Any Text |
+subscribable        | Available dataset queries for subscriptions parameters accepted: `{{begin}}` for date begin and `{{end}}` for date end |  Object | `{" <queryname>": "<querybodytemplate>"}` |
+env                 | The environment you want the dataset to be accessible on. Defaults to production |  Text | `staging`, `production` or `preproduction` |
+
+*Note 1: Updating a dataset requires authentication.*
+
+Note 2: When updating the `env` property of a dataset the change will cascade down to all associated layer and widget entities.
 
 ## Deleting a Dataset
 
-**When a dataset is deleted the user's applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.**
-
-Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them.
-
-In order to perform this operation, the following conditions must be met:
-
-- the dataset's `protected` property must be set to `false`.
-- the user must be logged in and belong to the same application as the dataset
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
-
-Note that the deletion process cascades in a non-atomic way; deleting a dataset will also attempt to remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it. However, if one of these deletes fails (ie. attempting to delete a protected layer will fail), the dataset will still be deleted, and those resources will be left orphaned.
-
-<aside class="warning">
-Deleting a dataset removes it permanently! It is recommended that you save a local copy before doing so.
-</aside>
+> Example request for deleting a dataset
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id> \
@@ -1011,31 +1019,23 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 -H "Content-Type: application/json"
 ```
 
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+In order to delete a dataset, the following conditions must be met:
+
+- the dataset's `protected` property must be set to `false`.
+- the user must be logged in and belong to the same application as the dataset
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+
+**When a dataset is deleted, the user's applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.**
+
+**Note 1: Deleting a dataset might remove it permanently, so it is recommended that you save a local copy before doing so.**
+
+*Note 2: the deletion process cascades in a non-atomic way; deleting a dataset will also attempt to remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it. However, if one of these deletes fails (ie. attempting to delete a protected layer will fail), the dataset will still be deleted, and those resources will be left orphaned.*
 
 ## Cloning a Dataset
 
-This endpoint returns a new dataset that is a replica of the dataset provided.
-It can take the optional query parameter `fullCloning=true` to force the cloning of the metadata.
-
-The POST payload expects a `dataset` object containing at least these 2 required keys:
-- `datasetUrl`:  The connectorUrl for the new dataset.
-- `application`: A list of the new dataset applications.
-
-Optionally, the following values can also be provided, which will be used to overwrite the
-original dataset's values when cloning:
-- `legend`
-- `applicationConfig`
-
-The cloned dataset has the same attributes as the source one, except for the following ones:
-- `name`: The current timestamp is added to the original name
-- `published`: will be false unless specified
-
-The field `clonedHost` will contain the host information about the original dataset.
-
-A user can only clone datasets from and to apps they belong to.
+> Example request for cloning a dataset
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2ff464ab28be/clone \
@@ -1054,28 +1054,27 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2f
 }'
 ```
 
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+This endpoint returns a new dataset that is a replica of the dataset provided. It can take the optional query parameter `fullCloning=true` to force the cloning of the metadata.
+
+The following fields must/can be provided when cloning a dataset (check also the example on the side):
+
+Field             |                         Description                  |    Type | Example value | Required    |
+----------------- | :--------------------------------------------------- | ------: | ------------: | ----------: |
+datasetUrl        | The connectorUrl for the new dataset.                |    Text | A valid URL   | Yes         |
+application       | A list of the new dataset applications.              |   Array | Any valid application name(s) | Yes |
+legend            | Legend for the dataset. If provided, it will override the original dataset values. |  Object | "legend": {"long": "123", "lat": "123", "country": ["pais"], "region": ["barrio"], "date": ["startDate", "endDate"]}} |
+applicationConfig | Group of relevant props of a widget. If provided, it will override the original dataset values. |   Array | Any Text      |
+
+The cloned dataset has the same attributes as the source one, except for the following ones:
+
+* `name`: The current timestamp is added to the original dataset's name.
+* `published`: will be false unless specified in the request body.
+
+The field `clonedHost` will contain the host information about the original dataset.
+
+*Note: Cloning a dataset requires authentication, and you will only be able to clone datasets from apps associated to your user.*
 
 ## Concatenate and Append Data
-
-Using these endpoints, you can add more data to an already existing dataset. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
-
-These process are asynchronous and not instantaneous. Immediately when triggered, these requests will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite, concatenate or append requests. Once the request has been fully processed, the status will be automatically set to `saved`. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
-
-In order to perform these operation, the following conditions must be met:
-
-- the dataset's `overwrite` property must be set to `true`.
-- the dataset's `status` property must be set to `saved`.
-- the user must be logged in and match one of the following:
-  - have role `ADMIN` and belong to the same application as the dataset
-  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
-
-While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.
-
-- The concatenate process relies on a slower approach to ensure the operation is atomic. Until the operation is completed, you will see the dataset data as it was before the concatenate operation was triggered. If the operation fails, the old version of the data is kept accessible as it was before the concatenation process was started. There's a known issue where concatenating new data to already existing large datasets may result in failure.
-- The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones.
 
 > Concatenate data using external data source:
 
@@ -1115,30 +1114,28 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/concat \
 }'
 ```
 
-<aside class="notice">
-    Using the previous <code class="prettyprint">url</code> field to pass the url of a single file is still permitted but is now deprecated in favor of <code class="prettyprint">sources</code>.
-</aside>
+Using these endpoints, you can add more data to an already existing dataset. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.
 
-## Overwrite Data
+These process are asynchronous and not instantaneous. Immediately when triggered, these requests will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite, concatenate or append requests. Once the request has been fully processed, the status will be automatically set to `saved`. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
 
-Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object. There are no requirements regarding similarity of the data structure between existing and new data - your overwrite data can have a completely different data schema.
+In order to perform these operation, the following conditions must be met:
 
-This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
-
-In order to perform this operation, the following conditions must be met:
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
 - the user must be logged in and match one of the following:
   - have role `ADMIN` and belong to the same application as the dataset
   - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
 
+While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.
 
-Field        |                        Description                                |   Type |        Values | Required
------------- | :-----------------------------------------------------------:     | -----: | ------------: | -------:
-provider     | Dataset provider this include inner connectors and 3rd party ones | String | [A valid dataset provider](##supported-dataset-sources) | Yes
-sources      | List of URLs from which to source data                            |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
-data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
-legend       | The schema of the new data. If none is provided, a guessing mechanism will be used. The existing `legend` value of the dataset will be ignored and overwritten in all `overwrite` operations. See [the legend section](#legend) above for more details.                                                | Object |               |       No
+- The concatenate process relies on a slower approach to ensure the operation is atomic. Until the operation is completed, you will see the dataset data as it was before the concatenate operation was triggered. If the operation fails, the old version of the data is kept accessible as it was before the concatenation process was started. There's a known issue where concatenating new data to already existing large datasets may result in failure.
+- The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones.
+
+<aside class="notice">
+    Using the previous <code class="prettyprint">url</code> field to pass the url of a single file is still permitted but is now deprecated in favor of <code class="prettyprint">sources</code>.
+</aside>
+
+## Overwrite Data
 
 > Overwrite data using external data source:
 
@@ -1164,20 +1161,31 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite
 }'
 ```
 
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object. There are no requirements regarding similarity of the data structure between existing and new data - your overwrite data can have a completely different data schema.
 
-Who can use this endpoint?
+This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
+
+In order to perform this operation, the following conditions must be met:
+- the dataset's `overwrite` property must be set to `true`.
+- the dataset's `status` property must be set to `saved`.
+- the user must be logged in and match one of the following:
+  - have role `ADMIN` and belong to the same application as the dataset
+  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+
+
+Field        |                        Description                                |   Type |        Values | Required
+------------ | :-----------------------------------------------------------:     | -----: | ------------: | -------:
+provider     | Dataset provider this include inner connectors and 3rd party ones | String | [A valid dataset provider](##supported-dataset-sources) | Yes
+sources      | List of URLs from which to source data                            |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
+data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
+legend       | The schema of the new data. If none is provided, a guessing mechanism will be used. The existing `legend` value of the dataset will be ignored and overwritten in all `overwrite` operations. See [the legend section](#legend) above for more details.                                                | Object |               |       No
+
+*Note: Overwrite a dataset's data requires authentication, and the user making the request must meet one of the following conditions:*
 
 * **MANAGER** users who are included in the `userId` field of the dataset entity.
 * **ADMIN** users who belong to **at least one of the dataset's applications**.
 
 ## Dataset data sync
-
-To sync the data of a dataset, you need to choose the action type (concat or overwrite), a cron pattern and a valid url. This configuration should be set in the 'sync' property when creating or updating a document dataset.
-
-Please be sure that the 'overwrite' property is set to true. This could be used as a lock in order to not allow new updates even if the sync task is actually created.
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -1199,3 +1207,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
     }
 }'
 ```
+
+To sync the data of a dataset, you need to choose the action type (concat or overwrite), a cron pattern and a valid url. This configuration should be set in the 'sync' property when creating or updating a document dataset.
+
+Please be sure that the 'overwrite' property is set to true. This could be used as a lock in order to not allow new updates even if the sync task is actually created.
