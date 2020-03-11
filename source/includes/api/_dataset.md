@@ -126,7 +126,7 @@ name           | Filter returned datasets by the name of the dataset.           
 type           | Filter returned datasets by dataset type.                                    | `raster` or `tabular`
 app            | Applications associated to this dataset - example values: `["data4sdgs","gfw","rw","aqueduct","prep","forest-atlas","gfw-climate","aqueduct-water-risk","test","gfw-pro","globalforestwatch", "ghg-gdp"]` | One or more applications, separated by `@` (check the example)
 connectorType  | Filter returned datasets by the type of connector used.                      | `rest` or `document`
-provider       | Dataset provider this include inner connectors and 3rd party ones            | [A valid dataset provider](##supported-dataset-sources)
+provider       | Dataset provider this include inner connectors and 3rd party ones            | [Check the available providers when creating a dataset](index-rw.html#creating-a-dataset)
 userId         | Filter results by the owner of the dataset.                                  | valid id
 user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
 status         | Filter results by the current status of the dataset.                         | `pending`, `saved` or `failed`
@@ -167,13 +167,11 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=user.role
 ```
 
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dataset, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
-
-Sorting by nested fields is not supported at the moment.
+The API currently supports sorting by means of the `sort` query parameter. Sorting can be done using any field from the dataset data model, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users). Sorting by nested fields is not supported at the moment.
 
 Multiple sorting criteria can be used, separating them by commas.
 
-You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+You can also specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
 
 #### Special sorting criteria
 
@@ -187,14 +185,12 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-most-favorited
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=relevance&status=saved&search=agriculture
 ```
 
-There are some criteria for special sorting in datasets:
+Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria. The following criteria can be used for special sorting in datasets:
 
-- `metadata`: delegates sorting to the metadata component, sorting by the name field of the metadata.
-- `most-viewed` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.
-- `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.
-- `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order.
-
-Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria.
+* `metadata`: delegates sorting to the metadata component, sorting by the name field of the metadata.
+* `most-viewed` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.
+* `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.
+* `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order.
 
 ### Include related entities
 
@@ -284,10 +280,10 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?includes=metadata,widget
 }
 ```
 
-> Loading all layers for the given dataset, not just the ones with env set to preproduction
+> Loading all layers for the given dataset, not just the ones with env set to production
 
 ```shell
-curl -X GET http://api.resourcewatch.org/dataset?includes=layer&env=preproduction
+curl -X GET http://api.resourcewatch.org/dataset?includes=layer&env=production
 ```
 
 > Loading the information about the user who authored the dataset
@@ -370,40 +366,36 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?includes=user
 
 When fetching the dashboards, you can request additional entities to be loaded with the datasets. The following entities are avaliable:
 
-- `widget` - loads all widgets associated with a given dataset.
-- `layer` - loads all layers associated with a given dataset.
-- `vocabulary` - loads all vocabulary entities associated with a given dataset.
-- `metadata` - loads all metadata associated with a given dataset.
-- `user` - loads the name, email address and role of the author of the dataset. If you do not issue this request as an ADMIN user, or if no user data is available, the `user` object will be empty.
+* `widget` - loads all widgets associated with a given dataset.
+* `layer` - loads all layers associated with a given dataset.
+* `vocabulary` - loads all vocabulary entities associated with a given dataset.
+* `metadata` - loads all metadata associated with a given dataset.
+* `user` - loads the name, email address and role of the author of the dataset. If you do not issue this request as an ADMIN user, or if no user data is available, the `user` object will be empty.
 
-**Note:** If you include related entities (e.g. layers) with query filters, the filters will not cascade to the related entities. For example, the following example will load layers for that dataset, not just the ones with env set to preproduction.
+**Note:** If you include related entities (e.g. layers) with query filters, the filters will not cascade to the related entities.
 
 ### Verification
 
-When available, the content of the `blockchain` field is used to validate the dataset's information using [Stampery](https://stampery.com/).
-
-> Get verification
+> Get verification information for a dataset
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/:datasetID/verification
 ```
 
-> Response:
+> Example response
 
 ```shell
 [
     {
         "id": "string",
-        "hash: "string"
+        "hash": "string"
     }
 ]
 ```
 
+When available, the content of the `blockchain` field is used to validate the dataset's information using [Stampery](https://stampery.com/).
+
 ### Flush dataset cache
-
-Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.
-
-Only users with the `ADMIN` role can use this endpoint.
 
 > Flush dataset's cache
 
@@ -418,11 +410,11 @@ curl -X POST https://api.resourcewatch.org/v1/:datasetID/flush \
 OK
 ```
 
+Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.
+
+*Note: Flushing a dataset's cache requires authentication by an ADMIN user.*
+
 ### Recover
-
-Resets a dataset's `status` to `saved` and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset's data was inconsistent for any reason, this endpoint will not change it, and it's up to you to fix it using a `data-overwrite` or other endpoints.
-
-Only users with the `ADMIN` role can use this endpoint.
 
 > Recover dataset
 
@@ -437,6 +429,9 @@ curl -X POST https://api.resourcewatch.org/v1/:datasetID/recover \
 OK
 ```
 
+Resets a dataset's `status` to `saved` and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset's data was inconsistent for any reason, this endpoint will not change it, and it's up to you to fix it using a `data-overwrite` or other endpoints.
+
+*Note: Recover a dataset's status requires authentication by an ADMIN user.*
 
 ## How to get a dataset by id
 
@@ -490,7 +485,6 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes=metadata,vocabulary,widget,layer
 ```
-
 
 ## How to get multiple datasets by ids
 
@@ -628,7 +622,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids \
 
 To create a dataset, you will need to be authenticated. Additionally, your user account needs to be associated with all `application` you specify for the dataset.
 
-To create a dataset, you need to define all of the required fields in the request body. The fields that compose a dataset are:
+You must provide all of the required fields in the request body. The fields that compose a dataset are:
 
 Field               |                                                      Description                                                       |    Type |                                                                                                                Values |                                          Required
 ------------------- | :--------------------------------------------------------------------------------------------------------------------: | ------: | --------------------------------------------------------------------------------------------------------------------: | ------------------------------------------------:
