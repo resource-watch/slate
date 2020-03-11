@@ -2,7 +2,7 @@
 
 ## What is a Dataset?
 
-If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the [dataset concept](#dataset) documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you. 
+If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the [dataset concept](#dataset) documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you.
 
 Once you've read that section, you can come back here to learn more details about [using existing datasets](#getting-all-datasets) or [creating your own](#creating-a-dataset).
 
@@ -74,23 +74,31 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
 
 ### Pagination
 
+> Paginating the output
 
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=1
+curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=2
+```
 
 Field        |         Description          |   Type |   Default
 ------------ | :--------------------------: | -----: | ----------:
 page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 10
 page[number] |       The page number        | Number | 1
 
-> Paginating the output
+### Filters
+
+> Filtering datasets
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=1
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=threshold&page[number]=2
+curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
 ```
 
+> For inclusive filtering with array props use '@'
 
-
-### Filters
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
+```
 
 The dataset list provided by the endpoint can be filtered with the following attributes:
 
@@ -112,25 +120,9 @@ protected     | If it's a protected layer                                       
 geoInfo       | If it contains interceptable geographical info                               | `true`or `false`
 subscribable  | If the dataset is subscribable (i.e. contains a non-empty object in the subscribable field) | `true` or `false`
 
-> Filtering datasets
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
-```
-
-> For inclusive filtering with array props use '@'
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
-```
-
 ### Sorting
 
 #### Basics of sorting
-
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dataset, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
-
-Sorting by nested fields is not supported at the moment.
 
 > Sorting datasets
 
@@ -138,16 +130,11 @@ Sorting by nested fields is not supported at the moment.
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name
 ```
 
-Multiple sorting criteria can be used, separating them by commas.
-
-
 > Sorting datasets by multiple criteria
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name,description
 ```
-
-You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
 
 > Explicit order of sorting
 
@@ -161,16 +148,15 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=user.role
 ```
 
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dataset, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
+
+Sorting by nested fields is not supported at the moment.
+
+Multiple sorting criteria can be used, separating them by commas.
+
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+
 #### Special sorting criteria
-
-There are some criteria for special sorting in datasets:
-
-- `metadata`: delegates sorting to the metadata component, sorting by the name field of the metadata.
-- `most-viewed` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.
-- `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.
-- `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order.
-
-Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria.
 
 > Sorting datasets with special criteria
 
@@ -182,30 +168,110 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-most-favorited
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=relevance&status=saved&search=agriculture
 ```
 
+There are some criteria for special sorting in datasets:
+
+- `metadata`: delegates sorting to the metadata component, sorting by the name field of the metadata.
+- `most-viewed` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.
+- `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.
+- `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order.
+
+Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria.
+
 ### Include related entities
 
-Available relationships: Any dataset relationship ['widget', 'layer', 'vocabulary', 'metadata', 'user']. User data is only available to users with ADMIN role.
-
-> Including relationships
+> Loads metadata and widgets associated with each dataset:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer
+curl -X GET https://api.resourcewatch.org/v1/dataset?includes=metadata,widget
 ```
 
-<aside class="notice">
-    If you include related entities (e.g. layers) with query filters, the filters will not
-    cascade to the related entities. For example, the following example will load layers for that dataset, not just the ones with env set to preproduction.
-</aside>
+```json
+{
+    "data": [
+        {
+            "id": "06c44f9a-aae7-401e-874c-de13b7764959",
+            "type": "dataset",
+            "attributes": {
+                "name": "Historical Precipitation -- U.S. (Puget Sound Lowlands)",
+                "slug": "Historical-Precipitation-US-Puget-Sound-Lowlands-1490086842133",
+                "type": "tabular",
+                "subtitle": null,
+                "application": [
+                    "prep"
+                ],
+                "dataPath": null,
+                "attributesPath": null,
+                "connectorType": "document",
+                "provider": "csv",
+                "userId": "586bc76036aacd381cb92b3a",
+                "connectorUrl": "https://raw.githubusercontent.com/fgassert/PREP-washington-observed-data/master/observed_precip.csv",
+                "sources": [],
+                "tableName": "index_06c44f9aaae7401e874cde13b7764959",
+                "status": "saved",
+                "published": false,
+                "overwrite": false,
+                "verified": false,
+                "blockchain": {},
+                "mainDateField": null,
+                "env": "production",
+                "geoInfo": false,
+                "protected": false,
+                "legend": {
+                    "date": [],
+                    "region": [],
+                    "country": [],
+                    "nested": [],
+                    "integer": [],
+                    "short": [],
+                    "byte": [],
+                    "double": [],
+                    "float": [],
+                    "half_float": [],
+                    "scaled_float": [],
+                    "boolean": [],
+                    "binary": [],
+                    "text": [],
+                    "keyword": []
+                },
+                "clonedHost": {},
+                "errorMessage": null,
+                "taskId": null,
+                "createdAt": "2016-08-01T15:28:15.050Z",
+                "updatedAt": "2018-01-05T18:15:23.266Z",
+                "dataLastUpdated": null,
+                "metadata": [
+                    { metadata props }
+                ],
+                "widget": [
+                    { widget props },
+                ],
+                "widgetRelevantProps": [],
+                "layerRelevantProps": []
+            }
+        }
+    ],
+    "links": {
+        "self": "http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&page[number]=1&page[size]=10",
+        "first": "http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&page[number]=1&page[size]=10",
+        "last": "http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&page[number]=223&page[size]=10",
+        "prev": "http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&page[number]=1&page[size]=10",
+        "next": "http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&page[number]=2&page[size]=10"
+    },
+    "meta": {
+        "total-pages": 223,
+        "total-items": 2228,
+        "size": 10
+    }
+}
+```
 
 > Loading all layers for the given dataset, not just the ones with env set to preproduction
 
 ```shell
-curl -X GET http://api.resourcewatch.org/dataset/c5fe87d6-49ca-4c68-ad7e-ea48145562e0?includes=layer&env=preproduction
+curl -X GET http://api.resourcewatch.org/dataset?includes=layer&env=preproduction
 ```
 
-#### User
-
-Loads the name, email address and role of the author of the dataset. If you do not issue this request as an ADMIN user, or if no user data is available, the `user` object will be empty.
+> Loading the information about the user who authored the dataset
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?includes=user
@@ -283,7 +349,15 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?includes=user
 }
 ```
 
+When fetching the dashboards, you can request additional entities to be loaded with the datasets. The following entities are avaliable:
 
+- `widget` - loads all widgets associated with a given dataset.
+- `layer` - loads all layers associated with a given dataset.
+- `vocabulary` - loads all vocabulary entities associated with a given dataset.
+- `metadata` - loads all metadata associated with a given dataset.
+- `user` - loads the name, email address and role of the author of the dataset. If you do not issue this request as an ADMIN user, or if no user data is available, the `user` object will be empty.
+
+**Note:** If you include related entities (e.g. layers) with query filters, the filters will not cascade to the related entities. For example, the following example will load layers for that dataset, not just the ones with env set to preproduction.
 
 ### Verification
 
@@ -305,7 +379,7 @@ curl -X GET https://api.resourcewatch.org/v1/:datasetID/verification
     }
 ]
 ```
- 
+
 ### Flush dataset cache
 
 Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.
