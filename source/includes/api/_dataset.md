@@ -8,7 +8,7 @@ Once you've read that section, you can come back here to learn more details abou
 
 ## Getting all datasets
 
-This endpoint will allow to get a list of the datasets available in the API. You can customize the result in multiple ways, using the options described below.
+This endpoint will allow you to get the list of the datasets available in the API. You can customize the result in multiple ways, using the options described below.
 
 
 ```shell

@@ -2,7 +2,7 @@
 
 ## Dataset
 
-One of the Resource Watch API's (RW API) goals is to provide a common interface for interacting with data hosted in different sources and formats. A **Dataset** is the Resource Watch's API way of providing users with access to data, while trying to, as much as possible, abstract and standardise operations that would otherwise fall on the user's hands to figure out. It's one of the cornerstone onto which many other API resources build upon.
+One of the Resource Watch API's (RW API) goals is to provide a common interface for interacting with data hosted in different sources and formats. A **Dataset** is the Resource Watch's API way of providing users with access to data, while trying to, as much as possible, abstract and standardise operations that would otherwise fall on the user's hands to figure out. It's one of the cornerstones that many other API resources build upon.
 
 **Example**: *A Resource Watch API dataset can represent data in a JSON file, hosted on [Carto](https://carto.com/) or [Google Earth Engine](https://earthengine.google.com/), to name a few. However, when accessing that data, you don't have to learn 3 different technologies - the Resource Watch API gives you a single, unified query interface.*
 
@@ -22,15 +22,15 @@ Each dataset has a **provider** (json/carto/GEE/...) that must specified on crea
 
 #### Carto
 
-Carto is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world.
+Carto is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world. You can learn more about Carto [here](https://carto.com/).
 
 #### ArcGIS Feature Service
 
-ArcGIS for server is a complete, cloud-based mapping platform.
+ArcGIS server is a complete, cloud-based mapping platform. You can learn more about ArcGIS [here](https://www.arcgis.com/index.html).
 
 #### Google Earth Engine
 
-Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth’s surface.
+Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth’s surface. You can learn more about Google Earth Engine [here](https://earthengine.google.com/).
 
 #### Web Map Services
 
