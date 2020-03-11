@@ -665,22 +665,7 @@ When creating a dataset, depending on the provider you are using, there are slig
 
 ### Carto datasets
 
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
- '{
-    "connectorType":"rest",
-    "provider":"cartodb",
-    "connectorUrl":"<cartoUrl>",
-    "application":[
-     "your", "apps"
-    ],
-    "name":"Example Carto Dataset"
-}'
-```
-
-> A real example:
+> Example of creating a dataset based on CartoDB data
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -697,11 +682,19 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+To create a dataset connected to a CartoDB data source, you should provide the following data:
+
+Field           | Description                                                                            | Example value |
+--------------- | :------------------------------------------------------------------------------------: | ------------: |
+`connectorType` | The type of connector should be set to 'rest'.                                         | rest          |
+`provider`      | The provider should be set to 'cartodb'.                                               | cartodb       |
+`connectorUrl`  | Here you should provide the URL for the CartoDB table that this dataset will be using. | https://wri-01.carto.com/tables/wdpa_protected_areas/table |
+
+*Note: Remember that creating datasets requires authentication.*
 
 ### ArcGIS feature Service
+
+> Example of creating a dataset based on ArcGIS feature service data
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -718,9 +711,15 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+To create a dataset using ArcGIS Feature Service as data source, you should provide the following data:
+
+Field           | Description                                                                            | Example value  |
+--------------- | :------------------------------------------------------------------------------------: | ------------:  |
+`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
+`provider`      | The provider should be set to 'featureservice'.                                        | featureservice |
+`connectorUrl`  | Here you should provide the URL for the JSON data in ArcGIS services this dataset will be using. | https://services.arcgis.com/uuid/arcgis/rest/services/example/FeatureServer/0?f=json |
+
+*Note: Remember that creating datasets requires authentication.*
 
 ### Google Earth Engine
 
@@ -738,6 +737,16 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
     "name":"Water occurrence"
 }'
 ```
+
+To create a dataset using Google Earth Engine as data source, you should provide the following data:
+
+Field           | Description                                                                            | Example value  |
+--------------- | :------------------------------------------------------------------------------------: | ------------:  |
+`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
+`provider`      | The provider should be set to 'gee'.                                                   | gee            |
+`tableName`     | The name of the data table in GEE this dataset will be using.                          | JRC/GSW1_0/GlobalSurfaceWater |
+
+*Note: Remember that creating datasets requires authentication.*
 
 ### NEXGDDP
 
