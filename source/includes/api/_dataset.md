@@ -23,7 +23,6 @@ Once you've read that section, you can come back here to learn more details abou
 
 This endpoint will allow you to get the list of the datasets available in the API. You can customize the result in multiple ways, using the options described below.
 
-
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset
 ```
@@ -113,25 +112,32 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
 curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
 ```
 
+> Matching vocabulary tags
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?vocabulary[legacy]=umd
+```
+
 The dataset list provided by the endpoint can be filtered with the following attributes:
 
-Filter        | Description                                                                  | Accepted values
-------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-name          | Allow us to filter by name                                                   | any valid text
-type          | Allow us to distinguish between tabular and raster datasets                  | `raster` or `tabular`
-app           | Applications to which this dataset is being used                              | Available applications like: `["data4sdgs","gfw","rw","aqueduct","prep","forest-atlas","gfw-climate","aqueduct-water-risk","test","gfw-pro","globalforestwatch", "ghg-gdp"]`
-connectorType |                                                                              | `rest` or `document`
-provider      | Dataset provider this include inner connectors and 3rd party ones            | [A valid dataset provider](##supported-dataset-sources)
-userId        | the user who registered the dataset                                          | valid id
-user.role     | The role of the user who registered the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
-status        | the internal dataset status at connection time                               | `pending`, `saved` or `failed`
-published     |                                                                              | `true`or `false`
-env           | If the dataset is in the staging, preproduction environment or in production one          | `staging`, `production` or `preproduction`. Defaults to `production`
-overwritted   | If the data can be overwritten (only for being able to make dataset updates) | `true`or `false`
-verify        | If this dataset contains data that is verified using blockchain              | `true`or `false`
-protected     | If it's a protected layer                                                    | `true`or `false`
-geoInfo       | If it contains interceptable geographical info                               | `true`or `false`
-subscribable  | If the dataset is subscribable (i.e. contains a non-empty object in the subscribable field) | `true` or `false`
+Filter         | Description                                                                  | Accepted values
+-------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------
+name           | Filter returned datasets by the name of the dataset.                         | any valid text
+type           | Filter returned datasets by dataset type.                                    | `raster` or `tabular`
+app            | Applications associated to this dataset - example values: `["data4sdgs","gfw","rw","aqueduct","prep","forest-atlas","gfw-climate","aqueduct-water-risk","test","gfw-pro","globalforestwatch", "ghg-gdp"]` | One or more applications, separated by `@` (check the example)
+connectorType  | Filter returned datasets by the type of connector used.                      | `rest` or `document`
+provider       | Dataset provider this include inner connectors and 3rd party ones            | [A valid dataset provider](##supported-dataset-sources)
+userId         | Filter results by the owner of the dataset.                                  | valid id
+user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+status         | Filter results by the current status of the dataset.                         | `pending`, `saved` or `failed`
+published      | If the dataset is published or not.                                          | `true`or `false`
+env            | If the dataset is in the staging, preproduction environment or in production one. | `staging`, `production` or `preproduction`. Defaults to `production`
+overwritted    | If the data can be overwritten (only for being able to make dataset updates) | `true`or `false`
+verify         | If this dataset contains data that is verified using blockchain              | `true`or `false`
+protected      | If the dataset is protected.                                                 | `true`or `false`
+geoInfo        | If it contains interceptable geographical info                               | `true`or `false`
+subscribable   | If the dataset is subscribable (i.e. contains a non-empty object in the subscribable field) | `true` or `false`
+vocabulary[tag]| Filter returned datasets by vocabulary tags.                                 | string (e.g. 'trees')
 
 ### Sorting
 
@@ -429,16 +435,6 @@ curl -X POST https://api.resourcewatch.org/v1/:datasetID/recover \
 
 ```shell
 OK
-```
-
-### Advanced filters
-
-By vocabulary-tag matching
-
-> Matching vocabulary tags
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=slug,-provider,userId&status=saved&includes=metadata,vocabulary,widget,layer&vocabulary[legacy]=umd
 ```
 
 
