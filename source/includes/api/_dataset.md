@@ -682,7 +682,7 @@ Field           | Description                                                   
 --------------- | :------------------------------------------------------------------------------------: | ------------: |
 `connectorType` | The type of connector should be set to 'rest'.                                         | rest          |
 `provider`      | The provider should be set to 'cartodb'.                                               | cartodb       |
-`connectorUrl`  | Here you should provide the URL for the CartoDB table that this dataset will be using. | https://wri-01.carto.com/tables/wdpa_protected_areas/table |
+`connectorUrl`  | The URL for the CartoDB table that this dataset will be using.                         | https://wri-01.carto.com/tables/wdpa_protected_areas/table |
 
 *Note: Remember that creating datasets requires authentication.*
 
@@ -711,7 +711,7 @@ Field           | Description                                                   
 --------------- | :------------------------------------------------------------------------------------: | ------------:  |
 `connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
 `provider`      | The provider should be set to 'featureservice'.                                        | featureservice |
-`connectorUrl`  | Here you should provide the URL for the JSON data in ArcGIS services this dataset will be using. | https://services.arcgis.com/uuid/arcgis/rest/services/example/FeatureServer/0?f=json |
+`connectorUrl`  | The URL for the JSON data in ArcGIS services this dataset will be using.               | https://services.arcgis.com/uuid/arcgis/rest/services/example/FeatureServer/0?f=json |
 
 *Note: Remember that creating datasets requires authentication.*
 
@@ -799,6 +799,87 @@ Field           | Description                                                   
 `connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
 `provider`      | The provider should be set to 'rasdaman'.                                              | rasdaman       |
 `connectorUrl`  | A URL pointing to a valid geotiff file.                                                | rw.dataset.raw/1508321309784_test_rasdaman_1b.tiff |
+
+*Note: Remember that creating datasets requires authentication.*
+
+### BigQuery
+
+> Example of creating a dataset based on BigQuery data
+
+```shell
+curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
+-H 'Authorization: Bearer <your-token>'  \
+-H 'Content-Type: application/json' -d \
+'{
+    "connectorType": "rest",
+    "provider": "bigquery",
+    "tableName": "[bigquery-public-data:ghcn_m.ghcnm_tmax]",
+    "application": ["rw"],
+    "name": "BigQuery dataset"
+}'
+```
+
+To create a dataset using BigQuery as data source, you should provide the following data:
+
+Field           | Description                                                                            | Example value  |
+--------------- | :------------------------------------------------------------------------------------: | ------------:  |
+`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
+`provider`      | The provider should be set to 'bigquery'.                                              | bigquery       |
+`tableName`     | The name of the data table in BigQuery this dataset will be using.                     | [bigquery-public-data:ghcn_m.ghcnm_tmax] |
+
+*Note: Remember that creating datasets requires authentication.*
+
+### Loca
+
+> Example of creating a dataset based on Loca data
+
+```shell
+curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
+-H 'Authorization: Bearer <your-token>'  \
+-H 'Content-Type: application/json' -d \
+'{
+    "connectorType": "rest",
+    "provider": "loca",
+    "tableName": "loca_tasavg/rcp85_decadal",
+    "application": ["rw"],
+    "name": "Loca dataset"
+}'
+```
+
+To create a dataset using Loca as data source, you should provide the following data:
+
+Field           | Description                                                                            | Example value  |
+--------------- | :------------------------------------------------------------------------------------: | ------------:  |
+`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
+`provider`      | The provider should be set to 'loca'.                                                  | loca           |
+`tableName`     | The name of the data table in Loca this dataset will be using.                         | loca_tasavg/rcp85_decadal |
+
+*Note: Remember that creating datasets requires authentication.*
+
+### WMS
+
+> Example of creating a dataset based on WMS data
+
+```shell
+curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
+-H 'Authorization: Bearer <your-token>'  \
+-H 'Content-Type: application/json' -d \
+'{
+    "connectorType": "wms",
+    "provider": "wms",
+    "connectorUrl": "https://raster.nationalmap.gov/arcgis/rest/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/25?f=pjson",
+    "application": ["rw"],
+    "name": "WMS dataset"
+}'
+```
+
+To create a dataset using WMS as data source, you should provide the following data:
+
+Field           | Description                                                                            | Example value  |
+--------------- | :------------------------------------------------------------------------------------: | ------------:  |
+`connectorType` | The type of connector should be set to 'wms'.                                          | wms            |
+`provider`      | The provider should be set to 'wms'.                                                   | wms            |
+`connectorUrl`  | The URL for the WMS table that this dataset will be using.                             | https://raster.nationalmap.gov/arcgis/rest/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/25?f=pjson |
 
 *Note: Remember that creating datasets requires authentication.*
 
