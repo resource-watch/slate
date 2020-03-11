@@ -2,17 +2,19 @@
 
 ## Dataset
 
-One of the Resource Watch API's (RW API) goals is to provide a common interface for interacting with data hosted in different sources and formats. A **Dataset** is the Resource Watch's API way of providing users with access to data, while trying to, as much as possible, abstract and standardise operations that would otherwise fall on the user's hands to figure out. It's one of the cornerstones that many other API resources build upon.
+One of the Resource Watch API's (RW API) goals is to provide a common interface for interacting with data hosted in different sources and formats. A **Dataset** is the Resource Watch's API way of providing users with access to data, while trying to, as much as possible, abstract and standardise operations that would otherwise fall on the user's hands to figure out. It's one of the cornerstones that many other API features build upon - and those features can help you get even more out of your data!
 
 **Example**: *A Resource Watch API dataset can represent data in a JSON file, hosted on [Carto](https://carto.com/) or [Google Earth Engine](https://earthengine.google.com/), to name a few. However, when accessing that data, you don't have to learn 3 different technologies - the Resource Watch API gives you a single, unified query interface.*
 
 
 On top of **datasets**, the RW API offers multiple resources that allow you to access data in multiple formats. These will be covered later in full detail, but as an example, here are some ways in which you can access and use datasets:
 
-* you can create **Layers** to display dataset's geographical information on maps;
-* you can create **Widgets**, graphic representations of dataset's data, which you can use, for instance, to build charts;
-* you can create **Subscriptions** associated with datasets and be notified via email of significant updates;
-* or you can perform your own **Queries** using a SQL-like syntax, and use the dataset data to build your own custom visualizations.
+* the RW API allows you to create **Widgets**, graphic representations of data, which can be made interactive to meet your custom needs;
+* if your data is georeferenced, you can use the **Layers** service to display data on informative maps;
+* you can create **Subscriptions** associated with datasets, and be notified via email of significant updates;
+* you can build your own **Queries** using a SQL-like syntax, and use the data to build your own custom visualizations.
+* the **Metadata** service offers you a way to provide additional details about your data, like multi-language descriptions that will allow you to reach a broader audience
+* the **Geostore** service allows you to access or save geometries, offering lots of useful tools when handling georeferenced datasets.
 
 
 ### Dataset providers
