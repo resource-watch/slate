@@ -723,6 +723,8 @@ Field           | Description                                                   
 
 ### Google Earth Engine
 
+> Example of creating a dataset based on Google Earth Engine data
+
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
 -H "Authorization: Bearer <your-token>" \
@@ -750,6 +752,8 @@ Field           | Description                                                   
 
 ### NEXGDDP
 
+> Example of creating a dataset based on NEXGDDP data
+
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
 -H "Authorization: Bearer <your-token>" \
@@ -765,12 +769,22 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
+To create a dataset using NEXGDDP as data source, you should provide the following data:
+
+Field           | Description                                                                            | Example value  |
+--------------- | :------------------------------------------------------------------------------------: | ------------:  |
+`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
+`provider`      | The provider should be set to 'nexgddp'.                                               | nexgddp        |
+`tableName`     | The name of the data table in NEXGDDP this dataset will be using.                      | historical/ACCESS1_0 |
+
+*Note: Remember that creating datasets requires authentication.*
+
 ### Rasdaman
 
-The `connectorUrl` must be a URL pointing to a valid geotiff file.
+> Example of creating a dataset based on Rasdaman data
 
 ```shell
-curl -XPOST 'https://api.resourcewatch.org/v1/dataset' -d \
+curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
 -H 'Authorization: Bearer <your-token>'  \
 -H 'Content-Type: application/json' -d \
 '{
@@ -784,32 +798,19 @@ curl -XPOST 'https://api.resourcewatch.org/v1/dataset' -d \
 }'
 ```
 
-### JSON, CSV, TSV or XML
+To create a dataset using Rasdaman as data source, you should provide the following data:
 
-This dataset hosts data from files in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
-source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations.
+Field           | Description                                                                            | Example value  |
+--------------- | :------------------------------------------------------------------------------------: | ------------:  |
+`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
+`provider`      | The provider should be set to 'rasdaman'.                                              | rasdaman       |
+`connectorUrl`  | A URL pointing to a valid geotiff file.                                                | rw.dataset.raw/1508321309784_test_rasdaman_1b.tiff |
 
-The original data must be available on a publicly accessible URLs, specified in the `sources` array field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details. You can specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.
+*Note: Remember that creating datasets requires authentication.*
 
-<aside class="notice">
-The previously used `connectorUrl` field should be considered deprecated when creating document-based datasets.
-</aside>
+### Document based datasets: JSON, CSV, TSV or XML
 
-Here's a breakdown of the fields specific to the creation of a document-based dataset:
-
-Field        |                        Description                                |   Type |        Values | Required
------------- | :-----------------------------------------------------------:     | -----: | ------------: | -------:
-sources      | List of URLs from which to source data                            |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
-data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
-legend       | See section below                                                 | Object |               |       No
-connectorUrl | URL from which to source data. Deprecated - use `sources` instead |   Text |           URL |       No
-
-
-
-<aside class="notice">
-When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.
-</aside>
-
+> Creating a CSV dataset with data provided by externally hosted files:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -861,9 +862,27 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+This dataset hosts data from files in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
+source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations.
+
+The original data must be available on a publicly accessible URLs, specified in the `sources` array field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details. You can specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.
+
+Here's a breakdown of the fields specific to the creation of a document-based dataset:
+
+Field        |                        Description                                |   Type |        Values | Required
+------------ | :-----------------------------------------------------------:     | -----: | ------------: | -------:
+connectorType| The connector type for this dataset.                              | String | `document`    | Yes
+provider     | The type of provider for this dataset.                            | String | `csv`, `tsv`, `json` or `xml` | Yes
+sources      | List of URLs from which to source data                            |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
+data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
+legend       | See section below                                                 | Object |               |       No
+connectorUrl | URL from which to source data. **Deprecated: use `sources` instead** | String |        URL |       No
+
+**Deprecation notice: The previously used `connectorUrl` field should be considered deprecated when creating document-based datasets.**
+
+*Note 1: Remember that creating datasets requires authentication.*
+
+*Note 2: When creating a document-based dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.*
 
 #### Legend
 
