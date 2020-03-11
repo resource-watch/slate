@@ -24,27 +24,35 @@ Each dataset has a **provider** (json/carto/GEE/...) that must specified on crea
 
 #### Carto
 
-Carto is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world. You can learn more about Carto [here](https://carto.com/).
+[Carto](https://carto.com/) is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world.
 
 #### ArcGIS Feature Service
 
-ArcGIS server is a complete, cloud-based mapping platform. You can learn more about ArcGIS [here](https://www.arcgis.com/index.html).
+[ArcGIS](https://www.arcgis.com/index.html) server is a complete, cloud-based mapping platform. You can learn more about ArcGIS [here](https://www.arcgis.com/index.html).
 
 #### Google Earth Engine
 
-Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth’s surface. You can learn more about Google Earth Engine [here](https://earthengine.google.com/).
+[Google Earth Engine](https://earthengine.google.com/) combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth’s surface.
 
 #### Web Map Services
 
-WMS connector provides access to data served through OGC WMS protocol standard.
+[WMS](https://docs.geoserver.org/stable/en/user/services/wms/index.html) connector provides access to data served through OGC WMS protocol standard.
 
 #### Rasdaman (Raster Data Manager)
 
-Rasdaman is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.
+[Rasdaman](https://www.rasdaman.com/) is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.
 
 #### NEX-GDDP
 
-The NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).
+The [NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP)](https://www.nasa.gov/nex) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).
+
+#### BigQuery
+
+[BigQuery](https://cloud.google.com/bigquery) is a serverless, highly scalable, and cost-effective cloud data warehouse designed to help you make informed decisions quickly, so you can transform your business with ease.
+
+#### Loca
+
+[LOCA](http://loca.ucsd.edu/), which stands for Localized Constructed Analogs, is a technique for downscaling climate model projections of the future climate.
 
 #### Comma-Separated Values (CSV)
 
