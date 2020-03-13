@@ -122,6 +122,77 @@
 
 <p>Welcome to the Resource Watch API Documentation</p>
 
+          <h1 id="concepts">Concepts</h1>
+
+<h2 id="dataset">Dataset</h2>
+
+<p>One of the Resource Watch API&rsquo;s (RW API) goals is to provide a common interface for interacting with data hosted in different sources and formats. A <strong>Dataset</strong> is the Resource Watch&rsquo;s API way of providing users with access to data, while trying to, as much as possible, abstract and standardise operations that would otherwise fall on the user&rsquo;s hands to figure out. It&rsquo;s one of the cornerstones that many other API features build upon - and those features can help you get even more out of your data!</p>
+
+<p><strong>Example</strong>: <em>A Resource Watch API dataset can represent data in a JSON file, hosted on <a href="https://carto.com/">Carto</a> or <a href="https://earthengine.google.com/">Google Earth Engine</a>, to name a few. However, when accessing that data, you don&rsquo;t have to learn 3 different technologies - the Resource Watch API gives you a single, unified query interface.</em></p>
+
+<p>On top of <strong>datasets</strong>, the RW API offers multiple resources that allow you to access data in multiple formats. These will be covered later in full detail, but as an example, here are some ways in which you can access and use datasets:</p>
+
+<ul>
+<li>the RW API allows you to create <strong>Widgets</strong>, graphic representations of data, which can be made interactive to meet your custom needs;</li>
+<li>if your data is georeferenced, you can use the <strong>Layers</strong> service to display data on informative maps;</li>
+<li>you can create <strong>Subscriptions</strong> associated with datasets, and be notified via email of significant updates;</li>
+<li>you can build your own <strong>Queries</strong> using a SQL-like syntax, and use the data to build your own custom visualizations.</li>
+<li>the <strong>Metadata</strong> service offers you a way to provide additional details about your data, like multi-language descriptions that will allow you to reach a broader audience</li>
+<li>the <strong>Geostore</strong> service allows you to access or save geometries, offering lots of useful tools when handling georeferenced datasets.</li>
+</ul>
+
+<h3 id="dataset-providers">Dataset providers</h3>
+
+<p>Each dataset has a <strong>provider</strong> (json/carto/GEE/&hellip;) that must specified on creation - it&rsquo;s this value that tells the RW API how to handle different data providers and formats, so you don&rsquo;t have to. Below you&rsquo;ll find a list of the different providers supported:</p>
+
+<h4 id="carto">Carto</h4>
+
+<p><a href="https://carto.com/">Carto</a> is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world.</p>
+
+<h4 id="arcgis-feature-service">ArcGIS Feature Service</h4>
+
+<p><a href="https://www.arcgis.com/index.html">ArcGIS</a> server is a complete, cloud-based mapping platform. You can learn more about ArcGIS <a href="https://www.arcgis.com/index.html">here</a>.</p>
+
+<h4 id="google-earth-engine">Google Earth Engine</h4>
+
+<p><a href="https://earthengine.google.com/">Google Earth Engine</a> combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth’s surface.</p>
+
+<h4 id="web-map-services">Web Map Services</h4>
+
+<p><a href="https://docs.geoserver.org/stable/en/user/services/wms/index.html">WMS</a> connector provides access to data served through OGC WMS protocol standard.</p>
+
+<h4 id="rasdaman-raster-data-manager">Rasdaman (Raster Data Manager)</h4>
+
+<p><a href="https://www.rasdaman.com/">Rasdaman</a> is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.</p>
+
+<h4 id="nex-gddp">NEX-GDDP</h4>
+
+<p>The <a href="https://www.nasa.gov/nex">NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP)</a> dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).</p>
+
+<h4 id="bigquery">BigQuery</h4>
+
+<p><a href="https://cloud.google.com/bigquery">BigQuery</a> is a serverless, highly scalable, and cost-effective cloud data warehouse designed to help you make informed decisions quickly, so you can transform your business with ease.</p>
+
+<h4 id="loca">Loca</h4>
+
+<p><a href="http://loca.ucsd.edu/">LOCA</a>, which stands for Localized Constructed Analogs, is a technique for downscaling climate model projections of the future climate.</p>
+
+<h4 id="comma-separated-values-csv">Comma-Separated Values (CSV)</h4>
+
+<p>Data provided in the form of a Comma-Separated Values (CSV) document.</p>
+
+<h4 id="tab-separated-values-tsv">Tab-Separated Values (TSV)</h4>
+
+<p>Data provided in the form of a Tab-Separated Values (TSV) document.</p>
+
+<h4 id="javascript-object-notation-json">JavaScript Object Notation (JSON)</h4>
+
+<p>Data provided in the form of a JSON document.</p>
+
+<h4 id="extensible-x-markup-language-xml">Extensible (X) Markup Language (XML)</h4>
+
+<p>Data provided in the form of a XML document.</p>
+
           <h1 id="authentication">Authentication</h1>
 
 <p>The RW API uses JWT <a href="https://tools.ietf.org/html/rfc7519">(JSON Web Tokens)</a> to identify and authenticate its users. This token must be provided inside an <code class="prettyprint">Authorization</code> header, with the form <code class="prettyprint">Bearer: &lt;token&gt;</code>.</p>
@@ -351,72 +422,13 @@ Remember — All favorite endpoints need to be authenticated.
 
 <h2 id="what-is-a-dataset">What is a Dataset?</h2>
 
-<p>A dataset abstracts the data that can be obtained from several sources into a common interface. There are several data providers supported in the API, and each of those has a different provider. Datasets can belong to several applications.</p>
+<p>If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the <a href="#dataset">dataset concept</a> documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you. </p>
 
-<h2 id="supported-dataset-sources">Supported dataset sources</h2>
-
-<h3 id="third-party-dataset-connectors">Third party Dataset connectors</h3>
-
-<p>For data stored on third party services.</p>
-
-<h4 id="carto">Carto</h4>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;rest&#39;, provider: &#39;cartodb&#39;)</code></strong><br>
-<a href="https://www.carto.com"><img src="images/dataset/carto.png" alt="Carto" /></a> CARTO is an open, powerful, and intuitive map platform for discovering and predicting the key insights underlying the location data in our world.</p>
-
-<h3 id="arcgis-feature-service">ArcGIS Feature service</h3>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;rest&#39;, provider: &#39;featureservice&#39;)</code></strong> <a href="https://www.arcgis.com/features/index.html"><img src="https://www.arcgis.com/features/img/logo-esri.png" alt="Logo esri" /></a><br>
-ArcGIS for server is a Complete, Cloud-Based Mapping Platform.</p>
-
-<h3 id="google-earth-engine">Google Earth Engine</h3>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;rest&#39;, provider: &#39;gee&#39;)</code></strong> <a href="https://earthengine.google.com/"><img src="https://earthengine.google.com/static/images/GoogleEarthEngine_Grey_108.png" alt="Googleearthengine grey 108" /></a><br>
-Google Earth Engine combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth&rsquo;s surface.</p>
-
-<h4 id="web-map-services-wms">Web Map Services (<a href="http://www.opengeospatial.org/standards/wms">WMS</a>)</h4>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;wms&#39;, provider: &#39;wms&#39;)</code></strong></p>
-
-<p>WMS connector provides access to data served through <a href="http://www.opengeospatial.org/standards/wms">OGC WMS</a> protocol standard.</p>
-
-<h4 id="rasdaman-raster-data-manager">Rasdaman (Raster Data Manager)</h4>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;rest&#39;, provider: &#39;rasdaman&#39;)</code></strong><br>
-<a href="http://www.rasdaman.com/">Rasdaman</a> is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.</p>
-
-<h3 id="internal-storage-connectors">Internal storage connectors</h3>
-
-<p>For data stored in our system.</p>
-
-<h4 id="nex-gddp">NEX-GDDP</h4>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;rest&#39;, provider: &#39;nexgddp&#39;)</code></strong><br>
-The NASA Earth Exchange Global Daily Downscaled Projections (<a href="https://nex.nasa.gov/nex/projects/1356/">NEX-GDDP</a>) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).</p>
-
-<h4 id="comma-separated-values-csv">Comma-Separated Values (CSV)</h4>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;document&#39;, provider: &#39;csv&#39;)</code></strong><br>
-Arbitrary Comma-Separated Values data</p>
-
-<h4 id="tab-separated-values-tsv">Tab-Separated Values (TSV)</h4>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;document&#39;, provider: &#39;tsv&#39;)</code></strong><br>
-Arbitrary tab-Separated Values data</p>
-
-<h4 id="javascript-object-notation-json">JavaScript Object Notation (JSON)</h4>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;document&#39;, provider: &#39;json&#39;)</code></strong><br>
-Arbitrary <a href="http://www.json.org/">json</a> structured data</p>
-
-<h4 id="xml">XML</h4>
-
-<p><strong><code class="prettyprint">(connectorType: &#39;document&#39;, provider: &#39;xml&#39;)</code></strong><br>
-Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data documents</p>
+<p>Once you&rsquo;ve read that section, you can come back here to learn more details about <a href="#getting-all-datasets">using existing datasets</a> or <a href="#creating-a-dataset">creating your own</a>.</p>
 
 <h2 id="getting-all-datasets">Getting all datasets</h2>
 
-<p>This endpoint will allow to get all datasets available in the API:</p>
+<p>This endpoint will allow you to get the list of the datasets available in the API. You can customize the result in multiple ways, using the options described below.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset
 </code></pre>
 <blockquote>
@@ -459,8 +471,7 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
             </span><span class="s2">"widgetRelevantProps"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
             </span><span class="s2">"layerRelevantProps"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
             </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-    </span><span class="err">...</span><span class="w">
+        </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
   </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
@@ -476,16 +487,36 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="slug-amp-dataset-id">Slug &amp; dataset-id</h3>
+<h3 id="pagination">Pagination</h3>
 
-<p>Datasets have an auto-generated and unique slug and id that allows the user to get, create, update, query or clone that dataset.</p>
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page. Values above 100 are not officially supported.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">10</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page number</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
 
-<p>The dataset slug and the id cannot be updated even if the name changes.</p>
-
-<h3 id="error-message">Error Message</h3>
-
-<p>When a dataset is created the status is set to &ldquo;pending&rdquo; by default. Once the adapter validates the dataset, the status is changed to &ldquo;saved&rdquo;. If the validation fails, the status will be set to &ldquo;failed&rdquo; and the adapter will also set an error message indicating the reason.</p>
-
+<blockquote>
+<p>Paginating the output</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>1
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>2
+</code></pre>
 <h3 id="filters">Filters</h3>
 
 <p>The dataset list provided by the endpoint can be filtered with the following attributes:</p>
@@ -791,33 +822,6 @@ Arbitrary <a href="https://www.w3.org/TR/2006/REC-xml11-20060816/">XML</a> data 
 <p>Matching vocabulary tags</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>umd
-</code></pre>
-<h3 id="pagination">Pagination</h3>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page. There&rsquo;s a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit.</td>
-<td style="text-align: right">Number</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>Paginating the output</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>1
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>2
 </code></pre>
 <h2 id="how-to-get-a-dataset-by-id">How to get a dataset by id</h2>
 
@@ -1163,7 +1167,13 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 </tr>
 </tbody></table>
 
-<p>There are some differences between datasets types.</p>
+<p>Once created, datasets have an auto-generated and unique slug and id that allows the user to get, create, update, query or clone that dataset. The dataset slug and the id cannot be modified.</p>
+
+<p>When a dataset is created, the <code class="prettyprint">status</code> is set to &ldquo;pending&rdquo; by default, meaning the dataset is not ready for usage just yet. Once the creation process is finished, the status will change to &ldquo;saved&rdquo;, meaning you can now access the dataset and its data. This process is asynchronous and its duration will depend on the provider of the dataset as well as the amount of data it contains. You should use <a href="#how-to-get-a-dataset-by-id">check your dataset</a> manually to see when the <code class="prettyprint">status</code> is updated.</p>
+
+<p>In case the dataset creation process fails, the <code class="prettyprint">status</code> value will be set to <code class="prettyprint">failed</code>, and the <code class="prettyprint">errorMessage</code> field will have a short description of what went wrong.</p>
+
+<p>When creating a dataset, depending on the provider you are using, there are slight differences that must be reflected in your request:</p>
 
 <h3 id="carto-datasets">Carto datasets</h3>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
