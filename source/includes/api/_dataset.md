@@ -850,6 +850,13 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 
 In order to modify the dataset, you can PATCH a request. It accepts the same parameters as the _create dataset_ endpoint, and you will need an authentication token.
 
+To perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the dataset
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+
 > An example update request:
 
 ```shell
