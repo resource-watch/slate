@@ -13,19 +13,9 @@ To see the documentation, you access to:
 
 ## Ruby version
 
-Please ensure that you are using the correct version of Ruby. This project requires Ruby version `2.4.1`. It is recommend to use `rvm` to manage different versions of Ruby in your development environment. You can find [here instructions on how to install `rvm`](https://rvm.io/rvm/install).
+Please ensure that you are using the correct version of Ruby - this project requires Ruby version `2.4.1`.
 
-After installing `rvm`, run this command to install Ruby version 2.4.1:
-
-```bash
-$ rvm install 2.4.1
-```
-
-Or, if already installed, use this command to switch Ruby version 2.4.1:
-
-```bash
-$ rvm use 2.4.1
-```
+It is recommend to use `rvm` to manage different versions of Ruby in your development environment. You can find [here instructions on how to install `rvm`](https://rvm.io/rvm/install).
 
 ## Installing dependencies
 
