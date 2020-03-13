@@ -23,7 +23,6 @@ widgetConfig |                     Custom configuration                     |  O
 template     |   If it's a template (base schema to create other widgets)   | Boolean
 default      |   If it's a default widget for the dataset that it belongs   | Boolean
 protected    |  If it's a protected widget (not is possible to delete if it's true)   | Boolean
-status       |                     Status of the Widget                     |    Text
 published    |                   If it's available to use                   |    Text
 freeze       |                   If the data is frozen                      |    Boolean
 verified     |                If it's verified by other user                |    Text
@@ -311,7 +310,6 @@ Remember — <strong>the resulting list is filtered by env=production</strong> u
             },
             "template":false,
             "default":true,
-            "status":"saved",
             "published":true,
             "freeze": false,
             "verified":false
@@ -340,7 +338,6 @@ Field     |                         Description                          |    Ty
 name      |    Filter the widgets whose name contains the filter text    |    Text
 dataset   |              Filter the widgets by dataset uuid              |    Text
 sort      |          Sort json response by specific attributes           |    Text
-status    |    Filter widgets on status (pending, saved, failed, all)    |    Text
 published |       Filter widgets on published status (true, false)       | Boolean
 freeze    |       Filter widgets on freeze status (true, false)          | Boolean
 verified  |           Filter by verified status (true, false)            | Boolean
@@ -375,12 +372,6 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f06
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/widget?sort=name
-```
-
-> Filter widgets by status
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?status=failed
 ```
 
 > Filter widgets by published status
@@ -684,7 +675,6 @@ Remember — the response is jsonapi format
       },
       "template": false,
       "default": false,
-      "status": "saved",
       "published": true,
       "verified": false
     }
@@ -713,7 +703,6 @@ application  | Application to which the widget belongs |   Array | gfw, forest-a
 authors      |           Name of the authors           |    Text |                                        Any text |       No
 queryUrl     |  Url with the data of the chart shows   |    Text |                                 Any valid query |       No
 widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
-status       |          Status of the Widget           |  Number |                                               1 |       No
 published    |        If it's available to use         | Boolean |                                    true - false |       No
 freeze       |        If the data is frozen            | Boolean |                                    true - false |       No
 protected    |        If it's a protected widget (not is possible to delete if it's true)         | Boolean |   true - false |       No
@@ -738,7 +727,6 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget \
          "your", "apps"
       ],
       "name":"Example Carto Dataset"
-      "status": 1,
       "published": true
    }
 }'
@@ -764,7 +752,6 @@ application  | Application to which the widget belongs |   Array | gfw, forest-a
 authors      |           Name of the authors           |    Text |                                        Any text |       No
 queryUrl     |  Url with the data of the chart shows   |    Text |                                 Any valid query |       No
 widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
-status       |          Status of the Widget           |  Number |                                               1 |       No
 published    |        If it's available to use         | Boolean |                                    true - false |       No
 freeze       |        If the data is frozen            | Boolean |                                    true - false |       No
 verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
