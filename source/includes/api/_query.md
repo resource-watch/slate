@@ -1,27 +1,201 @@
 # Query
 
-In order to retrieve data from the datasets it is possible to send queries to the API using the SQL or Feature Service languages.
-
-Two different endpoints are provided (under the dataset path and a generic one) and the sql query can be provided via query parameters or in the body of a POST request.
+> Example of GET request for a query providing the SQL as query param:
 
 ```shell
-curl -i -H 'Authorization: Bearer your-token>' -H 'Content-Type: application/json' -XPOST 'http://api.resourcewatch.org/v1/query/<dataset_id>/' -d '{
+curl -i -X GET http\://api.resourcewatch.org/v1/query\?sql\=SELECT\ \*\ from\ <dataset.slug>
+```
+
+> Example of POST request for a query providing the SQL as request body param:
+
+```shell
+curl -i -X POST 'http://api.resourcewatch.org/v1/query/<dataset_id>/' \
+-H 'Content-Type: application/json' \
+-d '{
     "sql": "SELECT * FROM <dataset_id> limit 10"
-}
-'
+}'
 ```
+
+In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also freeze or download the results of a particular query.
+
+**While we aim to make our query interface as broad and transparent as possible, some of the querying options described below will not be available for specific dataset providers, depending on this API's implementation or limitations on the actual data provider's side.**
+
+## Index of resources
+
+* [GET /v1/query](index-rw.html#executing-queries)
+* [POST /v1/query](index-rw.html#executing-queries)
+* [GET /v1/download](index-rw.html#download)
+* [POST /v1/download](index-rw.html#download)
+
+TODO: should these be here? if so, fix these URLs
+
+* [GET /v1/jiminy](index-rw.html#how-to-get-a-dataset-by-id)
+* [POST /v1/jiminy](index-rw.html#creating-a-dataset)
+
+## Executing queries
+
+> GET request for a query providing the SQL as query param:
 
 ```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query\?sql\=SELECT\ \*\ from\ <dataset.slug>
+curl -i -X GET 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
 ```
 
-<aside class="notice">
-While we aim to make our query interface as broad and transparent as possible, some of the querying options described 
-below will not be available for specific dataset providers, depending on this API's implementation or limitations on the
-actual data provider's side.
-</aside>
+> The same query executed as a POST request providing the SQL as request body param:
 
-## Select clause
+```shell
+curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a/' \
+-H 'Content-Type: application/json' \
+-d '{
+    "sql": "SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10"
+}'
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+        {
+            "cartodb_id": 1830,
+            "iso": "MEX",
+            "name_0": "Mexico",
+            "name_1": "Ciudad de México",
+            "type_1": "Distrito Federal"
+        },
+        {
+            "cartodb_id": 1109,
+            "iso": "HTI",
+            "name_0": "Haiti",
+            "name_1": "L'Artibonite",
+            "type_1": "Département"
+        },
+        {
+            "cartodb_id": 1117,
+            "iso": "HND",
+            "name_0": "Honduras",
+            "name_1": "Atlántida",
+            "type_1": "Departamento"
+        },
+        {
+            "cartodb_id": 1119,
+            "iso": "HND",
+            "name_0": "Honduras",
+            "name_1": "Colón",
+            "type_1": "Departamento"
+        },
+        {
+            "cartodb_id": 1105,
+            "iso": "GUY",
+            "name_0": "Guyana",
+            "name_1": "Upper Demerara-Berbice",
+            "type_1": "Region"
+        },
+        {
+            "cartodb_id": 1125,
+            "iso": "HND",
+            "name_0": "Honduras",
+            "name_1": "Gracias a Dios",
+            "type_1": "Departamento"
+        },
+        {
+            "cartodb_id": 1101,
+            "iso": "GUY",
+            "name_0": "Guyana",
+            "name_1": "Essequibo Islands-West Demerara",
+            "type_1": "Region"
+        },
+        {
+            "cartodb_id": 1131,
+            "iso": "HND",
+            "name_0": "Honduras",
+            "name_1": "Olancho",
+            "type_1": "Departamento"
+        },
+        {
+            "cartodb_id": 1133,
+            "iso": "HND",
+            "name_0": "Honduras",
+            "name_1": "Valle",
+            "type_1": "Departamento"
+        },
+        {
+            "cartodb_id": 2235,
+            "iso": "PRY",
+            "name_0": "Paraguay",
+            "name_1": "Concepción",
+            "type_1": "Departamento"
+        }
+    ],
+    "meta": {
+        "cloneUrl": {
+            "http_method": "POST",
+            "url": "/dataset/098b33df-6871-4e53-a5ff-b56a7d989f9a/clone",
+            "body": {
+                "dataset": {
+                    "datasetUrl": "/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT%20cartodb_id%2C%20iso%2C%20name_0%2C%20name_1%2C%20type_1%20FROM%20gadm28_adm1%20limit%2010",
+                    "application": [
+                        "your",
+                        "apps"
+                    ]
+                }
+            }
+        }
+    }
+}
+```
+
+To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body.
+
+## Freeze query
+
+> Example of a query using the freeze parameter
+
+```shell
+curl -i -X GET http\://api.resourcewatch.org/v1/query\?sql\=SELECT\ \*\ from\ <dataset.slug>&freeze=true
+```
+
+TODO: add example for freeze response
+
+It is possible generate a JSON file in a bucket with the result of executing an SQL query. In order to do that, you need to provide a query param `freeze` with value `true`, and the response will contain the URL for the JSON file.
+
+*Note: The usage of this flag requires authentication.*
+
+## Download
+
+> Requesting the download of a query providing the dataset ID in the URL:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>
+```
+
+> Requesting the download of a query providing the dataset ID in the FROM clause of the query:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>
+```
+
+> Explicitly setting the format of the returned file:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=json
+curl -X GET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=csv
+```
+
+You can download the result of a query using the `download` endpoint. You can either provide the dataset id in the URL or you can pass it as part of the SQL query (in the FROM clause).
+
+You can also specify which file type you want to download (JSON or CSV) - except for Google Earth Engine datasets (which only supports JSON). By default, the API will return a CSV file (JSON file for Google Earth Engine).
+
+**Please not that not all dataset providers support downloading queries - the following providers support downloading query results:**
+
+* Google Earth Engine
+* Document
+* Carto
+* BigQuery
+* ArcGIS FeatureService
+
+## SQL syntax
+
+### Select clause
 
 The `SELECT` part of the queries supports naming columns, **alias**, **math operations**, **DISTINCT**, **COUNT**, **SQL functions** and **PostGIS functions**
 
@@ -40,9 +214,9 @@ SELECT min(int) as minimum FROM table
 SELECT ST_valueCount(rast, 1, true) FROM table
 ```
 
-## From clause
+### From clause
 
-It is possible to refer to a dataset by using its **table name**, **slug** or **id**. 
+It is possible to refer to a dataset by using its **table name**, **slug** or **id**.
 
 ```sql
 SELECT * FROM <dataset.tableName>
@@ -50,7 +224,7 @@ SELECT * FROM <dataset.slug>
 SELECT * FROM <dataset.id>
 ```
 
-## Where clause
+### Where clause
 
 ```sql
 SELECT * FROM table WHERE a > 2
@@ -63,11 +237,10 @@ SELECT * FROM table WHERE st_intersects(st_setsrid(st_geomfromgeojson('{}'), 432
 SELECT * FROM table WHERE data BETWEEN 1 AND 3
 ```
 
-## Group by clause
+### Group by clause
 
 It is possible to group results by **column name**, **SQL functions** and **PostGIS functions**.
 Special grouping operations are available for document-type datasets (CSV and JSON) - see [this link](https://github.com/NLPchina/elasticsearch-sql/tree/5.5.2.0#beyond-sql) for more info.
-
 
 ```sql
 SELECT * FROM tablename GROUP BY columnOne
@@ -78,20 +251,18 @@ SELECT a, count(int) FROM table GROUP BY a
 SELECT count(*) FROM tablename GROUP BY ST_GeoHash(the_geom, 8)
 ```
 
-
 ```sql
 /* Only supported in document-type datasets - see https://github.com/NLPchina/elasticsearch-sql/tree/5.5.2.0#beyond-sql for full details */
-SELECT COUNT(age) FROM tablename GROUP BY range(age, 20,25,30,35,40) 
+SELECT COUNT(age) FROM tablename GROUP BY range(age, 20,25,30,35,40)
 SELECT online FROM online GROUP BY date_histogram(field='insert_time','interval'='1d')
 SELECT online FROM online GROUP BY date_range(field='insert_time','format'='yyyy-MM-dd' ,'2014-08-18','2014-08-17','now-8d','now-7d','now-6d','now')
 ```
 
-## Order by clause
+### Order by clause
 
 It is possible to order results by **column name**, **SQL functions** and **PostGIS functions**
 
-
-## Limit and offset clause
+### Limit and offset clause
 
 You can specify `limit` and `offset` clauses
 
@@ -100,8 +271,7 @@ SELECT * FROM table limit=20
 SELECT * FROM table limit=20 offset 10
 ```
 
-
-## Raster queries available
+### Raster queries available
 
 ```sql
 SELECT ST_METADATA(rast) FROM table
@@ -111,33 +281,21 @@ SELECT ST_HISTOGRAM(rast, 1, auto, true) FROM table
 SELECT ST_valueCount(rast, 1, true) FROM table
 ```
 
-## Freeze query
-
-It is possible generate a json file in a bucket of the sql result. You only need send a query param freeze with value true and you will obtain the url of the json file.
-
-<aside class="notice">
-    This is an authenticated feature!
-</aside>
-
-```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query\?sql\=SELECT\ \*\ from\ <dataset.slug>&freeze=true
-```
-
-## Rasdaman queries
+### Rasdaman queries
 
 SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.
 
 ```shell
 curl -XGET https://api.resourcewatch.org/v1/query?sql=SELECT avg(Green) from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat > 0 and  Lat < 45 \
-	-H 'Content-Type: application/json' \
-	-H 'Authorization: Bearer <token>'
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <token>'
 ```
 
-## NEX-GDDP queries
+### NEX-GDDP queries
 
 A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data are available. These can be accessed in the following ways:
 
-### Spatial aggregates over a layer
+#### Spatial aggregates over a layer
 
 Access spatial aggregates over the data by listing all dataset data for a particular year:
 
@@ -161,44 +319,4 @@ You can delimit an area of interest by providing a geostore id as a parameter:
 
 ```shell
 curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
-```
-
-## Download
-
-You can download the result of a query using the `download` endpoint. 
-
-<aside class="warning">
-    <ul>
-    This endpoint is not supported for all the dataset providers. The following dataset connector provide support for downloads:
-        <li>Google Earth Engine</li>
-        <li>Document</li>
-        <li>Carto</li>
-        <li>BigQuery</li>
-        <li>ArcGIS FeatureService</li>
-    </ul>
-</aside>
-
-```shell
-# The id of the dataset is part of the URL
-curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>
-
-# The id of the dataset is in the FROM clause
-curl -XGET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>
-```
-
-There are two ways to call it:
-
-- you can either specify the id of the dataset in the URL
-- or you can pass it as part of the SQL query (in the FROM clause)
-
-You can also specify which file type you want to download (JSON or CSV), except for Google Earth Engine datasets (only JSON).
-
-<aside class="notice">
-    By default, the API will return a CSV file (JSON file for Google Earth Engine).
-</aside>
-
-```shell
-# The format is explicitly set
-curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>&format=json
-curl -XGET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>&format=csv
 ```
