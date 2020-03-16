@@ -421,9 +421,9 @@ Resets a dataset's `status` to `saved` and clears its errors. Keep in mind that 
 
 *Note: Recover a dataset's status requires authentication by an ADMIN user.*
 
-## How to get a dataset by id
+## Getting a dataset by id
 
-> To get a dataset:
+> Getting a dataset by its id:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057ad4fc2145
@@ -474,9 +474,9 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057
 curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes=metadata,vocabulary,widget,layer
 ```
 
-## How to get multiple datasets by ids
+## Getting multiple datasets by ids
 
-> To get multiple dataset by ids:
+> Getting multiple dataset by its ids:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids \
@@ -639,7 +639,7 @@ env                 | The environment you want the dataset to be accessible on. 
 
 Once created, datasets have an auto-generated and unique slug and id that allows the user to get, create, update, query or clone that dataset. The dataset slug and the id cannot be modified.
 
-When a dataset is created, the `status` is set to "pending" by default, meaning the dataset is not ready for usage just yet. Once the creation process is finished, the status will change to "saved", meaning you can now access the dataset and its data. This process is asynchronous and its duration will depend on the provider of the dataset as well as the amount of data it contains. You should use [check your dataset](#how-to-get-a-dataset-by-id) manually to see when the `status` is updated.
+When a dataset is created, the `status` is set to "pending" by default, meaning the dataset is not ready for usage just yet. Once the creation process is finished, the status will change to "saved", meaning you can now access the dataset and its data. This process is asynchronous and its duration will depend on the provider of the dataset as well as the amount of data it contains. You should use [check your dataset](#getting-a-dataset-by-id) manually to see when the `status` is updated.
 
 In case the dataset creation process fails, the `status` value will be set to `failed`, and the `errorMessage` field will have a short description of what went wrong.
 
