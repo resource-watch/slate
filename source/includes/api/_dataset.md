@@ -6,18 +6,6 @@ If you are new to the RW API, or want to learn more about the concept of a datas
 
 Once you've read that section, you can come back here to learn more details about [using existing datasets](#getting-all-datasets) or [creating your own](#creating-a-dataset).
 
-## Index of resources
-
-* [GET /v1/dataset](index-rw.html#getting-all-datasets)
-* [GET /v1/dataset/:dataset](index-rw.html#how-to-get-a-dataset-by-id)
-* [POST /v1/dataset](index-rw.html#creating-a-dataset)
-* [PATCH /v1/dataset/:dataset](index-rw.html#updating-a-dataset)
-* [DELETE /v1/dataset/:dataset](index-rw.html#deleting-a-dataset)
-* [GET /v1/dataset/:dataset/verification](index-rw.html#verification)
-* [POST /v1/dataset/:id/clone](index-rw.html#cloning-a-dataset)
-* [POST /v1/dataset/upload](index-rw.html#uploading-a-dataset-binary)
-* [POST /v1/dataset/:dataset/flush](index-rw.html#flush)
-* [POST /v1/dataset/:dataset/recover](index-rw.html#recover)
 
 ## Getting all datasets
 
