@@ -155,7 +155,7 @@ env         | Environment to which the subscription is associated. | String |
 ## Finding all subscriptions
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/admin/find-all \
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/find-all \
 -H "Authorization: Bearer <your-token>"
 ```
 
