@@ -301,4 +301,18 @@ As it was previously stated, the SQL syntax might vary, either because of limita
 
 ### Carto datasets
 
-Carto datasets rely in PostgreSQL and PostGIS for the underlying structure in which the data is saved. The queries that you provide are passed through directly to Carto servers, and thus the supported SQL syntax for Carto datasets can be checked [in Carto docs](https://carto.com/help/tutorials/getting-started-with-sql-in-carto/).
+Carto datasets rely in **PostgreSQL** with **PostGIS** for the underlying structure in which the data is saved. The queries that you provide to the Query endpoints are passed through directly to Carto servers, and thus the supported SQL syntax for Carto datasets can be checked [in Carto docs](https://carto.com/help/tutorials/getting-started-with-sql-in-carto/).
+
+### Document-based datasets (JSON, CSV, TSV, XML)
+
+Document-based datasets rely in **Elasticsearch** for the underlying structure in which the data is saved. The queries that you provide are converted from SQL to JSON, and then from JSON to a SQL syntax that is supported by Elasticsearch. This conversion is performed by [this package](https://github.com/resource-watch/sql2json), also maintained as a [NPM package](https://www.npmjs.com/package/sql2json).
+
+Below are listed some of the limitations of using SQL with Elasticsearch, that you should pay attention to when querying document-based datasets:
+
+* Very large SQL queries may run into some parsing issues.
+* Using scalar functions on nested fields in ORDER BY or WHERE clauses.
+* Sorting by aggregated fields.
+* Using aggregation functions on top of scalar functions.
+* Using sub-selects as sub-queries.
+
+You can read more about the limitations of using SQL with Elasticsearch [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html).
