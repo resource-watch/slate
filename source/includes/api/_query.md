@@ -16,7 +16,7 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/<dataset_id>/' \
 }'
 ```
 
-In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also freeze or download the results of a particular query.
+In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query.
 
 **While we aim to make our query interface as broad and transparent as possible, some of the querying options described below will not be available for specific dataset providers, depending on this API's implementation or limitations on the actual data provider's side.**
 
@@ -133,20 +133,6 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
 ```
 
 To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body.
-
-## Freeze query
-
-> Example of a query using the freeze parameter
-
-```shell
-curl -i -X GET http\://api.resourcewatch.org/v1/query\?sql\=SELECT\ \*\ from\ <dataset.slug>&freeze=true
-```
-
-TODO: add example for freeze response
-
-It is possible generate a JSON file in a bucket with the result of executing an SQL query. In order to do that, you need to provide a query param `freeze` with value `true`, and the response will contain the URL for the JSON file.
-
-*Note: The usage of this flag requires authentication.*
 
 ## Download
 
