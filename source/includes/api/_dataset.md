@@ -1,15 +1,17 @@
 # Dataset
 
-## What is a Dataset?
+## What is a dataset?
 
 If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the [dataset concept](#dataset) documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you.
 
-Once you've read that section, you can come back here to learn more details about [using existing datasets](#getting-all-datasets) or [creating your own](#creating-a-dataset).
+Once you've read that section, you can come back here to learn more details about using the RW API's datasets feature. The RW API is home to many datasets uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you. These datasets contain a lot of information about a wide range of topics that you may want to learn about or build on top of. To find out more about finding and accessing the datasets already available on the RW API, check out the documentation on [getting datasets](#getting-all-datasets).
 
+You can also [create you own datasets](#creating-a-dataset) on the RW API, if you'd like to share your data with the world, or 
+ if you are looking to use the RW API and its features to gain insights into your data.
 
 ## Getting all datasets
 
-This endpoint will allow you to get the list of the datasets available in the API. You can customize the result in multiple ways, using the options described below.
+This endpoint will allow you to get the list of the datasets available in the API, and it's a great place for new users to start exploring the RW API. By default, this endpoint will give you a paginated list of 10 datasets. In the sections below, we'll explore how you can customize this endpoint call to match your needs. 
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset
@@ -74,17 +76,35 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
 
 ### Pagination
 
-> Paginating the output
+The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, datasets are listed in pages of 10 datasets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
+
+> Custom pagination: load page 2 using 25 results per page
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=1
-curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=2
+curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=2&page[size]=25
 ```
 
 Field        |         Description          |   Type |   Default
 ------------ | :--------------------------: | -----: | ----------:
 page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 10
 page[number] |       The page number        | Number | 1
+
+
+### Search
+
+> Search for datasets
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?search=wind
+```
+
+The dataset service offers a simple yet powerful search mechanism that will help you look for datasets. The query argument `search` allows you to specify a search string that will match:
+
+- The dataset name.
+- The dataset's metadata name.
+- The dataset's metadata description.
+- The [relational graph](#graph) node list.
+
 
 ### Filters
 
@@ -94,38 +114,85 @@ page[number] |       The page number        | Number | 1
 curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
 ```
 
-> For inclusive filtering with array props use '@'
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?app=gfw@rw@prep
-```
-
 > Matching vocabulary tags
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?vocabulary[legacy]=umd
 ```
 
-The dataset list provided by the endpoint can be filtered with the following attributes:
+The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you'll find in a dataset itself, while others are convenience filters for things like user role or favourites. These parameters can be combined into a complex `and` logic query.
 
-Filter         | Description                                                                  | Accepted values
--------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------
-name           | Filter returned datasets by the name of the dataset.                         | any valid text
-type           | Filter returned datasets by dataset type.                                    | `raster` or `tabular`
-app            | Applications associated to this dataset - example values: `["data4sdgs","gfw","rw","aqueduct","prep","forest-atlas","gfw-climate","aqueduct-water-risk","test","gfw-pro","globalforestwatch", "ghg-gdp"]` | One or more applications, separated by `@` (check the example)
-connectorType  | Filter returned datasets by the type of connector used.                      | `rest` or `document`
-provider       | Dataset provider this include inner connectors and 3rd party ones            | [Check the available providers when creating a dataset](index-rw.html#creating-a-dataset)
-userId         | Filter results by the owner of the dataset.                                  | valid id
-user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
-status         | Filter results by the current status of the dataset.                         | `pending`, `saved` or `failed`
-published      | If the dataset is published or not.                                          | `true`or `false`
-env            | If the dataset is in the staging, preproduction environment or in production one. | `staging`, `production` or `preproduction`. Defaults to `production`
-overwritted    | If the data can be overwritten (only for being able to make dataset updates) | `true`or `false`
-verify         | If this dataset contains data that is verified using blockchain              | `true`or `false`
-protected      | If the dataset is protected.                                                 | `true`or `false`
-geoInfo        | If it contains interceptable geographical info                               | `true`or `false`
-subscribable   | If the dataset is subscribable (i.e. contains a non-empty object in the subscribable field) | `true` or `false`
-vocabulary[tag]| Filter returned datasets by vocabulary tags.                                 | string (e.g. 'trees')
+Here's the comprehensive list of filters supported by datasets:
+ 
+
+Filter         | Description                                                                  | Type        | Expected values
+-------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------
+name           | Filter returned datasets by the name of the dataset.                         | String      | any valid text
+slug           | Filter returned datasets by the slug of the dataset.                         | String      | any valid text
+type           | Filter returned datasets by dataset type.                                    | String      | any valid text
+subtitle       | Filter returned datasets by dataset subtitle.                                | String      | any valid text
+application    | Applications associated to this dataset.                                     | Array       | any valid text
+applicationConfig |                                                                           | Object      | `true` or `false`
+dataPath       |                                                                              | String      | any valid text
+attributesPath |                                                                              | String      | any valid text
+connectorType  | Filter returned datasets by the type of connector used.                      | String      | `rest`, `document` or `wms`
+provider       | Dataset provider this include inner connectors and 3rd party ones            | String      | [Check the available providers when creating a dataset](index-rw.html#creating-a-dataset)
+connectorUrl   |                                                                              | String      | any valid text
+sources        |                                                                              | Array       | any valid text
+tableName      |                                                                              | String      | any valid text
+userId         | Filter results by the owner of the dataset. Does not support regexes.        | String      | valid user id
+status         | Filter results by the current status of the dataset.                         | String      | `pending`, `saved` or `failed`
+overwrite      | If the data can be overwritten (only for being able to make dataset updates) | Boolean     | `true`or `false`
+verified       | If this dataset contains data that is verified using blockchain              | Boolean     | `true`or `false`
+errorMessage   | If this dataset contains data that is verified using blockchain              | String      | any valid text
+mainDateField  | If this dataset contains data that is verified using blockchain              | String      | any valid text
+published      | If the dataset is published or not.                                          | Boolean     | `true`or `false`
+env            | Environment to which the dataset belongs. Multiple values can be combined using `,` as a separator. Does not support regexes. | String      | any valid text. Defaults to `production`. 
+geoInfo        | If it contains interceptable geographical info                               | Boolean     | `true`or `false`
+protected      | If the dataset is protected.                                                 | Boolean     | `true`or `false`
+taskId         | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets | String      | any valid text
+blockchain.id  |                                                                              | String      | any valid text
+blockchain.hash |                                                                             | String      | any valid text
+blockchain.time |                                                                             | String      | any valid text
+blockchain.backupUrl |                                                                        | String      | any valid text
+legend.lat     |                                                                              | String      | any valid text
+legend.long    |                                                                              | String      | any valid text
+legend.date    |                                                                              | Array       | any valid text
+legend.region  |                                                                              | Array       | any valid text
+legend.country |                                                                              | Array       | any valid text
+legend.nested  |                                                                              | Array       | any valid text
+legend.integer |                                                                              | Array       | any valid text
+legend.short   |                                                                              | Array       | any valid text
+legend.byte    |                                                                              | Array       | any valid text
+legend.double  |                                                                              | Array       | any valid text
+legend.byte    |                                                                              | Array       | any valid text
+legend.float   |                                                                              | Array       | any valid text
+legend.half_float |                                                                           | Array       | any valid text
+legend.scaled_float |                                                                         | Array       | any valid text
+legend.boolean |                                                                              | Array       | any valid text
+legend.binary  |                                                                              | Array       | any valid text
+legend.text    |                                                                              | Array       | any valid text
+legend.keyword |                                                                              | Array       | any valid text
+clonedHost.hostProvider |                                                                     | String      | any valid text
+clonedHost.hostUrl |                                                                          | String      | any valid text
+clonedHost.hostId |                                                                           | String      | any valid text
+clonedHost.hostType |                                                                         | String      | any valid text
+clonedHost.hostPath |                                                                         | String      | any valid text
+widgetRelevantProps |                                                                         | Array       | any valid text
+layerRelevantProps |                                                                          | Array       | any valid text
+subscribable   | If the dataset is subscribable (i.e. contains a non-empty object in the subscribable field) | Boolean     | `true` or `false`
+user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | String      | `ADMIN`, `MANAGER` or `USER`
+vocabulary[name]| Filter returned datasets by vocabulary tags. Does not support regexes.       | String      | any valid text
+collection     | Filter returned datasets collection id. Does not support regexes.            | String      | any valid text
+favourite      | Filter by favourited datasets. See [this section](#favorites) for more info. Does not support regexes. | String      | any valid text
+
+
+Please keep in mind the following:
+
+- String types support and expect a regex value, unless detailed otherwise on the `Description` field. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).
+- Array types support multiple values. Use `,` as an `or` multi-value separator, or `@` as a multi-value, exact match separator.
+- Object types expect a boolean value, where `true` matches a non-empty object, and `false` matches an empty object.
+
 
 ### Sorting
 
