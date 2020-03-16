@@ -151,3 +151,57 @@ Field       |             Description                              |   Type |
 ----------- | :--------------------------------------------------: | -----: |
 application | Application to which the subscription is associated. | String |
 env         | Environment to which the subscription is associated. | String |
+
+## Finding all subscriptions
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/admin/find-all \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+
+{
+    "data": [
+        {
+            "type": "subscription",
+            "id": "5e4d273dce77c53768bc24f9",
+            "attributes": {
+                "createdAt": "2020-02-19T12:17:01.176Z",
+                "userId": "5e2f0eaf9de40a6c87dd9b7d",
+                "resource": {
+                    "type": "EMAIL",
+                    "content": "youremail@resourcewatch.org"
+                },
+                "datasets": [
+                    "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"
+                ],
+                "params": {},
+                "confirmed": false,
+                "language": "en",
+                "datasetsQuery": [
+                    {
+                        "threshold": 1,
+                        "lastSentDate": "2020-02-19T12:17:01.175Z",
+                        "historical": [],
+                        "id": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
+                        "type": "COUNT"
+                    }
+                ],
+                "env": "production"
+            }
+        }
+    ]
+}
+```
+
+You can find all the subscriptions using the following endpoint.
+
+This endpoint supports the following optional query parameters as filters:
+
+Field       |             Description                              |   Type |
+----------- | :--------------------------------------------------: | -----: |
+application | Application to which the subscription is associated. | String |
+env         | Environment to which the subscription is associated. | String |

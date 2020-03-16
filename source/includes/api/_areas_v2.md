@@ -58,6 +58,8 @@ all         | Return all the areas instead of just the areas associated with use
 
 Finds all areas for the user who requested the list of areas. For each area, if it has an associated subscription (i.e. the `subscriptionId` field of the area is not empty), it merges the subscription data over the area data, returning it as a single object. After that, the remaining user subscriptions are converted to area objects and returned.
 
+It is important to note that if the `all=true` query filter is provided, then the `admin/find-all` endpoint of the subscriptions is used to find all existing subscriptions.
+
 ## Getting a single user area
 
 ```shell
