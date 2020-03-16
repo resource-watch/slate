@@ -308,3 +308,11 @@ You can delimit an area of interest by providing a geostore id as a parameter:
 ```shell
 curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
 ```
+
+## SQL specification for dataset providers
+
+As it was previously stated, the SQL syntax might vary, either because of limitations in this API's implementation or because of limitations on the actual data provider's side. This section aims at providing a broader view of the SQL support and limitations for each dataset provider.
+
+### Carto datasets
+
+Carto datasets rely in PostgreSQL and PostGIS for the underlying structure in which the data is saved. The queries that you provide are passed through directly to Carto servers, and thus the supported SQL syntax for Carto datasets can be checked [in Carto docs](https://carto.com/help/tutorials/getting-started-with-sql-in-carto/).
