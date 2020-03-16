@@ -20,18 +20,6 @@ In order to retrieve data from datasets, you can send queries to the API using a
 
 **While we aim to make our query interface as broad and transparent as possible, some of the querying options described below will not be available for specific dataset providers, depending on this API's implementation or limitations on the actual data provider's side.**
 
-## Index of resources
-
-* [GET /v1/query](index-rw.html#executing-queries)
-* [POST /v1/query](index-rw.html#executing-queries)
-* [GET /v1/download](index-rw.html#download)
-* [POST /v1/download](index-rw.html#download)
-
-TODO: should these be here? if so, fix these URLs
-
-* [GET /v1/jiminy](index-rw.html#how-to-get-a-dataset-by-id)
-* [POST /v1/jiminy](index-rw.html#creating-a-dataset)
-
 ## Executing queries
 
 > GET request for a query providing the SQL as query param:

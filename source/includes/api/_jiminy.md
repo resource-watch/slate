@@ -1,25 +1,13 @@
 # Jiminy
 
-[Jiminy](https://github.com/vizzuality/jiminy) is a lightweight library that powers this api endpoint whose aim is to infer which type of charts can be obtained from a dataset.
-
-To get the jiminy information from a query, you can do the following request:
-
-**`/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number>`**
-
-In order to retrieve the mentioned information the name of the columns that you want to obtain the data from are required.
-
-<aside class="notice">
-Remember — It is mandatory to set a limit value. If you do not set it and the dataset contains a lot of data, jiminy will try to obtain all data at once! This can produce performance issues.
-</aside>
-
-> To obtain jiminy information, you have to do a GET with the following query params:
+> Example jiminy GET request providing the SQL as query param:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/jiminy?sql=select <columns> from <dataset.slug or dataset.id> \
 -H "Content-Type: application/json"
 ```
 
-It is possible do a POST too:
+> Example jiminy POST request providing the SQL in the request body:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/jiminy \
@@ -29,82 +17,136 @@ curl -X POST https://api.resourcewatch.org/v1/jiminy \
   }'
 ```
 
-> Real example
+> Example with real data:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/jiminy?sql=select satellite, confidence, track, acq_date from VIIRS-Active-Fire-Global-1490086842549 limit 1000 \
+curl -X GET https://api.resourcewatch.org/v1/jiminy?sql=SELECT iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10 \
 -H "Content-Type: application/json"
 ```
 
-The response will be 200 if the query is correct:
+> Example of successful response:
 
 ```json
-
 {
-  "data": {
-    "general": ["bar", "line", "pie", "scatter", "1d_scatter", "1d_tick"],
-    "byColumns": {
-      "satellite": ["bar", "pie"],
-      "confidence": ["bar", "pie"],
-      "track": ["1d_scatter", "1d_tick"],
-      "acq_date": ["1d_scatter", "1d_tick"]
-    },
-    "byType": {
-      "bar": {
-        "general": ["satellite", "confidence", "track"],
-        "columns": {
-          "satellite": ["track"],
-          "confidence": ["track"],
-          "track": ["satellite", "confidence", "acq_date"],
-          "acq_date": ["track"]
+    "data": {
+        "general": [
+            "bar",
+            "pie",
+            "scatter"
+        ],
+        "byColumns": {
+            "iso": [
+                "bar",
+                "pie"
+            ],
+            "name_0": [
+                "bar",
+                "pie"
+            ],
+            "name_1": [
+                "bar",
+                "pie"
+            ],
+            "type_1": [
+                "bar",
+                "pie"
+            ]
+        },
+        "byType": {
+            "bar": {
+                "general": [
+                    "iso",
+                    "name_0",
+                    "name_1",
+                    "type_1"
+                ],
+                "columns": {
+                    "iso": [],
+                    "name_0": [],
+                    "name_1": [],
+                    "type_1": []
+                }
+            },
+            "line": {
+                "general": [],
+                "columns": {
+                    "iso": [],
+                    "name_0": [],
+                    "name_1": [],
+                    "type_1": []
+                }
+            },
+            "pie": {
+                "general": [
+                    "iso",
+                    "name_0",
+                    "name_1",
+                    "type_1"
+                ],
+                "columns": {
+                    "iso": [],
+                    "name_0": [],
+                    "name_1": [],
+                    "type_1": []
+                }
+            },
+            "scatter": {
+                "general": [
+                    "iso",
+                    "name_0",
+                    "name_1",
+                    "type_1"
+                ],
+                "columns": {
+                    "iso": [
+                        "name_0",
+                        "name_1",
+                        "type_1"
+                    ],
+                    "name_0": [
+                        "iso",
+                        "name_1",
+                        "type_1"
+                    ],
+                    "name_1": [
+                        "iso",
+                        "name_0",
+                        "type_1"
+                    ],
+                    "type_1": [
+                        "iso",
+                        "name_0",
+                        "name_1"
+                    ]
+                }
+            },
+            "1d_scatter": {
+                "general": [],
+                "columns": {
+                    "iso": [],
+                    "name_0": [],
+                    "name_1": [],
+                    "type_1": []
+                }
+            },
+            "1d_tick": {
+                "general": [],
+                "columns": {
+                    "iso": [],
+                    "name_0": [],
+                    "name_1": [],
+                    "type_1": []
+                }
+            }
         }
-      },
-      "line": {
-        "general": ["track"],
-        "columns": {
-          "satellite": [],
-          "confidence": [],
-          "track": ["acq_date"],
-          "acq_date": ["track"]
-        }
-      },
-      "pie": {
-        "general": ["satellite", "confidence"],
-        "columns": {
-          "satellite": [],
-          "confidence": [],
-          "track": [],
-          "acq_date": []
-        }
-      },
-      "scatter": {
-        "general": ["satellite", "confidence"],
-        "columns": {
-          "satellite": ["confidence"],
-          "confidence": ["satellite"],
-          "track": ["satellite", "confidence"],
-          "acq_date": ["satellite", "confidence"]
-        }
-      },
-      "1d_scatter": {
-        "general": ["track", "acq_date"],
-        "columns": {
-          "satellite": [],
-          "confidence": [],
-          "track": [],
-          "acq_date": []
-        }
-      },
-      "1d_tick": {
-        "general": ["track", "acq_date"],
-        "columns": {
-          "satellite": [],
-          "confidence": [],
-          "track": [],
-          "acq_date": []
-        }
-      }
     }
-  }
 }
 ```
+
+[Jiminy](https://github.com/vizzuality/jiminy) is a lightweight library that aims to infer which type of charts can be obtained from a dataset.
+
+In order to retrieve this information, you must provide a valid SQL query with the name of the columns that you want to obtain the data. *It is mandatory to set a limit value to the SQL query provided. If you do not set it and the dataset contains a lot of data, jiminy will try to obtain all data at once, which can result on performance issues.*
+
+To get the Jiminy information from a SQL query, you can perform the following request:
+
+`/jiminy?sql=select <columns> from <dataset.slug or dataset.id> limit <number>`
