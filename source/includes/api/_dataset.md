@@ -136,7 +136,7 @@ slug           | Filter returned datasets by the slug of the dataset.           
 type           | Filter returned datasets by dataset type.                                    | String      | any valid text
 subtitle       | Filter returned datasets by dataset subtitle.                                | String      | any valid text
 application    | Applications associated to this dataset.                                     | Array       | any valid text
-applicationConfig |                                                                           | Object      | `true` or `false`
+applicationConfig | If the dataset has `applicationConfig` data (i.e. contains a non-empty object in the `applicationConfig` field) | Boolean | `true` or `false`
 dataPath       |                                                                              | String      | any valid text
 attributesPath |                                                                              | String      | any valid text
 connectorType  | Filter returned datasets by the type of connector used.                      | String      | `rest`, `document` or `wms`
@@ -184,7 +184,7 @@ clonedHost.hostType |                                                           
 clonedHost.hostPath |                                                                         | String      | any valid text
 widgetRelevantProps |                                                                         | Array       | any valid text
 layerRelevantProps |                                                                          | Array       | any valid text
-subscribable   | If the dataset is subscribable (i.e. contains a non-empty object in the subscribable field) | Boolean     | `true` or `false`
+subscribable   | If the dataset is subscribable (i.e. contains a non-empty object in the `subscribable` field) | Boolean     | `true` or `false`
 user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | String      | `ADMIN`, `MANAGER` or `USER`
 vocabulary[name]| Filter returned datasets by vocabulary tags. Does not support regexes.       | String      | any valid text
 collection     | Filter returned datasets collection id. Does not support regexes.            | String      | any valid text
@@ -214,10 +214,10 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name,description
 ```
 
-> Explicit order of sorting
+> Sort by name descending, description ascending
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,%2Bdescription
 ```
 
 > Sorting datasets by the role of the user who owns the dataset
@@ -226,11 +226,11 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=user.role
 ```
 
-The API currently supports sorting by means of the `sort` query parameter. Sorting can be done using any field from the dataset data model, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users). Sorting by nested fields is not supported at the moment.
+The API currently supports sorting by means of the `sort` query parameter. Sorting can be done using any field from the [dataset model](#dataset-reference), as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users). Sorting by nested fields is not supported at the moment.
 
 Multiple sorting criteria can be used, separating them by commas.
 
-You can also specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+You can also specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
 #### Special sorting criteria
 
@@ -246,10 +246,11 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=relevance&status=saved
 
 Special search criteria must be used as sole sorting criteria, as it's not possible to combine any of them with any other search criteria. The following criteria can be used for special sorting in datasets:
 
-* `metadata`: delegates sorting to the metadata component, sorting by the name field of the metadata.
 * `most-viewed` delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.
 * `most-favorited`: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.
 * `relevance`: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a `search` parameter. Does not support ascending order.
+
+You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
 ### Include related entities
 
@@ -268,59 +269,22 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?includes=metadata,widget
             "attributes": {
                 "name": "Historical Precipitation -- U.S. (Puget Sound Lowlands)",
                 "slug": "Historical-Precipitation-US-Puget-Sound-Lowlands-1490086842133",
-                "type": "tabular",
-                "subtitle": null,
-                "application": [
-                    "prep"
-                ],
-                "dataPath": null,
-                "attributesPath": null,
-                "connectorType": "document",
-                "provider": "csv",
-                "userId": "586bc76036aacd381cb92b3a",
-                "connectorUrl": "https://raw.githubusercontent.com/fgassert/PREP-washington-observed-data/master/observed_precip.csv",
-                "sources": [],
-                "tableName": "index_06c44f9aaae7401e874cde13b7764959",
-                "status": "saved",
-                "published": false,
-                "overwrite": false,
-                "verified": false,
-                "blockchain": {},
-                "mainDateField": null,
-                "env": "production",
-                "geoInfo": false,
-                "protected": false,
-                "legend": {
-                    "date": [],
-                    "region": [],
-                    "country": [],
-                    "nested": [],
-                    "integer": [],
-                    "short": [],
-                    "byte": [],
-                    "double": [],
-                    "float": [],
-                    "half_float": [],
-                    "scaled_float": [],
-                    "boolean": [],
-                    "binary": [],
-                    "text": [],
-                    "keyword": []
-                },
-                "clonedHost": {},
-                "errorMessage": null,
-                "taskId": null,
-                "createdAt": "2016-08-01T15:28:15.050Z",
-                "updatedAt": "2018-01-05T18:15:23.266Z",
-                "dataLastUpdated": null,
+                ...
                 "metadata": [
-                    { metadata props }
+                    {  
+                    
+                        "id": "57a2251d5cd6980a00e054d9",
+                        "type": "metadata",
+                        "attributes": { ... }
+                    }
                 ],
                 "widget": [
-                    { widget props },
-                ],
-                "widgetRelevantProps": [],
-                "layerRelevantProps": []
+                    {  
+                        "id": "73f00267-fe34-42aa-a611-13b102f38d75",
+                        "type": "widget",
+                        "attributes": { ... }
+                    }
+                ]
             }
         }
     ],
@@ -339,10 +303,10 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?includes=metadata,widget
 }
 ```
 
-> Loading all layers for the given dataset, not just the ones with env set to production
+> Loading layers for the given dataset
 
 ```shell
-curl -X GET http://api.resourcewatch.org/dataset?includes=layer&env=production
+curl -X GET http://api.resourcewatch.org/dataset?includes=layer
 ```
 
 > Loading the information about the user who authored the dataset
@@ -351,79 +315,7 @@ curl -X GET http://api.resourcewatch.org/dataset?includes=layer&env=production
 curl -X GET https://api.resourcewatch.org/v1/dataset?includes=user
 ```
 
-> Example response:
-
-```json
-{
-    "data":  [{
-        "id": "8afcf415-ee0b-4d19-96f8-c7304c152e1b",
-        "type": "dataset",
-        "attributes": {
-            "name": "[delete] cit.005 Probabilities of Urban Expansion",
-            "slug": "Possibilities-of-Urban-Expansion",
-            "type": "raster",
-            "subtitle": "(SEDAC)",
-            "application": [
-                "rw"
-            ],
-            "dataPath": "",
-            "attributesPath": null,
-            "connectorType": "rest",
-            "provider": "cartodb",
-            "userId": "72a0aa1071e394dd3287e137",
-            "connectorUrl": "https://example.carto.com/tables/global_grid_prob_urban_expansion/public",
-            "sources": [],
-            "tableName": "global_grid_prob_urban_expansion",
-            "status": "saved",
-            "published": false,
-            "overwrite": false,
-            "verified": false,
-            "blockchain": {},
-            "subscribable": {},
-            "mainDateField": null,
-            "env": "production",
-            "geoInfo": true,
-            "protected": false,
-            "legend": {
-                "date": [],
-                "region": [],
-                "country": [],
-                "nested": [],
-                "integer": [],
-                "short": [],
-                "byte": [],
-                "double": [],
-                "float": [],
-                "half_float": [],
-                "scaled_float": [],
-                "boolean": [],
-                "binary": [],
-                "text": [],
-                "keyword": [],
-                "long": null,
-                "lat": null
-            },
-            "clonedHost": {},
-            "errorMessage": null,
-            "taskId": null,
-            "createdAt": "2017-04-06T11:09:56.242Z",
-            "updatedAt": "2018-01-18T15:41:48.408Z",
-            "dataLastUpdated": null,
-            "user": {
-                "name": "John",
-                "email": "john.doe@vizzuality.com",
-                "role": "MANAGER"
-            },
-            "widgetRelevantProps": [],
-            "layerRelevantProps": [
-                "the_raster_webmercator"
-            ]
-        }
-    }]
-}
-```
-
-When fetching the dashboards, you can request additional entities to be loaded with the datasets. The following entities are available:
+When fetching datasets, you can request additional entities to be loaded. The following entities are available:
 
 * `widget` - loads all widgets associated with a given dataset.
 * `layer` - loads all layers associated with a given dataset.
