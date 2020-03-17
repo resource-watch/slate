@@ -419,7 +419,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?includes=user
 }
 ```
 
-When fetching the dashboards, you can request additional entities to be loaded with the datasets. The following entities are avaliable:
+When fetching the dashboards, you can request additional entities to be loaded with the datasets. The following entities are available:
 
 * `widget` - loads all widgets associated with a given dataset.
 * `layer` - loads all layers associated with a given dataset.
@@ -676,6 +676,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids \
 ## Creating a Dataset
 
 To create a dataset, you will need to be authenticated. Additionally, your user account needs to be associated with all `application` you specify for the dataset.
+
+Depending on the provider you use for your dataset, your data may be copied to the API (ie: if you create a JSON-based dataset) or may be accessed by the RW API at the provided source (ie: carto datasets). Also: all RW API datasets are public, and will be visible and accessible to all users. It's also important to keep in mind that, depending on your user role, you may have permissions to create but not delete datasets. 
 
 You must provide all of the required fields in the request body. The fields that compose a dataset are:
 
