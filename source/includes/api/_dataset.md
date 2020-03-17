@@ -13,6 +13,10 @@ You can also [create you own datasets](#creating-a-dataset) on the RW API, if yo
 
 This endpoint will allow you to get the list of the datasets available in the API, and it's a great place for new users to start exploring the RW API. By default, this endpoint will give you a paginated list of 10 datasets. In the sections below, we'll explore how you can customize this endpoint call to match your needs. 
 
+For a detailed description of each field, check out the [Dataset reference](#dataset-reference) section.
+
+> Getting a list of datasets
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset
 ```
@@ -120,7 +124,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
 curl -X GET https://api.resourcewatch.org/v1/dataset?vocabulary[legacy]=umd
 ```
 
-The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you'll find in a dataset itself, while others are convenience filters for things like user role or favourites. These parameters can be combined into a complex `and` logic query.
+The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you'll find in a dataset itself (which you can learn more about in the [Dataset reference](#dataset-reference) section), while others are convenience filters for things like user role or favourites. These parameters can be combined into a complex `and` logic query.
 
 Here's the comprehensive list of filters supported by datasets:
  
@@ -144,8 +148,8 @@ userId         | Filter results by the owner of the dataset. Does not support re
 status         | Filter results by the current status of the dataset.                         | String      | `pending`, `saved` or `failed`
 overwrite      | If the data can be overwritten (only for being able to make dataset updates) | Boolean     | `true`or `false`
 verified       | If this dataset contains data that is verified using blockchain              | Boolean     | `true`or `false`
-errorMessage   | If this dataset contains data that is verified using blockchain              | String      | any valid text
-mainDateField  | If this dataset contains data that is verified using blockchain              | String      | any valid text
+errorMessage   | If this dataset is in `error` state, this field may contain additional details about the error. | String      | any valid text
+mainDateField  |                                                                              | String      | any valid text
 published      | If the dataset is published or not.                                          | Boolean     | `true`or `false`
 env            | Environment to which the dataset belongs. Multiple values can be combined using `,` as a separator. Does not support regexes. | String      | any valid text. Defaults to `production`. 
 geoInfo        | If it contains interceptable geographical info                               | Boolean     | `true`or `false`
