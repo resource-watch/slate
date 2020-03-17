@@ -4,7 +4,7 @@
 
 If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the [dataset concept](#dataset) documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you.
 
-Once you've read that section, you can come back here to learn more details about using the RW API's datasets feature. The RW API is home to many datasets uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you. These datasets contain a lot of information about a wide range of topics that you may want to learn about or build on top of. To find out more about finding and accessing the datasets already available on the RW API, check out the documentation on [getting datasets](#getting-all-datasets).
+Once you've read that section, you can come back here to learn more details about using the RW API's datasets feature. The RW API is home to many datasets uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you. These datasets contain a lot of information about a wide range of topics that you may want to learn about or build on top of. To find out more about finding and accessing the datasets already available on the RW API, check out the documentation on [getting datasets](#getting-all-datasets). A nice, visual way to explore existing datasets is by using the [Resource Watch](https://resourcewatch.org/) website. 
 
 You can also [create you own datasets](#creating-a-dataset) on the RW API, if you'd like to share your data with the world, or 
  if you are looking to use the RW API and its features to gain insights into your data.
