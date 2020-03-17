@@ -1343,3 +1343,58 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 To sync the data of a dataset, you need to choose the action type (concat or overwrite), a cron pattern and a valid url. This configuration should be set in the 'sync' property when creating or updating a document dataset.
 
 Please be sure that the 'overwrite' property is set to true. This could be used as a lock in order to not allow new updates even if the sync task is actually created.
+
+
+## Dataset reference
+
+This section gives you a complete view at the properties that are maintained as part of dataset. When interacting with a dataset (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
+
+You can find more details in the [source code](https://github.com/resource-watch/dataset/blob/master/app/src/models/dataset.model.js).
+
+Filter         | Description                                                                  | Type        
+-------------- | ---------------------------------------------------------------------------- | ---------------------------------------------
+id             | Unique Id of the dataset. Auto generated on creation, cannot be modified.    | String      
+name           | Name of the dataset.                                                         | String      
+slug           | Slug of the dataset. Auto generated on creation, cannot be modified.         | String      
+type           | Type of the dataset.                                                         | String      
+subtitle       | Subtitle of the dataset.                                                     | String      
+application    | Applications associated with this dataset.                                   | Array       
+applicationConfig | Key-value storage of application-specific data. Use the `application` value as key and a JSON Object as the value to store complex, extensible data. | Object      
+dataPath       | Path to the data in a JSON file-based datasets.                              | String      
+attributesPath |                                                                              | String      
+connectorType  | Type of connector. `wms` for WMS-based datasets, `rest` for datasets that rely on external data sources (carto, arcgis, etc) or `document` for file-based datasets (JSON, CSV, etc).                      | String      
+provider       | Dataset provider.                                                            | String      
+userId         | Id of the user who created the dataset.                                      | String      
+connectorUrl   | Path to the source of the data. On datasets with `document` connectorType, `sources` should be used instead. | String      
+sources        | Path to the source files of the data. Only used on datasets with `document` connectorType. | Array       
+tableName      | Additional value used to locate the dataset within a given underlying provider. Refer to the documentation of the different connector for more details. | String
+status         | Status of the dataset. `saved` means the dataset is available to use, `pending` means an operation is ongoing and the dataset is temporarily unavailable, `error` means the dataset is in an invalid state and requires further action before becoming available. | String      
+overwrite      | If the data can be overwritten (only for being able to update dataset)       | Boolean     
+verified       | If this dataset contains data that is verified using blockchain              | Boolean     
+errorMessage   | If this dataset is in `error` state, this field may contain additional details about the error. | String      
+mainDateField  |                                                                              | String      
+published      | If the dataset is published or not.                                          | Boolean     
+env            | Environment to which the dataset belongs.                                    | String
+geoInfo        | If it contains interceptable geographical info                               | Boolean     
+protected      | If the dataset is protected. A protected dataset cannot be deleted.          | Boolean     
+taskId         | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets | String      
+subscribable   | Information about the dataset being subscribable for alerts. More info about this can be found on the [Subscriptions](#subscriptions) section of the docs. | Object     
+blockchain.id  |                                                                              | String      
+blockchain.hash |                                                                             | String      
+blockchain.time |                                                                             | String      
+blockchain.backupUrl |                                                                        | String      
+legend.lat     | Dataset field representing a latitude value.                                 | String      
+legend.long    | Dataset field representing a longitude value.                                | String
+legend.*       | Different keys corresponding to data types. Each key may have an array of strings, referencing dataset fields that match that data type. | Array             
+clonedHost.hostProvider | When cloning a dataset, this will retain the `provider` value of the original dataset. | String      
+clonedHost.hostUrl | When cloning a dataset, this will retain the `connectorUrl` value of the original dataset. | String      
+clonedHost.hostId | When cloning a dataset, this will retain the `Id` value of the original dataset.  | String      
+clonedHost.hostType | When cloning a dataset, this will retain the `connectorType` value of the original dataset.  | String      
+clonedHost.hostPath | When cloning a dataset, this will retain the `tableName` value of the original dataset.  | String      
+widgetRelevantProps | Group of relevant props of a widget.                                    | Array       
+layerRelevantProps | Group of relevant props of a layer.                                      | Array       
+dataLastUpdated | User defined date of when a dataset was last updated.                       | Date    
+userName       | Name of the user who created the dataset. This value is used only internally, and is never directly exposed through the API | String       
+userRole       | Role of the user who created the dataset. This value is used only internally, and is never directly exposed through the API | String       
+createdAt      | Automatically maintained date of when the dataset was created.               | Date       
+updatedAt      | Automatically maintained date of when the dataset was last updated.          | Date       
