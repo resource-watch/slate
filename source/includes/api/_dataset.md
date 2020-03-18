@@ -325,74 +325,22 @@ When fetching datasets, you can request additional entities to be loaded. The fo
 
 **Note:** If you include related entities (e.g. layers) with query filters, the filters will not cascade to the related entities.
 
-### Verification
+## Getting a dataset by id or slug
 
-> Get verification information for a dataset
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/:datasetID/verification
-```
-
-> Example response
-
-```shell
-[
-    {
-        "id": "string",
-        "hash": "string"
-    }
-]
-```
-
-When available, the content of the `blockchain` field is used to validate the dataset's information using [Stampery](https://stampery.com/).
-
-### Flush dataset cache
-
-> Flush dataset's cache
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/:datasetID/flush \
--H "Authorization: Bearer <your-token>"
-```
-
-> Response:
-
-```shell
-OK
-```
-
-Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.
-
-*Note: Flushing a dataset's cache requires authentication by an ADMIN user.*
-
-### Recover
-
-> Recover dataset
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/:datasetID/recover \
--H "Authorization: Bearer <your-token>"
-```
-
-> Response:
-
-```shell
-OK
-```
-
-Resets a dataset's `status` to `saved` and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset's data was inconsistent for any reason, this endpoint will not change it, and it's up to you to fix it using a `data-overwrite` or other endpoints.
-
-*Note: Recover a dataset's status requires authentication by an ADMIN user.*
-
-## Getting a dataset by id
-
-> Getting a dataset by its id:
+> Getting a dataset by id:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057ad4fc2145
 ```
 
-> Response:
+
+> Getting a dataset by slug:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC-test-1490086842132
+```
+
+> Response (equal for both cases):
 
 ```shell
 {
@@ -431,7 +379,11 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057
 }
 ```
 
-> To get the dataset including its relationships:
+If you know the id or the `slug` of a dataset, then you can access it directly. 
+
+Using this endpoint, you can also [include related entities](#include-related-entities), in the same way you do when loading multiple datasets. 
+
+> Getting a dataset by its including its relationships:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes=metadata,vocabulary,widget,layer
@@ -439,7 +391,18 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de1
 
 ## Getting multiple datasets by ids
 
-> Getting multiple dataset by its ids:
+This endpoint allows you to load multiple datasets by id in a single request.
+
+
+
+#### Errors for getting multiple datasets by ids
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | ids: ids can not be empty. | The required `ids` field is missing in the request body.
+
+
+> Getting multiple datasets by their ids:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids \
@@ -465,50 +428,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids \
               "slug": "Social-Vulnerability-Index-2006-2010-US-New-Hampshire-1490086842541",
               "type": "tabular",
               "subtitle": null,
-              "application": [
-                "prep"
-              ],
-              "dataPath": null,
-              "attributesPath": null,
-              "connectorType": "rest",
-              "provider": "featureservice",
-              "userId": "586bc76036aacd381cb92b3a",
-              "connectorUrl": "https://coast.noaa.gov/arcgis/rest/services/sovi/sovi_tracts2010/MapServer/19?f=pjson",
-              "tableName": "sovisovi_tracts2010MapServer19",
-              "status": "saved",
-              "published": false,
-              "overwrite": false,
-              "verified": false,
-              "blockchain": {},
-              "mainDateField": null,
-              "env": "production",
-              "geoInfo": false,
-              "protected": false,
-              "legend": {
-                "date": [],
-                "region": [],
-                "country": [],
-                "nested": [],
-                "integer": [],
-                "short": [],
-                "byte": [],
-                "double": [],
-                "float": [],
-                "half_float": [],
-                "scaled_float": [],
-                "boolean": [],
-                "binary": [],
-                "text": [],
-                "keyword": []
-              },
-              "clonedHost": {},
-              "errorMessage": null,
-              "taskId": null,
-              "createdAt": "2016-09-01T08:18:39.006Z",
-              "updatedAt": "2017-12-01T22:17:59.585Z",
-              "dataLastUpdated": null,
-              "widgetRelevantProps": [],
-              "layerRelevantProps": []
+              ...
             }
           },
           {
@@ -519,50 +439,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids \
               "slug": "USGS-Land-Cover-Impervious-Surface-2001-US-Alaska-1490086842439",
               "type": "raster",
               "subtitle": null,
-              "application": [
-                "prep"
-              ],
-              "dataPath": null,
-              "attributesPath": null,
-              "connectorType": "wms",
-              "provider": "wms",
-              "userId": "586bc76036aacd381cb92b3a",
-              "connectorUrl": "https://raster.nationalmap.gov/arcgis/rest/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/25?f=pjson",
-              "tableName": "LandCoverUSGS_EROS_LandCover_NLCDMapServer25",
-              "status": "saved",
-              "published": false,
-              "overwrite": false,
-              "verified": false,
-              "blockchain": {},
-              "mainDateField": null,
-              "env": "production",
-              "geoInfo": false,
-              "protected": false,
-              "legend": {
-                "date": [],
-                "region": [],
-                "country": [],
-                "nested": [],
-                "integer": [],
-                "short": [],
-                "byte": [],
-                "double": [],
-                "float": [],
-                "half_float": [],
-                "scaled_float": [],
-                "boolean": [],
-                "binary": [],
-                "text": [],
-                "keyword": []
-              },
-              "clonedHost": {},
-              "errorMessage": null,
-              "taskId": null,
-              "createdAt": "2016-09-01T16:59:30.294Z",
-              "updatedAt": "2018-01-03T17:36:18.509Z",
-              "dataLastUpdated": null,
-              "widgetRelevantProps": [],
-              "layerRelevantProps": []
+              ...
             }
           }
         ]
@@ -1240,6 +1117,65 @@ To sync the data of a dataset, you need to choose the action type (concat or ove
 
 Please be sure that the 'overwrite' property is set to true. This could be used as a lock in order to not allow new updates even if the sync task is actually created.
 
+
+## Verification
+
+> Get verification information for a dataset
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/06c44f9a-aae7-401e-874c-de13b7764959/verification
+```
+
+> Example response
+
+```shell
+[
+    {
+        "id": "string",
+        "hash": "string"
+    }
+]
+```
+
+When available, the content of the `blockchain` field is used to validate the dataset's information using [Stampery](https://stampery.com/).
+
+## Flush dataset cache
+
+> Flush dataset's cache
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/:datasetID/flush \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```shell
+OK
+```
+
+Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.
+
+*Note: Flushing a dataset's cache requires authentication by an ADMIN user.*
+
+## Recover
+
+> Recover dataset
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/:datasetID/recover \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```shell
+OK
+```
+
+Resets a dataset's `status` to `saved` and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset's data was inconsistent for any reason, this endpoint will not change it, and it's up to you to fix it using a `data-overwrite` or other endpoints.
+
+*Note: Recover a dataset's status requires authentication by an ADMIN user.*
 
 ## Dataset reference
 
