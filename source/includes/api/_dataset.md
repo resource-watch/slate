@@ -503,6 +503,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
+  "dataset": {
     "name":"World Database on Protected Areas -- Global",
     "connectorType":"rest",
     "provider":"cartodb",
@@ -511,6 +512,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
       "gfw", 
       "forest-atlas"
     ]
+  }
 }'
 ```
 
@@ -529,19 +531,20 @@ The RW API will use the information above to directly query the Carto account sp
 - Any changes made to the data hosted on Carto will be automatically reflected on the data served by the RW API for this dataset.
 - If you restructure or delete your Carto table, the corresponding RW API dataset will be in an invalid state, and you should delete it.
 
-The `table` value of a carto-based dataset will automatically be filled with the name of the carto table corresponding to the dataset.
+The `tableName` value of a carto-based dataset will automatically be filled with the name of the carto table corresponding to the dataset.
 
 When creating a Carto based-dataset, the RW API will try to validate the `connectorUrl` by trying to connect to the corresponding Carto table - the result of this will determine if the dataset's status will be set to `saved` or `error`.
 
 ### ArcGIS feature Service
 
-> Example of creating a dataset based on ArcGIS feature service data
+> Example of creating a dataset based on ArcGIS feature service data with the minimum fields required
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
+  "dataset": {
     "connectorType":"rest",
     "provider":"featureservice",
     "connectorUrl":"https://services.arcgis.com/uDTUpUPbk8X8mXwl/arcgis/rest/services/Public_Schools_in_Onondaga_County/FeatureServer/0?f=json",
@@ -549,6 +552,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
      "prep"
     ],
     "name":"Uncontrolled Public-Use Airports -- U.S."
+  }
 }'
 ```
 
@@ -564,22 +568,23 @@ The RW API will use the information above to directly query the ArcGIS Feature S
 
 - The ArcGIS Feature Service URL provided will be publicly visible to all RW API users.
 - The ArcGIS Feature Service server will see increased traffic.
-- Any changes made to the data hosted on ArcGIS Feature Service data will be automatically reflected on the data served by the RW API for this dataset.
+- Any changes made to the data hosted on ArcGIS Feature Service will be automatically reflected on the data served by the RW API for this dataset.
 - If you restructure or delete your ArcGIS Feature Service dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.
 
-The `table` value of a ArcGIS-based dataset will automatically be filled with the name of the ArcGIS Feature Service table corresponding to the dataset.
+The `tableName` value of a ArcGIS-based dataset will automatically be filled with the name of the ArcGIS Feature Service table corresponding to the dataset.
 
 When creating a ArcGIS-based dataset, the RW API will try to validate the `connectorUrl` by trying to connect to the corresponding ArcGIS server - the result of this will determine if the dataset's status will be set to `saved` or `error`.
 
 ### Google Earth Engine
 
-> Example of creating a dataset based on Google Earth Engine data
+> Example of creating a dataset based on Google Earth Engine data with the minimum fields required
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
+  "dataset": {
     "connectorType":"rest",
     "provider":"gee",
     "tableName": "JRC/GSW1_0/GlobalSurfaceWater"
@@ -587,157 +592,67 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
      "rw"
     ],
     "name":"Water occurrence"
+  }
 }'
 ```
 
-To create a dataset using Google Earth Engine as data source, you should provide the following data:
+To create a dataset using Google Earth Engine (GEE) as data source, besides the common required fields, you must provide the following required data:
 
 Field           | Description                                                                            | Example value  |
 --------------- | :------------------------------------------------------------------------------------: | ------------:  |
-`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
-`provider`      | The provider should be set to 'gee'.                                                   | gee            |
-`tableName`     | The name of the data table in GEE this dataset will be using.                          | JRC/GSW1_0/GlobalSurfaceWater |
+`connectorType` | The type of connector. Must be set to `rest`.                                          | `rest`         |
+`provider`      | The provider should be set to `gee`.                                                   | `gee`          |
+`tableName`     | Relative path of the dataset within GEE.                                               | users/resourcewatch_wri/dataset_name |
 
-*Note: Remember that creating datasets requires authentication.*
+The RW API will use the information above to directly query the GEE dataset specified on the `tableName` field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:
 
-### NEXGDDP
+- The GEE resource name provided will be publicly visible to all RW API users.
+- Any changes made to the data hosted on GEE will be automatically reflected on the data served by the RW API for this dataset.
+- If you restructure or delete your GEE dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.
 
-> Example of creating a dataset based on NEXGDDP data
+When creating a GEE-based dataset, the RW API will try to validate it by connecting to the corresponding dataset GEE - the result of this will determine if the dataset's status will be set to `saved` or `error`.
 
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
-'{
-    "connectorType":"rest",
-    "provider":"nexgddp",
-    "tableName": "historical/ACCESS1_0"
-    "application":[
-     "rw"
-    ],
-    "name":"Nexgddp"
-}'
-```
 
-To create a dataset using NEXGDDP as data source, you should provide the following data:
-
-Field           | Description                                                                            | Example value  |
---------------- | :------------------------------------------------------------------------------------: | ------------:  |
-`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
-`provider`      | The provider should be set to 'nexgddp'.                                               | nexgddp        |
-`tableName`     | The name of the data table in NEXGDDP this dataset will be using.                      | historical/ACCESS1_0 |
-
-*Note: Remember that creating datasets requires authentication.*
-
-### Rasdaman
-
-> Example of creating a dataset based on Rasdaman data
-
-```shell
-curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
--H 'Authorization: Bearer <your-token>'  \
--H 'Content-Type: application/json' -d \
-'{
-    "connectorType":"rest",
-    "provider":"rasdaman",
-    "connectorUrl":"rw.dataset.raw/1508321309784_test_rasdaman_1b.tiff",
-    "application":[
-     "rw"
-    ],
-    "name":"rasdaman dataset"
-}'
-```
-
-To create a dataset using Rasdaman as data source, you should provide the following data:
-
-Field           | Description                                                                            | Example value  |
---------------- | :------------------------------------------------------------------------------------: | ------------:  |
-`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
-`provider`      | The provider should be set to 'rasdaman'.                                              | rasdaman       |
-`connectorUrl`  | A URL pointing to a valid geotiff file.                                                | rw.dataset.raw/1508321309784_test_rasdaman_1b.tiff |
-
-*Note: Remember that creating datasets requires authentication.*
-
-### BigQuery
-
-> Example of creating a dataset based on BigQuery data
-
-```shell
-curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
--H 'Authorization: Bearer <your-token>'  \
--H 'Content-Type: application/json' -d \
-'{
-    "connectorType": "rest",
-    "provider": "bigquery",
-    "tableName": "[bigquery-public-data:ghcn_m.ghcnm_tmax]",
-    "application": ["rw"],
-    "name": "BigQuery dataset"
-}'
-```
-
-To create a dataset using BigQuery as data source, you should provide the following data:
-
-Field           | Description                                                                            | Example value  |
---------------- | :------------------------------------------------------------------------------------: | ------------:  |
-`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
-`provider`      | The provider should be set to 'bigquery'.                                              | bigquery       |
-`tableName`     | The name of the data table in BigQuery this dataset will be using.                     | [bigquery-public-data:ghcn_m.ghcnm_tmax] |
-
-*Note: Remember that creating datasets requires authentication.*
-
-### Loca
-
-> Example of creating a dataset based on Loca data
-
-```shell
-curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
--H 'Authorization: Bearer <your-token>'  \
--H 'Content-Type: application/json' -d \
-'{
-    "connectorType": "rest",
-    "provider": "loca",
-    "tableName": "loca_tasavg/rcp85_decadal",
-    "application": ["rw"],
-    "name": "Loca dataset"
-}'
-```
-
-To create a dataset using Loca as data source, you should provide the following data:
-
-Field           | Description                                                                            | Example value  |
---------------- | :------------------------------------------------------------------------------------: | ------------:  |
-`connectorType` | The type of connector should be set to 'rest'.                                         | rest           |
-`provider`      | The provider should be set to 'loca'.                                                  | loca           |
-`tableName`     | The name of the data table in Loca this dataset will be using.                         | loca_tasavg/rcp85_decadal |
-
-*Note: Remember that creating datasets requires authentication.*
 
 ### WMS
 
-> Example of creating a dataset based on WMS data
+> Example of creating a dataset based on WMS data with the minimum fields required
 
 ```shell
 curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
 -H 'Authorization: Bearer <your-token>'  \
 -H 'Content-Type: application/json' -d \
 '{
-    "connectorType": "wms",
-    "provider": "wms",
-    "connectorUrl": "https://raster.nationalmap.gov/arcgis/rest/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/25?f=pjson",
-    "application": ["rw"],
-    "name": "WMS dataset"
-}'
+   "dataset": {
+     "application": [
+       "rw"
+     ],
+     "name": "Seasonal variability",
+     "connectorType": "wms",
+     "provider":"wms",
+     "connectorUrl":"http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/6?f=pjson"
+   }
+ }
+'
 ```
 
 To create a dataset using WMS as data source, you should provide the following data:
 
 Field           | Description                                                                            | Example value  |
 --------------- | :------------------------------------------------------------------------------------: | ------------:  |
-`connectorType` | The type of connector should be set to 'wms'.                                          | wms            |
-`provider`      | The provider should be set to 'wms'.                                                   | wms            |
-`connectorUrl`  | The URL for the WMS table that this dataset will be using.                             | https://raster.nationalmap.gov/arcgis/rest/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/25?f=pjson |
+`connectorType` | The type of connector. Must be set to `wms`.                                           | `wms`          |
+`provider`      | The provider should be set to `wms`.                                                   | `wms`          |
+`connectorUrl`  | URL of the server hosting the data in WMS format.                                      | http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/6?f=pjson |
 
-*Note: Remember that creating datasets requires authentication.*
+
+The RW API will use the information above to directly query the WMS dataset specified on the `connectorUrl` field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:
+
+- The WMS server URL provided will be publicly visible to all RW API users.
+- Any changes made to the data hosted on the WMS server data will be automatically reflected on the data served by the RW API for this dataset.
+- If you restructure or delete your WMS server data, the corresponding RW API dataset will be in an invalid state, and you should delete it.
+
+When creating a WMS-based dataset, no validation is done - the dataset is automatically created in a `saved` state.
+
 
 ### Document based datasets: JSON, CSV, TSV or XML
 
