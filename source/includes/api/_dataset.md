@@ -812,7 +812,19 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-If you want to upload your file to the API as a dataset, but don't have it available online, the `upload` endpoint allows you to. You can upload your file to the API by using the `upload` endpoint. This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. It returns a specially crafted `connectorUrl` value, and a list of fields found in your file. With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
+If you want to upload your file the API as a dataset, but don't have it available online, the `upload` endpoint allows you to. If your file is up to 4MB in size, you can upload it to the API by using the `upload` endpoint. This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. The supported formats/extesions are: csv, json, tsv, xml, tif, tiff and geo.tiff. The request uploads the file to the API, and returns a specially crafted `connectorUrl` value, and a list of fields found in your file. With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
+
+
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | - no file to check - | A file was not provided, or was provided in the wrong request field.
+400            | - dataset: file dataset can not be a empty file - | A file was not provided, or was provided in the wrong request field.
+400            | provider: provider must be in [csv,json,tsv,xml,tif,tiff,geo.tiff]. | A file was not provided, or was provided in the wrong request field.
+400            | - dataset: file too large -  | Your file is larger than 4MB.
+400            | - dataset: file <your file name> is bad file type. -  | The `provider` value must match the extension of the uploaded file.
+401            | Unauthorized   | You need to be logged in to be able to upload a file 
+
 
 ## Updating a Dataset
 
