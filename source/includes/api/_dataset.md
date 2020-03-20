@@ -663,6 +663,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
+  "dataset": {
     "connectorType":"document",
     "provider":"csv",
     "sources": [
@@ -673,11 +674,8 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
     "application":[
      "gfw"
     ],
-    "legend": {
-      "lat": "lat",
-      "long": "lon"
-    },
     "name":"Glad points"
+  }
 }'
 ```
 
@@ -688,6 +686,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
 '{
+  "dataset": {
     "connectorType":"document",
     "provider":"json",
     "application":[
@@ -697,42 +696,50 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
             {"name":"nameOne", "id":"random1"},
             {"name":"nameTow", "id":"random2"}
           ]},
-    "legend": {
-      "lat": "lat-column",
-      "long": "long-column",
-      "date": ["date1Column", "date2Column"],
-      "region": ["region1Column", "region2Column"],
-      "country": ["country1Column", "country2Column"]
-    },
     "name":"Example JSON Dataset"
+  }
 }'
 ```
 
-This dataset hosts data from files in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
-source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations.
+This dataset hosts data from files in JSON, CSV, TSV or XML format.
 
-The original data must be available on a publicly accessible URLs, specified in the `sources` array field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details. You can specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.
+Here's a breakdown of the fields you need to specify when creating a document type dataset, besides the common required fields:
 
-Here's a breakdown of the fields specific to the creation of a document-based dataset:
+Field           | Description                                                                            | Example value  |
+--------------- | :------------------------------------------------------------------------------------: | ------------:  |
+`connectorType` | The type of connector. Must be set to `document`.                                      | `document`     |
+`provider`      | The type of data you are uploading. Must be one of the following: `csv`, `tsv`, `json` or `xml`. | `csv`, `tsv`, `json` or `xml` |
+`connectorUrl`  | URL from which to source data.                                                         | http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/6?f=pjson |
+`sources`       | List of URLs from which to source data.                                                | ['http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/6?f=pjson','http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/7?f=pjson'] |
+`data`          | JSON DATA only for json connector if connectorUrl not present.                         | [{"key":"value1"},{"key":"value2"}]] |
 
-Field        |                        Description                                |   Type |        Values | Required
------------- | :-----------------------------------------------------------:     | -----: | ------------: | -------:
-connectorType| The connector type for this dataset.                              | String | `document`    | Yes
-provider     | The type of provider for this dataset.                            | String | `csv`, `tsv`, `json` or `xml` | Yes
-sources      | List of URLs from which to source data                            |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
-data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
-legend       | See section below                                                 | Object |               |       No
-connectorUrl | URL from which to source data. **Deprecated: use `sources` instead** | String |        URL |       No
 
-**Deprecation notice: The previously used `connectorUrl` field should be considered deprecated when creating document-based datasets.**
+When creating a document based dataset, you have multiple ways of providing your data to the API, of which you should use only one:
 
-*Note 1: Remember that creating datasets requires authentication.*
+- The `sources` field expects a list of URL containing files in the format matching your `provider` value. This is the recommended way of uploading data.
+- The `connectorUrl` field is similar to `sources`, but it only accepts a single value. **Deprecation notice**: The previously used `connectorUrl` field should be considered deprecated when creating document-based datasets.
+- If creating a dataset based on JSON data, you can upload the data on the actual request you issue to the API, inside the `data` field.
 
-*Note 2: When creating a document-based dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.*
 
-#### Legend
+The data passed in `sources` or `connectorUrl` must be available on a publicly accessible URLs, specified in the `sources` array field or the `connectorUrl` single value field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. `sources` allows you to specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.
 
-By default, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch [dynamic mapping API](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping).
+*Notice: If you want to create a file from a file you have, but that it's not available on a public URL, check out our docs for [uploading a dataset](#uploading-a-dataset).
+
+  
+Unlike with other dataset types, when the dataset is created, the data is copied from the provided source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations. This has a few implications that you should be aware of:
+
+- The URLs provided in `sources` or `connectorUrl` will be publicly visible to all RW API users.
+- On dataset creation, those URLs will be visited as the API loads and copies your data.
+- Queries to the dataset will use the API's internal copy of your data. If you wish to update that data, see the documentation below on how to update your data.
+- If the URLs provided become unavailable after the creation process is over, the dataset will continue to work normally - your data will still be available online.
+
+*Notice: When creating a document-based dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.*
+
+When creating a document-based dataset, the RW API will start a complex process that copies your data into the API's internal database, and perform certain indexing actions. This process is called a **Task**, and is given a `taskId` that is stored on the dataset's field with the same name. Depending on the size of your dataset, this may take from a few seconds to a few hours to complete. The result of this import process will determine if the dataset's status will be set to `saved` or `error`. You can follow this process by using the `taskId` value with the [Tasks API](#get-a-single-task).
+
+#### Using the legend fields to define field types
+
+By default, when creating a document based dataset, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch [dynamic mapping API](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping).
 However, in some scenarios, it may be desirable to specify some or all of these mappings manually, to match each field type to its Elasticsearch equivalent.
 
 When defining manual mappings, you don't need to map every single field. When processing the data, if a field is found for which there isn't a manual mapping, Elasticsearch will fallback to its dynamic mapping algorithm to try and guess that field's type. This API only supports a single explicit mapping per field, meaning you cannot declare a given field as both `text` and `keyword` for example.
@@ -765,7 +772,7 @@ keyword  | In beta, not fully supported |
 
 For more details on the characteristics of each of the basic data types, refer to the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_field_datatypes).
 
-## Uploading a Dataset (Binary)
+#### Uploading a dataset file
 
 > Upload raw data for using in a dataset
 
@@ -780,7 +787,16 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/upload \
 
 ```json
 {
-  "connectorUrl": "rw.dataset.raw/tmp/upload_75755182b1ceda30abed717f655c077d-observed_temp.csv"
+  "connectorUrl": "rw.dataset.raw/some-file.csv",
+  "fields": [
+    "Country (region)",
+    "Positive affect",
+    "Negative affect",
+    "Social support",
+    "Freedom",
+    "Corruption",
+    "Generosity"
+  ]
 }
 ```
 
@@ -791,19 +807,19 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 '{
+  "dataset": {
     "connectorType":"document",
     "provider":"csv",
-    "connectorUrl":"rw.dataset.raw/tmp/upload_75755182b1ceda30abed717f655c077d-observed_temp.csv",
+    "connectorUrl":"rw.dataset.raw/some-file.csv",
     "application":[
      "your", "apps"
     ],
     "name":"Example RAW Data Dataset"
+  }
 }'
 ```
 
-You can upload your raw data directly to S3 making use of the `upload` endpoint. This endpoint accepts a file in the property "dataset" and returns a valid connectorUrl. With this connectorUrl you can create or update a "document" dataset, or a raster dataset in the Rasdaman adapter.
-
-*Note: Uploading raw data for using in a dataset requires authentication.*
+If you want to upload your file to the API as a dataset, but don't have it available online, the `upload` endpoint allows you to. You can upload your file to the API by using the `upload` endpoint. This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. It returns a specially crafted `connectorUrl` value, and a list of fields found in your file. With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
 
 ## Updating a Dataset
 
@@ -1158,7 +1174,7 @@ blockchain.time         | String         | No                   |               
 blockchain.backupUrl    | String         | No                   |                            |                                                                                   
 legend.lat              | String         | No                   |                            | Dataset field representing a latitude value.                                      
 legend.long             | String         | No                   |                            | Dataset field representing a longitude value.                                
-legend.*                | Array          | No                   |                            | Different keys corresponding to data types. Each key may have an array of strings, referencing dataset fields that match that data type.             
+legend.*                | Array          | No                   |                            | Different keys corresponding to data types. Each key may have an array of strings, referencing dataset fields that match that data type. Used functionally for document-based datasets, but may also be set by the user as reference for other types. See [this section](#using-the-legend-fields-to-define-field-types) for more details.
 clonedHost.hostProvider | String         | No                   |                            | When cloning a dataset, this will retain the `provider` value of the original dataset.       
 clonedHost.hostUrl      | String         | No                   |                            | When cloning a dataset, this will retain the `connectorUrl` value of the original dataset.      
 clonedHost.hostId       | String         | No                   |                            | When cloning a dataset, this will retain the `Id` value of the original dataset.        
