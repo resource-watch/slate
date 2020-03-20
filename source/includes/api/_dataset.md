@@ -46,8 +46,6 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
             "status": "pending",
             "published": true,
             "overwrite": false,
-            "verified": false,
-            "blockchain": {},
             "env": "production",
             "geoInfo": false,
             "legend": {
@@ -147,7 +145,6 @@ tableName      |                                                                
 userId         | Filter results by the owner of the dataset. Does not support regexes.        | String      | valid user id
 status         | Filter results by the current status of the dataset.                         | String      | `pending`, `saved` or `failed`
 overwrite      | If the data can be overwritten (only for being able to make dataset updates) | Boolean     | `true`or `false`
-verified       | If this dataset contains data that is verified using blockchain              | Boolean     | `true`or `false`
 errorMessage   | If this dataset is in `error` state, this field may contain additional details about the error. | String      | any valid text
 mainDateField  |                                                                              | String      | any valid text
 published      | If the dataset is published or not.                                          | Boolean     | `true`or `false`
@@ -155,10 +152,6 @@ env            | Environment to which the dataset belongs. Multiple values can b
 geoInfo        | If it contains interceptable geographical info                               | Boolean     | `true`or `false`
 protected      | If the dataset is protected.                                                 | Boolean     | `true`or `false`
 taskId         | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets | String      | any valid text
-blockchain.id  |                                                                              | String      | any valid text
-blockchain.hash |                                                                             | String      | any valid text
-blockchain.time |                                                                             | String      | any valid text
-blockchain.backupUrl |                                                                        | String      | any valid text
 legend.lat     |                                                                              | String      | any valid text
 legend.long    |                                                                              | String      | any valid text
 legend.date    |                                                                              | Array       | any valid text
@@ -860,7 +853,6 @@ legend              |                                      Legend for dataset. K
 overwrite           |                                          It allows to overwrite dataset data                                           | Boolean | true/false |
 published           |                                           To set a public or private dataset                                           | Boolean | true/false |
 protected           |                           If it's a protected layer (not is possible to delete if it's true)                           | Boolean | true/false |
-verified            |                                    To generate a verified blockchain of the dataset                                    | Boolean | true/false |
 vocabularies        |                                                    Cluster of tags                                                     |  Object | `{"vocabularyOne": {"tags": [<tags>]},"vocabularyTwo": {"tags": [<tags>]}}` |
 widgetRelevantProps |                                          Group of relevant props of a widget                                           |   Array | Any Text |
 layerRelevantProps  |                                           Group of relevant props of a layer                                           |   Array | Any Text |
@@ -1075,27 +1067,6 @@ To sync the data of a dataset, you need to choose the action type (concat or ove
 Please be sure that the 'overwrite' property is set to true. This could be used as a lock in order to not allow new updates even if the sync task is actually created.
 
 
-## Verification
-
-> Get verification information for a dataset
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/06c44f9a-aae7-401e-874c-de13b7764959/verification
-```
-
-> Example response
-
-```shell
-[
-    {
-        "id": "string",
-        "hash": "string"
-    }
-]
-```
-
-When available, the content of the `blockchain` field is used to validate the dataset's information using [Stampery](https://stampery.com/).
-
 ## Flush dataset cache
 
 > Flush dataset's cache
@@ -1159,7 +1130,6 @@ sources                 | Array          | No                   | null          
 tableName               | String         | No                   | null                       | Additional value used to locate the dataset within a given underlying provider. Refer to the documentation of the different connector for more details. 
 status                  | String         | No                   | pending                    | Status of the dataset. `saved` means the dataset is available to use, `pending` means an operation is ongoing and the dataset is temporarily unavailable, `error` means the dataset is in an invalid state and requires further action before becoming available. 
 overwrite               | Boolean        | No                   | false                      | If the data can be overwritten (only for being able to update dataset)            
-verified                | Boolean        | No                   | false                      | If this dataset contains data that is verified using blockchain                   
 errorMessage            | String         | No                   | null                       | If this dataset is in `error` state, this field may contain additional details about the error. 
 mainDateField           | String         | No                   | null                       |                                                                                
 published               | Boolean        | Yes                  | true                       | If the dataset is published or not.                                               
@@ -1168,10 +1138,6 @@ geoInfo                 | Boolean        | Yes                  | false         
 protected               | Boolean        | Yes                  | false                      | If the dataset is protected. A protected dataset cannot be deleted.               
 taskId                  | String         | No                   | null                       | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets      
 subscribable            | Object         | No                   |                            | Information about the dataset being subscribable for alerts. More info about this can be found on the [Subscriptions](#subscriptions) section of the docs. 
-blockchain.id           | String         | No                   |                            |                                                                                   
-blockchain.hash         | String         | No                   |                            |                                                                                   
-blockchain.time         | String         | No                   |                            |                                                                                   
-blockchain.backupUrl    | String         | No                   |                            |                                                                                   
 legend.lat              | String         | No                   |                            | Dataset field representing a latitude value.                                      
 legend.long             | String         | No                   |                            | Dataset field representing a longitude value.                                
 legend.*                | Array          | No                   |                            | Different keys corresponding to data types. Each key may have an array of strings, referencing dataset fields that match that data type. Used functionally for document-based datasets, but may also be set by the user as reference for other types. See [this section](#using-the-legend-fields-to-define-field-types) for more details.
