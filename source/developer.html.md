@@ -17,6 +17,7 @@ includes:
   - dev/endpoints
   - api/microservices
   - dev/subscriptions
+  - dev/microservice_reference
 
 logo: logo-rw.png
 
