@@ -28,7 +28,7 @@ query            | [Github](https://github.com/resource-watch/query/)           
 rw-lp            | [Github](https://github.com/resource-watch/rw-lp)                |  |  |
 task-async       | [Github](https://github.com/resource-watch/task-executor)        |  |  |
 vocabulary       | [Github](https://github.com/resource-watch/vocabulary-tag/)      | [![Build Status](https://travis-ci.org/resource-watch/vocabulary-tag.svg?branch=develop)](https://travis-ci.org/resource-watch/vocabulary-tag) | [![Test Coverage](https://api.codeclimate.com/v1/badges/89f70e66993b8524fd09/test_coverage)](https://codeclimate.com/github/resource-watch/vocabulary-tag/test_coverage) |
-webshot          | [Github](https://github.com/resource-watch/webshot)              |  |  |
+webshot          | [Github](https://github.com/resource-watch/webshot)              | [![Build Status](https://travis-ci.org/resource-watch/webshot.svg?branch=develop)](https://travis-ci.org/resource-watch/webshot) | [![Test Coverage](https://api.codeclimate.com/v1/badges/e361eed538fcc656c7cd/test_coverage)](https://codeclimate.com/github/resource-watch/webshot/test_coverage) |
 widget           | [Github](https://github.com/resource-watch/widget)               | [![Build Status](https://travis-ci.org/resource-watch/widget.svg?branch=develop)](https://travis-ci.org/resource-watch/widget) | [![Test Coverage](https://api.codeclimate.com/v1/badges/a5b0be0d7e79db309b30/test_coverage)](https://codeclimate.com/github/resource-watch/widget/test_coverage) |
 
 
