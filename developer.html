@@ -1504,6 +1504,103 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 </tr>
 </tbody></table>
 
+<h2 id="finding-all-subscriptions">Finding all subscriptions</h2>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/find-all <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc7f9bb67c5da7720babc3"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-09T06:17:54.098Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2631f077ce98007988f9"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your.email@resourcewatch.org"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"umd-loss-gain"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d3015d189631c8e2acddda9a547260c4"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"prev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&amp;page[size]=10"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"total-pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"total-items"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can find all the subscriptions using the following endpoint.</p>
+
+<p>This endpoint supports the following optional query parameters as filters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td style="text-align: center">Application to which the subscription is associated.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&lsquo;rw&rsquo;</td>
+</tr>
+<tr>
+<td>env</td>
+<td style="text-align: center">Environment to which the subscription is associated.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;production&rsquo;</td>
+</tr>
+<tr>
+<td>updatedAtSince</td>
+<td style="text-align: center">Filter returned subscriptions by the updatedAt date being before the date provided. Should be a valid ISO date string.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;2020-03-25T09:16:22.068Z&rsquo;</td>
+</tr>
+<tr>
+<td>updatedAtUntil</td>
+<td style="text-align: center">Filter returned subscriptions by the updatedAt date being after the date provided. Should be a valid ISO date string.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;2020-03-25T09:16:22.068Z&rsquo;</td>
+</tr>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page. The maximum allowed value is 100 and the default value is 10.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">10</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page to fetch. Defaults to 1.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
+
           <h1 id="microservice-reference">Microservice reference</h1>
 
 <p>This document should give developers a bird&rsquo;s eye view of existing microservices, their status and resources, organized by namespace.</p>
@@ -1647,8 +1744,8 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 <tr>
 <td>webshot</td>
 <td style="text-align: center"><a href="https://github.com/resource-watch/webshot">Github</a></td>
-<td style="text-align: right"></td>
-<td style="text-align: right"></td>
+<td style="text-align: right"><a href="https://travis-ci.org/resource-watch/webshot"><img src="https://travis-ci.org/resource-watch/webshot.svg?branch=develop" alt="Build Status" /></a></td>
+<td style="text-align: right"><a href="https://codeclimate.com/github/resource-watch/webshot/test_coverage"><img src="https://api.codeclimate.com/v1/badges/e361eed538fcc656c7cd/test_coverage" alt="Test Coverage" /></a></td>
 </tr>
 <tr>
 <td>widget</td>

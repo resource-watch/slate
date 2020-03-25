@@ -5967,17 +5967,19 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </span></code></pre>
           <h1 id="dashboard">Dashboard</h1>
 
-<h2 id="what-is-a-dashboard">What is a Dashboard?</h2>
+<h2 id="what-is-a-dashboard">What is a dashboard</h2>
 
 <p>A dashboard contains the information to display a web page belonging to a user.</p>
 
 <h2 id="getting-all-dashboards">Getting all dashboards</h2>
 
+<blockquote>
 <p>This endpoint will allow to get all dashboards belonging to a user:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard -H <span class="s1">'Authorization: Bearer exampleToken'</span>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard -H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>
 </code></pre>
 <blockquote>
-<p>Response:</p>
+<p>Example response:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -6003,9 +6005,15 @@ If the original topic contains functioning widgets, they will be duplicated and 
                 </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
                 </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
                 </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"is-featured"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"author-title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"author-image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/cover/missing.png"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/thumb/missing.png"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/original/missing.png"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
             </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="err">...</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://staging-api.globalforestwatch.org/v1/dashboard?page%5Bnumber%5D=1&amp;page%5Bsize%5D=10"</span><span class="p">,</span><span class="w">
@@ -6023,6 +6031,16 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </span></code></pre>
 <h3 id="filters">Filters</h3>
 
+<blockquote>
+<p>Example request using query string filters:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?name<span class="o">=</span>text&amp;private<span class="o">=</span><span class="nb">false</span>
+</code></pre>
+<blockquote>
+<p>Deprecated filter syntax:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[name]<span class="o">=</span>text&amp;filter[private]<span class="o">=</span><span class="nb">false</span>
+</code></pre>
 <p>Available filters parameters:</p>
 
 <table><thead>
@@ -6072,20 +6090,22 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <td style="text-align: center">Filter dashboards by featured ones (true,false).</td>
 <td style="text-align: right">Boolean</td>
 </tr>
+<tr>
+<td>author-title</td>
+<td style="text-align: center">Filter dashboards by the title of the author of the dashboard.</td>
+<td style="text-align: right">Text</td>
+</tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?user<span class="o">=</span>57bc2608f098ce98007985e4&amp;private<span class="o">=</span><span class="nb">false</span>
-</code></pre>
-<aside class="warning">
-    <span>Deprecation notice</span>
-    <p>
-      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</i></b>.
-    </p>
-</aside>
-<pre class="highlight shell"><code><span class="c"># Deprecated syntax</span>
-curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="o">=</span>57bc2608f098ce98007985e4&amp;filter[private]<span class="o">=</span><span class="nb">false</span>
-</code></pre>
+
+<p><strong>Deprecation notice:</strong> The format <em>filter[filterName]=value</em> which was previously supported for some filters, is now deprecated, in favor of <em>filterName=value</em>.</p>
+
 <h3 id="pagination">Pagination</h3>
 
+<blockquote>
+<p>Example request using query string parameters for paging the result:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]<span class="o">=</span>15&amp;page[number]<span class="o">=</span>2
+</code></pre>
 <table><thead>
 <tr>
 <th>Field</th>
@@ -6107,28 +6127,19 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 <td style="text-align: right">1</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]<span class="o">=</span>15&amp;page[number]<span class="o">=</span>2
-</code></pre>
+
 <h3 id="sorting">Sorting</h3>
-
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the dashboard, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users).</p>
-
-<p>Sorting by nested fields is not supported at the moment.</p>
 
 <blockquote>
 <p>Sorting dashboards</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>name
 </code></pre>
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
 <blockquote>
 <p>Sorting dashboards by multiple criteria</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>name,slug
 </code></pre>
-<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> or <code class="prettyprint">+</code>. By default, <code class="prettyprint">asc</code> order is assumed.</p>
-
 <blockquote>
 <p>Explicit order of sorting</p>
 </blockquote>
@@ -6139,15 +6150,23 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>user.role
 </code></pre>
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> or <code class="prettyprint">+</code>. By default, <code class="prettyprint">asc</code> order is assumed.</p>
+
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the dashboard, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users).</p>
+
+<p>Sorting by nested fields is not supported at the moment.</p>
+
 <h3 id="include-related-entities">Include related entities</h3>
 
 <p>When loading dashboards, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data.</p>
 
 <h4 id="user">User</h4>
 
-<p>Loads the name and email address of the author of the dashboard. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author&rsquo;s role.</p>
-
-<p>If the data is not available (for example, the user has since been deleted), no <code class="prettyprint">user</code> property will be added to the layer object.</p>
+<blockquote>
+<p>Example request including the information for the user who owns the dashboard:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?includes<span class="o">=</span>user
 </code></pre>
 <blockquote>
@@ -6165,13 +6184,25 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
           </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test dashboard three description"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test dashboard three description"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.amazonaws.com/image.jpg"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.amazonaws.com/image.jpg"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.amazonaws.com/image.jpg"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
           </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57ac9f9e29309063404573a2"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
           </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
           </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
           </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
           </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"is-featured"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"author-title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"author-image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/cover/missing.png"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/thumb/missing.png"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/original/missing.png"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
           </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADMIN"</span><span class="p">,</span><span class="w">
@@ -6182,6 +6213,10 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>Loads the name and email address of the owner of the dashboard. If you request this issue as an authenticated user with ADMIN role, you will additionally get the owner&rsquo;s role.</p>
+
+<p>If the data is not available (for example, the user has since been deleted), no <code class="prettyprint">user</code> property will be added to the layer object.</p>
+
 <h2 id="getting-a-dashboard-by-its-id">Getting a dashboard by its ID</h2>
 
 <blockquote>
@@ -6213,13 +6248,92 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
       </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
       </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
       </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+      </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"is-featured"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author-title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"author-image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/cover/missing.png"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/thumb/missing.png"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/original/missing.png"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h2 id="creating-a-dashboard">Creating a dashboard</h2>
 
+<blockquote>
+<p>Example request for creating a dashboard:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboard <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+      "data": {
+          "type": "dashboards",
+          "attributes": {
+              "name": "Cities",
+              "summary": "Traditional models of city development can lock us into ...",
+              "description": "",
+              "content": "[{...}]",
+              "published": false,
+              "photo": {
+                  "cover": "...",
+                  "thumb": "...",
+                  "original": "..."
+              },
+              "private": true,
+              "production": true,
+              "preproduction": false,
+              "staging": false,
+              "application":  ["rw"],
+              "is-highlighted": false,
+              "is-featured": false,
+              "author-title": "",
+              "author-image": @file
+          }
+      }
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboards"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into ..."</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[{...}]"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
+            </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"is-featured"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"author-title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"author-image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <p>When creating a dashboard, the <code class="prettyprint">application</code> field should be present and cannot contain any values that are not associated with the creating user&rsquo;s account. If an <code class="prettyprint">application</code> value is not provided, <code class="prettyprint">[&quot;rw&quot;]</code> is used by default, and the process will fail if the user account does not belong to it. Any role can create a dashboard.</p>
 
 <p>Supported fields:</p>
@@ -6263,22 +6377,22 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 </tr>
 <tr>
 <td>private</td>
-<td></td>
+<td>If the dashboard is private or publicly available.</td>
 <td>boolean</td>
 </tr>
 <tr>
 <td>production</td>
-<td></td>
+<td>If the dashboard is available in the production environment.</td>
 <td>boolean</td>
 </tr>
 <tr>
 <td>preproduction</td>
-<td></td>
+<td>If the dashboard is available in the preproduction environment.</td>
 <td>boolean</td>
 </tr>
 <tr>
 <td>staging</td>
-<td></td>
+<td>If the dashboard is available in the staging environment.</td>
 <td>boolean</td>
 </tr>
 <tr>
@@ -6296,75 +6410,23 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 <td>If this dashboard is featured (<code class="prettyprint">true</code>/<code class="prettyprint">false</code>). Defaults to <code class="prettyprint">false</code>. Can only be set by user with <code class="prettyprint">ADMIN</code> role.</td>
 <td>boolean</td>
 </tr>
+<tr>
+<td>author-title</td>
+<td>The title of the author of the dashboard.</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>author-image</td>
+<td>File for the image of the author of the dashboard.</td>
+<td>valid image file (jpg, jpeg, png)</td>
+</tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboard <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-      "data": {
-          "type": "dashboards",
-          "attributes": {
-              "name": "Cities",
-              "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
-              "description": "",
-              "content": "[{...}]",
-              "published": false,
-              "photo": {
-                  "cover": "...",
-                  "thumb": "...",
-                  "original": "..."
-              },
-              "private": true,
-              "production": true,
-              "preproduction": false,
-              "staging": false,
-              "application":  ["rw"]
-          }
-      }
-  }'</span>
-</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboards"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ..."</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[{...}]"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"user-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eb63867922e16e34ef3ce862"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
-            </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
+
 <h2 id="editing-a-dashboard">Editing a dashboard</h2>
 
-<p>In order to perform this operation, the following conditions must be met:</p>
-
-<ul>
-<li>the user must be logged in and belong to the same application as the dashboard</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dashboard&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the dashboard)</li>
-</ul></li>
-</ul>
-
-<p>When updating the <code class="prettyprint">application</code> field of a dashboard, a user cannot add values not associated with their user account.</p>
+<blockquote>
+<p>Example request for updating a dashboard:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dashboard/&lt;id of the dashboard&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -6375,14 +6437,18 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
           }
       }
   }'</span>
-</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"243"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboards"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ..."</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Traditional models of city development can lock us ..."</span><span class="p">,</span><span class="w">
             </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dashboard that uses cities"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[{...}]"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
@@ -6397,13 +6463,19 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
             </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
+            </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"is-featured"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"author-title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"author-image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+            </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="delete-dashboard">Delete dashboard</h2>
-
 <p>In order to perform this operation, the following conditions must be met:</p>
 
 <ul>
@@ -6415,28 +6487,35 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
 <li>have role <code class="prettyprint">MANAGER</code> and be the dashboard&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the dashboard)</li>
 </ul></li>
 </ul>
+
+<p>When updating the <code class="prettyprint">application</code> field of a dashboard, a user cannot add values not associated with their user account.</p>
+
+<h2 id="delete-dashboard">Delete dashboard</h2>
+
+<blockquote>
+<p>Example request for deleting a dashboard:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dashboard/&lt;id of the dashboard&gt; <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
-<h2 id="clone-dashboard">Clone dashboard</h2>
-
-<p>Clones an existing dashboard using its ID. If the original dashboard contains widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to overwrite the data of the original dashboard. In the example on the side, the <code class="prettyprint">name</code> of the dashboard will be overwritten.</p>
-
-<p>The following attributes can be overwritten by providing new values in the request body:</p>
+<p>In order to perform this operation, the following conditions must be met:</p>
 
 <ul>
-<li><code class="prettyprint">name</code></li>
-<li><code class="prettyprint">description</code></li>
-<li><code class="prettyprint">content</code></li>
-<li><code class="prettyprint">published</code></li>
-<li><code class="prettyprint">summary</code></li>
-<li><code class="prettyprint">photo</code></li>
-<li><code class="prettyprint">private</code></li>
-<li><code class="prettyprint">production</code></li>
-<li><code class="prettyprint">preproduction</code></li>
-<li><code class="prettyprint">staging</code></li>
+<li>the user must be logged in and belong to the same application as the dashboard</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dashboard&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the dashboard)</li>
+</ul></li>
 </ul>
+
+<h2 id="clone-dashboard">Clone dashboard</h2>
+
+<blockquote>
+<p>Example request for cloning a dashboard:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dashboard/&lt;id&gt;/clone <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -6447,7 +6526,11 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
         }
     }
   }'</span>
-</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"224"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dashboards"</span><span class="p">,</span><span class="w">
@@ -6468,11 +6551,37 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]<span class="
             </span><span class="s2">"production"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"preproduction"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"staging"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w">  </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">],</span><span class="w">
+            </span><span class="s2">"is-highlighted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"is-featured"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"author-title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"author-image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"cover"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/cover/missing.png"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"thumb"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/thumb/missing.png"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"original"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/author_images/original/missing.png"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>Clones an existing dashboard using its ID. If the original dashboard contains widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to overwrite the data of the original dashboard. In the example on the side, the <code class="prettyprint">name</code> of the dashboard will be overwritten.</p>
+
+<p>The following attributes can be overwritten by providing new values in the request body:</p>
+
+<ul>
+<li><code class="prettyprint">name</code></li>
+<li><code class="prettyprint">description</code></li>
+<li><code class="prettyprint">content</code></li>
+<li><code class="prettyprint">published</code></li>
+<li><code class="prettyprint">summary</code></li>
+<li><code class="prettyprint">photo</code></li>
+<li><code class="prettyprint">private</code></li>
+<li><code class="prettyprint">production</code></li>
+<li><code class="prettyprint">preproduction</code></li>
+<li><code class="prettyprint">staging</code></li>
+<li><code class="prettyprint">author-title</code></li>
+</ul>
+
           <h1 id="subscriptions">Subscriptions</h1>
 
 <p>Subscription represents to which datasets and analysis a user can have access to.</p>
