@@ -1,19 +1,18 @@
 # Dashboard
 
-## What is a Dashboard?
+## What is a dashboard
 
 A dashboard contains the information to display a web page belonging to a user.
 
 ## Getting all dashboards
 
-This endpoint will allow to get all dashboards belonging to a user:
-
+> This endpoint will allow to get all dashboards belonging to a user:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer exampleToken'
+curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer <your-token>'
 ```
 
-> Response:
+> Example response:
 
 ```json
 {
@@ -40,9 +39,15 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
                 "staging": false,
                 "application":  ["rw"],
                 "is-highlighted": false,
+                "is-featured": false,
+                "author-title": "",
+                "author-image": {
+                    "cover": "/author_images/cover/missing.png",
+                    "thumb": "/author_images/thumb/missing.png",
+                    "original": "/author_images/original/missing.png"
+                }
             }
-        },
-        ...
+        }
     ],
     "links": {
         "self": "http://staging-api.globalforestwatch.org/v1/dashboard?page%5Bnumber%5D=1&page%5Bsize%5D=10",
@@ -59,8 +64,19 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard -H 'Authorization: Bearer
 }
 ```
 
-
 ### Filters
+
+> Example request using query string filters:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?name=text&private=false
+```
+
+> Deprecated filter syntax:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[name]=text&filter[private]=false
+```
 
 Available filters parameters:
 
@@ -74,43 +90,24 @@ user.role      | The role of the user who created the dashboard. If the requesti
 application    | The application to which the dashboard belongs.                                   | Text (single value)
 is-highlighted | Filter dashboards by highlighted ones (true,false).                               | Boolean
 is-featured    | Filter dashboards by featured ones (true,false).                                  | Boolean
+author-title   | Filter dashboards by the title of the author of the dashboard.                    | Text
 
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dashboard?user=57bc2608f098ce98007985e4&private=false
-```
-
-<aside class="warning">
-    <span>Deprecation notice</span>
-    <p>
-      The format <b><i>filter[filterName]=value</i></b> which was previously supported for some filters, is now deprecated, in favor of <b><i>filterName=value</i></b>.
-    </p>
-</aside>
-
-
-```shell
-# Deprecated syntax
-curl -X GET https://api.resourcewatch.org/v1/dashboard?filter[user]=57bc2608f098ce98007985e4&filter[private]=false
-```
-
+**Deprecation notice:** The format *filter[filterName]=value* which was previously supported for some filters, is now deprecated, in favor of *filterName=value*.
 
 ### Pagination
+
+> Example request using query string parameters for paging the result:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]=15&page[number]=2
+```
 
 Field        |         Description          |   Type|   Default value
 ------------ | :--------------------------: | -----:| -----:
 page[size]   | The number elements per page. The maximum allowed value is 100 | Number|   10
 page[number] |       The page number        | Number|   1
 
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]=15&page[number]=2
-```
-
 ### Sorting
-
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dashboard, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
-
-Sorting by nested fields is not supported at the moment.
 
 > Sorting dashboards
 
@@ -118,15 +115,11 @@ Sorting by nested fields is not supported at the moment.
 curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=name
 ```
 
-Multiple sorting criteria can be used, separating them by commas.
-
 > Sorting dashboards by multiple criteria
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=name,slug
 ```
-
-You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
 
 > Explicit order of sorting
 
@@ -140,15 +133,21 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=-name,+slug
 curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=user.role
 ```
 
+Multiple sorting criteria can be used, separating them by commas.
+
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dashboard, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
+
+Sorting by nested fields is not supported at the moment.
+
 ### Include related entities
 
 When loading dashboards, you can optionally pass an `includes` query argument to load additional data.
 
 #### User
 
-Loads the name and email address of the author of the dashboard. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
-
-If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
+> Example request including the information for the user who owns the dashboard:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
@@ -169,13 +168,25 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
           "description": "test dashboard three description",
           "content": "test dashboard three description",
           "published": true,
-          "photo": "user",
+          "photo": {
+            "cover": "https://s3.amazonaws.com/image.jpg",
+            "thumb": "https://s3.amazonaws.com/image.jpg",
+            "original": "https://s3.amazonaws.com/image.jpg"
+          },
           "user-id": "57ac9f9e29309063404573a2",
           "private": true,
           "production": true,
           "preproduction": false,
           "staging": false,
           "application":  ["rw"],
+          "is-highlighted": false,
+          "is-featured": false,
+          "author-title": "",
+          "author-image": {
+            "cover": "/author_images/cover/missing.png",
+            "thumb": "/author_images/thumb/missing.png",
+            "original": "/author_images/original/missing.png"
+          },
           "user": {
             "name": "John Doe",
             "role": "ADMIN",
@@ -186,6 +197,10 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
    ]
 }
 ```
+
+Loads the name and email address of the owner of the dashboard. If you request this issue as an authenticated user with ADMIN role, you will additionally get the owner's role.
+
+If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
 
 ## Getting a dashboard by its ID
 
@@ -219,34 +234,23 @@ curl -X GET http://api.resourcewatch.org/dashboard/24
       "production": true,
       "preproduction": false,
       "staging": false,
-      "user": null
+      "user": null,
+      "is-highlighted": false,
+      "is-featured": false,
+      "author-title": "",
+      "author-image": {
+        "cover": "/author_images/cover/missing.png",
+        "thumb": "/author_images/thumb/missing.png",
+        "original": "/author_images/original/missing.png"
+      }
     }
   }
 }
 ```
 
-
 ## Creating a dashboard
 
-When creating a dashboard, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Any role can create a dashboard.
-
-Supported fields:
-
-Name            | Description                                                                  | Accepted values
--------------   | ---------------------------------------------------------------------------- | ----------------------------
-name            | Short name for the dashboard                                                 | any valid text
-summary         | Summary of the content of the dashboard                                      | any valid text
-description     | Description of the dashboard                                                 | any valid text
-content         | Content of the dashboard, typically encoded as a JSON string                 | any valid text
-published       | If the dashboard is in a publishable state                                   | boolean
-photo           | Object containing a set of image urls associated with the dashboard          | object
-private         |                                                                              | boolean
-production      |                                                                              | boolean
-preproduction   |                                                                              | boolean
-staging         |                                                                              | boolean
-application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`.         | array of strings
-is-highlighted  | If this dashboard is highlighted (`true`/`false`). Defaults to `false`. Only accessible to users with `ADMIN` role. | boolean
-is-featured     | If this dashboard is featured (`true`/`false`). Defaults to `false`. Can only be set by user with `ADMIN` role. | boolean
+> Example request for creating a dashboard:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dashboard \
@@ -257,7 +261,7 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
           "type": "dashboards",
           "attributes": {
               "name": "Cities",
-              "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+              "summary": "Traditional models of city development can lock us into ...",
               "description": "",
               "content": "[{...}]",
               "published": false,
@@ -270,12 +274,17 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
               "production": true,
               "preproduction": false,
               "staging": false,
-              "application":  ["rw"]
+              "application":  ["rw"],
+              "is-highlighted": false,
+              "is-featured": false,
+              "author-title": "",
+              "author-image": @file
           }
       }
   }'
 ```
 
+> Example response:
 
 ```json
 {
@@ -285,7 +294,7 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
         "attributes": {
             "name": "Cities",
             "slug": "cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0",
-            "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+            "summary": "Traditional models of city development can lock us into ...",
             "description": "",
             "content": "[{...}]",
             "published": false,
@@ -302,22 +311,43 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
             "user": null,
             "application":  ["rw"],
             "is-highlighted": false,
+            "is-featured": false,
+            "author-title": "",
+            "author-image": {
+                "cover": "...",
+                "thumb": "...",
+                "original": "..."
+            }
         }
     }
 }
 ```
 
+When creating a dashboard, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Any role can create a dashboard.
+
+Supported fields:
+
+Name            | Description                                                                  | Accepted values
+-------------   | ---------------------------------------------------------------------------- | ----------------------------
+name            | Short name for the dashboard                                                 | any valid text
+summary         | Summary of the content of the dashboard                                      | any valid text
+description     | Description of the dashboard                                                 | any valid text
+content         | Content of the dashboard, typically encoded as a JSON string                 | any valid text
+published       | If the dashboard is in a publishable state                                   | boolean
+photo           | Object containing a set of image urls associated with the dashboard          | object
+private         | If the dashboard is private or publicly available.                           | boolean
+production      | If the dashboard is available in the production environment.                 | boolean
+preproduction   | If the dashboard is available in the preproduction environment.              | boolean
+staging         | If the dashboard is available in the staging environment.                    | boolean
+application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`.         | array of strings
+is-highlighted  | If this dashboard is highlighted (`true`/`false`). Defaults to `false`. Only accessible to users with `ADMIN` role. | boolean
+is-featured     | If this dashboard is featured (`true`/`false`). Defaults to `false`. Can only be set by user with `ADMIN` role. | boolean
+author-title    | The title of the author of the dashboard.                                    | any valid text
+author-image    | File for the image of the author of the dashboard.                           | valid image file (jpg, jpeg, png)
 
 ## Editing a dashboard
 
-In order to perform this operation, the following conditions must be met:
-
-- the user must be logged in and belong to the same application as the dashboard
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
-
-When updating the `application` field of a dashboard, a user cannot add values not associated with their user account.
+> Example request for updating a dashboard:
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
@@ -332,6 +362,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
   }'
 ```
 
+> Example response:
 
 ```json
 {
@@ -341,7 +372,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
         "attributes": {
             "name": "Cities",
             "slug": "cities-94bbc472-8970-4d9e-a3f2-d5422b1011e0",
-            "summary": "Traditional models of city development can lock us into congestion, sprawl, and inefficient resource use. However, compact, ...",
+            "summary": "Traditional models of city development can lock us ...",
             "description": "Dashboard that uses cities",
             "content": "[{...}]",
             "published": false,
@@ -356,13 +387,19 @@ curl -X PATCH https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
             "preproduction": false,
             "staging": false,
             "user": null,
-            "application":  ["rw"]
+            "application": ["rw"],
+            "is-highlighted": false,
+            "is-featured": false,
+            "author-title": "",
+            "author-image": {
+                "cover": "...",
+                "thumb": "...",
+                "original": "..."
+            }
         }
     }
 }
 ```
-
-## Delete dashboard
 
 In order to perform this operation, the following conditions must be met:
 
@@ -371,6 +408,11 @@ In order to perform this operation, the following conditions must be met:
   - have role `ADMIN`
   - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
 
+When updating the `application` field of a dashboard, a user cannot add values not associated with their user account.
+
+## Delete dashboard
+
+> Example request for deleting a dashboard:
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
@@ -378,23 +420,16 @@ curl -X DELETE https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> 
 -H "Content-Type: application/json"
 ```
 
+In order to perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the dashboard
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
+
 ## Clone dashboard
 
-Clones an existing dashboard using its ID. If the original dashboard contains widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to overwrite the data of the original dashboard. In the example on the side, the `name` of the dashboard will be overwritten.
-
-The following attributes can be overwritten by providing new values in the request body:
-
-- `name`
-- `description`
-- `content`
-- `published`
-- `summary`
-- `photo`
-- `private`
-- `production`
-- `preproduction`
-- `staging`
-
+> Example request for cloning a dashboard:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dashboard/<id>/clone \
@@ -408,6 +443,8 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard/<id>/clone \
     }
   }'
 ```
+
+> Example response:
 
 ```json
 {
@@ -431,8 +468,32 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard/<id>/clone \
             "production": true,
             "preproduction": false,
             "staging": false,
-            "application":  ["rw"]
+            "application":  ["rw"],
+            "is-highlighted": false,
+            "is-featured": false,
+            "author-title": "",
+            "author-image": {
+                "cover": "/author_images/cover/missing.png",
+                "thumb": "/author_images/thumb/missing.png",
+                "original": "/author_images/original/missing.png"
+            }
         }
     }
 }
 ```
+
+Clones an existing dashboard using its ID. If the original dashboard contains widgets, they will be duplicated and the new ids will be used by the new dashboard. Data can be provided in the body of the request in order to overwrite the data of the original dashboard. In the example on the side, the `name` of the dashboard will be overwritten.
+
+The following attributes can be overwritten by providing new values in the request body:
+
+- `name`
+- `description`
+- `content`
+- `published`
+- `summary`
+- `photo`
+- `private`
+- `production`
+- `preproduction`
+- `staging`
+- `author-title`
