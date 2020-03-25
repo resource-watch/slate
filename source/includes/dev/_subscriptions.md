@@ -207,9 +207,11 @@ You can find all the subscriptions using the following endpoint.
 
 This endpoint supports the following optional query parameters as filters:
 
-Field        |             Description                              |   Type |
------------- | :--------------------------------------------------: | -----: |
-application  | Application to which the subscription is associated. | String |
-env          | Environment to which the subscription is associated. | String |
-page[size]   | The number elements per page. The maximum allowed value is 100. The default value is 10. | Number |
-page[number] | The page to fetch. Defaults to 1.                    | Number |
+Field          |             Description                              |   Type | Example      |
+-------------- | :--------------------------------------------------: | -----: | -----------: |
+application    | Application to which the subscription is associated. | String | 'rw'         |
+env            | Environment to which the subscription is associated. | String | 'production' |
+updatedAtSince | Filter returned subscriptions by the updatedAt date being before the date provided. Should be a valid ISO date string. | String | '2020-03-25T09:16:22.068Z' |
+updatedAtUntil | Filter returned subscriptions by the updatedAt date being after the date provided. Should be a valid ISO date string. | String | '2020-03-25T09:16:22.068Z' |
+page[size]     | The number elements per page. The maximum allowed value is 100 and the default value is 10. | Number | 10 |
+page[number]   | The page to fetch. Defaults to 1.                    | Number | 1 |
