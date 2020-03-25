@@ -151,3 +151,67 @@ Field       |             Description                              |   Type |
 ----------- | :--------------------------------------------------: | -----: |
 application | Application to which the subscription is associated. | String |
 env         | Environment to which the subscription is associated. | String |
+
+## Finding all subscriptions
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/find-all \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+        {
+            "type": "subscription",
+            "id": "57bc7f9bb67c5da7720babc3",
+            "attributes": {
+                "name": null,
+                "createdAt": "2019-10-09T06:17:54.098Z",
+                "userId": "57bc2631f077ce98007988f9",
+                "resource": {
+                    "type": "EMAIL",
+                    "content": "your.email@resourcewatch.org"
+                },
+                "datasets": [
+                    "umd-loss-gain"
+                ],
+                "params": {
+                    "geostore": "d3015d189631c8e2acddda9a547260c4"
+                },
+                "confirmed": true,
+                "language": "en",
+                "datasetsQuery": [],
+                "env": "production"
+            }
+        }
+    ],
+    "links": {
+        "self": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10",
+        "first": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10",
+        "last": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10",
+        "prev": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10",
+        "next": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10"
+    },
+    "meta": {
+        "total-pages": 1,
+        "total-items": 1,
+        "size": 10
+    }
+}
+```
+
+You can find all the subscriptions using the following endpoint.
+
+This endpoint supports the following optional query parameters as filters:
+
+Field          |             Description                              |   Type | Example      |
+-------------- | :--------------------------------------------------: | -----: | -----------: |
+application    | Application to which the subscription is associated. | String | 'rw'         |
+env            | Environment to which the subscription is associated. | String | 'production' |
+updatedAtSince | Filter returned subscriptions by the updatedAt date being before the date provided. Should be a valid ISO date string. | String | '2020-03-25T09:16:22.068Z' |
+updatedAtUntil | Filter returned subscriptions by the updatedAt date being after the date provided. Should be a valid ISO date string. | String | '2020-03-25T09:16:22.068Z' |
+page[size]     | The number elements per page. The maximum allowed value is 100 and the default value is 10. | Number | 10 |
+page[number]   | The page to fetch. Defaults to 1.                    | Number | 1 |
