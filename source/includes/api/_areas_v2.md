@@ -481,8 +481,6 @@ curl -X POST https://api.resourcewatch.org/v2/area/sync
 }
 ```
 
-Use this endpoint to synchronize each area information with the associated subscription. The usage of this endpoint is recommended if you are performing update processes that rely on updated subscription information for the areas.
-
 > Example snippet that synchronizes the areas before fetching the information of ALL areas:
 
 ```javascript
@@ -500,3 +498,14 @@ while (hasNextPage) {
    hasNextPage = res.links.self === res.links.last;
 }
 ```
+
+Use this endpoint to synchronize each area information with the associated subscription. The usage of this endpoint is recommended if you are performing update processes that rely on updated subscription information for the areas.
+
+This endpoint supports the following query parameters to control the execution of the sync:
+
+Field       |             Description                              |   Type | Example |
+----------- | :--------------------------------------------------: | -----: | ------: |
+startDate   | The date from which the sync will be executed. All subscriptions that have been updated since this date will be synced with the existing areas. | String | 2020-03-18T09:45:56.476Z
+endDate     | The date until which the sync will be executed. All subscriptions that have been updated until this date will be synced with the existing areas. | String | 2020-03-25T09:45:56.476Z
+
+*Note: By default, the sync is done for the last week changes (i.e. the default value for the `startDate` parameter is one week ago and the default value for the `endDate` parameter is now).*
