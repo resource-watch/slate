@@ -162,38 +162,44 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/find-all \
 > Example response:
 
 ```json
-
 {
     "data": [
         {
             "type": "subscription",
-            "id": "5e4d273dce77c53768bc24f9",
+            "id": "57bc7f9bb67c5da7720babc3",
             "attributes": {
-                "createdAt": "2020-02-19T12:17:01.176Z",
-                "userId": "5e2f0eaf9de40a6c87dd9b7d",
+                "name": null,
+                "createdAt": "2019-10-09T06:17:54.098Z",
+                "userId": "57bc2631f077ce98007988f9",
                 "resource": {
                     "type": "EMAIL",
-                    "content": "youremail@resourcewatch.org"
+                    "content": "your.email@resourcewatch.org"
                 },
                 "datasets": [
-                    "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"
+                    "umd-loss-gain"
                 ],
-                "params": {},
-                "confirmed": false,
+                "params": {
+                    "geostore": "d3015d189631c8e2acddda9a547260c4"
+                },
+                "confirmed": true,
                 "language": "en",
-                "datasetsQuery": [
-                    {
-                        "threshold": 1,
-                        "lastSentDate": "2020-02-19T12:17:01.175Z",
-                        "historical": [],
-                        "id": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
-                        "type": "COUNT"
-                    }
-                ],
+                "datasetsQuery": [],
                 "env": "production"
             }
         }
-    ]
+    ],
+    "links": {
+        "self": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10",
+        "first": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10",
+        "last": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10",
+        "prev": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10",
+        "next": "https://api.resourcewatch.org/v1/subscriptions/find-all?page[number]=1&page[size]=10"
+    },
+    "meta": {
+        "total-pages": 1,
+        "total-items": 1,
+        "size": 10
+    }
 }
 ```
 
@@ -201,7 +207,9 @@ You can find all the subscriptions using the following endpoint.
 
 This endpoint supports the following optional query parameters as filters:
 
-Field       |             Description                              |   Type |
------------ | :--------------------------------------------------: | -----: |
-application | Application to which the subscription is associated. | String |
-env         | Environment to which the subscription is associated. | String |
+Field        |             Description                              |   Type |
+------------ | :--------------------------------------------------: | -----: |
+application  | Application to which the subscription is associated. | String |
+env          | Environment to which the subscription is associated. | String |
+page[size]   | The number elements per page. The maximum allowed value is 100. The default value is 10. | Number |
+page[number] | The page to fetch. Defaults to 1.                    | Number |
