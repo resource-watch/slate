@@ -6,6 +6,8 @@ Please ensure that you are using `v2` in the URL when requesting these endpoints
 
 ## Getting all user areas
 
+> Example request to get all areas for the logged user:
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v2/area
 -H "Authorization: Bearer <your-token>"
@@ -35,11 +37,62 @@ curl -X GET https://api.resourcewatch.org/v2/area
                 "webhookUrl": "",
                 "monthlySummary": false,
                 "subscriptionId": "5e4d273dce77c53768bc24f9",
-                "email": "tiago.garcia@vizzuality.com",
+                "email": "your.email@resourcewatch.org",
                 "language": "en"
             }
         }
     ]
+}
+```
+
+> Example request to get ALL areas (only available for ADMIN users):
+
+```shell
+curl -X GET https://api.resourcewatch.org/v2/area?all=true
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+        {
+            "type": "area",
+            "id": "5e4d74c3ef240412c2d56a71",
+            "attributes": {
+                "application": "gfw",
+                "userId": "5e2f0eaf9de40a6c87dd9b7d",
+                "createdAt": "2020-02-19T12:17:01.176Z",
+                "datasets": [],
+                "use": {},
+                "iso": {},
+                "admin": {},
+                "tags": [],
+                "status": "saved",
+                "public": false,
+                "fireAlerts": false,
+                "deforestationAlerts": false,
+                "webhookUrl": "",
+                "monthlySummary": false,
+                "subscriptionId": "5e4d273dce77c53768bc24f9",
+                "email": "your.email@resourcewatch.org",
+                "language": "en"
+            }
+        }
+    ],
+    "links": {
+        "self": "http://api.resourcewatch.org/v2/area?all=true&page[number]=1&page[size]=10",
+        "first": "http://api.resourcewatch.org/v2/area?all=true&page[number]=1&page[size]=10",
+        "last": "http://api.resourcewatch.org/v2/area?all=true&page[number]=1&page[size]=10",
+        "prev": "http://api.resourcewatch.org/v2/area?all=true&page[number]=1&page[size]=10",
+        "next": "http://api.resourcewatch.org/v2/area?all=true&page[number]=1&page[size]=10"
+    },
+    "meta": {
+        "total-pages": 1,
+        "total-items": 1,
+        "size": 10
+    }
 }
 ```
 
@@ -53,6 +106,10 @@ application | Filter results by the application associated with the areas.      
 status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
 all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
+page[number]| The number of the page to fetch. Only taken into account when using the `all=true` filter.                                                       | Number  | 1          |
+page[size]  | The size of the page to fetch. Only taken into account when using the `all=true` filter. Maximum value is 100.                                   | Number  | 10         |
+
+**Note: Due to performance and memory management issues, when the `all=true` filter is applied, the returned result is always paginated.**
 
 **Implementation details**
 
@@ -405,3 +462,50 @@ The following parameters are provided to the email service and can be used in th
 * `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
 * `image_url` : the URL for the image associated with the area.
 * `tags` : a string containing the AOI tags, comma-separated.
+
+## Sync areas
+
+```shell
+curl -X POST https://api.resourcewatch.org/v2/area/sync
+-H "Authorization: Bearer <your-token>" \
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "syncedAreas": 8,
+        "createdAreas": 0
+    }
+}
+```
+
+> Example snippet that synchronizes the areas before fetching the information of ALL areas:
+
+```javascript
+// First call the sync endpoint
+await request.post('v2/area/sync');
+
+// Then call the get endpoint while there are more pages to find
+var results = [];
+var hasNextPage = true;
+var pageNumber = 1;
+while (hasNextPage) {
+   var res = await request.get('v2/area?all=true&page[number]=' + pageNumber);
+   results = results.concat(res.data);
+   pageNumber++;
+   hasNextPage = res.links.self === res.links.last;
+}
+```
+
+Use this endpoint to synchronize each area information with the associated subscription. The usage of this endpoint is recommended if you are performing update processes that rely on updated subscription information for the areas.
+
+This endpoint supports the following query parameters to control the execution of the sync:
+
+Field       |             Description                              |   Type | Example |
+----------- | :--------------------------------------------------: | -----: | ------: |
+startDate   | The date from which the sync will be executed. All subscriptions that have been updated since this date will be synced with the existing areas. | String | 2020-03-18T09:45:56.476Z
+endDate     | The date until which the sync will be executed. All subscriptions that have been updated until this date will be synced with the existing areas. | String | 2020-03-25T09:45:56.476Z
+
+*Note: By default, the sync is done for the last week changes (i.e. the default value for the `startDate` parameter is one week ago and the default value for the `endDate` parameter is now).*
