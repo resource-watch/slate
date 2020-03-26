@@ -46,3 +46,7 @@ search: true
 # Introduction
 
 Welcome to the Resource Watch API Documentation
+
+<aside class="notice">
+  All use of the Resource Watch API is subject to the Resource Watch <a href="https://resourcewatch.org/terms-of-service" target="_blank">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements" target="_blank">API Attribution Requirements</a>.
+</aside>
