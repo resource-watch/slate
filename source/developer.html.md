@@ -18,6 +18,7 @@ includes:
   - api/microservices
   - dev/subscriptions
   - dev/microservice_reference
+  - dev/smoke_tests
 
 logo: logo-rw.png
 
