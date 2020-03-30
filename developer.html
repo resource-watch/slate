@@ -2043,6 +2043,121 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 </tr>
 </tbody></table>
 
+          <h1 id="api-smoke-tests">API Smoke Tests</h1>
+
+<p>This chapter covers the existing API Smoke Tests, including instructions on how to manage existing tests and create new ones.</p>
+
+<p>The API Smoke Tests are implemented using Canaries provided by AWS Synthetics <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html">(docs here)</a>.</p>
+
+<h2 id="template-for-smoke-tests">Template for smoke tests</h2>
+
+<blockquote>
+<p>Template for an AWS Synthetics Canary</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="kr">const</span> <span class="nx">synthetics</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'Synthetics'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">log</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'SyntheticsLogger'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">AWS</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'aws-sdk'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">https</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'https'</span><span class="p">);</span>
+<span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">apiCanaryBlueprint</span> <span class="o">=</span> <span class="nx">async</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+  <span class="kr">const</span> <span class="nx">verifyRequest</span> <span class="o">=</span> <span class="nx">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">requestOption</span><span class="p">,</span> <span class="nx">body</span> <span class="o">=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="c1">// Prep request</span>
+      <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">"Making request with options: "</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">requestOption</span><span class="p">));</span>
+      <span class="kd">let</span> <span class="nx">req</span> <span class="o">=</span> <span class="p">(</span><span class="nx">requestOption</span><span class="p">.</span><span class="nx">port</span> <span class="o">===</span> <span class="mi">443</span><span class="p">)</span> <span class="p">?</span> <span class="nx">https</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="nx">requestOption</span><span class="p">)</span> <span class="p">:</span> <span class="nx">http</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="nx">requestOption</span><span class="p">);</span>
+
+      <span class="c1">// POST body data</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">body</span><span class="p">)</span> <span class="p">{</span> <span class="nx">req</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">body</span><span class="p">));</span> <span class="p">}</span>
+
+      <span class="c1">// Handle response</span>
+      <span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'response'</span><span class="p">,</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">`Status Code: </span><span class="p">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+
+        <span class="c1">// Assert the status code returned</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">!==</span> <span class="mi">200</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">reject</span><span class="p">(</span><span class="s2">"Failed: "</span> <span class="o">+</span> <span class="nx">requestOption</span><span class="p">.</span><span class="nx">path</span> <span class="o">+</span> <span class="s2">" with status code "</span> <span class="o">+</span> <span class="nx">res</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Grab body chunks and piece returned body together</span>
+        <span class="kd">let</span> <span class="nx">body</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">body</span> <span class="o">+=</span> <span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span> <span class="p">});</span>
+
+        <span class="c1">// Resolve providing the returned body</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">resolve</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">body</span><span class="p">)));</span>
+      <span class="p">});</span>
+
+      <span class="c1">// Reject on error</span>
+      <span class="nx">req</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">));</span>
+      <span class="nx">req</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Build request options</span>
+  <span class="kd">let</span> <span class="nx">requestOptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">hostname</span><span class="p">:</span> <span class="s2">"api.resourcewatch.org"</span><span class="p">,</span>
+    <span class="na">method</span><span class="p">:</span> <span class="s2">"GET"</span><span class="p">,</span>
+    <span class="na">path</span><span class="p">:</span> <span class="s2">"/v1/dataset"</span><span class="p">,</span>
+    <span class="na">port</span><span class="p">:</span> <span class="mi">443</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s1">'User-Agent'</span><span class="p">:</span> <span class="nx">synthetics</span><span class="p">.</span><span class="nx">getCanaryUserAgentString</span><span class="p">(),</span>
+      <span class="s1">'Content-Type'</span><span class="p">:</span> <span class="s1">'application/json'</span><span class="p">,</span>
+    <span class="p">},</span>
+  <span class="p">};</span>
+
+  <span class="c1">// Find and use secret for auth token</span>
+  <span class="kr">const</span> <span class="nx">secretsManager</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AWS</span><span class="p">.</span><span class="nx">SecretsManager</span><span class="p">();</span>
+  <span class="nx">await</span> <span class="nx">secretsManager</span><span class="p">.</span><span class="nx">getSecretValue</span><span class="p">({</span> <span class="na">SecretId</span><span class="p">:</span> <span class="s2">"gfw-api/token"</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">.</span><span class="nx">stack</span><span class="p">);</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="nx">requestOptions</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s1">'Authorization'</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Bearer "</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="s2">"SecretString"</span><span class="p">])[</span><span class="s2">"token"</span><span class="p">];</span>
+  <span class="p">}).</span><span class="nx">promise</span><span class="p">();</span>
+
+  <span class="c1">// Find and use secret for hostname</span>
+  <span class="nx">await</span> <span class="nx">secretsManager</span><span class="p">.</span><span class="nx">getSecretValue</span><span class="p">({</span> <span class="na">SecretId</span><span class="p">:</span> <span class="s2">"wri-api/smoke-tests-host"</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">err</span><span class="p">.</span><span class="nx">stack</span><span class="p">);</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="nx">requestOptions</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="s2">"SecretString"</span><span class="p">])[</span><span class="s2">"smoke-tests-host"</span><span class="p">];</span>
+  <span class="p">}).</span><span class="nx">promise</span><span class="p">();</span>
+
+  <span class="kr">const</span> <span class="nx">body</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">verifyRequest</span><span class="p">(</span><span class="nx">requestOptions</span><span class="p">);</span>
+  <span class="kr">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">body</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
+
+  <span class="c1">// Change needed request options</span>
+  <span class="nx">requestOptions</span><span class="p">.</span><span class="nx">method</span> <span class="o">=</span> <span class="s2">"GET"</span><span class="p">;</span>
+  <span class="nx">requestOptions</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="s2">"/v1/dataset/"</span><span class="o">+</span><span class="nx">id</span><span class="p">;</span>
+
+  <span class="c1">// Make second request</span>
+  <span class="nx">await</span> <span class="nx">verifyRequest</span><span class="p">(</span><span class="nx">requestOptions</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">handler</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">await</span> <span class="nx">apiCanaryBlueprint</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre>
+<p>New tests should be based on the template displayed on the side, in order to take advantage of the configurations already in place.</p>
+
+<p>Tests can execute multiple requests, but please minimize the number of interactions with databases to avoid creating junk data (for this reason, smoke testing POST, PATCH and DELETE endpoints is not recommended).</p>
+
+<p>Another thing to notice is the usage of AWS secrets for storing a token to execute the request (<code class="prettyprint">gfw-api/token</code>), as well as the hostname where the test will be executed (<code class="prettyprint">wri-api/smoke-tests-host</code>).</p>
+
+<p>The template on the side executes a GET request to <code class="prettyprint">/v1/dataset</code>, grabs the first ID in the response data and executes a second GET request to the <code class="prettyprint">/v1/dataset/:id</code> endpoint.</p>
+
+<p><em>The test will pass if there are no exceptions thrown or promise rejections during the execution of the test. For the example on the side, the test will fail if any of the requests performed returns a status code that is not 200.</em></p>
+
+<h2 id="things-to-pay-attention">Things to pay attention</h2>
+
+<h3 id="use-a-user-to-run-the-tests">Use a user to run the tests</h3>
+
+<p>Please ensure that all tests are ran using a token for a user <strong>which was specifically created for running the tests</strong>. Also, it goes without saying, please don&rsquo;t share either the token or the credentials for the user running the tests with anyone.</p>
+
+<h3 id="always-configure-alarms-for-the-smoke-tests">Always configure alarms for the smoke tests</h3>
+
+<p>Smoke tests by default are created without an associated alarm. When managing or creating smoke tests, <strong>please ensure that each test has a unique alarm associated to it</strong>.</p>
+
+<p>Also, <strong>please ensure that the created alarm has an action defined to notify someone in case of failure of a test</strong>.</p>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
