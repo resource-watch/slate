@@ -627,3 +627,31 @@ Application key handling.
 ### Fastly cache
 
 Integrates HTTP caching using [Fastly](https://www.fastly.com/).
+
+### Read-only mode
+
+> Rejected endpoints will have HTTP status 503 and the following message:
+
+```json
+"API under maintenance, please try again later."
+```
+
+> Configuration of white and black lists using strings or regex:
+
+```javascript
+{
+    // Using a string that fully matches the endpoint path '/api/v1/dataset'
+    "blacklist": ["/api/v1/dataset"],
+
+    // Using a regex that partially matches endpoint paths such as '/api/v1/dataset'
+    "whitelist": [".*dataset"]
+}
+```
+
+This plugin activates a **read-only mode** that passes through all calls to GET endpoints and rejects calls to POST/PATCH/PUT/DELETE endpoints. The plugin provides the following configurations for increased flexibility:
+
+- `whitelist`: An array of POST/PATCH/PUT/DELETE endpoints that should be passed through. Each item of the array should be a string matching exactly the path to whitelist, or a Regex (also provided as a string), where any POST/PATCH/PUT/DELETE endpoint that matches the regex will be passed through.
+
+- `blacklist`: An array of GET endpoints that should be rejected. Each item of the array should be a string matching exactly the path to blacklist, or a Regex (also provided as a string), where any GET endpoint that matches the regex will be rejected.
+
+**Note: Please ensure you know what you're doing when activating this plugin, since it will highly restrict the usage of the API.**
