@@ -791,6 +791,33 @@ This plugin is disabled and is no longer supported.
 
 <p>Integrates HTTP caching using <a href="https://www.fastly.com/">Fastly</a>.</p>
 
+<h3 id="read-only-mode">Read-only mode</h3>
+
+<blockquote>
+<p>Rejected endpoints will have HTTP status 503 and the following message:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="s2">"API under maintenance, please try again later."</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Configuration of white and black lists:</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="p">{</span>
+    <span class="c1">// This blacklist prevents GETting widgets</span>
+    <span class="s2">"blacklist"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"/api/v1/widget"</span><span class="p">],</span>
+
+    <span class="c1">// This whitelist allows POST/PATCH/DELETE calls for datasets and layers</span>
+    <span class="s2">"whitelist"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"/api/v1/dataset"</span><span class="p">,</span> <span class="s2">"/api/v1/layer"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre>
+<p>This plugin activates a <strong>read-only mode</strong> that passes through all calls to GET endpoints and rejects calls to POST/PATCH/PUT/DELETE endpoints. The plugin provides the following configurations for increased flexibility:</p>
+
+<ul>
+<li><code class="prettyprint">whitelist</code>: An array of POST/PATCH/PUT/DELETE endpoints that should be passed through. Each item of the array should be a string matching exactly the path to whitelist.</li>
+<li><code class="prettyprint">blacklist</code>: An array of GET endpoints that should be rejected. Each item of the array should be a string matching exactly the path to blacklist.</li>
+</ul>
+
+<p><strong>Note: Please ensure you know what you&rsquo;re doing when activating this plugin, since it will highly restrict the usage of the API.</strong></p>
+
           <h1 id="control-tower-plugin-development">Control Tower plugin development</h1>
 
 <p>This chapter covers Control Tower plugin development basics. It aims at providing basic understanding of how existing Control Tower plugins work, and give you the foundations to develop your own plugins.</p>
