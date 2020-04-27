@@ -2185,6 +2185,34 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 
 <p>Also, <strong>please ensure that the created alarm has an action defined to notify someone in case of failure of a test</strong>.</p>
 
+<h2 id="running-smoke-tests-locally">Running smoke tests locally</h2>
+
+<blockquote>
+<p>Step 5 (before):</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="nx">exports</span><span class="p">.</span><span class="nx">handler</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">await</span> <span class="nx">apiCanaryBlueprint</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre>
+<blockquote>
+<p>Step 5 (after):</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="nx">apiCanaryBlueprint</span><span class="p">();</span>
+</code></pre>
+<p>In order to run smoke tests on your local machine for testing the script, some modifications need to be done:</p>
+
+<ol>
+<li>Copy the smoke test script into a file in your local machine (in this case, we&rsquo;re going to assume the name the file as <code class="prettyprint">index.js</code>).</li>
+<li>Comment out any references to the <code class="prettyprint">Synthetics</code> NPM package, which is only available for internal usage in the canary script.</li>
+<li>Replace all <code class="prettyprint">log.info</code> references (or any other method of the <code class="prettyprint">log</code> package) with <code class="prettyprint">console.log</code> and comment out the usage of the <code class="prettyprint">SyntheticsLogger</code> NPM package.</li>
+<li>Comment out references to the usage of AWS secrets and to the <code class="prettyprint">aws-sdk</code> NPM package.</li>
+<li>Replace the last lines of the script (see on the side).</li>
+</ol>
+
+<p>After these changes, you should be able to run the script locally using <code class="prettyprint">node index.js</code>. Remember that any exception or error thrown will cause the test to fail, otherwise the test will be considered a pass. If you want to explicitly fail the test if some assertion is not valid, you can throw a new Error with a message for debugging.</p>
+
+<p>Before updating the script once again in AWS Synthetics, <strong>don&rsquo;t forget to revert ALL the changes (just follow the steps in the reverse order)</strong>.</p>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
