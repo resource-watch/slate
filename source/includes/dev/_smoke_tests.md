@@ -113,3 +113,31 @@ Please ensure that all tests are ran using a token for a user **which was specif
 Smoke tests by default are created without an associated alarm. When managing or creating smoke tests, **please ensure that each test has a unique alarm associated to it**.
 
 Also, **please ensure that the created alarm has an action defined to notify someone in case of failure of a test**.
+
+## Running smoke tests locally
+
+> Step 5 (before):
+
+```javascript
+exports.handler = async () => {
+  return await apiCanaryBlueprint();
+};
+```
+
+> Step 5 (after):
+
+```javascript
+apiCanaryBlueprint();
+```
+
+In order to run smoke tests on your local machine for testing the script, some modifications need to be done:
+
+1. Copy the smoke test script into a file in your local machine (in this case, we're going to assume the name the file as `index.js`).
+2. Comment out any references to the `Synthetics` NPM package, which is only available for internal usage in the canary script.
+3. Replace all `log.info` references (or any other method of the `log` package) with `console.log` and comment out the usage of the `SyntheticsLogger` NPM package.
+4. Comment out references to the usage of AWS secrets and to the `aws-sdk` NPM package.
+5. Replace the last lines of the script (see on the side).
+
+After these changes, you should be able to run the script locally using `node index.js`. Remember that any exception or error thrown will cause the test to fail, otherwise the test will be considered a pass. If you want to explicitly fail the test if some assertion is not valid, you can throw a new Error with a message for debugging.
+
+Before updating the script once again in AWS Synthetics, **don't forget to revert ALL the changes (just follow the steps in the reverse order)**.
