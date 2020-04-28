@@ -814,7 +814,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 
 If you want to upload your file the API as a dataset, but don't have it available online, the `upload` endpoint allows you to. If your file is up to 4MB in size, you can upload it to the API by using the `upload` endpoint. This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. The supported formats/extensions are: csv, json, tsv, xml, tif, tiff and geo.tiff. The request uploads the file to the API, and returns a specially crafted `connectorUrl` value, and a list of fields found in your file. With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
 
-
+#### Errors for upload a dataset file
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
@@ -864,22 +864,22 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id-or-slug> \
 }'
 ```
 
+#### Errors for updating a dataset
+
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
-401            | Unauthorized   | You need to be logged in to be able to upload a file
-403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+401            | Unauthorized   | You need to be logged in to be able to update a dataset.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset).
 403            | Forbidden      | You are trying to update a dataset with one or more `application` values that are not associated with your user account. 
 404            | Dataset with id <id> doesn't exist   | A dataset with the provided id does not exist.
 
 ## Deleting a Dataset
 
-> Example request for deleting a dataset
+Use this endpoint if you wish to delete a dataset. Deleting a dataset of type document (`connectorType` with value `document`) will cause the API's internal copy of said data to be deleted. Dataset types that proxy data from an external source (ie. carto, gee, etc) will be deleted without modifying said external source.
 
-```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id> \
--H "Authorization: Bearer <your-token>"
--H "Content-Type: application/json"
-```
+When deleting a dataset that is associated with multiple `application` values, the user issuing the request must be associated with all of them in order for the dataset to be deleted. If that's not the case, the `application` values associated with the user will be removed from the dataset's `application` list, and no further action will be taken - the dataset itself and its associated resources will continue to exist. The dataset is only actually deleted if the user has access to all of the `application` to which the dataset belongs. 
+
+Besides deleting the dataset itself, this endpoint also deletes graph vocabularies, layers, widgets and metadata related to the dataset itself. These delete operations are issued in this order, and prior to deleting the dataset itself, but are not atomic - if one of them fails (for example, if attempting to delete a protected resource), the following ones are canceled, but the already deleted elements are not restored. 
 
 In order to delete a dataset, the following conditions must be met:
 
@@ -889,11 +889,23 @@ In order to delete a dataset, the following conditions must be met:
   - have role `ADMIN`
   - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
 
-**When a dataset is deleted, the user's applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.**
 
-**Note 1: Deleting a dataset might remove it permanently, so it is recommended that you save a local copy before doing so.**
+> Example request for deleting a dataset
 
-*Note 2: the deletion process cascades in a non-atomic way; deleting a dataset will also attempt to remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it. However, if one of these deletes fails (ie. attempting to delete a protected layer will fail), the dataset will still be deleted, and those resources will be left orphaned.*
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id> \
+-H "Authorization: Bearer <your-token>"
+-H "Content-Type: application/json"
+```
+
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | Dataset is protected | You are attempting to delete a dataset that has `protected` set to prevent deletion.
+401            | Unauthorized   | You need to be logged in to be able to delete a dataset.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+403            | Forbidden      | You are trying to delete a dataset with one or more `application` values that are not associated with your user account. 
+404            | Dataset with id <id> doesn't exist   | A dataset with the provided id does not exist.
 
 ## Cloning a Dataset
 
