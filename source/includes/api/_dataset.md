@@ -812,7 +812,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-If you want to upload your file the API as a dataset, but don't have it available online, the `upload` endpoint allows you to. If your file is up to 4MB in size, you can upload it to the API by using the `upload` endpoint. This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. The supported formats/extesions are: csv, json, tsv, xml, tif, tiff and geo.tiff. The request uploads the file to the API, and returns a specially crafted `connectorUrl` value, and a list of fields found in your file. With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
+If you want to upload your file the API as a dataset, but don't have it available online, the `upload` endpoint allows you to. If your file is up to 4MB in size, you can upload it to the API by using the `upload` endpoint. This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. The supported formats/extensions are: csv, json, tsv, xml, tif, tiff and geo.tiff. The request uploads the file to the API, and returns a specially crafted `connectorUrl` value, and a list of fields found in your file. With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
 
 
 
@@ -828,6 +828,24 @@ Error code     | Error message  | Description
 
 ## Updating a Dataset
 
+In order to modify the details of a dataset, you can use the update dataset endpoint. This endpoint allows you to modify most of your dataset's details, like the name or publishing status, but can also be used to modify internal fields of a dataset, like `connectorType`. When making these changes, be mindful that some of these fields are critical to the correct behavior of the dataset, and providing incorrect values may break your dataset. There are other endpoints documented in this page that allow you to perform certain update-like operations (ie. update data on a document-type dataset), so refer to those first before using this endpoint. Also important to keep in mind is the fact that this endpoint does not perform validation on things like `connectorUrl`/`sources` URLs.
+
+All the fields in the [dataset reference](#dataset-reference) can be modified, except the following:
+
+- `slug`
+- `userId`
+- `createdAt`
+- `updatedAt`
+
+Additionally, certain fields have special behavior associated with them:
+
+- `status` can only be modified by users with `ADMIN` role or by other microservices.
+- `taskId` and `errorMessage` can only be modified by other microservices.
+- `published` can only be modified by users with `ADMIN` role.
+- `env` changes will not only affect the dataset, but also related widgets and layers. Refer to the PATCH `/widget/change-environment/<dataset id>/<env>` and the the PATCH `/layer/change-environment/<dataset id>/<env>` endpoints respectively for more details.
+
+When passing new values for Object type fields, the new value will fully overwrite the previous one. It's up to you, as an API user, to build any merging logic into your application.
+
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the dataset
@@ -838,7 +856,7 @@ To perform this operation, the following conditions must be met:
 > Example request for updating the name of a dataset
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id> \
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id-or-slug> \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json" -d \
 '{
@@ -846,34 +864,12 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 }'
 ```
 
-In order to modify the dataset, you can PATCH a request. The following fields are available (only the fields provided in the request body will be updated, the remaining fields will be left as they are) for updating the dataset, providing them in the request body:
-
-Field               |                                                      Description                                                       |    Type | Values   |
-------------------- | :--------------------------------------------------------------------------------------------------------------------: | ------: | -------: |
-name                |                                                      Dataset name                                                      |    Text | Any Text |
-type                |                                                      Dataset type                                                      |    Text | Any Text |
-subtitle            |                                                    Dataset subtitle                                                    |    Text | Any Text |
-application         |                     Applications the dataset belongs to                                           |   Array | Any valid application name(s) |
-connectorType       |                                          Connector type                                                     |    Text | rest, document, wms |
-provider            |      The connectorType provider                                     |    Text | cartodb, feature service, gee, csv, tsv, xml, json, nexgddp |
-connectorUrl        |                                                 Url of the data source                                                 |     Url | Any url  |
-sources             |                                                Urls of the data sources                                                |   Array | Array of URLs |
-tableName           |                                                       Table name                                                       |    Text | Any valid table name |
-data                |                             JSON DATA only for json connector if connectorUrl not present                              |    JSON | [{},{},{}] |
-dataPath            |                                           Path to the data in a json dataset                                           |    Text | Any valid JSON key |
-legend              |                                      Legend for dataset. Keys for special fields                                       |  Object | "legend": {"long": "123", "lat": "123", "country": ["pais"], "region": ["barrio"], "date": ["startDate", "endDate"]}} |
-overwrite           |                                          It allows to overwrite dataset data                                           | Boolean | true/false |
-published           |                                           To set a public or private dataset                                           | Boolean | true/false |
-protected           |                           If it's a protected layer (not is possible to delete if it's true)                           | Boolean | true/false |
-vocabularies        |                                                    Cluster of tags                                                     |  Object | `{"vocabularyOne": {"tags": [<tags>]},"vocabularyTwo": {"tags": [<tags>]}}` |
-widgetRelevantProps |                                          Group of relevant props of a widget                                           |   Array | Any Text |
-layerRelevantProps  |                                           Group of relevant props of a layer                                           |   Array | Any Text |
-subscribable        | Available dataset queries for subscriptions parameters accepted: `{{begin}}` for date begin and `{{end}}` for date end |  Object | `{" <queryname>": "<querybodytemplate>"}` |
-env                 | The environment you want the dataset to be accessible on. Defaults to production |  Text | `staging`, `production` or `preproduction` |
-
-*Note 1: Updating a dataset requires authentication.*
-
-Note 2: When updating the `env` property of a dataset the change will cascade down to all associated layer and widget entities.
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | You need to be logged in to be able to upload a file
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+403            | Forbidden      | You are trying to update a dataset with one or more `application` values that are not associated with your user account. 
+404            | Dataset with id <id> doesn't exist   | A dataset with the provided id does not exist.
 
 ## Deleting a Dataset
 
