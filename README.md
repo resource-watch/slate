@@ -59,7 +59,7 @@ You have set up the documentation project and are ready to contribute? Great, he
 
 Created with slate project:
 
-<a href="https://github.com/lord/slate" target="_blank"><img src="https://raw.githubusercontent.com/lord/img/master/logo-slate.png" alt="Slate: API Documentation Generator" width="226"></a>
+<a href="q" target="_blank"><img src="https://raw.githubusercontent.com/lord/img/master/logo-slate.png" alt="Slate: API Documentation Generator" width="226"></a>
 
 
 
