@@ -1003,6 +1003,7 @@ Using this endpoint, you can add completely replace the data of an already exist
 This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
 
 In order to perform this operation, the following conditions must be met:
+
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
 - the user must be logged in and match one of the following:
@@ -1057,26 +1058,55 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2f
 }'
 ```
 
-This endpoint returns a new dataset that is a replica of the dataset provided. It can take the optional query parameter `fullCloning=true` to force the cloning of the metadata.
+This endpoint allows you to create a new, json based dataset, from the result of a RW API endpoint call. The basic usage example would be to create a new dataset based on a custom query to an existing dataset - this is illustrated in the example `curl` call in this section. Other use cases could be converting the result of an analysis endpoint into a dataset, or capturing the result of a query to a REST based dataset (cartodb, arcgis, etc) to an internal json representation of the same data, that is kept in the API database.   
 
-The following fields must/can be provided when cloning a dataset (check also the example on the side):
+In order to perform this operation, the following conditions must be met:
 
-Field             |                         Description                  |    Type | Example value | Required    |
------------------ | :--------------------------------------------------- | ------: | ------------: | ----------: |
-datasetUrl        | The connectorUrl for the new dataset.                |    Text | A valid URL   | Yes         |
-application       | A list of the new dataset applications.              |   Array | Any valid application name(s) | Yes |
-legend            | Legend for the dataset. If provided, it will override the original dataset values. |  Object | "legend": {"long": "123", "lat": "123", "country": ["pais"], "region": ["barrio"], "date": ["startDate", "endDate"]}} |
-applicationConfig | Group of relevant props of a widget. If provided, it will override the original dataset values. |   Array | Any Text      |
+- the user must belong to the applications specified in the request body.
+- the user must be logged in and match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
 
-The cloned dataset has the same attributes as the source one, except for the following ones:
 
-* `name`: The current timestamp is added to the original dataset's name.
-* `published`: will be false unless specified in the request body.
+The request requires two fields to be present:
 
-The field `clonedHost` will contain the host information about the original dataset.
+- `datasetUrl`: the URL from where to load the data to populate the new dataset. Must be RW API, relative path, like `/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010`.
+- `application`: the array of applications to which the new dataset will belong.
 
-*Note: Cloning a dataset requires authentication, and you will only be able to clone datasets from apps associated to your user.*
+Additionally, you can optionally specify these fields:
 
+- `legend`: field structure and type of the new dataset. Refer to [dataset reference](#dataset-reference) for more details.
+- `applicationConfig`: application-specific configuration. Refer to [dataset reference](#dataset-reference) for more details. If not provided, it will be copied from the original dataset.
+- `published`: if the user has `ADMIN` role, they can set this value to `true`. 
+
+
+For the fields in the following list, values will be copied from the original dataset to the new one, unless specified:
+
+- `name`: copied from the original dataset, with a timestamp appended, to ensure uniqueness.
+- `subtitle`
+- `dataPath`: will always be set to `data`, matching the expected response structure of RW API responses like `/query` that encapsulate the "real" data in a `data` json object.
+- `connectorType`: will be set to `document`
+- `provider`: will be set to `json`
+- `attributesPath`
+- `tableName`
+- `dataLastUpdated`
+- `overwrite`
+- `published`: if the user has role `ADMIN` and does not explicitly set `published` to `true` on the request body, this value is inherited. Otherwise, it's set to `false`.
+
+Datasets created through a cloning operation will have a specific `clonedHost` object, with additional data. Refer to [dataset reference](#dataset-reference) for more details on the content of this field. 
+
+The dataset cloning requests accepts an optional `full` boolean query parameter that, when set to `true`, will clone of vocabulary-related data and metadata from the original dataset to the new one.
+
+#### Errors for cloning a dataset
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | <field>: <field> can not be empty. | The required field identified in the error message is missing in the request body.
+400            | - application: must be a non-empty array -  | `application` must be specified as an array.
+401            | Unauthorized   | You need to be logged in to be able to clone a dataset.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset).
+403            | Forbidden - User does not have access to this dataset's application | You specified an `application` in your request body that is not associated with your user account. 
+404            | Dataset with id <id> doesn't exist   | A dataset with the provided id does not exist.
 
 ## Deleting a dataset
 
