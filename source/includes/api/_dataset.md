@@ -823,7 +823,7 @@ Error code     | Error message  | Description
 400            | provider: provider must be in [csv,json,tsv,xml,tif,tiff,geo.tiff]. | A file was not provided, or was provided in the wrong request field.
 400            | - dataset: file too large -  | Your file is larger than 4MB.
 400            | - dataset: file <your file name> is bad file type. -  | The `provider` value must match the extension of the uploaded file.
-401            | Unauthorized   | You need to be logged in to be able to upload a file 
+401            | Unauthorized   | You need to be logged in to be able to upload a file.
 
 
 ## Updating a dataset
@@ -1142,7 +1142,7 @@ Error code     | Error message  | Description
 403            | Forbidden      | You are trying to delete a dataset with one or more `application` values that are not associated with your user account. 
 404            | Dataset with id <id> doesn't exist   | A dataset with the provided id does not exist.
 
-## Dataset data sync
+## Dataset automatic synchronization
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -1165,9 +1165,19 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-To sync the data of a dataset, you need to choose the action type (concat or overwrite), a cron pattern and a valid url. This configuration should be set in the 'sync' property when creating or updating a document dataset.
+Certain datasets contain data that evolves frequently over time, and you, as the creator of this dataset, what to ensure that it's up-to-date. As we've seen before, if your data is hosted on one of the supported 3rd party data providers, like Carto or Arcgis, your data will be proxied, so users of the RW API will always see the latest version of your data. However, if you uploaded your data from a file, your data is copied to the RW API database at the time of the dataset's creation, so keeping it up-to-date requires a different approach. It's with scenario in mind that the RW API offers the automatic synchronization mechanism.
 
-Please be sure that the 'overwrite' property is set to true. This could be used as a lock in order to not allow new updates even if the sync task is actually created.
+The automatic synchronization mechanism is available for document based datasets only, and you can configure it when [creating](#creating-a-dataset) or [updating](#updating-the-fields-of-a-dataset) a dataset. When enabled, it will schedule an automatic, periodic task, that will update your document based dataset's data, based on data from an URL you provide. This means that, once configured, you just have to make sure the automatic synchronization mechanism can find the newest version of the data at the specified URL, and the RW API will take care of the actual data update process for you.
+
+To enable automatic synchronization, you need to pass a `sync` object on your calls to the respective endpoints, next to the other fields. See the included example for a clearer idea of how creating a dataset with automatic synchronization looks like.
+
+There are 3 fields, all required, that you need to specify inside the `sync` object:
+
+- `action`: choose either `concat` or `overwrite`. See more details above about [concatenating](#concatenate-and-append-data-to-a-document-based-dataset) and [overwriting](#overwrite-data-for-a-document-based-dataset) dataset data. Append operations, as documented in the section above, is not supported.
+- `cronPattern`: [cron](https://en.wikipedia.org/wiki/Cron) expression representing when and how frequently the synchronization process should take place. The host executing these tasks use UTC timezone.
+- `url`: publicly available URL from where the automatic synchronization mechanism will load the data to replace/concatenate to your dataset. 
+
+Keep in mind that, like their manual counterparts, modifications to a dataset done by the automatic synchronization mechanism will be blocked if a dataset's `overwrite` is set to true. This can be a silent blocker to your automatic synchronization process, but also intentionally used to block it, for example, should you want to prevent automatic updates for a brief period of time.
 
 
 ## Flush dataset cache
