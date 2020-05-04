@@ -1185,7 +1185,7 @@ Keep in mind that, like their manual counterparts, modifications to a dataset do
 > Flush dataset's cache
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/:datasetID/flush \
+curl -X POST https://api.resourcewatch.org/v1/0c630feb-8146-4fcc-a9be-be5adcb731c8/flush \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -1197,14 +1197,30 @@ OK
 
 Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.
 
-*Note: Flushing a dataset's cache requires authentication by an ADMIN user.*
+In order to flush a dataset's cache, the following conditions must be met:
+
+- the user must be logged in.
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+  
+  
+#### Errors for flushing a dataset's cache
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | You need to be logged in to be able to delete a dataset.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+403            | Forbidden      | You are trying to delete a dataset with one or more `application` values that are not associated with your user account. 
+404            | Dataset with id <id> doesn't exist   | A dataset with the provided id does not exist.
+
 
 ## Recover
 
 > Recover dataset
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/:datasetID/recover \
+curl -X POST https://api.resourcewatch.org/v1/0c630feb-8146-4fcc-a9be-be5adcb731c8/recover \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -1216,8 +1232,18 @@ OK
 
 Resets a dataset's `status` to `saved` and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset's data was inconsistent for any reason, this endpoint will not change it, and it's up to you to fix it using a `data-overwrite` or other endpoints.
 
-*Note: Recover a dataset's status requires authentication by an ADMIN user.*
+In order to recover a dataset, the user must be logged in and have the `ADMIN` role.
 
+#### Errors for recovering a dataset's cache
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | You need to be logged with to be able to delete a dataset.
+403            | Forbidden      | You need to have the `ADMIN` role.
+404            | Dataset with id <id> doesn't exist   | A dataset with the provided id does not exist.
+
+
+  
 ## Dataset reference
 
 This section gives you a complete view at the properties that are maintained as part of dataset. When interacting with a dataset (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
