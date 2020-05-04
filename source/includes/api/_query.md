@@ -18,9 +18,9 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/<dataset_id>/' \
 
 In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query.
 
-**While we aim to make our query interface as broad and transparent as possible, some of the querying options described below will not be available for specific dataset providers, depending on this API's implementation or limitations on the actual data provider's side.**
+*Please note that some SQL features might not be supported. Check [here](/index-rw.html#limitations-of-sql-syntax) for a comprehensive list of the SQL features that are not supported.*
 
-## Executing queries
+## Querying datasets
 
 > GET request for a query providing the SQL as query param:
 
@@ -134,6 +134,12 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
 
 To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body.
 
+### Errors for querying datasets
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
+
 ## Download
 
 > Requesting the download of a query providing the dataset ID in the URL:
@@ -157,7 +163,7 @@ curl -X GET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset
 
 You can download the result of a query using the `download` endpoint. You can either provide the dataset id in the URL or you can pass it as part of the SQL query (in the FROM clause).
 
-You can also specify which file type you want to download (JSON or CSV) - except for Google Earth Engine datasets (which only supports JSON). By default, the API will return a CSV file (JSON file for Google Earth Engine).
+You can also specify which file type you want to download (JSON or CSV) - except for Google Earth Engine datasets (which only supports JSON). By default, the API will return a CSV file (or a JSON file for Google Earth Engine).
 
 **Please not that not all dataset providers support downloading queries - the following providers support downloading query results:**
 
@@ -167,7 +173,46 @@ You can also specify which file type you want to download (JSON or CSV) - except
 * BigQuery
 * ArcGIS FeatureService
 
-## SQL syntax
+## Limitations of SQL syntax
+
+**While the WRI API aims to make the query interface as broad and transparent as possible, some of the querying options described below will not be available for specific dataset providers, depending on this API's implementation or limitations on the actual data provider's side.**
+
+Additionally to provider-specific limitations, every SQL query is transformed by [the `sql2json` microservice](https://github.com/resource-watch/sql2json), also maintained as [NPM package](https://www.npmjs.com/package/sql2json). There is a first conversion from SQL to JSON, and then from JSON to a SQL syntax that is compatible with [the Elasticsearch SQL plugin](https://github.com/NLPchina/elasticsearch-sql).
+
+This SQL syntax supported by Elasticsearch has some limitations that should be considered when querying datasets:
+
+* Very large SQL queries may run into some parsing issues.
+* Sorting by aggregated fields is not supported. For instance, the following statement is **not** supported: `GROUP BY age ORDER BY COUNT(*)`.
+* Using aggregation functions on top of scalar functions is also not possible. For instance, the following statement is **not** supported: `SELECT MAX(abs(age))`.
+* Sub-queries are only supported to a small degree, but the usage of `GROUP BY` or `HAVING` in the sub-query is not supported. For instance, the following statement **is** supported: `SELECT * FROM (SELECT first_name, last_name FROM emp WHERE last_name NOT LIKE '%a%') WHERE first_name LIKE 'A%' ORDER BY 1`, but statements with a higher level of complexity than applying simple conditions or orderings in the sub-query might not be supported.
+* The usage of scalar functions on nested fields in `ORDER BY` or `WHERE` clauses is limited. For instance, the following statement is **not** supported: `ORDER BY YEAR(dep.start_date)`.
+
+You can read more about the limitations of using SQL with Elasticsearch [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html).
+
+## Supported SQL syntax reference
+
+## CartoDB datasets
+
+| Supported | Feature | Example URL |
+|-----------|---------|-------------|
+| Supported | SELECT: Count query | [SELECT count(*) FROM edi](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20count(*)%20FROM%20edi) |
+| Supported | SELECT: Wildcard query | [SELECT * FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20LIMIT%205) |
+| Supported | WHERE: LIKE filtering | [SELECT * FROM edi WHERE region LIKE 'Europ%' LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20region%20LIKE%20'Europ%25'%20LIMIT%205) |
+| Supported | WHERE: BETWEEN filtering | [SELECT * FROM edi WHERE overall_score BETWEEN 1 AND 2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20BETWEEN%201%20AND%202%20LIMIT%205) |
+| Supported | WHERE: Disjunction of filter conditions | [SELECT * FROM edi WHERE overall_score <= 1 OR justice_pillar_score < 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%201%20OR%20justice_pillar_score%20%3C%201%20LIMIT%205) |
+| Supported | WHERE: Lower than or equal filtering | [SELECT * FROM edi WHERE overall_score <= 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%201%20LIMIT%205) |
+| Supported | WHERE: Conjunction of filter conditions | [SELECT * FROM edi WHERE overall_score <= 1 AND justice_pillar_score < 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%201%20AND%20justice_pillar_score%20%3C%201%20LIMIT%205) |
+| Supported | WHERE: Equality filtering | [SELECT * FROM edi WHERE overall_score = 2.1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3D%202.1%20LIMIT%205) |
+| Supported | WHERE: Lower than filtering | [SELECT * FROM edi WHERE overall_score < 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%201%20LIMIT%205) |
+| Supported | WHERE: Greater than or equal filtering | [SELECT * FROM edi WHERE overall_score >= 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3E%3D%201%20LIMIT%205) |
+| Supported | WHERE: Greater than filtering | [SELECT * FROM edi WHERE overall_score > 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3E%201%20LIMIT%205) |
+| Supported | FROM: Using dataset tableName in FROM statement | [SELECT * FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20LIMIT%205) |
+| **Not supported** | FROM: Using dataset slug in FROM statement | [SELECT * FROM Environmental-Democracy-Index-1490086842552 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20Environmental-Democracy-Index-1490086842552%20LIMIT%205) |
+| **Not supported** | FROM: Using dataset id in FROM statement | [SELECT * FROM 0b9f0100-ce5b-430f-ad8f-3363efa05481 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%200b9f0100-ce5b-430f-ad8f-3363efa05481%20LIMIT%205) |
+| Supported | SELECT: Aliasing calculated fields such as AVG in SELECT | [SELECT AVG(overall_score) as alias FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20AVG(overall_score)%20as%20alias%20FROM%20edi%20LIMIT%205) |
+| Supported | SELECT: Calculated fields such as AVG in SELECT | [SELECT AVG(overall_score) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20AVG(overall_score)%20FROM%20edi%20LIMIT%205) |
+| **Not supported** | SELECT: Projecting columns + counting query | [SELECT region, count(*) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20count(*)%20FROM%20edi%20LIMIT%205) |
+| Supported | SELECT: Projecting specific columns query | [SELECT region, country FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20country%20FROM%20edi%20LIMIT%205) |
 
 ### Select clause
 
@@ -294,25 +339,3 @@ You can delimit an area of interest by providing a geostore id as a parameter:
 ```shell
 curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
 ```
-
-## SQL specification for dataset providers
-
-As it was previously stated, the SQL syntax might vary, either because of limitations in this API's implementation or because of limitations on the actual data provider's side. This section aims at providing a broader view of the SQL support and limitations for each dataset provider.
-
-### Carto datasets
-
-Carto datasets rely in **PostgreSQL** with **PostGIS** for the underlying structure in which the data is saved. The queries that you provide to the Query endpoints are passed through directly to Carto servers, and thus the supported SQL syntax for Carto datasets can be checked [in Carto docs](https://carto.com/help/tutorials/getting-started-with-sql-in-carto/).
-
-### Document-based datasets (JSON, CSV, TSV, XML)
-
-Document-based datasets rely in **Elasticsearch** for the underlying structure in which the data is saved. The queries that you provide are converted from SQL to JSON, and then from JSON to a SQL syntax that is supported by Elasticsearch. This conversion is performed by [this package](https://github.com/resource-watch/sql2json), also maintained as a [NPM package](https://www.npmjs.com/package/sql2json).
-
-Below are listed some of the limitations of using SQL with Elasticsearch, that you should pay attention to when querying document-based datasets:
-
-* Very large SQL queries may run into some parsing issues.
-* Using scalar functions on nested fields in ORDER BY or WHERE clauses.
-* Sorting by aggregated fields.
-* Using aggregation functions on top of scalar functions.
-* Using sub-selects as sub-queries.
-
-You can read more about the limitations of using SQL with Elasticsearch [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html).
