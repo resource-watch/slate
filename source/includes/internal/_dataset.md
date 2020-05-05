@@ -102,7 +102,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset' -d \
 }'
 ```
 
-To create a dataset using Loca as data source, besides the common required fields, you must provide the following required data:
+To create a dataset using BigQuery as data source, besides the common required fields, you must provide the following required data:
 
 Field           | Description                                                                            | Example value  |
 --------------- | :------------------------------------------------------------------------------------: | ------------:  |
