@@ -57,62 +57,7 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
             "name_1": "L'Artibonite",
             "type_1": "Département"
         },
-        {
-            "cartodb_id": 1117,
-            "iso": "HND",
-            "name_0": "Honduras",
-            "name_1": "Atlántida",
-            "type_1": "Departamento"
-        },
-        {
-            "cartodb_id": 1119,
-            "iso": "HND",
-            "name_0": "Honduras",
-            "name_1": "Colón",
-            "type_1": "Departamento"
-        },
-        {
-            "cartodb_id": 1105,
-            "iso": "GUY",
-            "name_0": "Guyana",
-            "name_1": "Upper Demerara-Berbice",
-            "type_1": "Region"
-        },
-        {
-            "cartodb_id": 1125,
-            "iso": "HND",
-            "name_0": "Honduras",
-            "name_1": "Gracias a Dios",
-            "type_1": "Departamento"
-        },
-        {
-            "cartodb_id": 1101,
-            "iso": "GUY",
-            "name_0": "Guyana",
-            "name_1": "Essequibo Islands-West Demerara",
-            "type_1": "Region"
-        },
-        {
-            "cartodb_id": 1131,
-            "iso": "HND",
-            "name_0": "Honduras",
-            "name_1": "Olancho",
-            "type_1": "Departamento"
-        },
-        {
-            "cartodb_id": 1133,
-            "iso": "HND",
-            "name_0": "Honduras",
-            "name_1": "Valle",
-            "type_1": "Departamento"
-        },
-        {
-            "cartodb_id": 2235,
-            "iso": "PRY",
-            "name_0": "Paraguay",
-            "name_1": "Concepción",
-            "type_1": "Departamento"
-        }
+        ...
     ],
     "meta": {
         "cloneUrl": {
@@ -145,20 +90,20 @@ Error code     | Error message  | Description
 > Requesting the download of a query providing the dataset ID in the URL:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>
+curl -X GET 'https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>'
 ```
 
 > Requesting the download of a query providing the dataset ID in the FROM clause of the query:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>
+curl -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>'
 ```
 
 > Explicitly setting the format of the returned file:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=json
-curl -X GET https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=csv
+curl -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=json'
+curl -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=csv'
 ```
 
 You can download the result of a query using the `download` endpoint. You can either provide the dataset id in the URL or you can pass it as part of the SQL query (in the FROM clause).
