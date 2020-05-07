@@ -461,17 +461,6 @@ Creating a dataset is done using a POST request and passing the relevant data as
 
 Additionally, depending on the data provider you will be using, other fields may be required - we'll cover those in detail in each provider's specific documentation.
 
-
-
-// TODO: move down to providers
-connectorUrl        | Yes (except for `document` type if `sources` or `data` is specified, or for `gee`, `bigquery`, `nexgddp` or `loca` if `tableName` is specified) | 
-sources             |       No (recommended for `document` type datasets)            | 
-tableName           |            No (just for `gee` and nexgddp datasets)            | 
-data                | No (just for json-based `document` datasets, if `connectorUrl` or `sources` is not present) | 
-dataPath            | No (just for json-based `document` datasets, if `connectorUrl` or `sources` is not present) | 
-
-
-
 A successful dataset creation request will return a 200 HTTP code, and the dataset details as stored on the RW API. PAy special attention to the `id` or the `slug`, as those will allow you to [access your dataset](#getting-a-dataset-by-id-or-slug) later.
 
 
@@ -716,7 +705,7 @@ When creating a document based dataset, you have multiple ways of providing your
 
 The data passed in `sources` or `connectorUrl` must be available on a publicly accessible URLs, specified in the `sources` array field or the `connectorUrl` single value field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. `sources` allows you to specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.
 
-*Notice: If you want to create a file from a file you have, but that it's not available on a public URL, check out our docs for [uploading a dataset](#uploading-a-dataset).
+*Notice: If you want to create a dataset from a file you have, but that it's not available on a public URL, check out our docs for [uploading a dataset](#uploading-a-dataset).
 
   
 Unlike with other dataset types, when the dataset is created, the data is copied from the provided source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations. This has a few implications that you should be aware of:
@@ -812,7 +801,12 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-If you want to upload your file the API as a dataset, but don't have it available online, the `upload` endpoint allows you to. If your file is up to 4MB in size, you can upload it to the API by using the `upload` endpoint. This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. The supported formats/extensions are: csv, json, tsv, xml, tif, tiff and geo.tiff. The request uploads the file to the API, and returns a specially crafted `connectorUrl` value, and a list of fields found in your file. With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
+The `upload` endpoint allows you to create datasets on the API from local files that aren't available online. 
+If your file is up to 4MB in size, you can upload it to the API by using the `upload` endpoint. 
+This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. 
+The supported formats/extensions are: csv, json, tsv, xml, tif, tiff and geo.tiff.
+The request uploads the file to the API, and returns a specially crafted `connectorUrl` value, and a list of fields found in your file.
+With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
 
 #### Errors for upload a dataset file
 
@@ -998,7 +992,11 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite
 }'
 ```
 
-Using this endpoint, you can add completely replace the data of an already existing dataset. It's exclusively available for document based datasets - you'll get a `404` error if you use it on a dataset of a different type. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object. There are no requirements regarding similarity of the data structure between existing and new data - your overwrite data can have a completely different data schema.
+Using this endpoint, you can add or completely replace the data of an already existing dataset. 
+It's exclusively available for document based datasets - you'll get a `404` error if you use it on a dataset of a different type. 
+All previously existing data will be permanently deleted. 
+You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object. 
+There are no requirements regarding similarity of the data structure between existing and new data - your overwrite data can have a completely different data schema.
 
 This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset's `status` to be set to `pending`, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to `saved` and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.
 
@@ -1169,7 +1167,7 @@ Certain datasets contain data that evolves frequently over time, and you, as the
 
 The automatic synchronization mechanism is available for document based datasets only, and you can configure it when [creating](#creating-a-dataset) or [updating](#updating-the-fields-of-a-dataset) a dataset. When enabled, it will schedule an automatic, periodic task, that will update your document based dataset's data, based on data from an URL you provide. This means that, once configured, you just have to make sure the automatic synchronization mechanism can find the newest version of the data at the specified URL, and the RW API will take care of the actual data update process for you.
 
-To enable automatic synchronization, you need to pass a `sync` object on your calls to the respective endpoints, next to the other fields. See the included example for a clearer idea of how creating a dataset with automatic synchronization looks like.
+To configure automatic synchronization on dataset creation or update, you need to pass a `sync` object on your calls to the respective endpoints, next to the other fields. See the included example for a clearer idea of how creating a dataset with automatic synchronization looks like.
 
 There are 3 fields, all required, that you need to specify inside the `sync` object:
 
@@ -1177,8 +1175,13 @@ There are 3 fields, all required, that you need to specify inside the `sync` obj
 - `cronPattern`: [cron](https://en.wikipedia.org/wiki/Cron) expression representing when and how frequently the synchronization process should take place. The host executing these tasks use UTC timezone.
 - `url`: publicly available URL from where the automatic synchronization mechanism will load the data to replace/concatenate to your dataset. 
 
-Keep in mind that, like their manual counterparts, modifications to a dataset done by the automatic synchronization mechanism will be blocked if a dataset's `overwrite` is set to true. This can be a silent blocker to your automatic synchronization process, but also intentionally used to block it, for example, should you want to prevent automatic updates for a brief period of time.
+Internally, the automatic synchronization mechanism will call either the [dataset concatenation](#concatenate-and-append-data-to-a-document-based-dataset) or [dataset overwrite](#overwrite-data-for-a-document-based-dataset) endpoint. 
+If that internal request fails - for example, if `overwrite` is set to `false` - the sync process will fail silently. 
+If you have the `ADMIN` role, you can use the `/v1/task` endpoint to see scheduled tasks and their error output, but otherwise this failure will be invisible to end users.
 
+On the other hand, if the request goes through, but the concatenation/overwrite process fails - for example, if the URL provided is not available - then your dataset `status` will be set to `error` and the `errorMessage` field will give you a simple description of what happened.
+
+To see the details (including the date) of the last operation performed on the dataset, use the link in the `taskId` field.
 
 ## Flush dataset cache
 
