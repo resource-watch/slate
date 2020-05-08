@@ -126,35 +126,39 @@ This section describes the SQL support for querying datasets with provider `cart
 
 | Supported | Feature | Example URL |
 |-----------|---------|-------------|
-| Supported | SELECT: Projecting all columns using wildcard selector | [SELECT * FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20LIMIT%205) |
-| Supported | SELECT: Count all rows | [SELECT count(*) FROM edi](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20count(*)%20FROM%20edi) |
-| Supported | SELECT: Projecting specific columns | [SELECT region, overall_score FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall_score%20FROM%20edi%20LIMIT%205) |
-| **Not supported** | SELECT: Projecting columns AND counting all rows | [SELECT region, count(*) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20count(*)%20FROM%20edi%20LIMIT%205) |
-| Supported | SELECT: Aggregate functions such as AVG in SELECT | [SELECT AVG(overall_score) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20AVG(overall_score)%20FROM%20edi%20LIMIT%205) |
-| Supported | SELECT: Aliasing aggregate function results such as AVG in SELECT | [SELECT AVG(overall_score) as alias FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20AVG(overall_score)%20as%20alias%20FROM%20edi%20LIMIT%205) |
-| **Not supported** | FROM: Using dataset id in FROM statement | [SELECT * FROM 0b9f0100-ce5b-430f-ad8f-3363efa05481 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%200b9f0100-ce5b-430f-ad8f-3363efa05481%20LIMIT%205) |
-| **Not supported** | FROM: Using dataset slug in FROM statement | [SELECT * FROM Environmental-Democracy-Index-1490086842552 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20Environmental-Democracy-Index-1490086842552%20LIMIT%205) |
-| Supported | FROM: Using dataset tableName in FROM statement | [SELECT * FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20LIMIT%205) |
-| Supported | WHERE: Greater than filtering | [SELECT * FROM edi WHERE overall_score > 2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3E%202%20LIMIT%205) |
-| Supported | WHERE: Greater than or equal filtering | [SELECT * FROM edi WHERE overall_score >= 2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3E%3D%202%20LIMIT%205) |
-| Supported | WHERE: Equality filtering | [SELECT * FROM edi WHERE overall_score = 2.1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3D%202.1%20LIMIT%205) |
-| Supported | WHERE: Lower than filtering | [SELECT * FROM edi WHERE overall_score < 2.2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%202.2%20LIMIT%205) |
-| Supported | WHERE: Lower than or equal filtering | [SELECT * FROM edi WHERE overall_score <= 2.2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%202.2%20LIMIT%205) |
-| Supported | WHERE: Conjunction (AND) filtering | [SELECT * FROM edi WHERE overall_score <= 2.2 AND justice_pillar_score > 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%202.2%20AND%20justice_pillar_score%20%3E%201%20LIMIT%205) |
-| Supported | WHERE: Disjunction (OR) filtering | [SELECT * FROM edi WHERE overall_score <= 2.2 OR justice_pillar_score > 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%202.2%20OR%20justice_pillar_score%20%3E%201%20LIMIT%205) |
-| Supported | WHERE: BETWEEN filtering | [SELECT * FROM edi WHERE overall_score BETWEEN 2 AND 2.2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20BETWEEN%202%20AND%202.2%20LIMIT%205) |
-| Supported | WHERE: LIKE filtering | [SELECT * FROM edi WHERE region LIKE 'Europ%' LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20region%20LIKE%20'Europ%25'%20LIMIT%205) |
-| Supported | GROUP BY: Group results by a single column | [SELECT region FROM edi GROUP BY region LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20GROUP%20BY%20region%20LIMIT%205) |
-| Supported | GROUP BY: Group results by multiple columns | [SELECT region, overall_score FROM edi GROUP BY region, overall_score LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall_score%20FROM%20edi%20GROUP%20BY%20region%2C%20overall_score%20LIMIT%205) |
-| Supported | GROUP BY: Aggregate functions used with GROUP BY statements | [SELECT region, COUNT(*) as count FROM edi GROUP BY region LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20COUNT(*)%20as%20count%20FROM%20edi%20GROUP%20BY%20region%20LIMIT%205) |
-| **Not supported** | GROUP BY: Special grouping by range function | [SELECT count(*) FROM edi GROUP BY range(overall_score, 0,1,2,3,4) LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20count(*)%20FROM%20edi%20GROUP%20BY%20range(overall_score%2C%200%2C1%2C2%2C3%2C4)%20LIMIT%205) |
-| Supported | ORDER BY: Ordering results by one column | [SELECT region FROM edi ORDER BY region LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20ORDER%20BY%20region%20LIMIT%205) |
-| Supported | ORDER BY: Ordering results by one column descending | [SELECT region FROM edi ORDER BY region DESC LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20ORDER%20BY%20region%20DESC%20LIMIT%205) |
-| Supported | ORDER BY: Ordering results by multiple column | [SELECT region, overall_score FROM edi ORDER BY region, overall_score LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall_score%20FROM%20edi%20ORDER%20BY%20region%2C%20overall_score%20LIMIT%205) |
-| Supported | ORDER BY: Ordering results by multiple column descending | [SELECT region, overall_score FROM edi ORDER BY region, overall_score DESC LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall_score%20FROM%20edi%20ORDER%20BY%20region%2C%20overall_score%20DESC%20LIMIT%205) |
-| Supported | LIMIT: Limit the number of returned results | [SELECT region FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205) |
-| **Not supported** | OFFSET: Offset the returned results | [SELECT region FROM edi LIMIT 5 OFFSET 10](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%20OFFSET%2010) |
-| **Not supported** | OFFSET: Offset the returned results using short syntax | [SELECT region FROM edi LIMIT 5, 10](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%2C%2010) |
+| YES | SELECT: Selecting all columns using wildcard | [SELECT \* FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20LIMIT%205) |
+| YES | SELECT: Count all rows | [SELECT count(\*) FROM edi](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20count(\*)%20FROM%20edi) |
+| YES | SELECT: Selecting specific columns | [SELECT region, overall\_score FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall\_score%20FROM%20edi%20LIMIT%205) |
+| YES | SELECT: Selecting DISTINCT values for specific columns | [SELECT DISTINCT(region) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20DISTINCT(region)%20FROM%20edi%20LIMIT%205) |
+| NO | SELECT: Selecting columns AND counting all rows | [SELECT region, count(\*) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20count(\*)%20FROM%20edi%20LIMIT%205) |
+| YES | SELECT: Aliasing aggregate function results such as AVG in SELECT | [SELECT AVG(overall\_score) as alias FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20AVG(overall\_score)%20as%20alias%20FROM%20edi%20LIMIT%205) |
+| YES | SELECT: Usage of aggregate functions (AVG) in SELECT | [SELECT AVG(overall\_score) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20AVG(overall\_score)%20FROM%20edi%20LIMIT%205) |
+| YES | SELECT: Usage of aggregate functions (MAX) in SELECT | [SELECT MAX(overall\_score) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20MAX(overall\_score)%20FROM%20edi%20LIMIT%205) |
+| YES | SELECT: Usage of aggregate functions (MIN) in SELECT | [SELECT MIN(overall\_score) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20MIN(overall\_score)%20FROM%20edi%20LIMIT%205) |
+| YES | SELECT: Usage of aggregate functions (SUM) in SELECT | [SELECT SUM(overall\_score) FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20SUM(overall\_score)%20FROM%20edi%20LIMIT%205) |
+| NO | FROM: Using dataset id in FROM statement | [SELECT \* FROM 0b9f0100-ce5b-430f-ad8f-3363efa05481 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%200b9f0100-ce5b-430f-ad8f-3363efa05481%20LIMIT%205) |
+| NO | FROM: Using dataset slug in FROM statement | [SELECT \* FROM Environmental-Democracy-Index-1490086842552 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20Environmental-Democracy-Index-1490086842552%20LIMIT%205) |
+| YES | FROM: Using dataset tableName in FROM statement | [SELECT \* FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20LIMIT%205) |
+| YES | WHERE: Greater than filtering | [SELECT \* FROM edi WHERE overall\_score > 2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20overall\_score%20%3E%202%20LIMIT%205) |
+| YES | WHERE: Greater than or equal filtering | [SELECT \* FROM edi WHERE overall\_score >= 2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20overall\_score%20%3E%3D%202%20LIMIT%205) |
+| YES | WHERE: Equality filtering | [SELECT \* FROM edi WHERE overall\_score = 2.1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20overall\_score%20%3D%202.1%20LIMIT%205) |
+| YES | WHERE: Lower than filtering | [SELECT \* FROM edi WHERE overall\_score < 2.2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20overall\_score%20%3C%202.2%20LIMIT%205) |
+| YES | WHERE: Lower than or equal filtering | [SELECT \* FROM edi WHERE overall\_score <= 2.2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20overall\_score%20%3C%3D%202.2%20LIMIT%205) |
+| YES | WHERE: Conjunction (AND) filtering | [SELECT \* FROM edi WHERE overall\_score <= 2.2 AND justice\_pillar\_score > 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20overall\_score%20%3C%3D%202.2%20AND%20justice\_pillar\_score%20%3E%201%20LIMIT%205) |
+| YES | WHERE: Disjunction (OR) filtering | [SELECT \* FROM edi WHERE overall\_score <= 2.2 OR justice\_pillar\_score > 1 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20overall\_score%20%3C%3D%202.2%20OR%20justice\_pillar\_score%20%3E%201%20LIMIT%205) |
+| YES | WHERE: BETWEEN filtering | [SELECT \* FROM edi WHERE overall\_score BETWEEN 2 AND 2.2 LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20overall\_score%20BETWEEN%202%20AND%202.2%20LIMIT%205) |
+| YES | WHERE: LIKE filtering | [SELECT \* FROM edi WHERE region LIKE 'Europ%' LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20\*%20FROM%20edi%20WHERE%20region%20LIKE%20'Europ%25'%20LIMIT%205) |
+| YES | GROUP BY: Group results by a single column | [SELECT region FROM edi GROUP BY region LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20GROUP%20BY%20region%20LIMIT%205) |
+| YES | GROUP BY: Group results by multiple columns | [SELECT region, overall\_score FROM edi GROUP BY region, overall\_score LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall\_score%20FROM%20edi%20GROUP%20BY%20region%2C%20overall\_score%20LIMIT%205) |
+| YES | GROUP BY: Aggregate functions used with GROUP BY statements | [SELECT region, COUNT(\*) as count FROM edi GROUP BY region LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20COUNT(\*)%20as%20count%20FROM%20edi%20GROUP%20BY%20region%20LIMIT%205) |
+| NO | GROUP BY: Special grouping by range function | [SELECT count(\*) FROM edi GROUP BY range(overall\_score, 0,1,2,3,4) LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20count(\*)%20FROM%20edi%20GROUP%20BY%20range(overall\_score%2C%200%2C1%2C2%2C3%2C4)%20LIMIT%205) |
+| YES | ORDER BY: Ordering results by one column | [SELECT region FROM edi ORDER BY region LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20ORDER%20BY%20region%20LIMIT%205) |
+| YES | ORDER BY: Ordering results by one column descending | [SELECT region FROM edi ORDER BY region DESC LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20ORDER%20BY%20region%20DESC%20LIMIT%205) |
+| YES | ORDER BY: Ordering results by multiple column | [SELECT region, overall\_score FROM edi ORDER BY region, overall\_score LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall\_score%20FROM%20edi%20ORDER%20BY%20region%2C%20overall\_score%20LIMIT%205) |
+| YES | ORDER BY: Ordering results by multiple column descending | [SELECT region, overall\_score FROM edi ORDER BY region, overall\_score DESC LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall\_score%20FROM%20edi%20ORDER%20BY%20region%2C%20overall\_score%20DESC%20LIMIT%205) |
+| YES | LIMIT: Limit the number of returned results | [SELECT region FROM edi LIMIT 5](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205) |
+| NO | OFFSET: Offset the returned results | [SELECT region FROM edi LIMIT 5 OFFSET 10](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%20OFFSET%2010) |
+| NO | OFFSET: Offset the returned results using short syntax | [SELECT region FROM edi LIMIT 5, 10](http://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%2C%2010) |
 
 *Note: This table was generated automatically with the help of [this repository](https://github.com/resource-watch/sql-compatibility-test). If you are maintaining the docs, please do not edit manually these tables.*
 
@@ -164,35 +168,39 @@ This section describes the SQL support for querying datasets with connector type
 
 | Supported | Feature | Example URL |
 |-----------|---------|-------------|
-| Supported | SELECT: Projecting all columns using wildcard selector | [SELECT * FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20LIMIT%205) |
-| Supported | SELECT: Count all rows | [SELECT count(*) FROM data](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20count(*)%20FROM%20data) |
-| Supported | SELECT: Projecting specific columns | [SELECT bra_biome__name, alert__count FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20alert__count%20FROM%20data%20LIMIT%205) |
-| Supported | SELECT: Projecting columns AND counting all rows | [SELECT bra_biome__name, count(*) FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20count(*)%20FROM%20data%20LIMIT%205) |
-| Supported | SELECT: Aggregate functions such as AVG in SELECT | [SELECT AVG(alert__count) FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20AVG(alert__count)%20FROM%20data%20LIMIT%205) |
-| Supported | SELECT: Aliasing aggregate function results such as AVG in SELECT | [SELECT AVG(alert__count) as alias FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20AVG(alert__count)%20as%20alias%20FROM%20data%20LIMIT%205) |
-| Supported | FROM: Using dataset id in FROM statement | [SELECT * FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%209be3bf63-97fc-4bb0-b913-775ccae3cf9e%20LIMIT%205) |
-| Supported | FROM: Using dataset slug in FROM statement | [SELECT * FROM Glad-Alerts-Daily-Geostore-User-Areas_3 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20Glad-Alerts-Daily-Geostore-User-Areas_3%20LIMIT%205) |
-| Supported | FROM: Using dataset tableName in FROM statement | [SELECT * FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20LIMIT%205) |
-| Supported | WHERE: Greater than filtering | [SELECT * FROM data WHERE alert__count > 2 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3E%202%20LIMIT%205) |
-| Supported | WHERE: Greater than or equal filtering | [SELECT * FROM data WHERE alert__count >= 2 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3E%3D%202%20LIMIT%205) |
-| Supported | WHERE: Equality filtering | [SELECT * FROM data WHERE alert__count = 5 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3D%205%20LIMIT%205) |
-| Supported | WHERE: Lower than filtering | [SELECT * FROM data WHERE alert__count < 8 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3C%208%20LIMIT%205) |
-| Supported | WHERE: Lower than or equal filtering | [SELECT * FROM data WHERE alert__count <= 8 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3C%3D%208%20LIMIT%205) |
-| Supported | WHERE: Conjunction (AND) filtering | [SELECT * FROM data WHERE alert__count <= 8 AND alert_area__ha > 0.1 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3C%3D%208%20AND%20alert_area__ha%20%3E%200.1%20LIMIT%205) |
-| Supported | WHERE: Disjunction (OR) filtering | [SELECT * FROM data WHERE alert__count <= 8 OR alert_area__ha > 0.1 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3C%3D%208%20OR%20alert_area__ha%20%3E%200.1%20LIMIT%205) |
-| Supported | WHERE: BETWEEN filtering | [SELECT * FROM data WHERE alert__count BETWEEN 2 AND 8 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20BETWEEN%202%20AND%208%20LIMIT%205) |
-| **Not supported** | WHERE: LIKE filtering | [SELECT * FROM data WHERE bra_biome__name LIKE 'Amaz%' LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20bra_biome__name%20LIKE%20'Amaz%25'%20LIMIT%205) |
-| Supported | GROUP BY: Group results by a single column | [SELECT bra_biome__name FROM data GROUP BY bra_biome__name LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20GROUP%20BY%20bra_biome__name%20LIMIT%205) |
-| Supported | GROUP BY: Group results by multiple columns | [SELECT bra_biome__name, alert__count FROM data GROUP BY bra_biome__name, alert__count LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20alert__count%20FROM%20data%20GROUP%20BY%20bra_biome__name%2C%20alert__count%20LIMIT%205) |
-| Supported | GROUP BY: Aggregate functions used with GROUP BY statements | [SELECT bra_biome__name, COUNT(*) as count FROM data GROUP BY bra_biome__name LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20COUNT(*)%20as%20count%20FROM%20data%20GROUP%20BY%20bra_biome__name%20LIMIT%205) |
-| Supported | GROUP BY: Special grouping by range function | [SELECT count(*) FROM data GROUP BY range(alert__count, 0,1,2,3,4) LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20count(*)%20FROM%20data%20GROUP%20BY%20range(alert__count%2C%200%2C1%2C2%2C3%2C4)%20LIMIT%205) |
-| Supported | ORDER BY: Ordering results by one column | [SELECT bra_biome__name FROM data ORDER BY bra_biome__name LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20ORDER%20BY%20bra_biome__name%20LIMIT%205) |
-| Supported | ORDER BY: Ordering results by one column descending | [SELECT bra_biome__name FROM data ORDER BY bra_biome__name DESC LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20ORDER%20BY%20bra_biome__name%20DESC%20LIMIT%205) |
-| Supported | ORDER BY: Ordering results by multiple column | [SELECT bra_biome__name, alert__count FROM data ORDER BY bra_biome__name, alert__count LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20alert__count%20FROM%20data%20ORDER%20BY%20bra_biome__name%2C%20alert__count%20LIMIT%205) |
-| Supported | ORDER BY: Ordering results by multiple column descending | [SELECT bra_biome__name, alert__count FROM data ORDER BY bra_biome__name, alert__count DESC LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20alert__count%20FROM%20data%20ORDER%20BY%20bra_biome__name%2C%20alert__count%20DESC%20LIMIT%205) |
-| Supported | LIMIT: Limit the number of returned results | [SELECT bra_biome__name FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20LIMIT%205) |
-| Supported | OFFSET: Offset the returned results | [SELECT bra_biome__name FROM data LIMIT 5 OFFSET 10](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20LIMIT%205%20OFFSET%2010) |
-| **Not supported** | OFFSET: Offset the returned results using short syntax | [SELECT bra_biome__name FROM data LIMIT 5, 10](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20LIMIT%205%2C%2010) |
+| YES | SELECT: Selecting all columns using wildcard | [SELECT \* FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20LIMIT%205) |
+| YES | SELECT: Count all rows | [SELECT count(\*) FROM data](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20count(\*)%20FROM%20data) |
+| YES | SELECT: Selecting specific columns | [SELECT bra\_biome\_\_name, alert\_\_count FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%2C%20alert\_\_count%20FROM%20data%20LIMIT%205) |
+| NO | SELECT: Selecting DISTINCT values for specific columns | [SELECT DISTINCT(bra\_biome\_\_name) FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20DISTINCT(bra\_biome\_\_name)%20FROM%20data%20LIMIT%205) |
+| YES | SELECT: Selecting columns AND counting all rows | [SELECT bra\_biome\_\_name, count(\*) FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%2C%20count(\*)%20FROM%20data%20LIMIT%205) |
+| YES | SELECT: Aliasing aggregate function results such as AVG in SELECT | [SELECT AVG(alert\_\_count) as alias FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20AVG(alert\_\_count)%20as%20alias%20FROM%20data%20LIMIT%205) |
+| YES | SELECT: Usage of aggregate functions (AVG) in SELECT | [SELECT AVG(alert\_\_count) FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20AVG(alert\_\_count)%20FROM%20data%20LIMIT%205) |
+| YES | SELECT: Usage of aggregate functions (MAX) in SELECT | [SELECT MAX(alert\_\_count) FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20MAX(alert\_\_count)%20FROM%20data%20LIMIT%205) |
+| YES | SELECT: Usage of aggregate functions (MIN) in SELECT | [SELECT MIN(alert\_\_count) FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20MIN(alert\_\_count)%20FROM%20data%20LIMIT%205) |
+| YES | SELECT: Usage of aggregate functions (SUM) in SELECT | [SELECT SUM(alert\_\_count) FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20SUM(alert\_\_count)%20FROM%20data%20LIMIT%205) |
+| YES | FROM: Using dataset id in FROM statement | [SELECT \* FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%209be3bf63-97fc-4bb0-b913-775ccae3cf9e%20LIMIT%205) |
+| YES | FROM: Using dataset slug in FROM statement | [SELECT \* FROM Glad-Alerts-Daily-Geostore-User-Areas\_3 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20Glad-Alerts-Daily-Geostore-User-Areas\_3%20LIMIT%205) |
+| YES | FROM: Using dataset tableName in FROM statement | [SELECT \* FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20LIMIT%205) |
+| YES | WHERE: Greater than filtering | [SELECT \* FROM data WHERE alert\_\_count > 2 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20alert\_\_count%20%3E%202%20LIMIT%205) |
+| YES | WHERE: Greater than or equal filtering | [SELECT \* FROM data WHERE alert\_\_count >= 2 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20alert\_\_count%20%3E%3D%202%20LIMIT%205) |
+| YES | WHERE: Equality filtering | [SELECT \* FROM data WHERE alert\_\_count = 5 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20alert\_\_count%20%3D%205%20LIMIT%205) |
+| YES | WHERE: Lower than filtering | [SELECT \* FROM data WHERE alert\_\_count < 8 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20alert\_\_count%20%3C%208%20LIMIT%205) |
+| YES | WHERE: Lower than or equal filtering | [SELECT \* FROM data WHERE alert\_\_count <= 8 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20alert\_\_count%20%3C%3D%208%20LIMIT%205) |
+| YES | WHERE: Conjunction (AND) filtering | [SELECT \* FROM data WHERE alert\_\_count <= 8 AND alert\_area\_\_ha > 0.1 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20alert\_\_count%20%3C%3D%208%20AND%20alert\_area\_\_ha%20%3E%200.1%20LIMIT%205) |
+| YES | WHERE: Disjunction (OR) filtering | [SELECT \* FROM data WHERE alert\_\_count <= 8 OR alert\_area\_\_ha > 0.1 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20alert\_\_count%20%3C%3D%208%20OR%20alert\_area\_\_ha%20%3E%200.1%20LIMIT%205) |
+| YES | WHERE: BETWEEN filtering | [SELECT \* FROM data WHERE alert\_\_count BETWEEN 2 AND 8 LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20alert\_\_count%20BETWEEN%202%20AND%208%20LIMIT%205) |
+| NO | WHERE: LIKE filtering | [SELECT \* FROM data WHERE bra\_biome\_\_name LIKE 'Amaz%' LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20WHERE%20bra\_biome\_\_name%20LIKE%20'Amaz%25'%20LIMIT%205) |
+| YES | GROUP BY: Group results by a single column | [SELECT bra\_biome\_\_name FROM data GROUP BY bra\_biome\_\_name LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%20FROM%20data%20GROUP%20BY%20bra\_biome\_\_name%20LIMIT%205) |
+| YES | GROUP BY: Group results by multiple columns | [SELECT bra\_biome\_\_name, alert\_\_count FROM data GROUP BY bra\_biome\_\_name, alert\_\_count LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%2C%20alert\_\_count%20FROM%20data%20GROUP%20BY%20bra\_biome\_\_name%2C%20alert\_\_count%20LIMIT%205) |
+| YES | GROUP BY: Aggregate functions used with GROUP BY statements | [SELECT bra\_biome\_\_name, COUNT(\*) as count FROM data GROUP BY bra\_biome\_\_name LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%2C%20COUNT(\*)%20as%20count%20FROM%20data%20GROUP%20BY%20bra\_biome\_\_name%20LIMIT%205) |
+| YES | GROUP BY: Special grouping by range function | [SELECT count(\*) FROM data GROUP BY range(alert\_\_count, 0,1,2,3,4) LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20count(\*)%20FROM%20data%20GROUP%20BY%20range(alert\_\_count%2C%200%2C1%2C2%2C3%2C4)%20LIMIT%205) |
+| YES | ORDER BY: Ordering results by one column | [SELECT bra\_biome\_\_name FROM data ORDER BY bra\_biome\_\_name LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%20FROM%20data%20ORDER%20BY%20bra\_biome\_\_name%20LIMIT%205) |
+| YES | ORDER BY: Ordering results by one column descending | [SELECT bra\_biome\_\_name FROM data ORDER BY bra\_biome\_\_name DESC LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%20FROM%20data%20ORDER%20BY%20bra\_biome\_\_name%20DESC%20LIMIT%205) |
+| YES | ORDER BY: Ordering results by multiple column | [SELECT bra\_biome\_\_name, alert\_\_count FROM data ORDER BY bra\_biome\_\_name, alert\_\_count LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%2C%20alert\_\_count%20FROM%20data%20ORDER%20BY%20bra\_biome\_\_name%2C%20alert\_\_count%20LIMIT%205) |
+| YES | ORDER BY: Ordering results by multiple column descending | [SELECT bra\_biome\_\_name, alert\_\_count FROM data ORDER BY bra\_biome\_\_name, alert\_\_count DESC LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%2C%20alert\_\_count%20FROM%20data%20ORDER%20BY%20bra\_biome\_\_name%2C%20alert\_\_count%20DESC%20LIMIT%205) |
+| YES | LIMIT: Limit the number of returned results | [SELECT bra\_biome\_\_name FROM data LIMIT 5](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%20FROM%20data%20LIMIT%205) |
+| YES | OFFSET: Offset the returned results | [SELECT bra\_biome\_\_name FROM data LIMIT 5 OFFSET 10](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%20FROM%20data%20LIMIT%205%20OFFSET%2010) |
+| NO | OFFSET: Offset the returned results using short syntax | [SELECT bra\_biome\_\_name FROM data LIMIT 5, 10](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra\_biome\_\_name%20FROM%20data%20LIMIT%205%2C%2010) |
 
 *Note: This table was generated automatically with the help of [this repository](https://github.com/resource-watch/sql-compatibility-test). If you are maintaining the docs, please do not edit manually these tables.*
 
@@ -246,90 +254,4 @@ curl -i -XGET 'http://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced
 
 ```shell
 curl -i -XGET 'http://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962&geostore=0279093c278a64f4c3348ff63e4cfce0'
-```
-
-### Select clause
-
-The `SELECT` part of the queries supports naming columns, **alias**, **math operations**, **DISTINCT**, **COUNT**, **SQL functions** and **PostGIS functions**
-
-```sql
-SELECT * FROM table
-SELECT count(*) FROM table
-SELECT a, b FROM table
-SELECT a, count(*) FROM table
-
-SELECT sum(int) FROM table
-SELECT avg(int) FROM table
-SELECT max(int) FROM table
-SELECT min(int) FROM table
-SELECT min(int) as minimum FROM table
-
-SELECT ST_valueCount(rast, 1, true) FROM table
-```
-
-### From clause
-
-It is possible to refer to a dataset by using its **table name**, **slug** or **id**.
-
-```sql
-SELECT * FROM <dataset.tableName>
-SELECT * FROM <dataset.slug>
-SELECT * FROM <dataset.id>
-```
-
-### Where clause
-
-```sql
-SELECT * FROM table WHERE a > 2
-SELECT * FROM table WHERE a = 2
-SELECT * FROM table WHERE a < 2
-SELECT * FROM table WHERE a >= 2
-SELECT * FROM table WHERE a = 2 and b < 2
-SELECT * FROM table WHERE text like 'a%'
-SELECT * FROM table WHERE st_intersects(st_setsrid(st_geomfromgeojson('{}'), 4326), the_geom)
-SELECT * FROM table WHERE data BETWEEN 1 AND 3
-```
-
-### Group by clause
-
-It is possible to group results by **column name**, **SQL functions** and **PostGIS functions**.
-Special grouping operations are available for document-type datasets (CSV and JSON) - see [this link](https://github.com/NLPchina/elasticsearch-sql/tree/5.5.2.0#beyond-sql) for more info.
-
-```sql
-SELECT * FROM tablename GROUP BY columnOne
-SELECT * FROM tablename GROUP BY columnOne, columnTwo
-SELECT * FROM tablename GROUP BY ST_GeoHash(the_geom_point,8)
-
-SELECT a, count(int) FROM table GROUP BY a
-SELECT count(*) FROM tablename GROUP BY ST_GeoHash(the_geom, 8)
-```
-
-```sql
-/* Only supported in document-type datasets - see https://github.com/NLPchina/elasticsearch-sql/tree/5.5.2.0#beyond-sql for full details */
-SELECT COUNT(age) FROM tablename GROUP BY range(age, 20,25,30,35,40)
-SELECT online FROM online GROUP BY date_histogram(field='insert_time','interval'='1d')
-SELECT online FROM online GROUP BY date_range(field='insert_time','format'='yyyy-MM-dd' ,'2014-08-18','2014-08-17','now-8d','now-7d','now-6d','now')
-```
-
-### Order by clause
-
-It is possible to order results by **column name**, **SQL functions** and **PostGIS functions**
-
-### Limit and offset clause
-
-You can specify `limit` and `offset` clauses
-
-```sql
-SELECT * FROM table limit=20
-SELECT * FROM table limit=20 offset 10
-```
-
-### Raster queries available
-
-```sql
-SELECT ST_METADATA(rast) FROM table
-SELECT ST_BANDMETADATA(rast, occurrence) FROM table
-SELECT ST_SUMMARYSTATS() FROM table
-SELECT ST_HISTOGRAM(rast, 1, auto, true) FROM table
-SELECT ST_valueCount(rast, 1, true) FROM table
 ```
