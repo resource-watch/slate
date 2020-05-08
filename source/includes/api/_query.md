@@ -79,11 +79,23 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
 
 To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body.
 
-### Errors for querying datasets
+The following table describes the response body fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| data  | Array | Array of objects that correspond to the result of the query execution. The data structure varies according to the dataset being queried.
+| meta  | Object | Object with metadata regarding the query executed.
+| meta.cloneUrl | Object | Object with information for creating a new dataset from the current query execution.
+| meta.cloneUrl.httpMethod | String | The HTTP method that should be used for the request to create a new dataset from the current query execution.
+| meta.cloneUrl.url | String | The API endpoint path that should be used for the request to create a new dataset from the current query execution.
+| meta.cloneUrl.body | Object | The body request data that should be provided for creating a new dataset from the current query execution.
+
+Calling the query endpoint might sometimes result in an error being returned. The following table describes the possible errors that can occur when querying datasets:
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
+500            | Internal server error | The error message might vary in this case.
 
 ## Download
 
@@ -117,6 +129,15 @@ You can also specify which file type you want to download (JSON or CSV) - except
 * Carto
 * BigQuery
 * ArcGIS FeatureService
+
+The response body will contain the data to be downloaded. In the case of the format `json`, the returned result will be a JSON object with the results of the execution of the query provided. In the case of format `csv`, the body of the response will contain the actual CSV data corresponding to the results of the execution of the query provided.
+
+Calling the download endpoint might sometimes result in an error being returned. The following table describes the possible errors that can occur when downloading query results:
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
+500            | Internal server error | The error message might vary in this case.
 
 ## Supported SQL syntax reference
 
