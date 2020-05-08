@@ -9,16 +9,16 @@ curl -i -X GET http\://api.resourcewatch.org/v1/query\?sql\=SELECT\ \*\ from\ <d
 > Example of POST request for a query providing the SQL as request body param:
 
 ```shell
-curl -i -X POST 'http://api.resourcewatch.org/v1/query/<dataset_id>/' \
+curl -i -X POST 'http://api.resourcewatch.org/v1/query/<dataset.id>/' \
 -H 'Content-Type: application/json' \
 -d '{
-    "sql": "SELECT * FROM <dataset_id> limit 10"
+    "sql": "SELECT * FROM <dataset.tableName> limit 10"
 }'
 ```
 
 In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query.
 
-*Please note that some SQL features might not be supported. Check [here](/index-rw.html#limitations-of-sql-syntax) for a comprehensive list of the SQL features that are not supported.*
+*Please note that some SQL features might not be supported. Check [here](/index-rw.html#supported-sql-syntax-reference) for a reference of the SQL features' support for each dataset provider.*
 
 ## Querying datasets
 
@@ -118,25 +118,11 @@ You can also specify which file type you want to download (JSON or CSV) - except
 * BigQuery
 * ArcGIS FeatureService
 
-## Limitations of SQL syntax
-
-**While the WRI API aims to make the query interface as broad and transparent as possible, some of the querying options described below will not be available for specific dataset providers, depending on this API's implementation or limitations on the actual data provider's side.**
-
-Additionally to provider-specific limitations, every SQL query is transformed by [the `sql2json` microservice](https://github.com/resource-watch/sql2json), also maintained as [NPM package](https://www.npmjs.com/package/sql2json). There is a first conversion from SQL to JSON, and then from JSON to a SQL syntax that is compatible with [the Elasticsearch SQL plugin](https://github.com/NLPchina/elasticsearch-sql).
-
-This SQL syntax supported by Elasticsearch has some limitations that should be considered when querying datasets:
-
-* Very large SQL queries may run into some parsing issues.
-* Sorting by aggregated fields is not supported. For instance, the following statement is **not** supported: `GROUP BY age ORDER BY COUNT(*)`.
-* Using aggregation functions on top of scalar functions is also not possible. For instance, the following statement is **not** supported: `SELECT MAX(abs(age))`.
-* Sub-queries are only supported to a small degree, but the usage of `GROUP BY` or `HAVING` in the sub-query is not supported. For instance, the following statement **is** supported: `SELECT * FROM (SELECT first_name, last_name FROM emp WHERE last_name NOT LIKE '%a%') WHERE first_name LIKE 'A%' ORDER BY 1`, but statements with a higher level of complexity than applying simple conditions or orderings in the sub-query might not be supported.
-* The usage of scalar functions on nested fields in `ORDER BY` or `WHERE` clauses is limited. For instance, the following statement is **not** supported: `ORDER BY YEAR(dep.start_date)`.
-
-You can read more about the limitations of using SQL with Elasticsearch [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html).
-
 ## Supported SQL syntax reference
 
-## CartoDB datasets
+### CartoDB datasets
+
+This section describes the SQL support for querying datasets with provider `cartodb`.
 
 | Supported | Feature | Example URL |
 |-----------|---------|-------------|
@@ -172,7 +158,9 @@ You can read more about the limitations of using SQL with Elasticsearch [here](h
 
 *Note: This table was generated automatically with the help of [this repository](https://github.com/resource-watch/sql-compatibility-test). If you are maintaining the docs, please do not edit manually these tables.*
 
-## Document-based datasets
+### Document-based datasets
+
+This section describes the SQL support for querying datasets with connector type `document` and providers `csv`, `tsv`, `json` or `xml`.
 
 | Supported | Feature | Example URL |
 |-----------|---------|-------------|
@@ -207,6 +195,58 @@ You can read more about the limitations of using SQL with Elasticsearch [here](h
 | **Not supported** | OFFSET: Offset the returned results using short syntax | [SELECT bra_biome__name FROM data LIMIT 5, 10](http://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20LIMIT%205%2C%2010) |
 
 *Note: This table was generated automatically with the help of [this repository](https://github.com/resource-watch/sql-compatibility-test). If you are maintaining the docs, please do not edit manually these tables.*
+
+#### Troubleshooting SQL queries for document-based datasets
+
+This SQL syntax supported when running queries for document-based datasets has some known limitations:
+
+* Very large SQL queries may run into some parsing issues.
+* Sorting by aggregated fields is not supported. For instance, the following statement is **not** supported: `GROUP BY age ORDER BY COUNT(*)`.
+* Using aggregation functions on top of scalar functions is also not possible. For instance, the following statement is **not** supported: `SELECT MAX(abs(age))`.
+* Sub-queries are only supported to a small degree, but the usage of `GROUP BY` or `HAVING` in the sub-query is not supported. For instance, the following statement **is** supported: `SELECT * FROM (SELECT first_name, last_name FROM emp WHERE last_name NOT LIKE '%a%') WHERE first_name LIKE 'A%' ORDER BY 1`, but statements with a higher level of complexity than applying simple conditions or orderings in the sub-query might not be supported.
+* The usage of scalar functions on nested fields in `ORDER BY` or `WHERE` clauses is limited. For instance, the following statement is **not** supported: `ORDER BY YEAR(dep.start_date)`.
+
+You can read more about the limitations of using SQL with document-based datasets [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html).
+
+### Rasdaman datasets
+
+SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.
+
+```shell
+curl -XGET https://api.resourcewatch.org/v1/query?sql=SELECT avg(Green) from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat > 0 and  Lat < 45 \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <token>'
+```
+
+### NEX-GDDP datasets
+
+A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data are available. These can be accessed in the following ways:
+
+#### Spatial aggregates over a layer
+
+Access spatial aggregates over the data by listing all dataset data for a particular year:
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ where\ year\ \=\ 1960
+```
+
+Access particular aggregates:
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ avg\,\ min\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ where\ year\ \=\ 1960
+```
+
+Calculate statistics for a range of years:
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962
+```
+
+You can delimit an area of interest by providing a geostore id as a parameter:
+
+```shell
+curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
+```
 
 ### Select clause
 
@@ -292,44 +332,4 @@ SELECT ST_BANDMETADATA(rast, occurrence) FROM table
 SELECT ST_SUMMARYSTATS() FROM table
 SELECT ST_HISTOGRAM(rast, 1, auto, true) FROM table
 SELECT ST_valueCount(rast, 1, true) FROM table
-```
-
-### Rasdaman queries
-
-SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.
-
-```shell
-curl -XGET https://api.resourcewatch.org/v1/query?sql=SELECT avg(Green) from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat > 0 and  Lat < 45 \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <token>'
-```
-
-### NEX-GDDP queries
-
-A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data are available. These can be accessed in the following ways:
-
-#### Spatial aggregates over a layer
-
-Access spatial aggregates over the data by listing all dataset data for a particular year:
-
-```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ where\ year\ \=\ 1960
-```
-
-Access particular aggregates:
-
-```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ avg\,\ min\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ where\ year\ \=\ 1960
-```
-
-Calculate statistics for a range of years:
-
-```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962
-```
-
-You can delimit an area of interest by providing a geostore id as a parameter:
-
-```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
 ```
