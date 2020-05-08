@@ -224,28 +224,28 @@ A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like s
 
 #### Spatial aggregates over a layer
 
-Access spatial aggregates over the data by listing all dataset data for a particular year:
+> Access spatial aggregates over the data by listing all dataset data for a particular year:
 
 ```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ where\ year\ \=\ 1960
+curl -i -XGET 'http://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year = 1960'
 ```
 
-Access particular aggregates:
+> Access particular aggregates:
 
 ```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ avg\,\ min\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ where\ year\ \=\ 1960
+curl -i -XGET 'http://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT avg, min from nexgddp-historical-ACCESS1_0-prmaxday where year = 1960'
 ```
 
-Calculate statistics for a range of years:
+> Calculate statistics for a range of years:
 
 ```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962
+curl -i -XGET 'http://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962'
 ```
 
-You can delimit an area of interest by providing a geostore id as a parameter:
+> You can delimit an area of interest by providing a geostore id as a parameter:
 
 ```shell
-curl -i -XGET http\://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393\?sql\=SELECT\ \*\ from\ nexgddp-historical-ACCESS1_0-prmaxday\ \ where\ year\ between\ 1960\ and\ 1962&geostore\=0279093c278a64f4c3348ff63e4cfce0
+curl -i -XGET 'http://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962&geostore=0279093c278a64f4c3348ff63e4cfce0'
 ```
 
 ### Select clause
