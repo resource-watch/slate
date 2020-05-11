@@ -26,7 +26,7 @@ Each dataset has a **provider** (json/carto/GEE/...) that must specified on crea
 
 [Carto](https://carto.com/) is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world.
 
-#### ArcGIS Feature Service
+#### ArcGIS feature layer
 
 [ArcGIS](https://www.arcgis.com/index.html) server is a complete, cloud-based mapping platform. You can learn more about ArcGIS [here](https://www.arcgis.com/index.html).
 

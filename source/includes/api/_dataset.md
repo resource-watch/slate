@@ -517,9 +517,9 @@ The `tableName` value of a carto-based dataset will automatically be filled with
 
 When creating a Carto based-dataset, the RW API will try to validate the `connectorUrl` by trying to connect to the corresponding Carto table - the result of this will determine if the dataset's status will be set to `saved` or `error`.
 
-### ArcGIS feature Service
+### ArcGIS feature layer
 
-> Example of creating a dataset based on ArcGIS feature service data with the minimum fields required
+> Example of creating a dataset based on ArcGIS feature layer data with the minimum fields required
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset \
@@ -538,7 +538,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 }'
 ```
 
-To create a dataset using ArcGIS Feature Service as data source, besides the common required fields, you must provide the following required data:
+To create a dataset using ArcGIS feature layer as data source, besides the common required fields, you must provide the following required data:
 
 Field           | Description                                                                            | Example value  |
 --------------- | :------------------------------------------------------------------------------------: | ------------:  |
@@ -546,16 +546,16 @@ Field           | Description                                                   
 `provider`      | The provider should be set to `featureservice`.                                        | `featureservice` |
 `connectorUrl`  | The URL for the JSON data in ArcGIS services this dataset will be using.               | https://services.arcgis.com/uuid/arcgis/rest/services/example/FeatureServer/0?f=json |
 
-The RW API will use the information above to directly query the ArcGIS Feature Service Server specified on the `connectorUrl` field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:
+The RW API will use the information above to directly query the ArcGIS feature layer server specified on the `connectorUrl` field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:
 
-- The ArcGIS Feature Service URL provided will be publicly visible to all RW API users.
-- The ArcGIS Feature Service server will see increased traffic.
-- Any changes made to the data hosted on ArcGIS Feature Service will be automatically reflected on the data served by the RW API for this dataset.
-- If you restructure or delete your ArcGIS Feature Service dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.
+- The ArcGIS feature layer URL provided will be publicly visible to all RW API users.
+- The ArcGIS feature layer server will see increased traffic.
+- Any changes made to the data hosted on ArcGIS feature layer will be automatically reflected on the data served by the RW API for this dataset.
+- If you restructure or delete your ArcGIS feature layer dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.
 
-The `tableName` value of a ArcGIS-based dataset will automatically be filled with the name of the ArcGIS Feature Service table corresponding to the dataset.
+The `tableName` value of a ArcGIS-based dataset will automatically be filled with the name of the ArcGIS feature layer table corresponding to the dataset.
 
-When creating a ArcGIS-based dataset, the RW API will try to validate the `connectorUrl` by trying to connect to the corresponding ArcGIS server - the result of this will determine if the dataset's status will be set to `saved` or `error`.
+When creating a ArcGIS-based dataset, the RW API will try to validate the `connectorUrl` by trying to connect to the corresponding ArcGIS Feature Layer - the result of this will determine if the dataset's status will be set to `saved` or `error`.
 
 ### Google Earth Engine
 
@@ -624,7 +624,7 @@ Field           | Description                                                   
 --------------- | :------------------------------------------------------------------------------------: | ------------:  |
 `connectorType` | The type of connector. Must be set to `wms`.                                           | `wms`          |
 `provider`      | The provider should be set to `wms`.                                                   | `wms`          |
-`connectorUrl`  | URL of the server hosting the data in WMS format.                                      | http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/6?f=pjson |
+`connectorUrl`  | URL of the server hosting the data in WMS format.                                      | `https://maps.heigit.org/osm-wms/service?request=GetCapabilities&service=WMS` |
 
 
 The RW API will use the information above to directly query the WMS dataset specified on the `connectorUrl` field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:
@@ -839,7 +839,11 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id-or-slug> \
 }'
 ```
 
-In order to modify the fields of a dataset, you can use the patch dataset endpoint. This endpoint allows you to modify most of your dataset's details, like the name or publishing status, but can also be used to modify internal fields of a dataset, like `connectorType`. When making these changes, be mindful that some of these fields are critical to the correct behavior of the dataset, and providing incorrect values may break your dataset. There are other endpoints documented in this page that allow you to perform certain update-like operations (ie. update data on a document-type dataset), so refer to those first before using this endpoint. Also important to keep in mind is the fact that this endpoint does not perform validation on things like `connectorUrl`/`sources` URLs.
+In order to modify the fields of a dataset, you can use the patch dataset endpoint. 
+This endpoint allows you to modify most of your dataset's details, like the name or publishing status, but can also be used to modify internal fields of a dataset, like `connectorType`. 
+When making these changes, be mindful that some of these fields are critical to the correct behavior of the dataset, and providing incorrect values may break your dataset. 
+There are other endpoints documented in this page that allow you to perform certain update-like operations (ie. update data on a document-type dataset), so refer to those first before using this endpoint. 
+Also important to keep in mind is the fact that this endpoint does not perform validation on things like `connectorUrl`/`sources` URLs.
 
 All the fields in the [dataset reference](#dataset-reference) can be modified, except the following:
 
