@@ -210,7 +210,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name,description
 > Sort by name descending, description ascending
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,%2Bdescription
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
 ```
 
 > Sorting datasets by the role of the user who owns the dataset
@@ -330,7 +330,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057
 > Getting a dataset by slug:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC-test-1490086842132
+curl -X GET https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC
 ```
 
 > Response (equal for both cases):
@@ -341,8 +341,8 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC-test-
         "id": "51943691-eebc-4cb4-bdfb-057ad4fc2145",
         "type": "dataset",
         "attributes": {
-            "name": "Timber Production RDC (test)",
-            "slug": "Timber-Production-RDC-test-1490086842132",
+            "name": "Timber Production RDC",
+            "slug": "Timber-Production-RDC",
             "type": null,
             "subtitle": null,
             "application": ["forest-atlas"],
@@ -472,7 +472,7 @@ Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | `<field>`: `<field>` can not be empty | Your are missing a required field value.
 400            | `<field>`: empty or invalid `<field>` | The provided value for `<field>` is invalid. This is usually happens if an invalid value type is provided, but certain fields use more advanced validation rules, that may produce this error message if validation fails (ie: on a carto dataset, the `connectorUrl` must contain a valid carto URL). 
-400            | provider: must be valid [cartodb, featureservice, gee, bigquery, rasdaman, nexgddp, loca] | Your `provider` value is invalid.
+400            | provider: must be valid <list of valid providers> | Your `provider` value is invalid. The `<list of valid providers>` will contain the list of providers that are supported for the `connectorType` you specified.
 401            | Unauthorized  | You are not authenticated. If creating a BigQuery dataset, you may also see this message if you are authenticated. Refer to the [BigQuery documentation](#bigquery49) for more details.
 403            | Forbidden - User does not have access to this dataset's application  | You are trying to create a dataset with one or more `application` values that are not associated with your user account. 
 
