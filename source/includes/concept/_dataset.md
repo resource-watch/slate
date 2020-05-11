@@ -78,3 +78,21 @@ Data provided in the form of a JSON document.
 #### Extensible (X) Markup Language (XML)
 
 Data provided in the form of a XML document.
+
+
+### Dataset connector type
+
+Each dataset provider has an associated **connector type**, which you can determine using the table below. 
+
+Connector type          | Providers                      
+----------------------- | -------------- 
+document                | `csv`, `json`, `tsv`, `xml`          
+rest                    | `cartodb`, `featureservice`, `gee`, `bigquery`, `rasdaman`, `nexgddp`, `loca`           
+wms                     | `wms`        
+
+The connector type reflects an important aspect of a dataset: where is the actual data kept, and how is it accessed:
+
+- `document` connector type: a dataset that uses this connector type has its data hosted on the RW API database. For example,   datasets with provider `json` are based on user provided JSON files, and have the `document` connector type. This means that, on dataset creation, the content of the provided JSON files is copied onto an internal RW API database, and future queries will get their data from that database - the actual JSON files are not used after the creation process is done.
+- `rest` connector type: a dataset that uses this connector type proxies the underlying service specified as `provider`. For example, a dataset that uses the provider `cartodb` has the connector type `rest`. This means that queries to that dataset will cause the API to query the carto URL provided, and pass the result to the user. Apart from temporary caches, the actual data is never kept on the RW API itself. The underlying carto table needs to exist and be accessible for the RW API dataset to work.
+- `wms` connector type: this connector type is used only for datasets that use the `wms` provider. The RW API does not access the data for these datasets. 
+  
