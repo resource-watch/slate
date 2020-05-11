@@ -46,13 +46,22 @@ Each dataset has a **provider** (json/carto/GEE/...) that must specified on crea
 
 The [NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP)](https://www.nasa.gov/nex) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).
 
+*Note: While you may find and use existing dataset of this type, creation of new NEX-GDDP based datasets is restricted to specific users.*
+
+
 #### BigQuery
 
 [BigQuery](https://cloud.google.com/bigquery) is a serverless, highly scalable, and cost-effective cloud data warehouse designed to help you make informed decisions quickly, so you can transform your business with ease.
 
+*Note: While you may find and use existing dataset of this type, creation of new BigQuery based datasets is restricted to specific users.*
+
+
 #### Loca
 
 [LOCA](http://loca.ucsd.edu/), which stands for Localized Constructed Analogs, is a technique for downscaling climate model projections of the future climate.
+
+*Note: While you may find and use existing dataset of this type, creation of new LOCA based datasets is restricted to specific users.*
+
 
 #### Comma-Separated Values (CSV)
 
