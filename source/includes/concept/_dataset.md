@@ -118,4 +118,4 @@ If you've used SQL in the past, you know how powerful (and complex) it can be. T
 
 ### Some operation will depend on the provider of the dataset you're querying
 
-Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we've achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provided, but not for another. In the docs below, you'll find more details on these limitations, per provider.  
+Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we've achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provider, but not for another. In the docs below, you'll find more details on these limitations, per provider.  
