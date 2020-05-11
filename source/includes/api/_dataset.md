@@ -705,7 +705,7 @@ When creating a document based dataset, you have multiple ways of providing your
 
 The data passed in `sources` or `connectorUrl` must be available on a publicly accessible URLs, specified in the `sources` array field or the `connectorUrl` single value field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. `sources` allows you to specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.
 
-*Notice: If you want to create a dataset from a file you have, but that it's not available on a public URL, check out our docs for [uploading a dataset](#uploading-a-dataset).
+*Notice: If you want to create a dataset from a file you have, but that it's not available on a public URL, check out our docs for [uploading a dataset](#uploading-a-dataset).*
 
   
 Unlike with other dataset types, when the dataset is created, the data is copied from the provided source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations. This has a few implications that you should be aware of:
@@ -716,6 +716,8 @@ Unlike with other dataset types, when the dataset is created, the data is copied
 - If the URLs provided become unavailable after the creation process is over, the dataset will continue to work normally - your data will still be available online.
 
 *Notice: When creating a document-based dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.*
+
+*Tip: If you want to periodically and automatically update your document based dataset with new data, check out the [dataset automatic synchronization](#dataset-automatic-synchronization) functionality.*
 
 When creating a document-based dataset, the RW API will start a complex process that copies your data into the API's internal database, and perform certain indexing actions. This process is called a **Task**, and is given a `taskId` that is stored on the dataset's field with the same name. Depending on the size of your dataset, this may take from a few seconds to a few hours to complete. The result of this import process will determine if the dataset's status will be set to `saved` or `error`. You can follow this process by using the `taskId` value with the [Tasks API](#get-a-single-task).
 
@@ -949,6 +951,7 @@ sources      | List of URLs from which to source data                           
 data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
 dataPath     | Path to the data in a JSON file-based datasets                    | String |            '' | No
 
+*Tip: If you want to periodically and automatically concatenate data to your document based dataset, check out the [dataset automatic synchronization](#dataset-automatic-synchronization) functionality.*
         
 Use this endpoint when:
 
@@ -1017,6 +1020,7 @@ sources      | List of URLs from which to source data                           
 data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
 legend       | The schema of the new data. If none is provided, a guessing mechanism will be used. The existing `legend` value of the dataset will be ignored and overwritten in all `overwrite` operations. See [the legend section](#legend) above for more details.                                                | Object |               |       No
 
+*Tip: If you want to periodically and automatically overwrite the data on your document based dataset, check out the [dataset automatic synchronization](#dataset-automatic-synchronization) functionality.*
 
 #### Errors for overwriting data for a document based dataset
 
