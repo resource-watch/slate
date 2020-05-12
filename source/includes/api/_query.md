@@ -33,6 +33,8 @@ Both GET and POST query endpoints expect **the id of the dataset being queried t
 | POST  | `http://api.resourcewatch.org/v1/query/:datasetId` | The SQL statement should be provided in the body of the request.
 | POST  | `http://api.resourcewatch.org/v1/query` | The SQL statement should be provided in the body of the request. This way of querying datasets is only supported by some providers (e.g. document-based datasets).
 
+Note: The `FROM` clause of the SQL query being executed must also reference the dataset being queried. This reference should be done by providing the `dataset.tableName` field as the table being queried in the `FROM` clause. For some dataset providers (e.g. document-based datasets), you can provide instead the dataset id (`dataset.id`) or the dataset slug (`dataset.slug`) as the table being queried in the FROM clause.
+
 ### Query response body
 
 > Example response:
@@ -121,6 +123,8 @@ Download endpoints expect **the id of the dataset being queried to be provided a
 |-------|------|-------------|
 | GET   | `http://api.resourcewatch.org/v1/download/:datasetId?sql=<sql-statement>` | Default way of downloading query results.
 | GET   | `http://api.resourcewatch.org/v1/download?sql=<sql-statement>` | This way of downloading query results is only supported by some providers (e.g. document-based datasets).
+
+Note: The `FROM` clause of the SQL query being executed must also reference the dataset being queried. This reference should be done by providing the `dataset.tableName` field as the table being queried in the `FROM` clause. For some dataset providers (e.g. document-based datasets), you can provide instead the dataset id (`dataset.id`) or the dataset slug (`dataset.slug`) as the table being queried in the FROM clause.
 
 You can also specify which file type you want to download (JSON or CSV) by using the `format` query parameter (except for Google Earth Engine datasets, which only support downloading as JSON). By default, the API will return a CSV file (or a JSON file for Google Earth Engine).
 
