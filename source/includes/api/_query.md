@@ -1,22 +1,6 @@
 # Query
 
-> Example of GET request for a query providing the SQL as query param:
-
-```shell
-curl -i -X GET http://api.resourcewatch.org/v1/query?sql=SELECT * from <dataset.slug>
-```
-
-> Example of POST request for a query providing the SQL as request body param:
-
-```shell
-curl -i -X POST 'http://api.resourcewatch.org/v1/query/<dataset.id>/' \
--H 'Content-Type: application/json' \
--d '{
-    "sql": "SELECT * FROM <dataset.tableName> limit 10"
-}'
-```
-
-In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query.
+In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query. If you are new to the RW API, or want to learn more about the concept of a querying datasets, we strongly encourage you to read the [query concept](#query) documentation first. It gives you a brief and clear description of what a query is, and what it is useful for.
 
 *Please note that some SQL features might not be supported. Check [here](/index-rw.html#supported-sql-syntax-reference) for a reference of the SQL features' support for each dataset provider.*
 
