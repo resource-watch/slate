@@ -3,7 +3,7 @@
 > Example of GET request for a query providing the SQL as query param:
 
 ```shell
-curl -i -X GET http\://api.resourcewatch.org/v1/query\?sql\=SELECT\ \*\ from\ <dataset.slug>
+curl -i -X GET http://api.resourcewatch.org/v1/query?sql=SELECT * from <dataset.slug>
 ```
 
 > Example of POST request for a query providing the SQL as request body param:
