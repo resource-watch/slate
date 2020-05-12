@@ -22,6 +22,19 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
 }'
 ```
 
+To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body.
+
+Both GET and POST query endpoints expect **the id of the dataset being queried to be provided as part of the path**. This id can be omitted when querying datasets of certain providers (e.g. document-based datasets).
+
+| Method | Endpoint | Notes |
+|-------|------|-------------|
+| GET   | `http://api.resourcewatch.org/v1/query/:datasetId?sql=<sql-statement>` | Default way of querying datasets.
+| GET   | `http://api.resourcewatch.org/v1/query?sql=<sql-statement>` | This way of querying datasets is only supported by some providers (e.g. document-based datasets).
+| POST  | `http://api.resourcewatch.org/v1/query/:datasetId` | The SQL statement should be provided in the body of the request.
+| POST  | `http://api.resourcewatch.org/v1/query` | The SQL statement should be provided in the body of the request. This way of querying datasets is only supported by some providers (e.g. document-based datasets).
+
+### Query response body
+
 > Example response:
 
 ```json
@@ -49,7 +62,7 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
             "url": "/dataset/098b33df-6871-4e53-a5ff-b56a7d989f9a/clone",
             "body": {
                 "dataset": {
-                    "datasetUrl": "/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT%20cartodb_id%2C%20iso%2C%20name_0%2C%20name_1%2C%20type_1%20FROM%20gadm28_adm1%20limit%2010",
+                    "datasetUrl": "/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT%20*%20FROM%20gadm28_adm1%20limit%2010",
                     "application": [
                         "your",
                         "apps"
@@ -61,8 +74,6 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
 }
 ```
 
-To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body.
-
 The following table describes the response body fields:
 
 | Field | Type | Description |
@@ -73,6 +84,8 @@ The following table describes the response body fields:
 | meta.cloneUrl.httpMethod | String | The HTTP method that should be used for the request to create a new dataset from the current query execution.
 | meta.cloneUrl.url | String | The API endpoint path that should be used for the request to create a new dataset from the current query execution.
 | meta.cloneUrl.body | Object | The body request data that should be provided for creating a new dataset from the current query execution.
+
+### Query execution errors
 
 Calling the query endpoint might sometimes result in an error being returned. The following table describes the possible errors that can occur when querying datasets:
 
@@ -102,9 +115,14 @@ curl -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT * from <datase
 curl -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=csv'
 ```
 
-You can download the result of a query using the `download` endpoint. You can either provide the dataset id in the URL or you can pass it as part of the SQL query (in the FROM clause).
+Download endpoints expect **the id of the dataset being queried to be provided as part of the path**. This id can be omitted when downloading query results of datasets of certain providers (e.g. document-based datasets).
 
-You can also specify which file type you want to download (JSON or CSV) - except for Google Earth Engine datasets (which only supports JSON). By default, the API will return a CSV file (or a JSON file for Google Earth Engine).
+| Method | Endpoint | Notes |
+|-------|------|-------------|
+| GET   | `http://api.resourcewatch.org/v1/download/:datasetId?sql=<sql-statement>` | Default way of downloading query results.
+| GET   | `http://api.resourcewatch.org/v1/download?sql=<sql-statement>` | This way of downloading query results is only supported by some providers (e.g. document-based datasets).
+
+You can also specify which file type you want to download (JSON or CSV) by using the `format` query parameter (except for Google Earth Engine datasets, which only support downloading as JSON). By default, the API will return a CSV file (or a JSON file for Google Earth Engine).
 
 **Please not that not all dataset providers support downloading queries - the following providers support downloading query results:**
 
@@ -114,7 +132,11 @@ You can also specify which file type you want to download (JSON or CSV) - except
 * BigQuery
 * ArcGIS FeatureService
 
+### Download response body
+
 The response body will contain the data to be downloaded. In the case of the format `json`, the returned result will be a JSON object with the results of the execution of the query provided. In the case of format `csv`, the body of the response will contain the actual CSV data corresponding to the results of the execution of the query provided.
+
+### Download execution errors
 
 Calling the download endpoint might sometimes result in an error being returned. The following table describes the possible errors that can occur when downloading query results:
 
