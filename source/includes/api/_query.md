@@ -128,7 +128,7 @@ Note: The `FROM` clause of the SQL query being executed must also reference the 
 
 You can also specify which file type you want to download (JSON or CSV) by using the `format` query parameter (except for Google Earth Engine datasets, which only support downloading as JSON). By default, the API will return a CSV file (or a JSON file for Google Earth Engine).
 
-**Please not that not all dataset providers support downloading queries - the following providers support downloading query results:**
+**Please note that not all dataset providers support downloading queries - the following providers support downloading query results:**
 
 * Google Earth Engine
 * Document
