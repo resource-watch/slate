@@ -22,7 +22,7 @@ curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
 }'
 ```
 
-To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body.
+To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body. Using GET is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same query will see a great performance increase, even if they are made by a different application or client. POST requests, on the other hand, are not cached, but can be useful if your query is very long, and may experience issues related limits on URL length.  
 
 Both GET and POST query endpoints expect **the id of the dataset being queried to be provided as part of the path**. This id can be omitted when querying datasets of certain providers (e.g. document-based datasets).
 
