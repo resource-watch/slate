@@ -11,7 +11,9 @@ toc_footers:
 
 includes:
   - about_these_docs
+  - concept/intro
   - concept/dataset
+  - concept/query
   - api/authentication
   - api/contact
   - api/collections
