@@ -9,8 +9,23 @@ In order to retrieve data from datasets, you can send queries to the API using a
 > Structure of the endpoint for executing a query:
 
 ```shell
-curl -i -X GET 'https://api.resourcewatch.org/v1/query/<dataset.id>?sql=SELECT * FROM <dataset.tableName> limit 10'
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/<dataset.id>?sql=SELECT * FROM <dataset.tableName>'
 ```
+
+
+
+In order to query a dataset, you'll need two pieces of information:
+
+- The id of the dataset you're trying to query.
+- The SQL query that represents the data you are trying to retrieve.
+
+The [dataset documentation](#dataset6) covers different ways that you can use to browse the existing dataset catalog or upload your own, all of which will give you the details of a dataset, including the dataset id you'll need to query it.
+
+The SQL query will have to be custom built by you to fit your needs, but a good starting point for newcomers would be something like `SELECT * FROM <dataset.tableName> limit 10`.
+
+*Notice: the `limit` parameter restricts our results to 10 rows, and is not required. However, for our learning purposes, this is useful, as it keeps the API responses small and fast.* 
+
+Most of the SQL query is up to you to define, based on your needs and the [support provided for the dataset type you are using](#supported-sql-syntax-reference). The `FROM` clause, however, does use a special value - the dataset's `tableName` value, which you can also get from the [dataset documentation](#dataset6) described above.
 
 > Example endpoint for executing a query:
 
@@ -18,7 +33,8 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/query/<dataset.id>?sql=SELECT *
 curl -i -X GET 'https://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
 ```
 
-In order to query the data of a dataset, you should perform a GET request to the `query` endpoint, providing the ID of the dataset being queried in the path of the request (as in `/query/:datasetId`), and provide the SQL query as query param. The SQL query should also reference the dataset's `tableName` in the `FROM` clause of the SQL query.
+With both pieces of information at hand, you can now send your query to the API and get the response. The example `cURL` to the side shows how that would look like.
+
 
 ### Query response body
 
@@ -65,28 +81,20 @@ The following table describes the response body fields:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| data  | Array | Array of objects that correspond to the result of the query execution. The data structure varies according to the dataset being queried.
+| data  | Array | Array of objects that correspond to the result of the query execution. The data structure varies according to `SELECT` clause of your query, or the structure of dataset being queried.
 | meta  | Object | Object with metadata regarding the query executed.
 | meta.cloneUrl | Object | Object with information for creating a new dataset from the current query execution.
-| meta.cloneUrl.httpMethod | String | The HTTP method that should be used for the request to create a new dataset from the current query execution.
+| meta.cloneUrl.http_method | String | The HTTP method that should be used for the request to create a new dataset from the current query execution. Read the documentation on [cloning a dataset](#cloning-a-dataset) for more info.
 | meta.cloneUrl.url | String | The API endpoint path that should be used for the request to create a new dataset from the current query execution.
 | meta.cloneUrl.body | Object | The body request data that should be provided for creating a new dataset from the current query execution.
 
-### Query execution errors
-
-Calling the query endpoint might sometimes result in an error being returned. The following table describes the possible errors that can occur when querying datasets:
-
-Error code     | Error message  | Description
--------------- | -------------- | --------------
-400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
-500            | Internal server error | The error message might vary in this case.
 
 ### Query endpoint parameters
 
 > Example of requesting the query results as CSV data:
 
 ```shell
-curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 2&format=csv'
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2&format=csv'
 ```
 
 > Example response:
@@ -103,7 +111,7 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FR
 > Example of requesting to freeze the query results:
 
 ```shell
-curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 2&freeze=true' \
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2&freeze=true' \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -115,61 +123,80 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FR
 }
 ```
 
-The following parameters can be provided as query-string parameters, in order to customize the output of the response returned:
+The following parameters can be provided as query parameters, in order to customize the output of the response returned:
 
-Query-string parameter | Description                                                                  | Type        |
----------------------- | ---------------------------------------------------------------------------- | ----------- |
-sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String |
-format                 | The format of the returned response. By default, JSON format is assumed (`json`), but you can also request the response as CSV (`csv`), in which case the returned response will contain the CSV contents of the response. **This parameter will only be considered for document-based datasets.** | String |
-freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | String |
+Query parameter        | Description                                                                  | Type        | Required |
+---------------------- | ---------------------------------------------------------------------------- | ----------- | -------- |
+sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String | Yes |
+format                 | The format of the returned response. By default, JSON format is assumed (`json`), but you can also request the response as CSV (`csv`), in which case the returned response will contain the CSV contents of the response. **This parameter will only be considered for document-based datasets.** | String | No |
+freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | Boolean | No |
 
 ### Alternative ways for querying datasets
 
-> Example query providing a CartoDB dataset id in the request path and the dataset table name in the FROM clause:
+While the GET request described above is the recommended way of querying datasets, there are other ways to query the RW API datasets that may be more suited for specific use cases. 
 
-```shell
-curl -i -X GET 'https://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
-```
-
-> Example query providing a document-based dataset id in the request path:
-
-```shell
-curl -i -X GET 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date FROM data limit 10'
-```
-
-> Example query not using the dataset id in the request path, and using the dataset id in the FROM clause:
-
-```shell
-curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 10'
-```
+#### Using the dataset slug instead of the id
 
 > Example query not using the dataset id in the request path, and using the dataset slug in the FROM clause:
 
 ```shell
-curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FROM Glad-Alerts-Daily-Geostore-User-Areas_3 limit 10'
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2'
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/Glad-Alerts-Daily-Geostore-User-Areas_3?sql=SELECT alert__date from gadm28_adm1 limit 2'
 ```
 
-> The same query executed as a POST request providing the SQL as request body param:
+When referencing a dataset's id in a query, you have the option to use the dataset's slug instead, obtaining the same result. This is also applicable to the alternative query methods described in the sections below.
+
+#### POST requests
+
+> The same query executed as GET, and as a POST request providing the SQL as request body param:
 
 ```shell
-curl -i -X POST 'https://api.resourcewatch.org/v1/query' \
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2'
+curl -i -X POST 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e' \
 -H 'Content-Type: application/json' \
 -d '{
-    "sql": "SELECT alert__date FROM Glad-Alerts-Daily-Geostore-User-Areas_3 limit 10"
+    "sql": "SELECT alert__date from gadm28_adm1 limit 2"
 }'
 ```
 
-To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body. Using GET is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same query will see a great performance increase, even if they are made by a different application or client. POST requests, on the other hand, are not cached, but can be useful if your query is very long, and may experience issues related limits on URL length.
+Using the GET request is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same query will see a great performance increase, even if they are made by a different application or client.
+ 
+Alternatively, you can also query a dataset using a POST request. POST requests are not cached, so you will not benefit from these speed improvements. However, GET requests can sometimes hit URL length restrictions, should your query string be too long. Using a POST request is the recommended solution for these cases. See the example on the side to see how you can query a dataset with a POST request.
 
-Both GET and POST query endpoints can receive the id of the dataset being queried to be provided as part of the path. If the dataset id is provided as part of the path, then the `FROM` clause must contain either the `tableName` (in the case of CartoDB datasets) or it is ignored (in the case of document-based datasets). If the dataset id is not provided, then the `FROM` clause of the query must contain either the dataset `id` or `slug`. The table below explains the different valid ways of querying datasets:
+#### Dataset id as the FROM clause
 
-| Endpoint structure | Notes |
-|--------------------|-------|
-| `GET/POST https://api.resourcewatch.org/v1/query/:datasetId?sql=<sql-statement>` | In the case of CartoDB datasets, if the dataset id is present in the path of the request, the `FROM` clause must contain the dataset `tableName`.
-| `GET/POST https://api.resourcewatch.org/v1/query/:datasetId?sql=<sql-statement>` | In the case of document-based datasets, if the dataset id is present in the path of the request, the contents of the `FROM` clause is ignored.
-| `GET/POST https://api.resourcewatch.org/v1/query?sql=<sql-statement>` | When the dataset id is not present in the path of the request, the `FROM` clause must contain either the dataset `id` or `slug` of the dataset being queried.
+> Three different but equivalent syntaxes for the same query:
 
-## Download
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
+
+curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10'
+
+curl -i -X POST 'https://api.resourcewatch.org/v1/query' \
+-H 'Content-Type: application/json' \
+-d '{
+    "sql": "SELECT cartodb_id, iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10"
+}'
+
+```
+
+The examples we've seen so far expect the URL to have the `/query/<dataset id or slug>?sql=SELECT * FROM <dataset.tableName>` format. However, you can also use the equivalent
+`/query?sql=SELECT * FROM <dataset id>` syntax. You can also use this alternative syntax with POST requests.
+
+
+#### Redundant FROM clause (document based datasets only)
+
+> Example query providing a document-based dataset id in the request path or as the FROM clause:
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 10'
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date FROM data limit 10'
+```
+
+When querying a document based dataset using either GET or POST `/query/<dataset id or slug>` request, the `FROM` clause is required but ignored, meaning you don't have to provide the dataset's `tableName` as you normally would. The example on the side illustrates this.  
+
+
+## Downloading data from a dataset
 
 > Requesting the download of a query providing the dataset ID in the URL:
 
