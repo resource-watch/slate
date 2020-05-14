@@ -122,6 +122,18 @@
 
 <h1 id="welcome-to-the-resource-watch-api-documentation">Welcome to the Resource Watch API Documentation.</h1>
 
+          <h1 id="about-these-docs">About these docs</h1>
+
+<p>This documentation page aims to cover the Resource Watch API functionality and details. In it, you&rsquo;ll find a top-level description of the services it provides, as well as a breakdown of the different endpoints, their functionality, parameters and output. The goal is to give you the tools to create powerful applications and data products.</p>
+
+<p>The RW API is <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> and <a href="https://en.wikipedia.org/wiki/JSON">JSON</a> based, and these docs assume you are familiar with both technologies. Besides endpoint descriptions, the documentation will include example code snippets that use <a href="https://en.wikipedia.org/wiki/CURL">cURL</a> to illustrate how you would use each endpoint. Knowing the basics of cURL will help you better understand those examples. </p>
+
+<p>For readability, URLs and query parameters may be displayed without escaping/encoding, but be sure to encode your URLs before issuing a request to the API, or it may produce undesired results. If you are using the RW API to build your own application, there&rsquo;s probably a library out there that does this for you automatically.</p>
+
+<p>In these examples, you&rsquo;ll also find references to a <code class="prettyprint">Authorization: Bearer &lt;your-token&gt;</code> HTTP header. You can find more details about tokens in the <a href="#authentication">authentication</a> section, which you should read before you get started.   </p>
+
+<p>Last but not least, the RW API and its docs are made by humans, who will occasionally make mistakes. If you find something that you think is incorrect, could be improved, if you want to contribute yourself, or just want to say &ldquo;thank you&rdquo;, you can reach us through <a href="https://github.com/resource-watch/doc-api">the RW API documentation Github project page</a>.</p>
+
           <h1 id="authentication">Authentication</h1>
 
 <p>The RW API uses JWT <a href="https://tools.ietf.org/html/rfc7519">(JSON Web Tokens)</a> to identify and authenticate its users. This token must be provided inside an <code class="prettyprint">Authorization</code> header, with the form <code class="prettyprint">Bearer: &lt;token&gt;</code>.</p>
@@ -349,15 +361,24 @@ Remember — All favorite endpoints need to be authenticated.
 </code></pre>
           <h1 id="dataset">Dataset</h1>
 
-<h2 id="what-is-a-dataset">What is a Dataset?</h2>
+<h2 id="what-is-a-dataset">What is a dataset?</h2>
 
-<p>If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the <a href="#dataset">dataset concept</a> documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you. </p>
+<p>If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the <a href="#dataset">dataset concept</a> documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you.</p>
 
-<p>Once you&rsquo;ve read that section, you can come back here to learn more details about <a href="#getting-all-datasets">using existing datasets</a> or <a href="#creating-a-dataset">creating your own</a>.</p>
+<p>Once you&rsquo;ve read that section, you can come back here to learn more details about using the RW API&rsquo;s datasets feature. The RW API is home to many datasets uploaded by <a href="https://www.wri.org/">WRI</a>, its partner organizations, or by API users like you. These datasets contain a lot of information about a wide range of topics that you may want to learn about or build on top of. To find out more about finding and accessing the datasets already available on the RW API, check out the documentation on <a href="#getting-all-datasets">getting datasets</a>. A nice, visual way to explore existing datasets is by using the <a href="https://resourcewatch.org/">Resource Watch</a> website. </p>
+
+<p>You can also <a href="#creating-a-dataset">create you own datasets</a> on the RW API, if you&rsquo;d like to share your data with the world, or 
+ if you are looking to use the RW API and its features to gain insights into your data.</p>
 
 <h2 id="getting-all-datasets">Getting all datasets</h2>
 
-<p>This endpoint will allow you to get the list of the datasets available in the API. You can customize the result in multiple ways, using the options described below.</p>
+<p>This endpoint will allow you to get the list of the datasets available in the API, and it&rsquo;s a great place for new users to start exploring the RW API. By default, this endpoint will give you a paginated list of 10 datasets. In the sections below, we&rsquo;ll explore how you can customize this endpoint call to match your needs. </p>
+
+<p>For a detailed description of each field, check out the <a href="#dataset-reference">Dataset reference</a> section.</p>
+
+<blockquote>
+<p>Getting a list of datasets</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset
 </code></pre>
 <blockquote>
@@ -385,8 +406,6 @@ Remember — All favorite endpoints need to be authenticated.
             </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
             </span><span class="s2">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"blockchain"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
             </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"geoInfo"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="s2">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -418,6 +437,13 @@ Remember — All favorite endpoints need to be authenticated.
 </span></code></pre>
 <h3 id="pagination">Pagination</h3>
 
+<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, datasets are listed in pages of 10 datasets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  </p>
+
+<blockquote>
+<p>Custom pagination: load page 2 using 25 results per page</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25
+</code></pre>
 <table><thead>
 <tr>
 <th>Field</th>
@@ -440,99 +466,23 @@ Remember — All favorite endpoints need to be authenticated.
 </tr>
 </tbody></table>
 
+<h3 id="search">Search</h3>
+
 <blockquote>
-<p>Paginating the output</p>
+<p>Search for datasets</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>1
-curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>threshold&amp;page[number]<span class="o">=</span>2
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?search<span class="o">=</span>wind
 </code></pre>
+<p>The dataset service offers a simple yet powerful search mechanism that will help you look for datasets. The query argument <code class="prettyprint">search</code> allows you to specify a search string that will match:</p>
+
+<ul>
+<li>The dataset name.</li>
+<li>The dataset&rsquo;s metadata name.</li>
+<li>The dataset&rsquo;s metadata description.</li>
+<li>The <a href="#graph">relational graph</a> node list.</li>
+</ul>
+
 <h3 id="filters">Filters</h3>
-
-<p>The dataset list provided by the endpoint can be filtered with the following attributes:</p>
-
-<table><thead>
-<tr>
-<th>Filter</th>
-<th>Description</th>
-<th>Accepted values</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>name</td>
-<td>Allow us to filter by name</td>
-<td>any valid text</td>
-</tr>
-<tr>
-<td>type</td>
-<td>Allow us to distinguish between tabular and raster datasets</td>
-<td><code class="prettyprint">raster</code> or <code class="prettyprint">tabular</code></td>
-</tr>
-<tr>
-<td>app</td>
-<td>Applications to which this dataset is being used</td>
-<td>Available applications like: <code class="prettyprint">[&quot;data4sdgs&quot;,&quot;gfw&quot;,&quot;rw&quot;,&quot;aqueduct&quot;,&quot;prep&quot;,&quot;forest-atlas&quot;,&quot;gfw-climate&quot;,&quot;aqueduct-water-risk&quot;,&quot;test&quot;,&quot;gfw-pro&quot;,&quot;globalforestwatch&quot;, &quot;ghg-gdp&quot;]</code></td>
-</tr>
-<tr>
-<td>connectorType</td>
-<td></td>
-<td><code class="prettyprint">rest</code> or <code class="prettyprint">document</code></td>
-</tr>
-<tr>
-<td>provider</td>
-<td>Dataset provider this include inner connectors and 3rd party ones</td>
-<td><a href="##supported-dataset-sources">A valid dataset provider</a></td>
-</tr>
-<tr>
-<td>userId</td>
-<td>the user who registered the dataset</td>
-<td>valid id</td>
-</tr>
-<tr>
-<td>user.role</td>
-<td>The role of the user who registered the dataset. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
-<td><code class="prettyprint">ADMIN</code>, <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code></td>
-</tr>
-<tr>
-<td>status</td>
-<td>the internal dataset status at connection time</td>
-<td><code class="prettyprint">pending</code>, <code class="prettyprint">saved</code> or <code class="prettyprint">failed</code></td>
-</tr>
-<tr>
-<td>published</td>
-<td></td>
-<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
-</tr>
-<tr>
-<td>env</td>
-<td>If the dataset is in the staging, preproduction environment or in production one</td>
-<td><code class="prettyprint">staging</code>, <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code>. Defaults to <code class="prettyprint">production</code></td>
-</tr>
-<tr>
-<td>overwritted</td>
-<td>If the data can be overwritten (only for being able to make dataset updates)</td>
-<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
-</tr>
-<tr>
-<td>verify</td>
-<td>If this dataset contains data that is verified using blockchain</td>
-<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
-</tr>
-<tr>
-<td>protected</td>
-<td>If it&rsquo;s a protected layer</td>
-<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
-</tr>
-<tr>
-<td>geoInfo</td>
-<td>If it contains interceptable geographical info</td>
-<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
-</tr>
-<tr>
-<td>subscribable</td>
-<td>If the dataset is subscribable (i.e. contains a non-empty object in the subscribable field)</td>
-<td><code class="prettyprint">true</code> or <code class="prettyprint">false</code></td>
-</tr>
-</tbody></table>
 
 <blockquote>
 <p>Filtering datasets</p>
@@ -540,34 +490,366 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>birds&amp;provider<span class="o">=</span>cartodb
 </code></pre>
 <blockquote>
-<p>For inclusive filtering with array props use &rsquo;@&rsquo;</p>
+<p>Matching vocabulary tags</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?app<span class="o">=</span>gfw@rw@prep
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?vocabulary[legacy]<span class="o">=</span>umd
 </code></pre>
+<p>The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you&rsquo;ll find in a dataset itself (which you can learn more about in the <a href="#dataset-reference">Dataset reference</a> section), while others are convenience filters for things like user role or favourites. These parameters can be combined into a complex <code class="prettyprint">and</code> logic query.</p>
+
+<p>Here&rsquo;s the comprehensive list of filters supported by datasets:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Expected values</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>Filter returned datasets by the name of the dataset.</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>slug</td>
+<td>Filter returned datasets by the slug of the dataset.</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>type</td>
+<td>Filter returned datasets by dataset type.</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td>Filter returned datasets by dataset subtitle.</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>application</td>
+<td>Applications associated to this dataset.</td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>applicationConfig</td>
+<td>If the dataset has <code class="prettyprint">applicationConfig</code> data (i.e. contains a non-empty object in the <code class="prettyprint">applicationConfig</code> field)</td>
+<td>Boolean</td>
+<td><code class="prettyprint">true</code> or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>dataPath</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>attributesPath</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>connectorType</td>
+<td>Filter returned datasets by the type of connector used.</td>
+<td>String</td>
+<td><code class="prettyprint">rest</code>, <code class="prettyprint">document</code> or <code class="prettyprint">wms</code></td>
+</tr>
+<tr>
+<td>provider</td>
+<td>Dataset provider this include inner connectors and 3rd party ones</td>
+<td>String</td>
+<td><a href="index-rw.html#creating-a-dataset">Check the available providers when creating a dataset</a></td>
+</tr>
+<tr>
+<td>connectorUrl</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>sources</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>tableName</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>userId</td>
+<td>Filter results by the owner of the dataset. Does not support regexes.</td>
+<td>String</td>
+<td>valid user id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>Filter results by the current status of the dataset.</td>
+<td>String</td>
+<td><code class="prettyprint">pending</code>, <code class="prettyprint">saved</code> or <code class="prettyprint">failed</code></td>
+</tr>
+<tr>
+<td>overwrite</td>
+<td>If the data can be overwritten (only for being able to make dataset updates)</td>
+<td>Boolean</td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>errorMessage</td>
+<td>If this dataset is in <code class="prettyprint">error</code> state, this field may contain additional details about the error.</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>mainDateField</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>published</td>
+<td>If the dataset is published or not.</td>
+<td>Boolean</td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>env</td>
+<td>Environment to which the dataset belongs. Multiple values can be combined using <code class="prettyprint">,</code> as a separator. Does not support regexes.</td>
+<td>String</td>
+<td>any valid text. Defaults to <code class="prettyprint">production</code>.</td>
+</tr>
+<tr>
+<td>geoInfo</td>
+<td>If it contains interceptable geographical info</td>
+<td>Boolean</td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>protected</td>
+<td>If the dataset is protected.</td>
+<td>Boolean</td>
+<td><code class="prettyprint">true</code>or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>taskId</td>
+<td>Id of the latest task associated with this dataset. Typically only present in <code class="prettyprint">document</code> connectorType datasets</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.lat</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.long</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.date</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.region</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.country</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.nested</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.integer</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.short</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.byte</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.double</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.byte</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.float</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.half_float</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.scaled_float</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.boolean</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.binary</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.text</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>legend.keyword</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>clonedHost.hostProvider</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>clonedHost.hostUrl</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>clonedHost.hostId</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>clonedHost.hostType</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>clonedHost.hostPath</td>
+<td></td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>widgetRelevantProps</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>layerRelevantProps</td>
+<td></td>
+<td>Array</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>subscribable</td>
+<td>If the dataset is subscribable (i.e. contains a non-empty object in the <code class="prettyprint">subscribable</code> field)</td>
+<td>Boolean</td>
+<td><code class="prettyprint">true</code> or <code class="prettyprint">false</code></td>
+</tr>
+<tr>
+<td>user.role</td>
+<td>Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
+<td>String</td>
+<td><code class="prettyprint">ADMIN</code>, <code class="prettyprint">MANAGER</code> or <code class="prettyprint">USER</code></td>
+</tr>
+<tr>
+<td>vocabulary[name]</td>
+<td>Filter returned datasets by vocabulary tags. Does not support regexes.</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>collection</td>
+<td>Filter returned datasets collection id. Does not support regexes.</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+<tr>
+<td>favourite</td>
+<td>Filter by favourited datasets. See <a href="#favorites">this section</a> for more info. Does not support regexes.</td>
+<td>String</td>
+<td>any valid text</td>
+</tr>
+</tbody></table>
+
+<p>Please keep in mind the following:</p>
+
+<ul>
+<li>String types support and expect a regex value, unless detailed otherwise on the <code class="prettyprint">Description</code> field. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).</li>
+<li>Array types support multiple values. Use <code class="prettyprint">,</code> as an <code class="prettyprint">or</code> multi-value separator, or <code class="prettyprint">@</code> as a multi-value, exact match separator.</li>
+<li>Object types expect a boolean value, where <code class="prettyprint">true</code> matches a non-empty object, and <code class="prettyprint">false</code> matches an empty object.</li>
+</ul>
+
 <h3 id="sorting">Sorting</h3>
 
 <h4 id="basics-of-sorting">Basics of sorting</h4>
-
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the dataset, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users).</p>
-
-<p>Sorting by nested fields is not supported at the moment.</p>
 
 <blockquote>
 <p>Sorting datasets</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name
 </code></pre>
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
 <blockquote>
 <p>Sorting datasets by multiple criteria</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name,description
 </code></pre>
-<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> or <code class="prettyprint">+</code>. By default, <code class="prettyprint">asc</code> order is assumed.</p>
-
 <blockquote>
-<p>Explicit order of sorting</p>
+<p>Sort by name descending, description ascending</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-name,+description
 </code></pre>
@@ -576,18 +858,13 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>user.role
 </code></pre>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> query parameter. Sorting can be done using any field from the <a href="#dataset-reference">dataset model</a>, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users). Sorting by nested fields is not supported at the moment.</p>
+
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<p>You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+
 <h4 id="special-sorting-criteria">Special sorting criteria</h4>
-
-<p>There are some criteria for special sorting in datasets:</p>
-
-<ul>
-<li><code class="prettyprint">metadata</code>: delegates sorting to the metadata component, sorting by the name field of the metadata.</li>
-<li><code class="prettyprint">most-viewed</code> delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.</li>
-<li><code class="prettyprint">most-favorited</code>: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.</li>
-<li><code class="prettyprint">relevance</code>: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a <code class="prettyprint">search</code> parameter. Does not support ascending order.</li>
-</ul>
-
-<p>Special search criteria must be used as sole sorting criteria, as it&rsquo;s not possible to combine any of them with any other search criteria.</p>
 
 <blockquote>
 <p>Sorting datasets with special criteria</p>
@@ -595,180 +872,107 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-most-favorited
 </code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>relevance&amp;status<span class="o">=</span>saved&amp;search<span class="o">=</span>agriculture
 </code></pre>
+<p>Special search criteria must be used as sole sorting criteria, as it&rsquo;s not possible to combine any of them with any other search criteria. The following criteria can be used for special sorting in datasets:</p>
+
+<ul>
+<li><code class="prettyprint">most-viewed</code> delegates sorting to the graph component, sorting by the datasets that have been queried more frequently. Supports ascending/descending order.</li>
+<li><code class="prettyprint">most-favorited</code>: delegates sorting to the graph component, sorting by the datasets that have been more favorited. Supports ascending/descending order.</li>
+<li><code class="prettyprint">relevance</code>: delegates sorting to the metadata component, sorting by the datasets which metadata better match the search criteria. Can only be used in conjunction with a <code class="prettyprint">search</code> parameter. Does not support ascending order.</li>
+</ul>
+
+<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+
 <h3 id="include-related-entities">Include related entities</h3>
 
-<p>Available relationships: Any dataset relationship [&lsquo;widget&rsquo;, &#39;layer&rsquo;, &#39;vocabulary&rsquo;, &#39;metadata&rsquo;, &#39;user&rsquo;]. User data is only available to users with ADMIN role.</p>
-
 <blockquote>
-<p>Including relationships</p>
+<p>Loads metadata and widgets associated with each dataset:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer
-</code></pre>
-<aside class="notice">
-    If you include related entities (e.g. layers) with query filters, the filters will not
-    cascade to the related entities. For example, the following example will load layers for that dataset, not just the ones with env set to preproduction.
-</aside>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?includes<span class="o">=</span>metadata,widget
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06c44f9a-aae7-401e-874c-de13b7764959"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Historical Precipitation -- U.S. (Puget Sound Lowlands)"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Historical-Precipitation-US-Puget-Sound-Lowlands-1490086842133"</span><span class="p">,</span><span class="w">
+                </span><span class="err">...</span><span class="w">
+                </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">  
 
-<blockquote>
-<p>Loading all layers for the given dataset, not just the ones with env set to preproduction</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset/c5fe87d6-49ca-4c68-ad7e-ea48145562e0?includes<span class="o">=</span>layer&amp;env<span class="o">=</span>preproduction
-</code></pre>
-<h4 id="user">User</h4>
-
-<p>Loads the name, email address and role of the author of the dataset. If you do not issue this request as an ADMIN user, or if no user data is available, the <code class="prettyprint">user</code> object will be empty.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?includes<span class="o">=</span>user
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"data"</span><span class="p">:</span><span class="w">  </span><span class="p">[{</span><span class="w">
-        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8afcf415-ee0b-4d19-96f8-c7304c152e1b"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[delete] cit.005 Probabilities of Urban Expansion"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Possibilities-of-Urban-Expansion"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"(SEDAC)"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="s2">"rw"</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"attributesPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"connectorType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rest"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"72a0aa1071e394dd3287e137"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.carto.com/tables/global_grid_prob_urban_expansion/public"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-            </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"global_grid_prob_urban_expansion"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"blockchain"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="s2">"subscribable"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="s2">"mainDateField"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"geoInfo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"nested"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"integer"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"short"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"byte"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"double"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"float"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"half_float"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"scaled_float"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"boolean"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"binary"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"long"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"lat"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"clonedHost"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="s2">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-06T11:09:56.242Z"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-01-18T15:41:48.408Z"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"dataLastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@vizzuality.com"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MANAGER"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"widgetRelevantProps"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-            </span><span class="s2">"layerRelevantProps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="s2">"the_raster_webmercator"</span><span class="w">
-            </span><span class="p">]</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57a2251d5cd6980a00e054d9"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"widget"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">  
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"73f00267-fe34-42aa-a611-13b102f38d75"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"widget"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
-    </span><span class="p">}]</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&amp;page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&amp;page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&amp;page[number]=223&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"prev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&amp;page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?includes=widget%2Cmetadata&amp;page[number]=2&amp;page[size]=10"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"total-pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">223</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"total-items"</span><span class="p">:</span><span class="w"> </span><span class="mi">2228</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="verification">Verification</h3>
-
-<p>When available, the content of the <code class="prettyprint">blockchain</code> field is used to validate the dataset&rsquo;s information using <a href="https://stampery.com/">Stampery</a>.</p>
-
 <blockquote>
-<p>Get verification</p>
+<p>Loading layers for the given dataset</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/:datasetID/verification
+<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/dataset?includes<span class="o">=</span>layer
 </code></pre>
 <blockquote>
-<p>Response:</p>
+<p>Loading the information about the user who authored the dataset</p>
 </blockquote>
-<pre class="highlight shell"><code><span class="o">[</span>
-    <span class="o">{</span>
-        <span class="s2">"id"</span>: <span class="s2">"string"</span>,
-        <span class="s2">"hash: "</span>string<span class="s2">"
-    }
-]
-</span></code></pre>
-<h3 id="flush-dataset-cache">Flush dataset cache</h3>
-
-<p>Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.</p>
-
-<p>Only users with the <code class="prettyprint">ADMIN</code> role can use this endpoint.</p>
-
-<blockquote>
-<p>Flush dataset&rsquo;s cache</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/:datasetID/flush <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?includes<span class="o">=</span>user
 </code></pre>
-<blockquote>
-<p>Response:</p>
-</blockquote>
-<pre class="highlight shell"><code>OK
-</code></pre>
-<h3 id="recover">Recover</h3>
+<p>When fetching datasets, you can request additional entities to be loaded. The following entities are available:</p>
 
-<p>Resets a dataset&rsquo;s <code class="prettyprint">status</code> to <code class="prettyprint">saved</code> and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset&rsquo;s data was inconsistent for any reason, this endpoint will not change it, and it&rsquo;s up to you to fix it using a <code class="prettyprint">data-overwrite</code> or other endpoints.</p>
+<ul>
+<li><code class="prettyprint">widget</code> - loads all widgets associated with a given dataset.</li>
+<li><code class="prettyprint">layer</code> - loads all layers associated with a given dataset.</li>
+<li><code class="prettyprint">vocabulary</code> - loads all vocabulary entities associated with a given dataset.</li>
+<li><code class="prettyprint">metadata</code> - loads all metadata associated with a given dataset.</li>
+<li><code class="prettyprint">user</code> - loads the name, email address and role of the author of the dataset. If you do not issue this request as an ADMIN user, or if no user data is available, the <code class="prettyprint">user</code> object will be empty.</li>
+</ul>
 
-<p>Only users with the <code class="prettyprint">ADMIN</code> role can use this endpoint.</p>
+<p><strong>Note:</strong> If you include related entities (e.g. layers) with query filters, the filters will not cascade to the related entities.</p>
 
-<blockquote>
-<p>Recover dataset</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/:datasetID/recover <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Response:</p>
-</blockquote>
-<pre class="highlight shell"><code>OK
-</code></pre>
-<h3 id="advanced-filters">Advanced filters</h3>
-
-<p>By vocabulary-tag matching</p>
+<h2 id="getting-a-dataset-by-id-or-slug">Getting a dataset by id or slug</h2>
 
 <blockquote>
-<p>Matching vocabulary tags</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>slug,-provider,userId&amp;status<span class="o">=</span>saved&amp;includes<span class="o">=</span>metadata,vocabulary,widget,layer&amp;vocabulary[legacy]<span class="o">=</span>umd
-</code></pre>
-<h2 id="how-to-get-a-dataset-by-id">How to get a dataset by id</h2>
-
-<blockquote>
-<p>To get a dataset:</p>
+<p>Getting a dataset by id:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057ad4fc2145
 </code></pre>
 <blockquote>
-<p>Response:</p>
+<p>Getting a dataset by slug:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC
+</code></pre>
+<blockquote>
+<p>Response (equal for both cases):</p>
 </blockquote>
 <pre class="highlight shell"><code><span class="o">{</span>
     <span class="s2">"data"</span>: <span class="o">{</span>
         <span class="s2">"id"</span>: <span class="s2">"51943691-eebc-4cb4-bdfb-057ad4fc2145"</span>,
         <span class="s2">"type"</span>: <span class="s2">"dataset"</span>,
         <span class="s2">"attributes"</span>: <span class="o">{</span>
-            <span class="s2">"name"</span>: <span class="s2">"Timber Production RDC (test)"</span>,
-            <span class="s2">"slug"</span>: <span class="s2">"Timber-Production-RDC-test-1490086842132"</span>,
+            <span class="s2">"name"</span>: <span class="s2">"Timber Production RDC"</span>,
+            <span class="s2">"slug"</span>: <span class="s2">"Timber-Production-RDC"</span>,
             <span class="s2">"type"</span>: null,
             <span class="s2">"subtitle"</span>: null,
             <span class="s2">"application"</span>: <span class="o">[</span><span class="s2">"forest-atlas"</span><span class="o">]</span>,
@@ -797,15 +1001,37 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre>
+<p>If you know the id or the <code class="prettyprint">slug</code> of a dataset, then you can access it directly. Both id and <code class="prettyprint">slug</code> are case-sensitive.</p>
+
+<p>Using this endpoint, you can also <a href="#include-related-entities">include related entities</a>, in the same way you do when loading multiple datasets. </p>
+
 <blockquote>
-<p>To get the dataset including its relationships:</p>
+<p>Getting a dataset by its including its relationships:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959?includes<span class="o">=</span>metadata,vocabulary,widget,layer
 </code></pre>
-<h2 id="how-to-get-multiple-datasets-by-ids">How to get multiple datasets by ids</h2>
+<h2 id="getting-multiple-datasets-by-ids">Getting multiple datasets by ids</h2>
+
+<p>This endpoint allows you to load multiple datasets by id in a single request.</p>
+
+<h4 id="errors-for-getting-multiple-datasets-by-ids">Errors for getting multiple datasets by ids</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>ids: ids can not be empty.</td>
+<td>The required <code class="prettyprint">ids</code> field is missing in the request body.</td>
+</tr>
+</tbody></table>
 
 <blockquote>
-<p>To get multiple dataset by ids:</p>
+<p>Getting multiple datasets by their ids:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
@@ -819,330 +1045,168 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
 <blockquote>
 <p>Response</p>
 </blockquote>
-<pre class="highlight shell"><code>    <span class="o">{</span>
-        <span class="s2">"data"</span>: <span class="o">[</span>
-          <span class="o">{</span>
-            <span class="s2">"id"</span>: <span class="s2">"0706f039-b929-453e-b154-7392123ae99e"</span>,
-            <span class="s2">"type"</span>: <span class="s2">"dataset"</span>,
-            <span class="s2">"attributes"</span>: <span class="o">{</span>
-              <span class="s2">"name"</span>: <span class="s2">"Social Vulnerability Index (2006-2010) -- U.S. (New Hampshire)"</span>,
-              <span class="s2">"slug"</span>: <span class="s2">"Social-Vulnerability-Index-2006-2010-US-New-Hampshire-1490086842541"</span>,
-              <span class="s2">"type"</span>: <span class="s2">"tabular"</span>,
-              <span class="s2">"subtitle"</span>: null,
-              <span class="s2">"application"</span>: <span class="o">[</span>
-                <span class="s2">"prep"</span>
-              <span class="o">]</span>,
-              <span class="s2">"dataPath"</span>: null,
-              <span class="s2">"attributesPath"</span>: null,
-              <span class="s2">"connectorType"</span>: <span class="s2">"rest"</span>,
-              <span class="s2">"provider"</span>: <span class="s2">"featureservice"</span>,
-              <span class="s2">"userId"</span>: <span class="s2">"586bc76036aacd381cb92b3a"</span>,
-              <span class="s2">"connectorUrl"</span>: <span class="s2">"https://coast.noaa.gov/arcgis/rest/services/sovi/sovi_tracts2010/MapServer/19?f=pjson"</span>,
-              <span class="s2">"tableName"</span>: <span class="s2">"sovisovi_tracts2010MapServer19"</span>,
-              <span class="s2">"status"</span>: <span class="s2">"saved"</span>,
-              <span class="s2">"published"</span>: <span class="nb">false</span>,
-              <span class="s2">"overwrite"</span>: <span class="nb">false</span>,
-              <span class="s2">"verified"</span>: <span class="nb">false</span>,
-              <span class="s2">"blockchain"</span>: <span class="o">{}</span>,
-              <span class="s2">"mainDateField"</span>: null,
-              <span class="s2">"env"</span>: <span class="s2">"production"</span>,
-              <span class="s2">"geoInfo"</span>: <span class="nb">false</span>,
-              <span class="s2">"protected"</span>: <span class="nb">false</span>,
-              <span class="s2">"legend"</span>: <span class="o">{</span>
-                <span class="s2">"date"</span>: <span class="o">[]</span>,
-                <span class="s2">"region"</span>: <span class="o">[]</span>,
-                <span class="s2">"country"</span>: <span class="o">[]</span>,
-                <span class="s2">"nested"</span>: <span class="o">[]</span>,
-                <span class="s2">"integer"</span>: <span class="o">[]</span>,
-                <span class="s2">"short"</span>: <span class="o">[]</span>,
-                <span class="s2">"byte"</span>: <span class="o">[]</span>,
-                <span class="s2">"double"</span>: <span class="o">[]</span>,
-                <span class="s2">"float"</span>: <span class="o">[]</span>,
-                <span class="s2">"half_float"</span>: <span class="o">[]</span>,
-                <span class="s2">"scaled_float"</span>: <span class="o">[]</span>,
-                <span class="s2">"boolean"</span>: <span class="o">[]</span>,
-                <span class="s2">"binary"</span>: <span class="o">[]</span>,
-                <span class="s2">"text"</span>: <span class="o">[]</span>,
-                <span class="s2">"keyword"</span>: <span class="o">[]</span>
-              <span class="o">}</span>,
-              <span class="s2">"clonedHost"</span>: <span class="o">{}</span>,
-              <span class="s2">"errorMessage"</span>: null,
-              <span class="s2">"taskId"</span>: null,
-              <span class="s2">"createdAt"</span>: <span class="s2">"2016-09-01T08:18:39.006Z"</span>,
-              <span class="s2">"updatedAt"</span>: <span class="s2">"2017-12-01T22:17:59.585Z"</span>,
-              <span class="s2">"dataLastUpdated"</span>: null,
-              <span class="s2">"widgetRelevantProps"</span>: <span class="o">[]</span>,
-              <span class="s2">"layerRelevantProps"</span>: <span class="o">[]</span>
-            <span class="o">}</span>
-          <span class="o">}</span>,
-          <span class="o">{</span>
-            <span class="s2">"id"</span>: <span class="s2">"0c630feb-8146-4fcc-a9be-be5adcb731c8"</span>,
-            <span class="s2">"type"</span>: <span class="s2">"dataset"</span>,
-            <span class="s2">"attributes"</span>: <span class="o">{</span>
-              <span class="s2">"name"</span>: <span class="s2">"USGS Land Cover - Impervious Surface (2001) -- U.S. (Alaska)"</span>,
-              <span class="s2">"slug"</span>: <span class="s2">"USGS-Land-Cover-Impervious-Surface-2001-US-Alaska-1490086842439"</span>,
-              <span class="s2">"type"</span>: <span class="s2">"raster"</span>,
-              <span class="s2">"subtitle"</span>: null,
-              <span class="s2">"application"</span>: <span class="o">[</span>
-                <span class="s2">"prep"</span>
-              <span class="o">]</span>,
-              <span class="s2">"dataPath"</span>: null,
-              <span class="s2">"attributesPath"</span>: null,
-              <span class="s2">"connectorType"</span>: <span class="s2">"wms"</span>,
-              <span class="s2">"provider"</span>: <span class="s2">"wms"</span>,
-              <span class="s2">"userId"</span>: <span class="s2">"586bc76036aacd381cb92b3a"</span>,
-              <span class="s2">"connectorUrl"</span>: <span class="s2">"https://raster.nationalmap.gov/arcgis/rest/services/LandCover/USGS_EROS_LandCover_NLCD/MapServer/25?f=pjson"</span>,
-              <span class="s2">"tableName"</span>: <span class="s2">"LandCoverUSGS_EROS_LandCover_NLCDMapServer25"</span>,
-              <span class="s2">"status"</span>: <span class="s2">"saved"</span>,
-              <span class="s2">"published"</span>: <span class="nb">false</span>,
-              <span class="s2">"overwrite"</span>: <span class="nb">false</span>,
-              <span class="s2">"verified"</span>: <span class="nb">false</span>,
-              <span class="s2">"blockchain"</span>: <span class="o">{}</span>,
-              <span class="s2">"mainDateField"</span>: null,
-              <span class="s2">"env"</span>: <span class="s2">"production"</span>,
-              <span class="s2">"geoInfo"</span>: <span class="nb">false</span>,
-              <span class="s2">"protected"</span>: <span class="nb">false</span>,
-              <span class="s2">"legend"</span>: <span class="o">{</span>
-                <span class="s2">"date"</span>: <span class="o">[]</span>,
-                <span class="s2">"region"</span>: <span class="o">[]</span>,
-                <span class="s2">"country"</span>: <span class="o">[]</span>,
-                <span class="s2">"nested"</span>: <span class="o">[]</span>,
-                <span class="s2">"integer"</span>: <span class="o">[]</span>,
-                <span class="s2">"short"</span>: <span class="o">[]</span>,
-                <span class="s2">"byte"</span>: <span class="o">[]</span>,
-                <span class="s2">"double"</span>: <span class="o">[]</span>,
-                <span class="s2">"float"</span>: <span class="o">[]</span>,
-                <span class="s2">"half_float"</span>: <span class="o">[]</span>,
-                <span class="s2">"scaled_float"</span>: <span class="o">[]</span>,
-                <span class="s2">"boolean"</span>: <span class="o">[]</span>,
-                <span class="s2">"binary"</span>: <span class="o">[]</span>,
-                <span class="s2">"text"</span>: <span class="o">[]</span>,
-                <span class="s2">"keyword"</span>: <span class="o">[]</span>
-              <span class="o">}</span>,
-              <span class="s2">"clonedHost"</span>: <span class="o">{}</span>,
-              <span class="s2">"errorMessage"</span>: null,
-              <span class="s2">"taskId"</span>: null,
-              <span class="s2">"createdAt"</span>: <span class="s2">"2016-09-01T16:59:30.294Z"</span>,
-              <span class="s2">"updatedAt"</span>: <span class="s2">"2018-01-03T17:36:18.509Z"</span>,
-              <span class="s2">"dataLastUpdated"</span>: null,
-              <span class="s2">"widgetRelevantProps"</span>: <span class="o">[]</span>,
-              <span class="s2">"layerRelevantProps"</span>: <span class="o">[]</span>
-            <span class="o">}</span>
-          <span class="o">}</span>
-        <span class="o">]</span>
-    <span class="o">}</span>
-</code></pre>
-<h2 id="creating-a-dataset">Creating a Dataset</h2>
+<pre class="highlight json"><code><span class="w">    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0706f039-b929-453e-b154-7392123ae99e"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Social Vulnerability Index (2006-2010) -- U.S. (New Hampshire)"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Social-Vulnerability-Index-2006-2010-US-New-Hampshire-1490086842541"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tabular"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+              </span><span class="err">...</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0c630feb-8146-4fcc-a9be-be5adcb731c8"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USGS Land Cover - Impervious Surface (2001) -- U.S. (Alaska)"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USGS-Land-Cover-Impervious-Surface-2001-US-Alaska-1490086842439"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+              </span><span class="err">...</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="creating-a-dataset">Creating a dataset</h2>
 
-<p>To create a dataset, you will need to be authenticated. Additionally, your user account needs to be associated with all <code class="prettyprint">application</code> you specify for the dataset.</p>
+<p>So you are ready to create your first dataset on the RW API? Great, welcome aboard! These instruction will help you create your dataset on the RW API, so you can start sharing your data with the world and taking full advantage of all the RW API features on your projects.</p>
 
-<p>To create a dataset, you need to define all of the required fields in the request body. The fields that compose a dataset are:</p>
+<p>Before creating a dataset, there are a few things you must know and do:</p>
+
+<ul>
+<li>In order to be able to create a dataset, you need to be <a href="#authentication">authenticated</a>.</li>
+<li>Depending on your user account&rsquo;s role, you may have permission to create a dataset but not delete it afterwards.</li>
+<li>All data uploaded to the RW API will be publicly visible and available to other users. </li>
+</ul>
+
+<p>The first thing to consider when creating a dataset is where your data currently is - this will determine the <a href="#dataset-providers">Dataset provider</a> you will need to use and, with it, a set of things you need to take into account - we&rsquo;ll cover each provider in detail shortly. When building your request to the RW API to create your dataset, you will need to take into account both the general details that follow, plus the details for the <code class="prettyprint">provider</code> you are using. Be sure to review both sections when creating your datasets, to avoid any pitfalls.</p>
+
+<p>Creating a dataset is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the <a href="#dataset-reference">dataset reference</a> section, but the minimum field list you must specify for all datasets is:</p>
+
+<ul>
+<li>name</li>
+<li>application</li>
+<li>connectorType</li>
+<li>provider </li>
+</ul>
+
+<p>Additionally, depending on the data provider you will be using, other fields may be required - we&rsquo;ll cover those in detail in each provider&rsquo;s specific documentation.</p>
+
+<p>A successful dataset creation request will return a 200 HTTP code, and the dataset details as stored on the RW API. PAy special attention to the <code class="prettyprint">id</code> or the <code class="prettyprint">slug</code>, as those will allow you to <a href="#getting-a-dataset-by-id-or-slug">access your dataset</a> later.</p>
+
+<p><strong>There&rsquo;s one aspect of the dataset creation process that you need to keep in mind: it is an asynchronous process.</strong> This means that a successful call to the create dataset endpoint will <em>start</em> the process, but the dataset may not be immediately available to be used. The <code class="prettyprint">status</code> field will tell you if the dataset creation process is in progress (status set to <code class="prettyprint">pending</code>), if something went wrong (<code class="prettyprint">failed</code>, in which case the <code class="prettyprint">errorMessage</code> field will have a short description of what went wrong) or if the dataset is available to be used (when status is <code class="prettyprint">saved</code>). The amount of time it takes for a newly created dataset to go from <code class="prettyprint">pending</code> to <code class="prettyprint">saved</code> depends on the provider and amount of data. Just keep in mind that you need to wait for the status to be set to <code class="prettyprint">saved</code> before starting to use your datasets. You should <a href="#getting-a-dataset-by-id-or-slug">check your dataset</a> manually to see when the <code class="prettyprint">status</code> is updated.</p>
+
+<h4 id="errors-for-creating-a-dataset">Errors for creating a dataset</h4>
 
 <table><thead>
 <tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>name</td>
-<td style="text-align: center">Dataset name</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any Text</td>
-<td style="text-align: right">Yes</td>
+<td>400</td>
+<td><code class="prettyprint">&lt;field&gt;</code>: <code class="prettyprint">&lt;field&gt;</code> can not be empty</td>
+<td>Your are missing a required field value.</td>
 </tr>
 <tr>
-<td>type</td>
-<td style="text-align: center">Dataset type</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any Text</td>
-<td style="text-align: right">No</td>
+<td>400</td>
+<td><code class="prettyprint">&lt;field&gt;</code>: empty or invalid <code class="prettyprint">&lt;field&gt;</code></td>
+<td>The provided value for <code class="prettyprint">&lt;field&gt;</code> is invalid. This is usually happens if an invalid value type is provided, but certain fields use more advanced validation rules, that may produce this error message if validation fails (ie: on a carto dataset, the <code class="prettyprint">connectorUrl</code> must contain a valid carto URL).</td>
 </tr>
 <tr>
-<td>subtitle</td>
-<td style="text-align: center">Dataset subtitle</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any Text</td>
-<td style="text-align: right">No</td>
+<td>400</td>
+<td>provider: must be valid <list of valid providers></td>
+<td>Your <code class="prettyprint">provider</code> value is invalid. The <code class="prettyprint">&lt;list of valid providers&gt;</code> will contain the list of providers that are supported for the <code class="prettyprint">connectorType</code> you specified.</td>
 </tr>
 <tr>
-<td>application</td>
-<td style="text-align: center">Applications the dataset belongs to</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any valid application name(s)</td>
-<td style="text-align: right">Yes</td>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated. If creating a BigQuery dataset, you may also see this message if you are authenticated. Refer to the <a href="#bigquery49">BigQuery documentation</a> for more details.</td>
 </tr>
 <tr>
-<td>connectorType</td>
-<td style="text-align: center">Connector type</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">rest, document, wms</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>provider</td>
-<td style="text-align: center">The connectorType provider</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">cartodb, feature service, gee, csv, tsv, xml, json, nexgddp</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>connectorUrl</td>
-<td style="text-align: center">Url of the data source</td>
-<td style="text-align: right">Url</td>
-<td style="text-align: right">Any url</td>
-<td style="text-align: right">Yes (except for gee, nexgddp and document type datasets)</td>
-</tr>
-<tr>
-<td>sources</td>
-<td style="text-align: center">Urls of the data sources</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Array of URLs</td>
-<td style="text-align: right">No (recommended for document type datasets)</td>
-</tr>
-<tr>
-<td>tableName</td>
-<td style="text-align: center">Table name</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any valid table name</td>
-<td style="text-align: right">No (just for GEE and nexgddp datasets)</td>
-</tr>
-<tr>
-<td>data</td>
-<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
-<td style="text-align: right">JSON</td>
-<td style="text-align: right">[{},{},{}]</td>
-<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
-</tr>
-<tr>
-<td>dataPath</td>
-<td style="text-align: center">Path to the data in a json dataset</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any valid JSON key</td>
-<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
-</tr>
-<tr>
-<td>legend</td>
-<td style="text-align: center">Legend for dataset. Keys for special fields</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right">&ldquo;legend&rdquo;: {&ldquo;long&rdquo;: &ldquo;123&rdquo;, &ldquo;lat&rdquo;: &ldquo;123&rdquo;, &ldquo;country&rdquo;: [&ldquo;pais&rdquo;], &ldquo;region&rdquo;: [&ldquo;barrio&rdquo;], &ldquo;date&rdquo;: [&ldquo;startDate&rdquo;, &ldquo;endDate&rdquo;]}}</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>overwrite</td>
-<td style="text-align: center">It allows to overwrite dataset data</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true/false</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>published</td>
-<td style="text-align: center">To set a public or private dataset</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true/false</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>protected</td>
-<td style="text-align: center">If it&rsquo;s a protected layer (not is possible to delete if it&rsquo;s true)</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true/false</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>verified</td>
-<td style="text-align: center">To generate a verified blockchain of the dataset</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true/false</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>vocabularies</td>
-<td style="text-align: center">Cluster of tags</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right"><code class="prettyprint">{&quot;vocabularyOne&quot;: {&quot;tags&quot;: [&lt;tags&gt;]},&quot;vocabularyTwo&quot;: {&quot;tags&quot;: [&lt;tags&gt;]}}</code></td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>widgetRelevantProps</td>
-<td style="text-align: center">Group of relevant props of a widget</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any Text</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>layerRelevantProps</td>
-<td style="text-align: center">Group of relevant props of a layer</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Any Text</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>subscribable</td>
-<td style="text-align: center">Available dataset queries for subscriptions parameters accepted: <code class="prettyprint">{{begin}}</code> for date begin and <code class="prettyprint">{{end}}</code> for date end</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right"><code class="prettyprint">{&quot; &lt;queryname&gt;&quot;: &quot;&lt;querybodytemplate&gt;&quot;}</code></td>
-<td style="text-align: right">No (just for json if connectorUrl is not present)</td>
-</tr>
-<tr>
-<td>env</td>
-<td style="text-align: center">The environment you want the dataset to be accessible on. Defaults to production</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right"><code class="prettyprint">staging</code>, <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code></td>
-<td style="text-align: right">No</td>
+<td>403</td>
+<td>Forbidden - User does not have access to this dataset&rsquo;s application</td>
+<td>You are trying to create a dataset with one or more <code class="prettyprint">application</code> values that are not associated with your user account.</td>
 </tr>
 </tbody></table>
 
-<p>Once created, datasets have an auto-generated and unique slug and id that allows the user to get, create, update, query or clone that dataset. The dataset slug and the id cannot be modified.</p>
-
-<p>When a dataset is created, the <code class="prettyprint">status</code> is set to &ldquo;pending&rdquo; by default, meaning the dataset is not ready for usage just yet. Once the creation process is finished, the status will change to &ldquo;saved&rdquo;, meaning you can now access the dataset and its data. This process is asynchronous and its duration will depend on the provider of the dataset as well as the amount of data it contains. You should use <a href="#how-to-get-a-dataset-by-id">check your dataset</a> manually to see when the <code class="prettyprint">status</code> is updated.</p>
-
-<p>In case the dataset creation process fails, the <code class="prettyprint">status</code> value will be set to <code class="prettyprint">failed</code>, and the <code class="prettyprint">errorMessage</code> field will have a short description of what went wrong.</p>
-
-<p>When creating a dataset, depending on the provider you are using, there are slight differences that must be reflected in your request:</p>
-
 <h3 id="carto-datasets">Carto datasets</h3>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "connectorType":"rest",
-    "provider":"cartodb",
-    "connectorUrl":"&lt;cartoUrl&gt;",
-    "application":[
-     "your", "apps"
-    ],
-    "name":"Example Carto Dataset"
-}'</span>
-</code></pre>
+
 <blockquote>
-<p>A real example:</p>
+<p>Example of creating a dataset based on CartoDB data with the minimum fields required</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
+  "dataset": {
+    "name":"World Database on Protected Areas -- Global",
     "connectorType":"rest",
     "provider":"cartodb",
     "connectorUrl":"https://wri-01.carto.com/tables/wdpa_protected_areas/table",
     "application":[
-     "gfw", "forest-atlas"
-    ],
-    "name":"World Database on Protected Areas -- Global"
+      "gfw", 
+      "forest-atlas"
+    ]
+  }
 }'</span>
 </code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+<p>To create a dataset connected to a Carto data source, besides the common required fields, you must provide the following required data:</p>
 
-<h3 id="arcgis-feature-service">ArcGIS feature Service</h3>
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Example value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
+<td style="text-align: right"><code class="prettyprint">rest</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">provider</code></td>
+<td style="text-align: center">The provider should be set to <code class="prettyprint">cartodb</code>.</td>
+<td style="text-align: right"><code class="prettyprint">cartodb</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">connectorUrl</code></td>
+<td style="text-align: center">The URL for the CartoDB table that this dataset will be using.</td>
+<td style="text-align: right"><code class="prettyprint">https://wri-01.carto.com/tables/wdpa_protected_areas/table</code></td>
+</tr>
+</tbody></table>
+
+<p>The RW API will use the information above to directly query the Carto account specified on the <code class="prettyprint">connectorUrl</code> field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+
+<ul>
+<li>The Carto URL provided will be publicly visible to all RW API users.</li>
+<li>The Carto account will see increased traffic.</li>
+<li>Any changes made to the data hosted on Carto will be automatically reflected on the data served by the RW API for this dataset.</li>
+<li>If you restructure or delete your Carto table, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
+</ul>
+
+<p>The <code class="prettyprint">tableName</code> value of a carto-based dataset will automatically be filled with the name of the carto table corresponding to the dataset.</p>
+
+<p>When creating a Carto based-dataset, the RW API will try to validate the <code class="prettyprint">connectorUrl</code> by trying to connect to the corresponding Carto table - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
+
+<h3 id="arcgis-feature-layer">ArcGIS feature layer</h3>
+
+<blockquote>
+<p>Example of creating a dataset based on ArcGIS feature layer data with the minimum fields required</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
+  "dataset": {
     "connectorType":"rest",
     "provider":"featureservice",
     "connectorUrl":"https://services.arcgis.com/uDTUpUPbk8X8mXwl/arcgis/rest/services/Public_Schools_in_Onondaga_County/FeatureServer/0?f=json",
@@ -1150,17 +1214,58 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
      "prep"
     ],
     "name":"Uncontrolled Public-Use Airports -- U.S."
+  }
 }'</span>
 </code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+<p>To create a dataset using ArcGIS feature layer as data source, besides the common required fields, you must provide the following required data:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Example value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
+<td style="text-align: right"><code class="prettyprint">rest</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">provider</code></td>
+<td style="text-align: center">The provider should be set to <code class="prettyprint">featureservice</code>.</td>
+<td style="text-align: right"><code class="prettyprint">featureservice</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">connectorUrl</code></td>
+<td style="text-align: center">The URL for the JSON data in ArcGIS services this dataset will be using.</td>
+<td style="text-align: right">https://services.arcgis.com/uuid/arcgis/rest/services/example/FeatureServer/0?f=json</td>
+</tr>
+</tbody></table>
+
+<p>The RW API will use the information above to directly query the ArcGIS feature layer server specified on the <code class="prettyprint">connectorUrl</code> field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+
+<ul>
+<li>The ArcGIS feature layer URL provided will be publicly visible to all RW API users.</li>
+<li>The ArcGIS feature layer server will see increased traffic.</li>
+<li>Any changes made to the data hosted on ArcGIS feature layer will be automatically reflected on the data served by the RW API for this dataset.</li>
+<li>If you restructure or delete your ArcGIS feature layer dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
+</ul>
+
+<p>The <code class="prettyprint">tableName</code> value of a ArcGIS-based dataset will automatically be filled with the name of the ArcGIS feature layer table corresponding to the dataset.</p>
+
+<p>When creating a ArcGIS-based dataset, the RW API will try to validate the <code class="prettyprint">connectorUrl</code> by trying to connect to the corresponding ArcGIS Feature Layer - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
 
 <h3 id="google-earth-engine">Google Earth Engine</h3>
+
+<blockquote>
+<p>Example of creating a dataset based on Google Earth Engine data with the minimum fields required</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
+  "dataset": {
     "connectorType":"rest",
     "provider":"gee",
     "tableName": "JRC/GSW1_0/GlobalSurfaceWater"
@@ -1168,97 +1273,112 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span
      "rw"
     ],
     "name":"Water occurrence"
+  }
 }'</span>
 </code></pre>
-<h3 id="nexgddp">NEXGDDP</h3>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{
-    "connectorType":"rest",
-    "provider":"nexgddp",
-    "tableName": "historical/ACCESS1_0"
-    "application":[
-     "rw"
-    ],
-    "name":"Nexgddp"
-}'</span>
-</code></pre>
-<h3 id="rasdaman">Rasdaman</h3>
-
-<p>The <code class="prettyprint">connectorUrl</code> must be a URL pointing to a valid geotiff file.</p>
-<pre class="highlight shell"><code>curl -XPOST <span class="s1">'https://api.resourcewatch.org/v1/dataset'</span> -d <span class="se">\</span>
--H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>  <span class="se">\</span>
--H <span class="s1">'Content-Type: application/json'</span> -d <span class="se">\</span>
-<span class="s1">'{
-    "connectorType":"rest",
-    "provider":"rasdaman",
-    "connectorUrl":"rw.dataset.raw/1508321309784_test_rasdaman_1b.tiff",
-    "application":[
-     "rw"
-    ],
-    "name":"rasdaman dataset"
-}'</span>
-</code></pre>
-<h3 id="json-csv-tsv-or-xml">JSON, CSV, TSV or XML</h3>
-
-<p>This dataset hosts data from files in JSON, CSV, TSV or XML format. When creating the dataset, the data is copied from the provided
-source into the API&rsquo;s internal Elasticsearch instance, which is the source used for subsequent queries or other operations.</p>
-
-<p>The original data must be available on a publicly accessible URLs, specified in the <code class="prettyprint">sources</code> array field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. The only exception to this rule is when creating a JSON-based dataset, in which case you can instead pass the actual data on the dataset creation request body - see the example below for more details. You can specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.</p>
-
-<aside class="notice">
-The previously used `connectorUrl` field should be considered deprecated when creating document-based datasets.
-</aside>
-
-<p>Here&rsquo;s a breakdown of the fields specific to the creation of a document-based dataset:</p>
+<p>To create a dataset using Google Earth Engine (GEE) as data source, besides the common required fields, you must provide the following required data:</p>
 
 <table><thead>
 <tr>
 <th>Field</th>
 <th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
+<th style="text-align: right">Example value</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>sources</td>
-<td style="text-align: center">List of URLs from which to source data</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">URL array</td>
-<td style="text-align: right">Yes, unless JSON data is provided using the <code class="prettyprint">data</code> field</td>
+<td><code class="prettyprint">connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
+<td style="text-align: right"><code class="prettyprint">rest</code></td>
 </tr>
 <tr>
-<td>data</td>
-<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">[{},{},{}]</td>
-<td style="text-align: right">Yes for JSON if <code class="prettyprint">sources</code> is not present</td>
+<td><code class="prettyprint">provider</code></td>
+<td style="text-align: center">The provider should be set to <code class="prettyprint">gee</code>.</td>
+<td style="text-align: right"><code class="prettyprint">gee</code></td>
 </tr>
 <tr>
-<td>legend</td>
-<td style="text-align: center">See section below</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right"></td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>connectorUrl</td>
-<td style="text-align: center">URL from which to source data. Deprecated - use <code class="prettyprint">sources</code> instead</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">URL</td>
-<td style="text-align: right">No</td>
+<td><code class="prettyprint">tableName</code></td>
+<td style="text-align: center">Relative path of the dataset within GEE.</td>
+<td style="text-align: right">users/resourcewatch_wri/dataset_name</td>
 </tr>
 </tbody></table>
 
-<aside class="notice">
-When creating a dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.
-</aside>
+<p>The RW API will use the information above to directly query the GEE dataset specified on the <code class="prettyprint">tableName</code> field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+
+<ul>
+<li>The GEE resource name provided will be publicly visible to all RW API users.</li>
+<li>Any changes made to the data hosted on GEE will be automatically reflected on the data served by the RW API for this dataset.</li>
+<li>If you restructure or delete your GEE dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
+</ul>
+
+<p>When creating a GEE-based dataset, the RW API will try to validate it by connecting to the corresponding dataset GEE - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
+
+<h3 id="wms">WMS</h3>
+
+<blockquote>
+<p>Example of creating a dataset based on WMS data with the minimum fields required</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s1">'https://api.resourcewatch.org/v1/dataset'</span> -d <span class="se">\</span>
+-H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>  <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> -d <span class="se">\</span>
+<span class="s1">'{
+   "dataset": {
+     "application": [
+       "rw"
+     ],
+     "name": "Seasonal variability",
+     "connectorType": "wms",
+     "provider":"wms",
+     "connectorUrl":"http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/6?f=pjson"
+   }
+ }
+'</span>
+</code></pre>
+<p>To create a dataset using WMS as data source, you should provide the following data:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Example value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">wms</code>.</td>
+<td style="text-align: right"><code class="prettyprint">wms</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">provider</code></td>
+<td style="text-align: center">The provider should be set to <code class="prettyprint">wms</code>.</td>
+<td style="text-align: right"><code class="prettyprint">wms</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">connectorUrl</code></td>
+<td style="text-align: center">URL of the server hosting the data in WMS format.</td>
+<td style="text-align: right"><code class="prettyprint">https://maps.heigit.org/osm-wms/service?request=GetCapabilities&amp;service=WMS</code></td>
+</tr>
+</tbody></table>
+
+<p>The RW API will use the information above to directly query the WMS dataset specified on the <code class="prettyprint">connectorUrl</code> field whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+
+<ul>
+<li>The WMS server URL provided will be publicly visible to all RW API users.</li>
+<li>Any changes made to the data hosted on the WMS server data will be automatically reflected on the data served by the RW API for this dataset.</li>
+<li>If you restructure or delete your WMS server data, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
+</ul>
+
+<p>When creating a WMS-based dataset, no validation is done - the dataset is automatically created in a <code class="prettyprint">saved</code> state.</p>
+
+<h3 id="document-based-datasets-json-csv-tsv-or-xml">Document based datasets: JSON, CSV, TSV or XML</h3>
+
+<blockquote>
+<p>Creating a CSV dataset with data provided by externally hosted files:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
+  "dataset": {
     "connectorType":"document",
     "provider":"csv",
     "sources": [
@@ -1269,11 +1389,8 @@ When creating a dataset, if any of the fields has a numerical name (for example,
     "application":[
      "gfw"
     ],
-    "legend": {
-      "lat": "lat",
-      "long": "lon"
-    },
     "name":"Glad points"
+  }
 }'</span>
 </code></pre>
 <blockquote>
@@ -1283,6 +1400,7 @@ When creating a dataset, if any of the fields has a numerical name (for example,
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
+  "dataset": {
     "connectorType":"document",
     "provider":"json",
     "application":[
@@ -1292,23 +1410,78 @@ When creating a dataset, if any of the fields has a numerical name (for example,
             {"name":"nameOne", "id":"random1"},
             {"name":"nameTow", "id":"random2"}
           ]},
-    "legend": {
-      "lat": "lat-column",
-      "long": "long-column",
-      "date": ["date1Column", "date2Column"],
-      "region": ["region1Column", "region2Column"],
-      "country": ["country1Column", "country2Column"]
-    },
     "name":"Example JSON Dataset"
+  }
 }'</span>
 </code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+<p>This dataset hosts data from files in JSON, CSV, TSV or XML format.</p>
 
-<h4 id="legend">Legend</h4>
+<p>Here&rsquo;s a breakdown of the fields you need to specify when creating a document type dataset, besides the common required fields:</p>
 
-<p>By default, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping">dynamic mapping API</a>.
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Example value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">document</code>.</td>
+<td style="text-align: right"><code class="prettyprint">document</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">provider</code></td>
+<td style="text-align: center">The type of data you are uploading. Must be one of the following: <code class="prettyprint">csv</code>, <code class="prettyprint">tsv</code>, <code class="prettyprint">json</code> or <code class="prettyprint">xml</code>.</td>
+<td style="text-align: right"><code class="prettyprint">csv</code>, <code class="prettyprint">tsv</code>, <code class="prettyprint">json</code> or <code class="prettyprint">xml</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">connectorUrl</code></td>
+<td style="text-align: center">URL from which to source data.</td>
+<td style="text-align: right">http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/6?f=pjson</td>
+</tr>
+<tr>
+<td><code class="prettyprint">sources</code></td>
+<td style="text-align: center">List of URLs from which to source data.</td>
+<td style="text-align: right">[&lsquo;http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/6?f=pjson&rsquo;,&#39;http://gis-gfw.wri.org/arcgis/rest/services/prep/nex_gddp_indicators/MapServer/7?f=pjson&rsquo;]</td>
+</tr>
+<tr>
+<td><code class="prettyprint">data</code></td>
+<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present.</td>
+<td style="text-align: right">[{&ldquo;key&rdquo;:&ldquo;value1&rdquo;},{&ldquo;key&rdquo;:&ldquo;value2&rdquo;}]]</td>
+</tr>
+</tbody></table>
+
+<p>When creating a document based dataset, you have multiple ways of providing your data to the API, of which you should use only one:</p>
+
+<ul>
+<li>The <code class="prettyprint">sources</code> field expects a list of URL containing files in the format matching your <code class="prettyprint">provider</code> value. This is the recommended way of uploading data.</li>
+<li>The <code class="prettyprint">connectorUrl</code> field is similar to <code class="prettyprint">sources</code>, but it only accepts a single value. <strong>Deprecation notice</strong>: The previously used <code class="prettyprint">connectorUrl</code> field should be considered deprecated when creating document-based datasets.</li>
+<li>If creating a dataset based on JSON data, you can upload the data on the actual request you issue to the API, inside the <code class="prettyprint">data</code> field.</li>
+</ul>
+
+<p>The data passed in <code class="prettyprint">sources</code> or <code class="prettyprint">connectorUrl</code> must be available on a publicly accessible URLs, specified in the <code class="prettyprint">sources</code> array field or the <code class="prettyprint">connectorUrl</code> single value field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. <code class="prettyprint">sources</code> allows you to specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.</p>
+
+<p><em>Notice: If you want to create a dataset from a file you have, but that it&rsquo;s not available on a public URL, check out our docs for <a href="#uploading-a-dataset">uploading a dataset</a>.</em></p>
+
+<p>Unlike with other dataset types, when the dataset is created, the data is copied from the provided source into the API&rsquo;s internal Elasticsearch instance, which is the source used for subsequent queries or other operations. This has a few implications that you should be aware of:</p>
+
+<ul>
+<li>The URLs provided in <code class="prettyprint">sources</code> or <code class="prettyprint">connectorUrl</code> will be publicly visible to all RW API users.</li>
+<li>On dataset creation, those URLs will be visited as the API loads and copies your data.</li>
+<li>Queries to the dataset will use the API&rsquo;s internal copy of your data. If you wish to update that data, see the documentation below on how to update your data.</li>
+<li>If the URLs provided become unavailable after the creation process is over, the dataset will continue to work normally - your data will still be available online.</li>
+</ul>
+
+<p><em>Notice: When creating a document-based dataset, if any of the fields has a numerical name (for example, column: <code class="prettyprint">3</code>), a string named <code class="prettyprint">col_</code> will be appended to the beginning of the name of the column. This way, an uploaded column named <code class="prettyprint">3</code> will become <code class="prettyprint">col_3</code>.</em></p>
+
+<p><em>Tip: If you want to periodically and automatically update your document based dataset with new data, check out the <a href="#dataset-automatic-synchronization">dataset automatic synchronization</a> functionality.</em></p>
+
+<p>When creating a document-based dataset, the RW API will start a complex process that copies your data into the API&rsquo;s internal database, and perform certain indexing actions. This process is called a <strong>Task</strong>, and is given a <code class="prettyprint">taskId</code> that is stored on the dataset&rsquo;s field with the same name. Depending on the size of your dataset, this may take from a few seconds to a few hours to complete. The result of this import process will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>. You can follow this process by using the <code class="prettyprint">taskId</code> value with the <a href="#get-a-single-task">Tasks API</a>.</p>
+
+<h4 id="using-the-legend-fields-to-define-field-types">Using the legend fields to define field types</h4>
+
+<p>By default, when creating a document based dataset, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping">dynamic mapping API</a>.
 However, in some scenarios, it may be desirable to specify some or all of these mappings manually, to match each field type to its Elasticsearch equivalent.</p>
 
 <p>When defining manual mappings, you don&rsquo;t need to map every single field. When processing the data, if a field is found for which there isn&rsquo;t a manual mapping, Elasticsearch will fallback to its dynamic mapping algorithm to try and guess that field&rsquo;s type. This API only supports a single explicit mapping per field, meaning you cannot declare a given field as both <code class="prettyprint">text</code> and <code class="prettyprint">keyword</code> for example.</p>
@@ -1403,40 +1576,139 @@ However, in some scenarios, it may be desirable to specify some or all of these 
 
 <p>For more details on the characteristics of each of the basic data types, refer to the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_field_datatypes">Elasticsearch documentation</a>.</p>
 
-<h2 id="uploading-a-dataset-binary">Uploading a Dataset (Binary)</h2>
+<h4 id="uploading-a-dataset-file">Uploading a dataset file</h4>
 
-<p>To upload a dataset, you will need to be authenticated.</p>
-
-<p>You can upload your raw data directly to S3 making use of the &ldquo;upload&rdquo; endpoint. This endpoint accepts a file in the property &ldquo;dataset&rdquo; and returns a valid connectorUrl. With this connectorUrl you can create or update a &ldquo;document&rdquo; dataset, or a raster dataset in the Rasdaman adapter.</p>
+<blockquote>
+<p>Upload raw data for using in a dataset</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/upload <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -F <span class="nv">provider</span><span class="o">=</span>csv,
 -F <span class="nv">dataset</span><span class="o">=</span>@&lt;your-file&gt;
 </code></pre>
-<p>It returns the following information:</p>
-
 <blockquote>
-<p>Response</p>
+<p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw.dataset.raw/tmp/upload_75755182b1ceda30abed717f655c077d-observed_temp.csv"</span><span class="w">
+  </span><span class="s2">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw.dataset.raw/some-file.csv"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"Country (region)"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Positive affect"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Negative affect"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Social support"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Freedom"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Corruption"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Generosity"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+</span></code></pre>
+<blockquote>
+<p>Using the returned connectorUrl to create a new dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 <span class="s1">'{
+  "dataset": {
     "connectorType":"document",
     "provider":"csv",
-    "connectorUrl":"rw.dataset.raw/tmp/upload_75755182b1ceda30abed717f655c077d-observed_temp.csv",
+    "connectorUrl":"rw.dataset.raw/some-file.csv",
     "application":[
      "your", "apps"
     ],
     "name":"Example RAW Data Dataset"
+  }
 }'</span>
 </code></pre>
-<h2 id="updating-a-dataset">Updating a Dataset</h2>
+<p>The <code class="prettyprint">upload</code> endpoint allows you to create datasets on the API from local files that aren&rsquo;t available online. 
+If your file is up to 4MB in size, you can upload it to the API by using the <code class="prettyprint">upload</code> endpoint. 
+This endpoint accepts a file in the &ldquo;dataset&rdquo; field of your POST request, and a <code class="prettyprint">provider</code> that matches your file type and extension. 
+The supported formats/extensions are: csv, json, tsv, xml, tif, tiff and geo.tiff.
+The request uploads the file to the API, and returns a specially crafted <code class="prettyprint">connectorUrl</code> value, and a list of fields found in your file.
+With this data, you can create a document type dataset by passing it to the <code class="prettyprint">connectorUrl</code> value of a <a href="#document-based-datasets-json-csv-tsv-or-xml">new document type dataset</a>.</p>
 
-<p>In order to modify the dataset, you can PATCH a request. It accepts the same parameters as the <em>create dataset</em> endpoint, and you will need an authentication token.</p>
+<h4 id="errors-for-upload-a-dataset-file">Errors for upload a dataset file</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>- no file to check -</td>
+<td>A file was not provided, or was provided in the wrong request field.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- dataset: file dataset can not be a empty file -</td>
+<td>A file was not provided, or was provided in the wrong request field.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>provider: provider must be in [csv,json,tsv,xml,tif,tiff,geo.tiff].</td>
+<td>A file was not provided, or was provided in the wrong request field.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- dataset: file too large -</td>
+<td>Your file is larger than 4MB.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- dataset: file <your file name> is bad file type. -</td>
+<td>The <code class="prettyprint">provider</code> value must match the extension of the uploaded file.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to upload a file.</td>
+</tr>
+</tbody></table>
+
+<h2 id="updating-a-dataset">Updating a dataset</h2>
+
+<p>There are multiple options to update a dataset, depending on what modification you are trying to achieve, and the underlying data provider of the dataset itself. This section covers the different endpoints that allow you to modify a dataset, their details, and helps you pick the option that best fits your scenario. We recommend reviewing all of them before proceeding, so you can find the endpoint that best matches your needs.</p>
+
+<h3 id="updating-the-fields-of-a-dataset">Updating the fields of a dataset</h3>
+
+<blockquote>
+<p>Example request for updating the name of a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id-or-slug&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
+<span class="s1">'{
+    "name": "Another name for the dataset"
+}'</span>
+</code></pre>
+<p>In order to modify the fields of a dataset, you can use the patch dataset endpoint. 
+This endpoint allows you to modify most of your dataset&rsquo;s details, like the name or publishing status, but can also be used to modify internal fields of a dataset, like <code class="prettyprint">connectorType</code>. 
+When making these changes, be mindful that some of these fields are critical to the correct behavior of the dataset, and providing incorrect values may break your dataset. 
+There are other endpoints documented in this page that allow you to perform certain update-like operations (ie. update data on a document-type dataset), so refer to those first before using this endpoint. 
+Also important to keep in mind is the fact that this endpoint does not perform validation on things like <code class="prettyprint">connectorUrl</code>/<code class="prettyprint">sources</code> URLs.</p>
+
+<p>All the fields in the <a href="#dataset-reference">dataset reference</a> can be modified, except the following:</p>
+
+<ul>
+<li><code class="prettyprint">slug</code></li>
+<li><code class="prettyprint">userId</code></li>
+<li><code class="prettyprint">createdAt</code></li>
+<li><code class="prettyprint">updatedAt</code></li>
+</ul>
+
+<p>Additionally, certain fields have special behavior associated with them:</p>
+
+<ul>
+<li><code class="prettyprint">status</code> can only be modified by users with <code class="prettyprint">ADMIN</code> role or by other microservices.</li>
+<li><code class="prettyprint">taskId</code> and <code class="prettyprint">errorMessage</code> can only be modified by other microservices.</li>
+<li><code class="prettyprint">published</code> can only be modified by users with <code class="prettyprint">ADMIN</code> role.</li>
+<li><code class="prettyprint">env</code> changes will not only affect the dataset, but also related widgets and layers. Refer to the PATCH <code class="prettyprint">/widget/change-environment/&lt;dataset id&gt;/&lt;env&gt;</code> and the the PATCH <code class="prettyprint">/layer/change-environment/&lt;dataset id&gt;/&lt;env&gt;</code> endpoints respectively for more details.</li>
+</ul>
+
+<p>When passing new values for Object type fields, the new value will fully overwrite the previous one. It&rsquo;s up to you, as an API user, to build any merging logic into your application.</p>
 
 <p>To perform this operation, the following conditions must be met:</p>
 
@@ -1450,119 +1722,46 @@ However, in some scenarios, it may be desirable to specify some or all of these 
 </ul></li>
 </ul>
 
-<blockquote>
-<p>An example update request:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt; <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
-<span class="s1">'{
-    "name": "Another name for the dataset"
-}'</span>
-</code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
-<p>Note: When updating the <code class="prettyprint">env</code> property of a dataset the change will cascade down to all associated layer and widget entities.</p>
-
-<h2 id="deleting-a-dataset">Deleting a Dataset</h2>
-
-<p><strong>When a dataset is deleted the user&rsquo;s applications that were present on the dataset will be removed from it. If this results in a dataset without applications, the dataset itself will be then deleted.</strong></p>
-
-<p>Datasets can be deleted either by with role ADMIN or by the user with role MANAGER that created them.</p>
-
-<p>In order to perform this operation, the following conditions must be met:</p>
+<p>Use this endpoint when:</p>
 
 <ul>
-<li>the dataset&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.</li>
-<li>the user must be logged in and belong to the same application as the dataset</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
-</ul></li>
+<li>Modifying the fields of a dataset, like name, and not the data itself.</li>
+<li>Modifying the source of data for any dataset that&rsquo;s not document based (<code class="prettyprint">connectorType</code> values other than <code class="prettyprint">document</code>).</li>
+<li>Making advanced changes to a dataset.</li>
 </ul>
 
-<p>Note that the deletion process cascades in a non-atomic way; deleting a dataset will also attempt to remove all the layers, widgets, vocabularies, related knowledge graph elements, and metadata entities associated with it. However, if one of these deletes fails (ie. attempting to delete a protected layer will fail), the dataset will still be deleted, and those resources will be left orphaned.</p>
+<h4 id="errors-for-updating-the-fields-of-a-dataset">Errors for updating the fields of a dataset</h4>
 
-<aside class="warning">
-Deleting a dataset removes it permanently! It is recommended that you save a local copy before doing so.
-</aside>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt; <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
--H <span class="s2">"Content-Type: application/json"</span>
-</code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to update a dataset.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset).</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to update a dataset with one or more <code class="prettyprint">application</code> values that are not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset with id <id> doesn&rsquo;t exist</td>
+<td>A dataset with the provided id does not exist.</td>
+</tr>
+</tbody></table>
 
-<h2 id="cloning-a-dataset">Cloning a Dataset</h2>
-
-<p>This endpoint returns a new dataset that is a replica of the dataset provided.
-It can take the optional query parameter <code class="prettyprint">fullCloning=true</code> to force the cloning of the metadata.</p>
-
-<p>The POST payload expects a <code class="prettyprint">dataset</code> object containing at least these 2 required keys:
-- <code class="prettyprint">datasetUrl</code>:  The connectorUrl for the new dataset.
-- <code class="prettyprint">application</code>: A list of the new dataset applications.</p>
-
-<p>Optionally, the following values can also be provided, which will be used to overwrite the
-original dataset&rsquo;s values when cloning:
-- <code class="prettyprint">legend</code>
-- <code class="prettyprint">applicationConfig</code></p>
-
-<p>The cloned dataset has the same attributes as the source one, except for the following ones:
-- <code class="prettyprint">name</code>: The current timestamp is added to the original name
-- <code class="prettyprint">published</code>: will be false unless specified</p>
-
-<p>The field <code class="prettyprint">clonedHost</code> will contain the host information about the original dataset.</p>
-
-<p>A user can only clone datasets from and to apps they belong to.</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2ff464ab28be/clone <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
--H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
-<span class="s1">'{
-  "dataset": {
-    "datasetUrl": "/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010",
-    "application": [
-      "your",
-      "apps"
-    ],
-    "legend": {...},
-    "applicationConfig" : {...}
-  }
-}'</span>
-</code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
-
-<h2 id="concatenate-and-append-data">Concatenate and Append Data</h2>
-
-<p>Using these endpoints, you can add more data to an already existing dataset. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.</p>
-
-<p>These process are asynchronous and not instantaneous. Immediately when triggered, these requests will cause the dataset&rsquo;s <code class="prettyprint">status</code> to be set to <code class="prettyprint">pending</code>, meaning you will not be able to issue new overwrite, concatenate or append requests. Once the request has been fully processed, the status will be automatically set to <code class="prettyprint">saved</code>. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.</p>
-
-<p>In order to perform these operation, the following conditions must be met:</p>
-
-<ul>
-<li>the dataset&rsquo;s <code class="prettyprint">overwrite</code> property must be set to <code class="prettyprint">true</code>.</li>
-<li>the dataset&rsquo;s <code class="prettyprint">status</code> property must be set to <code class="prettyprint">saved</code>.</li>
-<li>the user must be logged in and match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset</li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
-</ul></li>
-</ul>
-
-<p>While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.</p>
-
-<ul>
-<li>The concatenate process relies on a slower approach to ensure the operation is atomic. Until the operation is completed, you will see the dataset data as it was before the concatenate operation was triggered. If the operation fails, the old version of the data is kept accessible as it was before the concatenation process was started. There&rsquo;s a known issue where concatenating new data to already existing large datasets may result in failure.</li>
-<li>The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones.</li>
-</ul>
+<h3 id="concatenate-and-append-data-to-a-document-based-dataset">Concatenate and append data to a document based dataset</h3>
 
 <blockquote>
 <p>Concatenate data using external data source:</p>
@@ -1599,22 +1798,35 @@ original dataset&rsquo;s values when cloning:
     "data": [{},{}]
 }'</span>
 </code></pre>
+<p>Using these endpoints, you can add more data to an already existing dataset. They are exclusively available for document based datasets - you&rsquo;ll get a <code class="prettyprint">404</code> error if you use them on a dataset of a different type. You can either provide the URL for the file containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object.</p>
+
+<p>These process are asynchronous and not instantaneous. Immediately when triggered, these requests will cause the dataset&rsquo;s <code class="prettyprint">status</code> to be set to <code class="prettyprint">pending</code>, meaning you will not be able to issue new overwrite, concatenate or append requests. Once the request has been fully processed, the status will be automatically set to <code class="prettyprint">saved</code>. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.</p>
+
+<p>In order to perform these operation, the following conditions must be met:</p>
+
+<ul>
+<li>the dataset&rsquo;s <code class="prettyprint">overwrite</code> property must be set to <code class="prettyprint">true</code>.</li>
+<li>the dataset&rsquo;s <code class="prettyprint">status</code> property must be set to <code class="prettyprint">saved</code>.</li>
+<li>the user must be logged in and match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset</li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
+</ul></li>
+</ul>
+
+<p>While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.</p>
+
+<ul>
+<li>The concatenate process relies on a slower approach to ensure the operation is atomic. Until the operation is completed, you will see the dataset data as it was before the concatenate operation was triggered. If the operation fails, the old version of the data is kept accessible as it was before the concatenation process was started. There&rsquo;s a known issue where concatenating new data to already existing large datasets may result in failure.</li>
+<li>The append operation relies on a faster process that does not offer atomicity. The new data is simply added to the current dataset, and any queries done while this process is taking place may produce results based on the preexisting data mixed with parts of the newly added values. Should the operation fail halfway, your dataset may contain all the preexisting records as well as part (but not all) of the newly added ones.</li>
+</ul>
+
 <aside class="notice">
     Using the previous <code class="prettyprint">url</code> field to pass the url of a single file is still permitted but is now deprecated in favor of <code class="prettyprint">sources</code>.
 </aside>
 
-<h2 id="overwrite-data">Overwrite Data</h2>
-
-<p>Using this endpoint, you can add completely replace the data of an already existing dataset. All previously existing data will be permanently deleted. You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object. There are no requirements regarding similarity of the data structure between existing and new data - your overwrite data can have a completely different data schema.</p>
-
-<p>This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset&rsquo;s <code class="prettyprint">status</code> to be set to <code class="prettyprint">pending</code>, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to <code class="prettyprint">saved</code> and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.</p>
-
-<p>In order to perform this operation, the following conditions must be met:
-- the dataset&rsquo;s <code class="prettyprint">overwrite</code> property must be set to <code class="prettyprint">true</code>.
-- the dataset&rsquo;s <code class="prettyprint">status</code> property must be set to <code class="prettyprint">saved</code>.
-- the user must be logged in and match one of the following:
-  - have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset
-  - have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</p>
+<p>Here&rsquo;s a more detailed description of the request&rsquo;s body fields:</p>
 
 <table><thead>
 <tr>
@@ -1629,7 +1841,142 @@ original dataset&rsquo;s values when cloning:
 <td>provider</td>
 <td style="text-align: center">Dataset provider this include inner connectors and 3rd party ones</td>
 <td style="text-align: right">String</td>
-<td style="text-align: right"><a href="##supported-dataset-sources">A valid dataset provider</a></td>
+<td style="text-align: right">A valid dataset provider</td>
+<td style="text-align: right">Yes</td>
+</tr>
+<tr>
+<td>sources</td>
+<td style="text-align: center">List of URLs from which to source data</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">URL array</td>
+<td style="text-align: right">Yes, unless JSON data is provided using the <code class="prettyprint">data</code> field</td>
+</tr>
+<tr>
+<td>data</td>
+<td style="text-align: center">JSON DATA only for json connector if connectorUrl not present</td>
+<td style="text-align: right">Array</td>
+<td style="text-align: right">[{},{},{}]</td>
+<td style="text-align: right">Yes for JSON if <code class="prettyprint">sources</code> is not present</td>
+</tr>
+<tr>
+<td>dataPath</td>
+<td style="text-align: center">Path to the data in a JSON file-based datasets</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&ldquo;</td>
+<td style="text-align: right">No</td>
+</tr>
+</tbody></table>
+
+<p><em>Tip: If you want to periodically and automatically concatenate data to your document based dataset, check out the <a href="#dataset-automatic-synchronization">dataset automatic synchronization</a> functionality.</em></p>
+
+<p>Use this endpoint when:</p>
+
+<ul>
+<li>Adding new data to an existing document based dataset, without modifying/removing the existing one.</li>
+</ul>
+
+<h4 id="errors-for-concatenating-and-appending-data-to-a-document-based-dataset">Errors for concatenating and appending data to a document based dataset</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Dataset is not in saved status</td>
+<td>The dataset&rsquo;s <code class="prettyprint">status</code> value is not set to <code class="prettyprint">saved</code>. Refer to <a href="#dataset-reference">dataset reference</a> for more details on this field and its values.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to update a dataset.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset).</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to update a dataset with one or more <code class="prettyprint">application</code> values that are not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Endpoint not found</td>
+<td>A dataset with the provided id does not exist, or does not have <code class="prettyprint">connectorType</code> with value <code class="prettyprint">document</code>.</td>
+</tr>
+<tr>
+<td>409</td>
+<td>Dataset locked. Overwrite false.</td>
+<td>The dataset you&rsquo;re trying to modify has <code class="prettyprint">overwrite</code> value set to <code class="prettyprint">false</code>, to explicitly prevent data modifications.</td>
+</tr>
+</tbody></table>
+
+<h3 id="overwrite-data-for-a-document-based-dataset">Overwrite data for a document based dataset</h3>
+
+<blockquote>
+<p>Overwrite data using external data source:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+   "sources": ["&lt;url of the data source&gt;"],
+   "provider": "csv"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Overwrite data using JSON array in post body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+   "data": [{},{}],
+   "provider": "csv"
+}'</span>
+</code></pre>
+<p>Using this endpoint, you can add or completely replace the data of an already existing dataset. 
+It&rsquo;s exclusively available for document based datasets - you&rsquo;ll get a <code class="prettyprint">404</code> error if you use it on a dataset of a different type. 
+All previously existing data will be permanently deleted. 
+You can either provide the URL(s) for the file(s) containing the data you wish to add, or simply provide that data in the body of your request, as a JSON object. 
+There are no requirements regarding similarity of the data structure between existing and new data - your overwrite data can have a completely different data schema.</p>
+
+<p>This process is asynchronous and not instantaneous. Immediately when triggered, this request will cause the dataset&rsquo;s <code class="prettyprint">status</code> to be set to <code class="prettyprint">pending</code>, meaning you will not be able to issue new overwrite or concat requests, and will not yet be able to access the new data yet. Once the request has been fully processed, the status will be automatically set to <code class="prettyprint">saved</code> and the new data will be accessible. Depending on factors like API load or the size of the data being uploaded, this may take from a few minutes to a few hours to occur. The API does not issue any notification when the asynchronous operation is finished.</p>
+
+<p>In order to perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the dataset&rsquo;s <code class="prettyprint">overwrite</code> property must be set to <code class="prettyprint">true</code>.</li>
+<li>the dataset&rsquo;s <code class="prettyprint">status</code> property must be set to <code class="prettyprint">saved</code>.</li>
+<li>the user must be logged in and match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset</li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
+</ul></li>
+</ul>
+
+<p>Here&rsquo;s a more detailed description of the request&rsquo;s body fields:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Values</th>
+<th style="text-align: right">Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>provider</td>
+<td style="text-align: center">Dataset provider this include inner connectors and 3rd party ones</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">A valid dataset provider</td>
 <td style="text-align: right">Yes</td>
 </tr>
 <tr>
@@ -1655,44 +2002,228 @@ original dataset&rsquo;s values when cloning:
 </tr>
 </tbody></table>
 
-<blockquote>
-<p>Overwrite data using external data source:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{
-   "sources": ["&lt;url of the data source&gt;"],
-   "provider": "csv"
-}'</span>
-</code></pre>
-<blockquote>
-<p>Overwrite data using JSON array in post body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset_id/data-overwrite <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
-<span class="s1">'{
-   "data": [{},{}],
-   "provider": "csv"
-}'</span>
-</code></pre>
-<aside class="notice">
-    This is an authenticated endpoint!
-</aside>
+<p><em>Tip: If you want to periodically and automatically overwrite the data on your document based dataset, check out the <a href="#dataset-automatic-synchronization">dataset automatic synchronization</a> functionality.</em></p>
 
-<p>Who can use this endpoint?</p>
+<h4 id="errors-for-overwriting-data-for-a-document-based-dataset">Errors for overwriting data for a document based dataset</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Dataset is not in saved status</td>
+<td>The dataset&rsquo;s <code class="prettyprint">status</code> value is not set to <code class="prettyprint">saved</code>. Refer to <a href="#dataset-reference">dataset reference</a> for more details on this field and its values.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to update a dataset.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset).</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to update a dataset with one or more <code class="prettyprint">application</code> values that are not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Endpoint not found</td>
+<td>A dataset with the provided id does not exist, or does not have <code class="prettyprint">connectorType</code> with value <code class="prettyprint">document</code>.</td>
+</tr>
+<tr>
+<td>409</td>
+<td>Dataset locked. Overwrite false.</td>
+<td>The dataset you&rsquo;re trying to modify has <code class="prettyprint">overwrite</code> value set to <code class="prettyprint">false</code>, to explicitly prevent data modifications.</td>
+</tr>
+</tbody></table>
+
+<p>Use this endpoint when:</p>
 
 <ul>
-<li><strong>MANAGER</strong> users who are included in the <code class="prettyprint">userId</code> field of the dataset entity.</li>
-<li><strong>ADMIN</strong> users who belong to <strong>at least one of the dataset&rsquo;s applications</strong>.</li>
+<li>Fully replacing the data of an existing document based dataset, while keeping other values like id or name.</li>
+<li>Modifying the structure of the data for a document based dataset.</li>
 </ul>
 
-<h2 id="dataset-data-sync">Dataset data sync</h2>
+<h2 id="cloning-a-dataset">Cloning a dataset</h2>
 
-<p>To sync the data of a dataset, you need to choose the action type (concat or overwrite), a cron pattern and a valid url. This configuration should be set in the &#39;sync&rsquo; property when creating or updating a document dataset.</p>
+<blockquote>
+<p>Example request for cloning a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/5306fd54-df71-4e20-8b34-2ff464ab28be/clone <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+-H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
+<span class="s1">'{
+  "dataset": {
+    "datasetUrl": "/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010",
+    "application": [
+      "your",
+      "apps"
+    ],
+    "legend": {...},
+    "applicationConfig" : {...}
+  }
+}'</span>
+</code></pre>
+<p>This endpoint allows you to create a new, json based dataset, from the result of a RW API endpoint call. The basic usage example would be to create a new dataset based on a custom query to an existing dataset - this is illustrated in the example <code class="prettyprint">curl</code> call in this section. Other use cases could be converting the result of an analysis endpoint into a dataset, or capturing the result of a query to a REST based dataset (cartodb, arcgis, etc) to an internal json representation of the same data, that is kept in the API database.   </p>
 
-<p>Please be sure that the &#39;overwrite&rsquo; property is set to true. This could be used as a lock in order to not allow new updates even if the sync task is actually created.</p>
+<p>In order to perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the user must belong to the applications specified in the request body.</li>
+<li>the user must be logged in and match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
+</ul></li>
+</ul>
+
+<p>The request requires two fields to be present:</p>
+
+<ul>
+<li><code class="prettyprint">datasetUrl</code>: the URL from where to load the data to populate the new dataset. Must be RW API, relative path, like <code class="prettyprint">/query/5306fd54-df71-4e20-8b34-2ff464ab28be?sql=select%20%2A%20from%20data%20limit%2010</code>.</li>
+<li><code class="prettyprint">application</code>: the array of applications to which the new dataset will belong.</li>
+</ul>
+
+<p>Additionally, you can optionally specify these fields:</p>
+
+<ul>
+<li><code class="prettyprint">legend</code>: field structure and type of the new dataset. Refer to <a href="#dataset-reference">dataset reference</a> for more details.</li>
+<li><code class="prettyprint">applicationConfig</code>: application-specific configuration. Refer to <a href="#dataset-reference">dataset reference</a> for more details. If not provided, it will be copied from the original dataset.</li>
+<li><code class="prettyprint">published</code>: if the user has <code class="prettyprint">ADMIN</code> role, they can set this value to <code class="prettyprint">true</code>. </li>
+</ul>
+
+<p>For the fields in the following list, values will be copied from the original dataset to the new one, unless specified:</p>
+
+<ul>
+<li><code class="prettyprint">name</code>: copied from the original dataset, with a timestamp appended, to ensure uniqueness.</li>
+<li><code class="prettyprint">subtitle</code></li>
+<li><code class="prettyprint">dataPath</code>: will always be set to <code class="prettyprint">data</code>, matching the expected response structure of RW API responses like <code class="prettyprint">/query</code> that encapsulate the &quot;real&rdquo; data in a <code class="prettyprint">data</code> json object.</li>
+<li><code class="prettyprint">connectorType</code>: will be set to <code class="prettyprint">document</code></li>
+<li><code class="prettyprint">provider</code>: will be set to <code class="prettyprint">json</code></li>
+<li><code class="prettyprint">attributesPath</code></li>
+<li><code class="prettyprint">tableName</code></li>
+<li><code class="prettyprint">dataLastUpdated</code></li>
+<li><code class="prettyprint">overwrite</code></li>
+<li><code class="prettyprint">published</code>: if the user has role <code class="prettyprint">ADMIN</code> and does not explicitly set <code class="prettyprint">published</code> to <code class="prettyprint">true</code> on the request body, this value is inherited. Otherwise, it&rsquo;s set to <code class="prettyprint">false</code>.</li>
+</ul>
+
+<p>Datasets created through a cloning operation will have a specific <code class="prettyprint">clonedHost</code> object, with additional data. Refer to <a href="#dataset-reference">dataset reference</a> for more details on the content of this field. </p>
+
+<p>The dataset cloning requests accepts an optional <code class="prettyprint">full</code> boolean query parameter that, when set to <code class="prettyprint">true</code>, will clone of vocabulary-related data and metadata from the original dataset to the new one.</p>
+
+<h4 id="errors-for-cloning-a-dataset">Errors for cloning a dataset</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td><field>: <field> can not be empty.</td>
+<td>The required field identified in the error message is missing in the request body.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- application: must be a non-empty array -</td>
+<td><code class="prettyprint">application</code> must be specified as an array.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to clone a dataset.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset).</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden - User does not have access to this dataset&rsquo;s application</td>
+<td>You specified an <code class="prettyprint">application</code> in your request body that is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset with id <id> doesn&rsquo;t exist</td>
+<td>A dataset with the provided id does not exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-a-dataset">Deleting a dataset</h2>
+
+<p>Use this endpoint if you wish to delete a dataset. Deleting a dataset of type document (<code class="prettyprint">connectorType</code> with value <code class="prettyprint">document</code>) will cause the API&rsquo;s internal copy of said data to be deleted. Dataset types that proxy data from an external source (ie. carto, gee, etc) will be deleted without modifying said external source.</p>
+
+<p>When deleting a dataset that is associated with multiple <code class="prettyprint">application</code> values, the user issuing the request must be associated with all of them in order for the dataset to be deleted. If that&rsquo;s not the case, the <code class="prettyprint">application</code> values associated with the user will be removed from the dataset&rsquo;s <code class="prettyprint">application</code> list, and no further action will be taken - the dataset itself and its associated resources will continue to exist. The dataset is only actually deleted if the user has access to all of the <code class="prettyprint">application</code> to which the dataset belongs. </p>
+
+<p>Besides deleting the dataset itself, this endpoint also deletes graph vocabularies, layers, widgets and metadata related to the dataset itself. These delete operations are issued in this order, and prior to deleting the dataset itself, but are not atomic - if one of them fails (for example, if attempting to delete a protected resource), the following ones are canceled, but the already deleted elements are not restored. </p>
+
+<p>In order to delete a dataset, the following conditions must be met:</p>
+
+<ul>
+<li>the dataset&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.</li>
+<li>the user must be logged in and belong to the same application as the dataset</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
+</ul></li>
+</ul>
+
+<blockquote>
+<p>Example request for deleting a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Dataset is protected</td>
+<td>You are attempting to delete a dataset that has <code class="prettyprint">protected</code> set to prevent deletion.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to delete a dataset.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to delete a dataset with one or more <code class="prettyprint">application</code> values that are not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset with id <id> doesn&rsquo;t exist</td>
+<td>A dataset with the provided id does not exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="dataset-automatic-synchronization">Dataset automatic synchronization</h2>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
@@ -1712,6 +2243,426 @@ original dataset&rsquo;s values when cloning:
     }
 }'</span>
 </code></pre>
+<p>Certain datasets contain data that evolves frequently over time, and you, as the creator of this dataset, what to ensure that it&rsquo;s up-to-date. As we&rsquo;ve seen before, if your data is hosted on one of the supported 3rd party data providers, like Carto or Arcgis, your data will be proxied, so users of the RW API will always see the latest version of your data. However, if you uploaded your data from a file, your data is copied to the RW API database at the time of the dataset&rsquo;s creation, so keeping it up-to-date requires a different approach. It&rsquo;s with scenario in mind that the RW API offers the automatic synchronization mechanism.</p>
+
+<p>The automatic synchronization mechanism is available for document based datasets only, and you can configure it when <a href="#creating-a-dataset">creating</a> or <a href="#updating-the-fields-of-a-dataset">updating</a> a dataset. When enabled, it will schedule an automatic, periodic task, that will update your document based dataset&rsquo;s data, based on data from an URL you provide. This means that, once configured, you just have to make sure the automatic synchronization mechanism can find the newest version of the data at the specified URL, and the RW API will take care of the actual data update process for you.</p>
+
+<p>To configure automatic synchronization on dataset creation or update, you need to pass a <code class="prettyprint">sync</code> object on your calls to the respective endpoints, next to the other fields. See the included example for a clearer idea of how creating a dataset with automatic synchronization looks like.</p>
+
+<p>There are 3 fields, all required, that you need to specify inside the <code class="prettyprint">sync</code> object:</p>
+
+<ul>
+<li><code class="prettyprint">action</code>: choose either <code class="prettyprint">concat</code> or <code class="prettyprint">overwrite</code>. See more details above about <a href="#concatenate-and-append-data-to-a-document-based-dataset">concatenating</a> and <a href="#overwrite-data-for-a-document-based-dataset">overwriting</a> dataset data. Append operations, as documented in the section above, is not supported.</li>
+<li><code class="prettyprint">cronPattern</code>: <a href="https://en.wikipedia.org/wiki/Cron">cron</a> expression representing when and how frequently the synchronization process should take place. The host executing these tasks use UTC timezone.</li>
+<li><code class="prettyprint">url</code>: publicly available URL from where the automatic synchronization mechanism will load the data to replace/concatenate to your dataset. </li>
+</ul>
+
+<p>Internally, the automatic synchronization mechanism will call either the <a href="#concatenate-and-append-data-to-a-document-based-dataset">dataset concatenation</a> or <a href="#overwrite-data-for-a-document-based-dataset">dataset overwrite</a> endpoint. 
+If that internal request fails - for example, if <code class="prettyprint">overwrite</code> is set to <code class="prettyprint">false</code> - the sync process will fail silently. 
+If you have the <code class="prettyprint">ADMIN</code> role, you can use the <code class="prettyprint">/v1/task</code> endpoint to see scheduled tasks and their error output, but otherwise this failure will be invisible to end users.</p>
+
+<p>On the other hand, if the request goes through, but the concatenation/overwrite process fails - for example, if the URL provided is not available - then your dataset <code class="prettyprint">status</code> will be set to <code class="prettyprint">error</code> and the <code class="prettyprint">errorMessage</code> field will give you a simple description of what happened.</p>
+
+<p>To see the details (including the date) of the last operation performed on the dataset, use the link in the <code class="prettyprint">taskId</code> field.</p>
+
+<h2 id="flush-dataset-cache">Flush dataset cache</h2>
+
+<blockquote>
+<p>Flush dataset&rsquo;s cache</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/0c630feb-8146-4fcc-a9be-be5adcb731c8/flush <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight shell"><code>OK
+</code></pre>
+<p>Flushes the cache for the specified dataset. Take into account that only the dataset itself, query results and fields will be flushed. Any other relation, like metadata, layers or widgets linked to the specified dataset will not be affected by this action.</p>
+
+<p>In order to flush a dataset&rsquo;s cache, the following conditions must be met:</p>
+
+<ul>
+<li>the user must be logged in.</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
+</ul></li>
+</ul>
+
+<h4 id="errors-for-flushing-a-dataset-39-s-cache">Errors for flushing a dataset&rsquo;s cache</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to delete a dataset.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to delete a dataset with one or more <code class="prettyprint">application</code> values that are not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset with id <id> doesn&rsquo;t exist</td>
+<td>A dataset with the provided id does not exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="recover">Recover</h2>
+
+<blockquote>
+<p>Recover dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/0c630feb-8146-4fcc-a9be-be5adcb731c8/recover <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight shell"><code>OK
+</code></pre>
+<p>Resets a dataset&rsquo;s <code class="prettyprint">status</code> to <code class="prettyprint">saved</code> and clears its errors. Keep in mind that this does NOT modify the dataset in any other way - if the underling dataset&rsquo;s data was inconsistent for any reason, this endpoint will not change it, and it&rsquo;s up to you to fix it using a <code class="prettyprint">data-overwrite</code> or other endpoints.</p>
+
+<p>In order to recover a dataset, the user must be logged in and have the <code class="prettyprint">ADMIN</code> role.</p>
+
+<h4 id="errors-for-recovering-a-dataset-39-s-cache">Errors for recovering a dataset&rsquo;s cache</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged with to be able to delete a dataset.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to have the <code class="prettyprint">ADMIN</code> role.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset with id <id> doesn&rsquo;t exist</td>
+<td>A dataset with the provided id does not exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="dataset-reference">Dataset reference</h2>
+
+<p>This section gives you a complete view at the properties that are maintained as part of dataset. When interacting with a dataset (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the <code class="prettyprint">id</code> is nested inside an <code class="prettyprint">attributes</code> object).</p>
+
+<p>You can find more details in the <a href="https://github.com/resource-watch/dataset/blob/master/app/src/models/dataset.model.js">source code</a>.</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>Yes (autogenerated)</td>
+<td></td>
+<td>Unique Id of the dataset. Auto generated on creation. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>Name of the dataset.</td>
+</tr>
+<tr>
+<td>slug</td>
+<td>String</td>
+<td>Yes (autogenerated)</td>
+<td></td>
+<td>Slug of the dataset. Auto generated on creation. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td>Type of the dataset.</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td>Subtitle of the dataset.</td>
+</tr>
+<tr>
+<td>application</td>
+<td>Array</td>
+<td>Yes</td>
+<td></td>
+<td>Applications associated with this dataset.</td>
+</tr>
+<tr>
+<td>applicationConfig</td>
+<td>Object</td>
+<td>No</td>
+<td></td>
+<td>Key-value storage of application-specific data. Use the <code class="prettyprint">application</code> value as key and a JSON Object as the value to store complex, extensible data.</td>
+</tr>
+<tr>
+<td>dataPath</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td>Path to the data in a JSON file-based datasets.</td>
+</tr>
+<tr>
+<td>attributesPath</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td></td>
+</tr>
+<tr>
+<td>connectorType</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>Type of connector. <code class="prettyprint">wms</code> for WMS-based datasets, <code class="prettyprint">rest</code> for datasets that rely on external data sources (carto, arcgis, etc) or <code class="prettyprint">document</code> for file-based datasets (JSON, CSV, etc).</td>
+</tr>
+<tr>
+<td>provider</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>Dataset provider.</td>
+</tr>
+<tr>
+<td>userId</td>
+<td>String</td>
+<td>Yes (autopopulated)</td>
+<td></td>
+<td>Id of the user who created the dataset. Set automatically on creation. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>connectorUrl</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td>Path to the source of the data. On datasets with <code class="prettyprint">document</code> connectorType, <code class="prettyprint">sources</code> should be used instead.</td>
+</tr>
+<tr>
+<td>sources</td>
+<td>Array</td>
+<td>No</td>
+<td>null</td>
+<td>Path to the source files of the data. Only used on datasets with <code class="prettyprint">document</code> connectorType.</td>
+</tr>
+<tr>
+<td>tableName</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td>Additional value used to locate the dataset within a given underlying provider. Refer to the documentation of the different connector for more details.</td>
+</tr>
+<tr>
+<td>status</td>
+<td>String</td>
+<td>No</td>
+<td>pending</td>
+<td>Status of the dataset. <code class="prettyprint">saved</code> means the dataset is available to use, <code class="prettyprint">pending</code> means an operation is ongoing and the dataset is temporarily unavailable, <code class="prettyprint">error</code> means the dataset is in an invalid state and requires further action before becoming available.</td>
+</tr>
+<tr>
+<td>overwrite</td>
+<td>Boolean</td>
+<td>No</td>
+<td>false</td>
+<td>If the data can be overwritten (only for being able to update dataset)</td>
+</tr>
+<tr>
+<td>errorMessage</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td>If this dataset is in <code class="prettyprint">error</code> state, this field may contain additional details about the error.</td>
+</tr>
+<tr>
+<td>mainDateField</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td></td>
+</tr>
+<tr>
+<td>published</td>
+<td>Boolean</td>
+<td>Yes</td>
+<td>true</td>
+<td>If the dataset is published or not.</td>
+</tr>
+<tr>
+<td>env</td>
+<td>String</td>
+<td>Yes</td>
+<td>production</td>
+<td>Environment to which the dataset belongs.</td>
+</tr>
+<tr>
+<td>geoInfo</td>
+<td>Boolean</td>
+<td>Yes</td>
+<td>false</td>
+<td>If it contains interceptable geographical info</td>
+</tr>
+<tr>
+<td>protected</td>
+<td>Boolean</td>
+<td>Yes</td>
+<td>false</td>
+<td>If the dataset is protected. A protected dataset cannot be deleted.</td>
+</tr>
+<tr>
+<td>taskId</td>
+<td>String</td>
+<td>No</td>
+<td>null</td>
+<td>Id of the latest task associated with this dataset. Typically only present in <code class="prettyprint">document</code> connectorType datasets</td>
+</tr>
+<tr>
+<td>subscribable</td>
+<td>Object</td>
+<td>No</td>
+<td></td>
+<td>Information about the dataset being subscribable for alerts. More info about this can be found on the <a href="#subscriptions">Subscriptions</a> section of the docs.</td>
+</tr>
+<tr>
+<td>legend.lat</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>Dataset field representing a latitude value.</td>
+</tr>
+<tr>
+<td>legend.long</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>Dataset field representing a longitude value.</td>
+</tr>
+<tr>
+<td>legend.*</td>
+<td>Array</td>
+<td>No</td>
+<td></td>
+<td>Different keys corresponding to data types. Each key may have an array of strings, referencing dataset fields that match that data type. Used functionally for document-based datasets, but may also be set by the user as reference for other types. See <a href="#using-the-legend-fields-to-define-field-types">this section</a> for more details.</td>
+</tr>
+<tr>
+<td>clonedHost.hostProvider</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>When cloning a dataset, this will retain the <code class="prettyprint">provider</code> value of the original dataset.</td>
+</tr>
+<tr>
+<td>clonedHost.hostUrl</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>When cloning a dataset, this will retain the <code class="prettyprint">connectorUrl</code> value of the original dataset.</td>
+</tr>
+<tr>
+<td>clonedHost.hostId</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>When cloning a dataset, this will retain the <code class="prettyprint">Id</code> value of the original dataset.</td>
+</tr>
+<tr>
+<td>clonedHost.hostType</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>When cloning a dataset, this will retain the <code class="prettyprint">connectorType</code> value of the original dataset.</td>
+</tr>
+<tr>
+<td>clonedHost.hostPath</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>When cloning a dataset, this will retain the <code class="prettyprint">tableName</code> value of the original dataset.</td>
+</tr>
+<tr>
+<td>widgetRelevantProps</td>
+<td>Array</td>
+<td>No</td>
+<td></td>
+<td>Group of relevant props of a widget.</td>
+</tr>
+<tr>
+<td>layerRelevantProps</td>
+<td>Array</td>
+<td>No</td>
+<td></td>
+<td>Group of relevant props of a layer.</td>
+</tr>
+<tr>
+<td>dataLastUpdated</td>
+<td>Date</td>
+<td>No</td>
+<td></td>
+<td>User defined date of when a dataset was last updated.</td>
+</tr>
+<tr>
+<td>userName</td>
+<td>String</td>
+<td>No (autogenerated)</td>
+<td>null</td>
+<td>Name of the user who created the dataset. This value is used only internally, and is never directly exposed through the API. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>userRole</td>
+<td>String</td>
+<td>No (autogenerated)</td>
+<td>null</td>
+<td>Role of the user who created the dataset. This value is used only internally, and is never directly exposed through the API. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td>Date</td>
+<td>No (autogenerated)</td>
+<td><current date></td>
+<td>Automatically maintained date of when the dataset was created. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>updatedAt</td>
+<td>Date</td>
+<td>No (autogenerated)</td>
+<td><current date></td>
+<td>Automatically maintained date of when the dataset was last updated. Cannot be modified by users.</td>
+</tr>
+</tbody></table>
+
           <h1 id="widget">Widget</h1>
 
 <h2 id="what-is-a-widget">What is a Widget?</h2>

@@ -1,0 +1,308 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>RW API Internal docs</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #272822;
+  background-color: #f92672;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #f8f8f2;
+}
+.highlight .p, .highlight .pi {
+  color: #f8f8f2;
+}
+.highlight .gi {
+  color: #a6e22e;
+}
+.highlight .gd {
+  color: #f92672;
+}
+.highlight .gh {
+  color: #66d9ef;
+  background-color: #272822;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #ae81ff;
+}
+.highlight .kc {
+  color: #fd971f;
+}
+.highlight .kt {
+  color: #fd971f;
+}
+.highlight .kd {
+  color: #fd971f;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #a6e22e;
+}
+.highlight .sr {
+  color: #a1efe4;
+}
+.highlight .si {
+  color: #cc6633;
+}
+.highlight .se {
+  color: #cc6633;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #66d9ef;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #a6e22e;
+}
+.highlight .ss {
+  color: #a6e22e;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="internal rw" data-languages="[&quot;shell&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo-rw.png" alt="Logo rw" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="shell">cURL</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='https://ui.resourcewatch.org'>Sign Up for a Developer Key</a></li>
+            <li><a href='https://github.com/resource-watch/doc-api'>Contribute to these docs</a></li>
+            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="introduction">Introduction</h1>
+
+<p>Welcome to the Resource Watch API Internal Documentation</p>
+
+          <h1 id="dataset">Dataset</h1>
+
+<p>Besides the dataset types documented on the core dataset docs, there are additional dataset types that are available to internal developers only.</p>
+
+<h3 id="nexgddp">NEXGDDP</h3>
+
+<blockquote>
+<p>Example of creating a dataset based on NEXGDDP data with the minimum fields required</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+   "dataset": {
+     "application": [
+       "rw"
+     ],
+     "name": "Average low temperature (decadal under rcp45 scenario)",
+     "connectorType": "rest",
+     "provider": "nexgddp",
+     "tableName": "tasmin/rcp45_decadal"
+   }
+ }'</span>
+</code></pre>
+<p>To create a dataset using NEXGDDP as data source, besides the common required fields, you must provide the following required data:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Example value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
+<td style="text-align: right"><code class="prettyprint">rest</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">provider</code></td>
+<td style="text-align: center">The provider should be set to <code class="prettyprint">nexgddp</code>.</td>
+<td style="text-align: right"><code class="prettyprint">nexgddp</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">tableName</code></td>
+<td style="text-align: center"></td>
+<td style="text-align: right">tasmin/rcp45_decadal</td>
+</tr>
+</tbody></table>
+
+<p>This dataset type assumes that data is already present in WRI&rsquo;s Rasdaman server, and makes no attempt to put it there. It should be accessible via the <code class="prettyprint">tableName</code> specified in the request.</p>
+
+<p>The RW API will use the information above to directly query the NEXGDDP dataset specified on the <code class="prettyprint">tableName</code> field that should live on WRI&rsquo;s Rasdaman server, whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+
+<ul>
+<li>Any changes made to the data hosted on the Rasdaman server will be automatically reflected on the data served by the RW API for this dataset.</li>
+<li>If you restructure or delete your NEXGDDP dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
+</ul>
+
+<p>When creating a NEXGDDP dataset, the RW API will try to validate it by connecting to the corresponding dataset on the Rasdaman server - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
+
+<h3 id="loca">Loca</h3>
+
+<blockquote>
+<p>Example of creating a dataset based on Loca data with the minimum fields required</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+   "dataset": {
+     "application": [
+       "rw"
+     ],
+     "name": "Average low temperature (decadal under rcp45 scenario)",
+     "connectorType": "rest",
+     "provider": "loca",
+     "tableName": "loca_tasavg/rcp85_decadal"
+   }
+ }'</span>
+</code></pre>
+<p>To create a dataset using Loca as data source, besides the common required fields, you must provide the following required data:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Example value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
+<td style="text-align: right"><code class="prettyprint">rest</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">provider</code></td>
+<td style="text-align: center">The provider should be set to <code class="prettyprint">loca</code>.</td>
+<td style="text-align: right"><code class="prettyprint">loca</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">tableName</code></td>
+<td style="text-align: center"></td>
+<td style="text-align: right">loca_tasavg/rcp85_decadal</td>
+</tr>
+</tbody></table>
+
+<p>This dataset type assumes that data is already present in WRI&rsquo;s Rasdaman server, and makes no attempt to put it there. It should be accessible via the <code class="prettyprint">tableName</code> specified in the request.</p>
+
+<p>The RW API will use the information above to directly query the Loca dataset specified on the <code class="prettyprint">tableName</code> field that should live on WRI&rsquo;s Rasdaman server, whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+
+<ul>
+<li>Any changes made to the data hosted on the Rasdaman server will be automatically reflected on the data served by the RW API for this dataset.</li>
+<li>If you restructure or delete your Loca dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
+</ul>
+
+<p>When creating a Loca dataset, the RW API will try to validate it by connecting to the corresponding dataset on the Rasdaman server - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
+
+<h3 id="bigquery">BigQuery</h3>
+
+<blockquote>
+<p>Example of creating a dataset based on BigQuery data with the minimum fields required</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s1">'https://api.resourcewatch.org/v1/dataset'</span> -d <span class="se">\</span>
+-H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>  <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> -d <span class="se">\</span>
+<span class="s1">'{"
+  dataset": {
+    "name": "World Bank: Education Data. Contains key education statistics from a variety of sources to provide a look at global literacy, spending, and access",
+    "tableName": "[bigquery-public-data.world_bank_intl_education.international_education]",
+    "connectorType":"rest",
+    "provider":"bigquery", 
+    "application": ["rw"]
+  }
+}'</span>
+</code></pre>
+<p>To create a dataset using BigQuery as data source, besides the common required fields, you must provide the following required data:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Example value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
+<td style="text-align: right"><code class="prettyprint">rest</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">provider</code></td>
+<td style="text-align: center">The provider should be set to <code class="prettyprint">bigquery</code>.</td>
+<td style="text-align: right"><code class="prettyprint">bigquery</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">tableName</code></td>
+<td style="text-align: center">Dataset&rsquo;s reference in [owner:dataset.table] format</td>
+<td style="text-align: right">[bigquery-public-data.world_bank_intl_education.international_education]</td>
+</tr>
+</tbody></table>
+
+<p>This dataset type assumes that data is already present on the location identified by the value in <code class="prettyprint">tableName</code>, and makes no attempt to put it there.</p>
+
+<p>The RW API will use the information above to directly query the BigQuery dataset specified above whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+
+<ul>
+<li>Any changes made to the data hosted on the BigQuery dataset will be automatically reflected on the data served by the RW API for this dataset.</li>
+<li>If you restructure or delete your BigQuery dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
+</ul>
+
+<p>When creating a Loca dataset, the RW API will try to validate it by connecting to the corresponding dataset on BigQuery - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
+
+<p><strong>Important</strong>: as BigQuery is billed by query, opening this connector to the world could have a large impact on the API&rsquo;s cost. As such, creating BigQuery datasets is restricted to specific users. </p>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="shell">cURL</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
