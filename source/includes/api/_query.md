@@ -6,34 +6,19 @@ In order to retrieve data from datasets, you can send queries to the API using a
 
 ## Querying datasets
 
-> GET request for a query providing the SQL as query param:
+> Structure of the endpoint for executing a query:
+
+```shell
+curl -i -X GET 'http://api.resourcewatch.org/v1/query/<dataset.id>?sql=SELECT * FROM <dataset.tableName> limit 10'
+```
+
+> Example endpoint for executing a query:
 
 ```shell
 curl -i -X GET 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
 ```
 
-> The same query executed as a POST request providing the SQL as request body param:
-
-```shell
-curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a/' \
--H 'Content-Type: application/json' \
--d '{
-    "sql": "SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10"
-}'
-```
-
-To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body. Using GET is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same query will see a great performance increase, even if they are made by a different application or client. POST requests, on the other hand, are not cached, but can be useful if your query is very long, and may experience issues related limits on URL length.
-
-Both GET and POST query endpoints expect **the id of the dataset being queried to be provided as part of the path**. This id can be omitted when querying datasets of certain providers (e.g. document-based datasets).
-
-| Method | Endpoint | Notes |
-|-------|------|-------------|
-| GET   | `http://api.resourcewatch.org/v1/query/:datasetId?sql=<sql-statement>` | Default way of querying datasets.
-| GET   | `http://api.resourcewatch.org/v1/query?sql=<sql-statement>` | This way of querying datasets is only supported by some providers (e.g. document-based datasets).
-| POST  | `http://api.resourcewatch.org/v1/query/:datasetId` | The SQL statement should be provided in the body of the request.
-| POST  | `http://api.resourcewatch.org/v1/query` | The SQL statement should be provided in the body of the request. This way of querying datasets is only supported by some providers (e.g. document-based datasets).
-
-Note: The `FROM` clause of the SQL query being executed must also reference the dataset being queried. This reference should be done by providing the `dataset.tableName` field as the table being queried in the `FROM` clause. For some dataset providers (e.g. document-based datasets), you can provide instead the dataset id (`dataset.id`) or the dataset slug (`dataset.slug`) as the table being queried in the FROM clause.
+In order to query the data of a dataset, you should perform a GET request to the `query` endpoint, providing the ID of the dataset being queried in the path of the request (as in `/query/:datasetId`), and provide the SQL query as query param. The SQL query should also reference the dataset's `tableName` in the `FROM` clause of the SQL query.
 
 ### Query response body
 
@@ -95,6 +80,32 @@ Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
 500            | Internal server error | The error message might vary in this case.
+
+### Alternative ways for querying datasets
+
+To execute a query over a dataset's data, you can either perform a GET request providing the SQL query as query param, or a POST request providing the SQL query in the request body. Using GET is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same query will see a great performance increase, even if they are made by a different application or client. POST requests, on the other hand, are not cached, but can be useful if your query is very long, and may experience issues related limits on URL length.
+
+Both GET and POST query endpoints can receive the id of the dataset being queried to be provided as part of the path. If the dataset id is provided as part of the path, then the `FROM` clause must contain either the `tableName` (in the case of CartoDB datasets) or it is ignored (in the case of document-based datasets). If the dataset id is not provided, then the `FROM` clause of the query must contain either the dataset `id` or `slug`. The table below explains the different valid ways of querying datasets:
+
+| Endpoint structure | Notes |
+|--------------------|-------|
+| `GET/POST http://api.resourcewatch.org/v1/query/:datasetId?sql=<sql-statement>` | In the case of CartoDB datasets, if the dataset id is present in the path of the request, the `FROM` clause must contain the dataset `tableName`.
+| `GET/POST http://api.resourcewatch.org/v1/query/:datasetId?sql=<sql-statement>` | In the case of document-based datasets, if the dataset id is present in the path of the request, the contents of the `FROM` clause is ignored.
+| `GET/POST http://api.resourcewatch.org/v1/query?sql=<sql-statement>` | When the dataset id is not present in the path of the request, the `FROM` clause must contain either the dataset `id` or `slug` of the dataset being queried.
+
+
+TODO: ADD EXAMPLES
+
+
+> The same query executed as a POST request providing the SQL as request body param:
+
+```shell
+curl -i -X POST 'http://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a/' \
+-H 'Content-Type: application/json' \
+-d '{
+    "sql": "SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10"
+}'
+```
 
 ## Download
 
