@@ -81,6 +81,48 @@ Error code     | Error message  | Description
 400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
 500            | Internal server error | The error message might vary in this case.
 
+### Query endpoint parameters
+
+> Example of requesting the query results as CSV data:
+
+```shell
+curl -i -X GET 'http://api.resourcewatch.org/v1/query?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 2&format=csv'
+```
+
+> Example response:
+
+```csv
+"alert__date",
+"_id"
+"2019-04-12",
+"AW6O0fqMLu2ttL7ZDM4P"
+"2015-08-22",
+"AW6O0fqMLu2ttL7ZDM4T"
+```
+
+> Example of requesting to freeze the query results:
+
+```shell
+curl -i -X GET 'http://api.resourcewatch.org/v1/query?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 2&freeze=true' \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+{
+    "url": "https://storage.googleapis.com/query-freeze/1589458072773.json"
+}
+```
+
+The following parameters can be provided as query-string parameters, in order to customize the output of the response returned:
+
+Query-string parameter | Description                                                                  | Type        |
+---------------------- | ---------------------------------------------------------------------------- | ----------- |
+sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String |
+format                 | The format of the returned response. By default, JSON format is assumed (`json`), but you can also request the response as CSV (`csv`), in which case the returned response will contain the CSV contents of the response. **This parameter will only be considered for document-based datasets.** | String |
+freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | String |
+
 ### Alternative ways for querying datasets
 
 > Example query providing a CartoDB dataset id in the request path and the dataset table name in the FROM clause:
