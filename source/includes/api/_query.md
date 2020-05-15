@@ -12,8 +12,6 @@ In order to retrieve data from datasets, you can send queries to the API using a
 curl -i -X GET 'https://api.resourcewatch.org/v1/query/<dataset.id>?sql=SELECT * FROM <dataset.tableName>'
 ```
 
-
-
 In order to query a dataset, you'll need two pieces of information:
 
 - The id of the dataset you're trying to query.
@@ -23,7 +21,7 @@ The [dataset documentation](#dataset6) covers different ways that you can use to
 
 The SQL query will have to be custom built by you to fit your needs, but a good starting point for newcomers would be something like `SELECT * FROM <dataset.tableName> limit 10`.
 
-*Notice: the `limit` parameter restricts our results to 10 rows, and is not required. However, for our learning purposes, this is useful, as it keeps the API responses small and fast.* 
+*Notice: the `limit` parameter restricts our results to 10 rows, and is not required. However, for our learning purposes, this is useful, as it keeps the API responses small and fast.*
 
 Most of the SQL query is up to you to define, based on your needs and the [support provided for the dataset type you are using](#supported-sql-syntax-reference). The `FROM` clause, however, does use a special value - the dataset's `tableName` value, which you can also get from the [dataset documentation](#dataset6) described above.
 
@@ -34,7 +32,6 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b
 ```
 
 With both pieces of information at hand, you can now send your query to the API and get the response. The example `cURL` to the side shows how that would look like.
-
 
 ### Query response body
 
@@ -88,7 +85,6 @@ The following table describes the response body fields:
 | meta.cloneUrl.url | String | The API endpoint path that should be used for the request to create a new dataset from the current query execution.
 | meta.cloneUrl.body | Object | The body request data that should be provided for creating a new dataset from the current query execution.
 
-
 ### Query endpoint parameters
 
 > Example of requesting the query results as CSV data:
@@ -133,7 +129,7 @@ freeze                 | The `freeze` parameter, when provided as `true`, will c
 
 ### Alternative ways for querying datasets
 
-While the GET request described above is the recommended way of querying datasets, there are other ways to query the RW API datasets that may be more suited for specific use cases. 
+While the GET request described above is the recommended way of querying datasets, there are other ways to query the RW API datasets that may be more suited for specific use cases.
 
 #### Using the dataset slug instead of the id
 
@@ -160,7 +156,7 @@ curl -i -X POST 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-
 ```
 
 Using the GET request is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same query will see a great performance increase, even if they are made by a different application or client.
- 
+
 Alternatively, you can also query a dataset using a POST request. POST requests are not cached, so you will not benefit from these speed improvements. However, GET requests can sometimes hit URL length restrictions, should your query string be too long. Using a POST request is the recommended solution for these cases. See the example on the side to see how you can query a dataset with a POST request.
 
 #### Dataset id as the FROM clause
@@ -183,7 +179,6 @@ curl -i -X POST 'https://api.resourcewatch.org/v1/query' \
 The examples we've seen so far expect the URL to have the `/query/<dataset id or slug>?sql=SELECT * FROM <dataset.tableName>` format. However, you can also use the equivalent
 `/query?sql=SELECT * FROM <dataset id>` syntax. You can also use this alternative syntax with POST requests.
 
-
 #### Redundant FROM clause (document based datasets only)
 
 > Example query providing a document-based dataset id in the request path or as the FROM clause:
@@ -193,61 +188,189 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FR
 curl -i -X GET 'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date FROM data limit 10'
 ```
 
-When querying a document based dataset using either GET or POST `/query/<dataset id or slug>` request, the `FROM` clause is required but ignored, meaning you don't have to provide the dataset's `tableName` as you normally would. The example on the side illustrates this.  
-
+When querying a document based dataset using either GET or POST `/query/<dataset id or slug>` request, the `FROM` clause is required but ignored, meaning you don't have to provide the dataset's `tableName` as you normally would. The example on the side illustrates this.
 
 ## Downloading data from a dataset
 
-> Requesting the download of a query providing the dataset ID in the URL:
+> Structure of the endpoint for downloading the results of a query:
 
 ```shell
-curl -X GET 'https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * from <dataset.tableName>'
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELECT * FROM <dataset.tableName>'
 ```
 
-> Requesting the download of a query providing the dataset ID in the FROM clause of the query:
+> Example endpoint for downloading the results of a query:
 
 ```shell
-curl -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>'
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
 ```
 
-> Explicitly setting the format of the returned file:
+The download endpoint allows you to download the results of the execution of a query over a dataset. In order to use this endpoint, it is recommended to read beforehand on how to [query datasets](index-rw.html#querying-datasets).
 
-```shell
-curl -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=json'
-curl -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT * from <dataset.id>&format=csv'
-```
+**Note: Some dataset providers do not support downloading query results. You can download query results for the following dataset providers:**
 
-Download endpoints expect **the id of the dataset being queried to be provided as part of the path**. This id can be omitted when downloading query results of datasets of certain providers (e.g. document-based datasets).
+- Google Earth Engine
+- Document-based datasets
+- Carto
+- BigQuery
+- ArcGIS FeatureService
 
-| Method | Endpoint | Notes |
-|-------|------|-------------|
-| GET   | `https://api.resourcewatch.org/v1/download/:datasetId?sql=<sql-statement>` | Default way of downloading query results.
-| GET   | `https://api.resourcewatch.org/v1/download?sql=<sql-statement>` | This way of downloading query results is only supported by some providers (e.g. document-based datasets).
+As for querying datasets, in order to download the results of the execution of query, you'll need two pieces of information:
 
-Note: The `FROM` clause of the SQL query being executed must also reference the dataset being queried. This reference should be done by providing the `dataset.tableName` field as the table being queried in the `FROM` clause. For some dataset providers (e.g. document-based datasets), you can provide instead the dataset id (`dataset.id`) or the dataset slug (`dataset.slug`) as the table being queried in the FROM clause.
+- The id of the dataset you're trying to download the query execution results.
+- The SQL query that represents the data you are trying to download.
 
-You can also specify which file type you want to download (JSON or CSV) by using the `format` query parameter (except for Google Earth Engine datasets, which only support downloading as JSON). By default, the API will return a CSV file (or a JSON file for Google Earth Engine).
+The [dataset documentation](#dataset6) covers different ways that you can use to browse the existing dataset catalog or upload your own, all of which will give you the details of a dataset, including the dataset id you'll need to query it.
 
-**Please note that not all dataset providers support downloading queries - the following providers support downloading query results:**
+The SQL query will have to be custom built by you to fit your needs, but a good starting point for newcomers would be something like `SELECT * FROM <dataset.tableName> limit 10`.
 
-* Google Earth Engine
-* Document
-* Carto
-* BigQuery
-* ArcGIS FeatureService
+*Notice: the `limit` parameter restricts our results to 10 rows, and is not required. However, for our learning purposes, this is useful, as it keeps the API responses small and fast.*
+
+As with the query endpoint, the `FROM` clause should reference the dataset's `tableName` value, which you can also get from the [dataset documentation](#dataset6) described above. And also, don't forget that you can check the [support provided for the dataset type you are using](#supported-sql-syntax-reference) if you are having trouble writing your SQL query.
 
 ### Download response body
 
-The response body will contain the data to be downloaded. In the case of the format `json`, the returned result will be a JSON object with the results of the execution of the query provided. In the case of format `csv`, the body of the response will contain the actual CSV data corresponding to the results of the execution of the query provided.
+> Example of downloading query results (by default, CSV data is assumed):
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date, alert__count from gadm28_adm1 limit 2'
+```
+
+> Example CSV response:
+
+```csv
+"alert__date",
+"alert__count",
+"_id"
+"2019-04-12",
+5,
+"AW6O0fqMLu2ttL7ZDM4P"
+"2015-08-22",
+6,
+"AW6O0fqMLu2ttL7ZDM4T"
+```
+
+> Example of downloading query results requesting format as JSON:
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date, alert__count from gadm28_adm1 limit 2&format=json'
+```
+
+> Example JSON response:
+
+```json
+{
+    "data": [
+        {
+            "alert__date": "2019-04-12",
+            "alert__count": 5,
+            "_id": "AW6O0fqMLu2ttL7ZDM4P"
+        },
+        {
+            "alert__date": "2015-08-22",
+            "alert__count": 6,
+            "_id": "AW6O0fqMLu2ttL7ZDM4T"
+        }
+    ]
+}
+```
+
+The response body of executing the download endpoint will contain the data to be downloaded. You can use the `format` query parameter to customize the format of the data returned. By default, `format=csv` will be assumed, so you will receive the corresponding query results the actual CSV data in the response body. If you provide `format=json`, the returned result will be a JSON object with a `data` index containing the results of the execution of the query provided.
 
 ### Download execution errors
 
-Calling the download endpoint might sometimes result in an error being returned. The following table describes the possible errors that can occur when downloading query results:
+Calling the download endpoint might sometimes result in an error being returned. The following table describes the possible errors that can occur when downloading query execution results:
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
 500            | Internal server error | The error message might vary in this case.
+
+### Download endpoint parameters
+
+> Example of requesting to freeze the download results:
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/downloadss/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2&freeze=true' \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+{
+    "url": "https://storage.googleapis.com/query-freeze/1589458072773.json"
+}
+```
+
+You can use the following query parameters to customize the output of the download query execution results endpoint:
+
+Query parameter        | Description                                                                  | Type        | Required |
+---------------------- | ---------------------------------------------------------------------------- | ----------- | -------- |
+sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String | Yes |
+format                 | The format of the returned response. By default, CSV format is assumed (`csv`), but you can also request the response as JSON (`json`). Check the section on the [download endpoint response body](index-rw.html#download-response-body) for some examples of how the `format` query parameter can be used. | String | No |
+freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | Boolean | No |
+
+### Alternative ways for downloading query execution results
+
+As in the case of [querying datasets](index-rw.html#alternative-ways-for-querying-datasets), there are some alternative ways that you can use for downloading query execution results. While the GET request described above is the recommended way of downloading query results, there are other ways to download query results that may be more suited for specific use cases.
+
+#### Using the dataset slug instead of the id
+
+> Example request for downloading the query execution results not using the dataset id in the request path, and using the dataset slug in the FROM clause:
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2'
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/Glad-Alerts-Daily-Geostore-User-Areas_3?sql=SELECT alert__date from gadm28_adm1 limit 2'
+```
+
+When referencing a dataset's id in th SQL query, you have the option to use the dataset's slug instead, obtaining the same result. This is also applicable to the alternative download methods described in the sections below.
+
+#### POST requests
+
+> The same download request executed as GET, and as a POST request providing the SQL as request body param:
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2'
+curl -i -X POST 'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e' \
+-H 'Content-Type: application/json' \
+-d '{
+    "sql": "SELECT alert__date from gadm28_adm1 limit 2"
+}'
+```
+
+Using the GET request is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same download endpoint call will see a great performance increase, even if they are made by a different application or client.
+
+Alternatively, you can also download the query results using a POST request. POST requests are not cached, so you will not benefit from these speed improvements. However, GET requests can sometimes hit URL length restrictions, should your SQL query string be too long. Using a POST request is the recommended solution for these cases. See the example on the side to see how you can download the query execution results with a POST request.
+
+#### Dataset id as the FROM clause
+
+> Three different but equivalent syntaxes for the same call to the download endpoint:
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
+
+curl -i -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10'
+
+curl -i -X POST 'https://api.resourcewatch.org/v1/download' \
+-H 'Content-Type: application/json' \
+-d '{
+    "sql": "SELECT cartodb_id, iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10"
+}'
+
+```
+
+The examples we've seen so far expect the URL to have the `/download/<dataset id or slug>?sql=SELECT * FROM <dataset.tableName>` format. However, you can also use the equivalent `/download?sql=SELECT * FROM <dataset id>` syntax. This alternative syntax is also available for POST requests.
+
+#### Redundant FROM clause (document-based datasets only)
+
+> Example download providing a document-based dataset id in the request path or as the FROM clause:
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/download?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 10'
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date FROM data limit 10'
+```
+
+When downloading the query results for a document based dataset using either GET or POST `/download/<dataset id or slug>` request, the `FROM` clause is required but ignored, meaning you don't have to provide the dataset's `tableName` as you normally would. The example on the side illustrates this.
 
 ## Supported SQL syntax reference
 
@@ -339,11 +462,11 @@ This section describes the SQL support for querying datasets with connector type
 
 This SQL syntax supported when running queries for document-based datasets has some known limitations:
 
-* Very large SQL queries may run into some parsing issues.
-* Sorting by aggregated fields is not supported. For instance, the following statement is **not** supported: `GROUP BY age ORDER BY COUNT(*)`.
-* Using aggregation functions on top of scalar functions is also not possible. For instance, the following statement is **not** supported: `SELECT MAX(abs(age))`.
-* Sub-queries are only supported to a small degree, but the usage of `GROUP BY` or `HAVING` in the sub-query is not supported. For instance, the following statement **is** supported: `SELECT * FROM (SELECT first_name, last_name FROM emp WHERE last_name NOT LIKE '%a%') WHERE first_name LIKE 'A%' ORDER BY 1`, but statements with a higher level of complexity than applying simple conditions or orderings in the sub-query might not be supported.
-* The usage of scalar functions on nested fields in `ORDER BY` or `WHERE` clauses is limited. For instance, the following statement is **not** supported: `ORDER BY YEAR(dep.start_date)`.
+- Very large SQL queries may run into some parsing issues.
+- Sorting by aggregated fields is not supported. For instance, the following statement is **not** supported: `GROUP BY age ORDER BY COUNT(*)`.
+- Using aggregation functions on top of scalar functions is also not possible. For instance, the following statement is **not** supported: `SELECT MAX(abs(age))`.
+- Sub-queries are only supported to a small degree, but the usage of `GROUP BY` or `HAVING` in the sub-query is not supported. For instance, the following statement **is** supported: `SELECT * FROM (SELECT first_name, last_name FROM emp WHERE last_name NOT LIKE '%a%') WHERE first_name LIKE 'A%' ORDER BY 1`, but statements with a higher level of complexity than applying simple conditions or orderings in the sub-query might not be supported.
+- The usage of scalar functions on nested fields in `ORDER BY` or `WHERE` clauses is limited. For instance, the following statement is **not** supported: `ORDER BY YEAR(dep.start_date)`.
 
 You can read more about the limitations of using SQL with document-based datasets [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html).
 
