@@ -204,7 +204,7 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELEC
 curl -i -X GET 'https://api.resourcewatch.org/v1/download/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
 ```
 
-The download endpoint allows you to download the results of the execution of a query over a dataset. In order to use this endpoint, it is recommended to read beforehand on how to [query datasets](index-rw.html#querying-datasets).
+The download endpoint allows you to download the results of the execution of a query over a dataset. This endpoint is greatly based on the [query datasets](index-rw.html#querying-datasets) endpoint, so we strongly suggest you read that section of the documentation.
 
 **Note: Some dataset providers do not support downloading query results. You can download query results for the following dataset providers:**
 
@@ -214,7 +214,7 @@ The download endpoint allows you to download the results of the execution of a q
 - BigQuery
 - ArcGIS FeatureService
 
-As for querying datasets, in order to download the results of the execution of query, you'll need two pieces of information:
+Like when querying datasets, in order to download the results of the execution of query, you'll need two pieces of information:
 
 - The id of the dataset you're trying to download the query execution results.
 - The SQL query that represents the data you are trying to download.
@@ -283,6 +283,7 @@ Calling the download endpoint might sometimes result in an error being returned.
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
+400            | - format: format must be in [json,csv]. -  | If provided, `format` must be either `csv or `json`.
 500            | Internal server error | The error message might vary in this case.
 
 ### Download endpoint parameters
