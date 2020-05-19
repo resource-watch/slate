@@ -12,6 +12,8 @@ However, in order to perform GET requests for content that is not private, there
 
 ![Auth success](images/authentication/auth-success.png)
 
+Once generated, a token is valid until any of the associated user information (name, email, or associated applications) changes. If your token becomes invalid, you will need to log in and go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
+
 ## How to create a new user
 
 To create a new user make a request like the one in the sidebar:
