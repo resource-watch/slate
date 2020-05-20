@@ -282,7 +282,7 @@ Calling the download endpoint might sometimes result in an error being returned.
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
-400            | SQL o FS required | The required `sql` field is missing either as query string parameter or in the request body.
+400            | SQL or FS required | The required `sql` field is missing either as query string parameter or in the request body.
 400            | - format: format must be in [json,csv]. -  | If provided, `format` must be either `csv or `json`.
 500            | Internal server error | The error message might vary in this case.
 
