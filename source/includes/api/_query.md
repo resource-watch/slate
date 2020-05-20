@@ -291,7 +291,7 @@ Error code     | Error message  | Description
 > Example of requesting to freeze the download results:
 
 ```shell
-curl -i -X GET 'https://api.resourcewatch.org/v1/downloadss/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2&freeze=true' \
+curl -i -X GET 'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2&freeze=true' \
 -H "Authorization: Bearer <your-token>"
 ```
 
