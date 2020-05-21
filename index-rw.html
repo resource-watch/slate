@@ -140,7 +140,7 @@
 
           <h1 id="concepts">Concepts</h1>
 
-<h2 id="dataset">Dataset</h2>
+          <h2 id="dataset">Dataset</h2>
 
 <p>One of the Resource Watch API&rsquo;s (RW API) goals is to provide a common interface for interacting with data hosted in different sources and formats. A <strong>Dataset</strong> is the Resource Watch&rsquo;s API way of providing users with access to data, while trying to, as much as possible, abstract and standardise operations that would otherwise fall on the user&rsquo;s hands to figure out. It&rsquo;s one of the cornerstones that many other API features build upon - and those features can help you get even more out of your data!</p>
 
@@ -246,6 +246,28 @@
 <li><code class="prettyprint">rest</code> connector type: a dataset that uses this connector type proxies the underlying service specified as <code class="prettyprint">provider</code>. For example, a dataset that uses the provider <code class="prettyprint">cartodb</code> has the connector type <code class="prettyprint">rest</code>. This means that queries to that dataset will cause the API to query the carto URL provided, and pass the result to the user. Apart from temporary caches, the actual data is never kept on the RW API itself. The underlying carto table needs to exist and be accessible for the RW API dataset to work.</li>
 <li><code class="prettyprint">wms</code> connector type: this connector type is used only for datasets that use the <code class="prettyprint">wms</code> provider. The RW API does not access the data for these datasets. </li>
 </ul>
+
+          <h2 id="query">Query</h2>
+
+<p>In the previous section, we covered the concept of a RW API dataset which, in simple terms, is a way to tell the RW API that your data exists, and where. While cataloging datasets in a public repository is useful, making that data easily accessible is one of the main goals of the RW API. This is where <strong>queries</strong> come in.</p>
+
+<p>In the context of the RW API, a dataset query is very similar an <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> query would be to a database - it&rsquo;s a specially crafted statement that allows you to express what data you want, from which dataset, and with which structure. The RW API will use that query to get you the data you need, in the format you asked for, so that it&rsquo;s easy to use in the context of your applications. While it doesn&rsquo;t comply (nor does it attempt to) with any of the formal <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> specifications, RW API queries use a SQL-like syntax that will be very familiar to anyone who has worked with a relational database in the past. If that&rsquo;s not your case, there are many tutorials out there that will help you learn the basics in no time. </p>
+
+<p>Using this common, SQL-based syntax, RW API queries allow you to query its datasets using a common API and syntax, no matter where the actual underlying data is hosted. Querying a carto dataset is the same as querying a JSON document or a BigQuery table. This is one of the main goals of the RW API, and one of most valuable features we offer you, the end user - using a single tool and language, you can quickly query data from a wide range of sources, on a broad set of topics.</p>
+
+<p>In the <a href="#query9">query endpoint documentation</a> below, we&rsquo;ll go into more detail on how you can submit your queries to the API, the specifics of more advanced operations and detailed limitations of querying the RW API but, for now, there are 3 high-level ideas that you should keep in mind:</p>
+
+<h3 id="all-queries-should-be-select-queries">All queries should be <code class="prettyprint">SELECT</code> queries</h3>
+
+<p>Querying in the RW API is meant to be used only to read data, not to manipulate it. If you have used SQL before, you know it can be used to modify data, but that&rsquo;s not the approach used in the RW API. If you&rsquo;d like to modify the data of a dataset, you should use the <a href="#updating-a-dataset">dataset update</a> endpoints instead.</p>
+
+<h3 id="not-all-sql-constructs-are-supported">Not all SQL constructs are supported</h3>
+
+<p>If you&rsquo;ve used SQL in the past, you know how powerful (and complex) it can be. Things like nested queries or joins can be hard to use and even more to maintain, even without the added complexity of an environment where multiple data providers coexist. That&rsquo;s why the RW API limits its support to basic SQL syntax, so we can focus on delivering a tool that&rsquo;s simple and easy to use for most users. The <a href="#supported-sql-syntax-reference">supported SQL syntax reference</a> section below will go into more detail on what&rsquo;s supported and what&rsquo;s not, and will help you understand the specifics of what you can achieve with RW API queries.</p>
+
+<h3 id="some-operation-will-depend-on-the-provider-of-the-dataset-you-39-re-querying">Some operation will depend on the provider of the dataset you&rsquo;re querying</h3>
+
+<p>Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we&rsquo;ve achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provider, but not for another. The <a href="#supported-sql-syntax-reference">supported SQL syntax reference</a> below has more details on these limitations, per provider.  </p>
 
           <h1 id="authentication">Authentication</h1>
 
@@ -4709,259 +4731,1089 @@ Remember — the response is jsonapi format
 </code></pre>
           <h1 id="query">Query</h1>
 
-<p>In order to retrieve data from the datasets it is possible to send queries to the API using the SQL or Feature Service languages.</p>
+<p>In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query. If you are new to the RW API, or want to learn more about the concept of a querying datasets, we strongly encourage you to read the <a href="#query">query concept</a> documentation first. It gives you a brief and clear description of what a query is, and what it is useful for.</p>
 
-<p>Two different endpoints are provided (under the dataset path and a generic one) and the sql query can be provided via query parameters or in the body of a POST request.</p>
-<pre class="highlight shell"><code>curl -i -H <span class="s1">'Authorization: Bearer your-token&gt;'</span> -H <span class="s1">'Content-Type: application/json'</span> -XPOST <span class="s1">'http://api.resourcewatch.org/v1/query/&lt;dataset_id&gt;/'</span> -d <span class="s1">'{
-    "sql": "SELECT * FROM &lt;dataset_id&gt; limit 10"
-}
-'</span>
-</code></pre><pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query<span class="se">\?</span>sql<span class="se">\=</span>SELECT<span class="se">\ \*\ </span>from<span class="se">\ </span>&lt;dataset.slug&gt;
+<p><em>Please note that some SQL features might not be supported. Check <a href="index-rw.html#supported-sql-syntax-reference">here</a> for a reference of the SQL features&rsquo; support for each dataset provider.</em></p>
+
+<p>Note: This section is currently a work in progress and, for the moment it only covers querying CartoDB and document-based datasets. The remaining providers should follow in the next versions.</p>
+
+<h2 id="querying-datasets">Querying datasets</h2>
+
+<blockquote>
+<p>Structure of the endpoint for executing a query:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/&lt;dataset.id&gt;?sql=SELECT * FROM &lt;dataset.tableName&gt;'</span>
 </code></pre>
-<aside class="notice">
-While we aim to make our query interface as broad and transparent as possible, some of the querying options described 
-below will not be available for specific dataset providers, depending on this API&rsquo;s implementation or limitations on the
-actual data provider&rsquo;s side.
-</aside>
+<p>In order to query a dataset, you&rsquo;ll need two pieces of information:</p>
 
-<h2 id="select-clause">Select clause</h2>
+<ul>
+<li>The id of the dataset you&rsquo;re trying to query.</li>
+<li>The SQL query that represents the data you are trying to retrieve.</li>
+</ul>
 
-<p>The <code class="prettyprint">SELECT</code> part of the queries supports naming columns, <strong>alias</strong>, <strong>math operations</strong>, <strong>DISTINCT</strong>, <strong>COUNT</strong>, <strong>SQL functions</strong> and <strong>PostGIS functions</strong></p>
-<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="n">a</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
+<p>The <a href="#dataset6">dataset documentation</a> covers different ways that you can use to browse the existing dataset catalog or upload your own, all of which will give you the details of a dataset, including the dataset id you&rsquo;ll need to query it.</p>
 
-<span class="k">SELECT</span> <span class="k">sum</span><span class="p">(</span><span class="n">int</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="k">avg</span><span class="p">(</span><span class="n">int</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="k">max</span><span class="p">(</span><span class="n">int</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="k">min</span><span class="p">(</span><span class="n">int</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="k">min</span><span class="p">(</span><span class="n">int</span><span class="p">)</span> <span class="k">as</span> <span class="n">minimum</span> <span class="k">FROM</span> <span class="k">table</span>
+<p>The SQL query will have to be custom built by you to fit your needs, but a good starting point for newcomers would be something like <code class="prettyprint">SELECT * FROM &lt;dataset.tableName&gt; limit 10</code>.</p>
 
-<span class="k">SELECT</span> <span class="n">ST_valueCount</span><span class="p">(</span><span class="n">rast</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
+<p><em>Notice: the <code class="prettyprint">limit</code> parameter restricts our results to 10 rows, and is not required. However, for our learning purposes, this is useful, as it keeps the API responses small and fast.</em></p>
+
+<p>Most of the SQL query is up to you to define, based on your needs and the <a href="#supported-sql-syntax-reference">support provided for the dataset type you are using</a>. The <code class="prettyprint">FROM</code> clause, however, does use a special value - the dataset&rsquo;s <code class="prettyprint">tableName</code> value, which you can also get from the <a href="#dataset6">dataset documentation</a> described above.</p>
+
+<blockquote>
+<p>Example endpoint for executing a query:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'</span>
 </code></pre>
-<h2 id="from-clause">From clause</h2>
+<p>With both pieces of information at hand, you can now send your query to the API and get the response. The example <code class="prettyprint">cURL</code> to the side shows how that would look like.</p>
 
-<p>It is possible to refer to a dataset by using its <strong>table name</strong>, <strong>slug</strong> or <strong>id</strong>. </p>
-<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">dataset</span><span class="p">.</span><span class="n">tableName</span><span class="o">&gt;</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">dataset</span><span class="p">.</span><span class="n">slug</span><span class="o">&gt;</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="o">&lt;</span><span class="n">dataset</span><span class="p">.</span><span class="n">id</span><span class="o">&gt;</span>
+<h3 id="query-response-body">Query response body</h3>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cartodb_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1830</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEX"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mexico"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ciudad de México"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Distrito Federal"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"cartodb_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1109</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HTI"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Haiti"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"L'Artibonite"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Département"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cloneUrl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"http_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dataset/098b33df-6871-4e53-a5ff-b56a7d989f9a/clone"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"datasetUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT%20*%20FROM%20gadm28_adm1%20limit%2010"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                        </span><span class="s2">"your"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"apps"</span><span class="w">
+                    </span><span class="p">]</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>The following table describes the response body fields:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>data</td>
+<td>Array</td>
+<td>Array of objects that correspond to the result of the query execution. The data structure varies according to <code class="prettyprint">SELECT</code> clause of your query, or the structure of dataset being queried.</td>
+</tr>
+<tr>
+<td>meta</td>
+<td>Object</td>
+<td>Object with metadata regarding the query executed.</td>
+</tr>
+<tr>
+<td>meta.cloneUrl</td>
+<td>Object</td>
+<td>Object with information for creating a new dataset from the current query execution.</td>
+</tr>
+<tr>
+<td>meta.cloneUrl.http_method</td>
+<td>String</td>
+<td>The HTTP method that should be used for the request to create a new dataset from the current query execution. Read the documentation on <a href="#cloning-a-dataset">cloning a dataset</a> for more info.</td>
+</tr>
+<tr>
+<td>meta.cloneUrl.url</td>
+<td>String</td>
+<td>The API endpoint path that should be used for the request to create a new dataset from the current query execution.</td>
+</tr>
+<tr>
+<td>meta.cloneUrl.body</td>
+<td>Object</td>
+<td>The body request data that should be provided for creating a new dataset from the current query execution.</td>
+</tr>
+</tbody></table>
+
+<h3 id="query-endpoint-parameters">Query endpoint parameters</h3>
+
+<blockquote>
+<p>Example of requesting the query results as CSV data:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2&amp;format=csv'</span>
 </code></pre>
-<h2 id="where-clause">Where clause</h2>
-<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">2</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">2</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="mi">2</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">and</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">2</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="n">text</span> <span class="k">like</span> <span class="s1">'a%'</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="n">st_intersects</span><span class="p">(</span><span class="n">st_setsrid</span><span class="p">(</span><span class="n">st_geomfromgeojson</span><span class="p">(</span><span class="s1">'{}'</span><span class="p">),</span> <span class="mi">4326</span><span class="p">),</span> <span class="n">the_geom</span><span class="p">)</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="k">data</span> <span class="k">BETWEEN</span> <span class="mi">1</span> <span class="k">AND</span> <span class="mi">3</span>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight plaintext"><code>"alert__date",
+"_id"
+"2019-04-12",
+"AW6O0fqMLu2ttL7ZDM4P"
+"2015-08-22",
+"AW6O0fqMLu2ttL7ZDM4T"
 </code></pre>
-<h2 id="group-by-clause">Group by clause</h2>
-
-<p>It is possible to group results by <strong>column name</strong>, <strong>SQL functions</strong> and <strong>PostGIS functions</strong>.
-Special grouping operations are available for document-type datasets (CSV and JSON) - see <a href="https://github.com/NLPchina/elasticsearch-sql/tree/5.5.2.0#beyond-sql">this link</a> for more info.</p>
-<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">tablename</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">columnOne</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">tablename</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">columnOne</span><span class="p">,</span> <span class="n">columnTwo</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">tablename</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">ST_GeoHash</span><span class="p">(</span><span class="n">the_geom_point</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
-
-<span class="k">SELECT</span> <span class="n">a</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="n">int</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">a</span>
-<span class="k">SELECT</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">tablename</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">ST_GeoHash</span><span class="p">(</span><span class="n">the_geom</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-</code></pre><pre class="highlight sql"><code><span class="cm">/* Only supported in document-type datasets - see https://github.com/NLPchina/elasticsearch-sql/tree/5.5.2.0#beyond-sql for full details */</span>
-<span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">tablename</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">range</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">35</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span> 
-<span class="k">SELECT</span> <span class="n">online</span> <span class="k">FROM</span> <span class="n">online</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">date_histogram</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s1">'insert_time'</span><span class="p">,</span><span class="s1">'interval'</span><span class="o">=</span><span class="s1">'1d'</span><span class="p">)</span>
-<span class="k">SELECT</span> <span class="n">online</span> <span class="k">FROM</span> <span class="n">online</span> <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">date_range</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="s1">'insert_time'</span><span class="p">,</span><span class="s1">'format'</span><span class="o">=</span><span class="s1">'yyyy-MM-dd'</span> <span class="p">,</span><span class="s1">'2014-08-18'</span><span class="p">,</span><span class="s1">'2014-08-17'</span><span class="p">,</span><span class="s1">'now-8d'</span><span class="p">,</span><span class="s1">'now-7d'</span><span class="p">,</span><span class="s1">'now-6d'</span><span class="p">,</span><span class="s1">'now'</span><span class="p">)</span>
+<blockquote>
+<p>Example of requesting to freeze the query results:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2&amp;freeze=true'</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<h2 id="order-by-clause">Order by clause</h2>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://storage.googleapis.com/query-freeze/1589458072773.json"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>The following parameters can be provided as query parameters, in order to customize the output of the response returned:</p>
 
-<p>It is possible to order results by <strong>column name</strong>, <strong>SQL functions</strong> and <strong>PostGIS functions</strong></p>
+<table><thead>
+<tr>
+<th>Query parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sql</td>
+<td>The SQL query to be executed. This parameter changes the data returned in the query response body.</td>
+<td>String</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>format</td>
+<td>The format of the returned response. By default, JSON format is assumed (<code class="prettyprint">json</code>), but you can also request the response as CSV (<code class="prettyprint">csv</code>), in which case the returned response will contain the CSV contents of the response. <strong>This parameter will only be considered for document-based datasets.</strong></td>
+<td>String</td>
+<td>No</td>
+</tr>
+<tr>
+<td>freeze</td>
+<td>The <code class="prettyprint">freeze</code> parameter, when provided as <code class="prettyprint">true</code>, will create a file with the results of the execution of the query and return the URL for that file. <strong>Please note that you should be authenticated in order to request freezing the results of query executions.</strong></td>
+<td>Boolean</td>
+<td>No</td>
+</tr>
+</tbody></table>
 
-<h2 id="limit-and-offset-clause">Limit and offset clause</h2>
+<h3 id="alternative-ways-for-querying-datasets">Alternative ways for querying datasets</h3>
 
-<p>You can specify <code class="prettyprint">limit</code> and <code class="prettyprint">offset</code> clauses</p>
-<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">limit</span><span class="o">=</span><span class="mi">20</span>
-<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">limit</span><span class="o">=</span><span class="mi">20</span> <span class="k">offset</span> <span class="mi">10</span>
+<p>While the GET request described above is the recommended way of querying datasets, there are other ways to query the RW API datasets that may be more suited for specific use cases.</p>
+
+<h4 id="using-the-dataset-slug-instead-of-the-id">Using the dataset slug instead of the id</h4>
+
+<blockquote>
+<p>Example query not using the dataset id in the request path, and using the dataset slug in the FROM clause:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2'</span>
+curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/Glad-Alerts-Daily-Geostore-User-Areas_3?sql=SELECT alert__date from gadm28_adm1 limit 2'</span>
 </code></pre>
-<h2 id="raster-queries-available">Raster queries available</h2>
-<pre class="highlight sql"><code><span class="k">SELECT</span> <span class="n">ST_METADATA</span><span class="p">(</span><span class="n">rast</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="n">ST_BANDMETADATA</span><span class="p">(</span><span class="n">rast</span><span class="p">,</span> <span class="n">occurrence</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="n">ST_SUMMARYSTATS</span><span class="p">()</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="n">ST_HISTOGRAM</span><span class="p">(</span><span class="n">rast</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">auto</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-<span class="k">SELECT</span> <span class="n">ST_valueCount</span><span class="p">(</span><span class="n">rast</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">true</span><span class="p">)</span> <span class="k">FROM</span> <span class="k">table</span>
-</code></pre>
-<h2 id="freeze-query">Freeze query</h2>
+<p>When referencing a dataset&rsquo;s id in a query, you have the option to use the dataset&rsquo;s slug instead, obtaining the same result. This is also applicable to the alternative query methods described in the sections below.</p>
 
-<p>It is possible generate a json file in a bucket of the sql result. You only need send a query param freeze with value true and you will obtain the url of the json file.</p>
+<h4 id="post-requests">POST requests</h4>
 
-<aside class="notice">
-    This is an authenticated feature!
-</aside>
-<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query<span class="se">\?</span>sql<span class="se">\=</span>SELECT<span class="se">\ \*\ </span>from<span class="se">\ </span>&lt;dataset.slug&gt;&amp;freeze<span class="o">=</span><span class="nb">true</span>
+<blockquote>
+<p>The same query executed as GET, and as a POST request providing the SQL as request body param:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2'</span>
+curl -i -X POST <span class="s1">'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+-d <span class="s1">'{
+    "sql": "SELECT alert__date from gadm28_adm1 limit 2"
+}'</span>
 </code></pre>
-<h2 id="rasdaman-queries">Rasdaman queries</h2>
+<p>Using the GET request is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same query will see a great performance increase, even if they are made by a different application or client.</p>
+
+<p>Alternatively, you can also query a dataset using a POST request. POST requests are not cached, so you will not benefit from these speed improvements. However, GET requests can sometimes hit URL length restrictions, should your query string be too long. Using a POST request is the recommended solution for these cases. See the example on the side to see how you can query a dataset with a POST request.</p>
+
+<h4 id="dataset-id-as-the-from-clause">Dataset id as the FROM clause</h4>
+
+<blockquote>
+<p>Three different but equivalent syntaxes for the same query:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'</span>
+
+curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10'</span>
+
+curl -i -X POST <span class="s1">'https://api.resourcewatch.org/v1/query'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+-d <span class="s1">'{
+    "sql": "SELECT cartodb_id, iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10"
+}'</span>
+
+</code></pre>
+<p>The examples we&rsquo;ve seen so far expect the URL to have the <code class="prettyprint">/query/&lt;dataset id or slug&gt;?sql=SELECT * FROM &lt;dataset.tableName&gt;</code> format. However, you can also use the equivalent
+<code class="prettyprint">/query?sql=SELECT * FROM &lt;dataset id&gt;</code> syntax. You can also use this alternative syntax with POST requests.</p>
+
+<h4 id="redundant-from-clause-document-based-datasets-only">Redundant FROM clause (document based datasets only)</h4>
+
+<blockquote>
+<p>Example query providing a document-based dataset id in the request path or as the FROM clause:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 10'</span>
+curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date FROM data limit 10'</span>
+</code></pre>
+<p>When querying a document based dataset using either GET or POST <code class="prettyprint">/query/&lt;dataset id or slug&gt;</code> request, the <code class="prettyprint">FROM</code> clause is required but ignored, meaning you don&rsquo;t have to provide the dataset&rsquo;s <code class="prettyprint">tableName</code> as you normally would. The example on the side illustrates this.</p>
+
+<h2 id="downloading-data-from-a-dataset">Downloading data from a dataset</h2>
+
+<blockquote>
+<p>Structure of the endpoint for downloading the results of a query:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql=SELECT * FROM &lt;dataset.tableName&gt;'</span>
+</code></pre>
+<blockquote>
+<p>Example endpoint for downloading the results of a query:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'</span>
+</code></pre>
+<p>The download endpoint allows you to download the results of the execution of a query over a dataset. This endpoint is greatly based on the <a href="index-rw.html#querying-datasets">query datasets</a> endpoint, so we strongly suggest you read that section of the documentation.</p>
+
+<p><strong>Note: Some dataset providers do not support downloading query results. You can download query results for the following dataset providers:</strong></p>
+
+<ul>
+<li>Google Earth Engine</li>
+<li>Document-based datasets</li>
+<li>Carto</li>
+<li>BigQuery</li>
+<li>ArcGIS FeatureService</li>
+</ul>
+
+<p>Like when querying datasets, in order to download the results of the execution of query, you&rsquo;ll need two pieces of information:</p>
+
+<ul>
+<li>The id of the dataset you&rsquo;re trying to download the query execution results.</li>
+<li>The SQL query that represents the data you are trying to download.</li>
+</ul>
+
+<p>The <a href="#dataset6">dataset documentation</a> covers different ways that you can use to browse the existing dataset catalog or upload your own, all of which will give you the details of a dataset, including the dataset id you&rsquo;ll need to query it.</p>
+
+<p>The SQL query will have to be custom built by you to fit your needs, but a good starting point for newcomers would be something like <code class="prettyprint">SELECT * FROM &lt;dataset.tableName&gt; limit 10</code>.</p>
+
+<p><em>Notice: the <code class="prettyprint">limit</code> parameter restricts our results to 10 rows, and is not required. However, for our learning purposes, this is useful, as it keeps the API responses small and fast.</em></p>
+
+<p>As with the query endpoint, the <code class="prettyprint">FROM</code> clause should reference the dataset&rsquo;s <code class="prettyprint">tableName</code> value, which you can also get from the <a href="#dataset6">dataset documentation</a> described above. And also, don&rsquo;t forget that you can check the <a href="#supported-sql-syntax-reference">support provided for the dataset type you are using</a> if you are having trouble writing your SQL query.</p>
+
+<h3 id="download-response-body">Download response body</h3>
+
+<blockquote>
+<p>Example of downloading query results (by default, CSV data is assumed):</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date, alert__count from gadm28_adm1 limit 2'</span>
+</code></pre>
+<blockquote>
+<p>Example CSV response:</p>
+</blockquote>
+<pre class="highlight plaintext"><code>"alert__date",
+"alert__count",
+"_id"
+"2019-04-12",
+5,
+"AW6O0fqMLu2ttL7ZDM4P"
+"2015-08-22",
+6,
+"AW6O0fqMLu2ttL7ZDM4T"
+</code></pre>
+<blockquote>
+<p>Example of downloading query results requesting format as JSON:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date, alert__count from gadm28_adm1 limit 2&amp;format=json'</span>
+</code></pre>
+<blockquote>
+<p>Example JSON response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"alert__date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-04-12"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"alert__count"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AW6O0fqMLu2ttL7ZDM4P"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"alert__date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-22"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"alert__count"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AW6O0fqMLu2ttL7ZDM4T"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>The response body of executing the download endpoint will contain the data to be downloaded. You can use the <code class="prettyprint">format</code> query parameter to customize the format of the data returned. By default, <code class="prettyprint">format=csv</code> will be assumed, so you will receive the corresponding query results the actual CSV data in the response body. If you provide <code class="prettyprint">format=json</code>, the returned result will be a JSON object with a <code class="prettyprint">data</code> index containing the results of the execution of the query provided.</p>
+
+<h3 id="download-execution-errors">Download execution errors</h3>
+
+<p>Calling the download endpoint might sometimes result in an error being returned. The following table describes the possible errors that can occur when downloading query execution results:</p>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>SQL or FS required</td>
+<td>The required <code class="prettyprint">sql</code> field is missing either as query string parameter or in the request body.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- format: format must be in [json,csv]. -</td>
+<td>If provided, <code class="prettyprint">format</code> must be either <code class="prettyprint">csv</code> or <code class="prettyprint">json</code>.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal server error</td>
+<td>The error message might vary in this case.</td>
+</tr>
+</tbody></table>
+
+<h3 id="download-endpoint-parameters">Download endpoint parameters</h3>
+
+<blockquote>
+<p>Example of requesting to freeze the download results:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2&amp;freeze=true'</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://storage.googleapis.com/query-freeze/1589458072773.json"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can use the following query parameters to customize the output of the download query execution results endpoint:</p>
+
+<table><thead>
+<tr>
+<th>Query parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sql</td>
+<td>The SQL query to be executed. This parameter changes the data returned in the query response body.</td>
+<td>String</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>format</td>
+<td>The format of the returned response. By default, CSV format is assumed (<code class="prettyprint">csv</code>), but you can also request the response as JSON (<code class="prettyprint">json</code>). Check the section on the <a href="index-rw.html#download-response-body">download endpoint response body</a> for some examples of how the <code class="prettyprint">format</code> query parameter can be used.</td>
+<td>String</td>
+<td>No</td>
+</tr>
+<tr>
+<td>freeze</td>
+<td>The <code class="prettyprint">freeze</code> parameter, when provided as <code class="prettyprint">true</code>, will create a file with the results of the execution of the query and return the URL for that file. <strong>Please note that you should be authenticated in order to request freezing the results of query executions.</strong></td>
+<td>Boolean</td>
+<td>No</td>
+</tr>
+</tbody></table>
+
+<h3 id="alternative-ways-for-downloading-query-execution-results">Alternative ways for downloading query execution results</h3>
+
+<p>As in the case of <a href="index-rw.html#alternative-ways-for-querying-datasets">querying datasets</a>, there are some alternative ways that you can use for downloading query execution results. While the GET request described above is the recommended way of downloading query results, there are other ways to download query results that may be more suited for specific use cases.</p>
+
+<h4 id="using-the-dataset-slug-instead-of-the-id">Using the dataset slug instead of the id</h4>
+
+<blockquote>
+<p>Example request for downloading the query execution results not using the dataset id in the request path, and using the dataset slug in the FROM clause:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2'</span>
+curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/Glad-Alerts-Daily-Geostore-User-Areas_3?sql=SELECT alert__date from gadm28_adm1 limit 2'</span>
+</code></pre>
+<p>When referencing a dataset&rsquo;s id in th SQL query, you have the option to use the dataset&rsquo;s slug instead, obtaining the same result. This is also applicable to the alternative download methods described in the sections below.</p>
+
+<h4 id="post-requests">POST requests</h4>
+
+<blockquote>
+<p>The same download request executed as GET, and as a POST request providing the SQL as request body param:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date from gadm28_adm1 limit 2'</span>
+curl -i -X POST <span class="s1">'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+-d <span class="s1">'{
+    "sql": "SELECT alert__date from gadm28_adm1 limit 2"
+}'</span>
+</code></pre>
+<p>Using the GET request is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same download endpoint call will see a great performance increase, even if they are made by a different application or client.</p>
+
+<p>Alternatively, you can also download the query results using a POST request. POST requests are not cached, so you will not benefit from these speed improvements. However, GET requests can sometimes hit URL length restrictions, should your SQL query string be too long. Using a POST request is the recommended solution for these cases. See the example on the side to see how you can download the query execution results with a POST request.</p>
+
+<h4 id="dataset-id-as-the-from-clause">Dataset id as the FROM clause</h4>
+
+<blockquote>
+<p>Three different but equivalent syntaxes for the same call to the download endpoint:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'</span>
+
+curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10'</span>
+
+curl -i -X POST <span class="s1">'https://api.resourcewatch.org/v1/download'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+-d <span class="s1">'{
+    "sql": "SELECT cartodb_id, iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10"
+}'</span>
+
+</code></pre>
+<p>The examples we&rsquo;ve seen so far expect the URL to have the <code class="prettyprint">/download/&lt;dataset id or slug&gt;?sql=SELECT * FROM &lt;dataset.tableName&gt;</code> format. However, you can also use the equivalent <code class="prettyprint">/download?sql=SELECT * FROM &lt;dataset id&gt;</code> syntax. This alternative syntax is also available for POST requests.</p>
+
+<h4 id="redundant-from-clause-document-based-datasets-only">Redundant FROM clause (document-based datasets only)</h4>
+
+<blockquote>
+<p>Example download providing a document-based dataset id in the request path or as the FROM clause:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download?sql=SELECT alert__date FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e limit 10'</span>
+curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date FROM data limit 10'</span>
+</code></pre>
+<p>When downloading the query results for a document based dataset using either GET or POST <code class="prettyprint">/download/&lt;dataset id or slug&gt;</code> request, the <code class="prettyprint">FROM</code> clause is required but ignored, meaning you don&rsquo;t have to provide the dataset&rsquo;s <code class="prettyprint">tableName</code> as you normally would. The example on the side illustrates this.</p>
+
+<h2 id="supported-sql-syntax-reference">Supported SQL syntax reference</h2>
+
+<h3 id="cartodb-datasets">CartoDB datasets</h3>
+
+<p>This section describes the SQL support for querying datasets with provider <code class="prettyprint">cartodb</code>.</p>
+
+<table><thead>
+<tr>
+<th>Supported</th>
+<th>Feature</th>
+<th>Example URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting all columns using wildcard</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20LIMIT%205">SELECT * FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Count all rows</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20count(*)%20FROM%20edi">SELECT count(*) FROM edi</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting specific columns</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall_score%20FROM%20edi%20LIMIT%205">SELECT region, overall_score FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting DISTINCT values for specific columns</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20DISTINCT(region)%20FROM%20edi%20LIMIT%205">SELECT DISTINCT(region) FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>SELECT: Selecting columns AND counting all rows</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20count(*)%20FROM%20edi%20LIMIT%205">SELECT region, count(*) FROM edi LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Aliasing aggregate function results such as AVG in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20AVG(overall_score)%20as%20alias%20FROM%20edi%20LIMIT%205">SELECT AVG(overall_score) as alias FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (AVG) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20AVG(overall_score)%20FROM%20edi%20LIMIT%205">SELECT AVG(overall_score) FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (MAX) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20MAX(overall_score)%20FROM%20edi%20LIMIT%205">SELECT MAX(overall_score) FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (MIN) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20MIN(overall_score)%20FROM%20edi%20LIMIT%205">SELECT MIN(overall_score) FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (SUM) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20SUM(overall_score)%20FROM%20edi%20LIMIT%205">SELECT SUM(overall_score) FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset id in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query?sql=SELECT%20*%20FROM%200b9f0100-ce5b-430f-ad8f-3363efa05481%20LIMIT%205">SELECT * FROM 0b9f0100-ce5b-430f-ad8f-3363efa05481 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset slug in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query?sql=SELECT%20*%20FROM%20Environmental-Democracy-Index-1490086842552%20LIMIT%205">SELECT * FROM Environmental-Democracy-Index-1490086842552 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset tableName in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20LIMIT%205">SELECT * FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Greater than filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3E%202%20LIMIT%205">SELECT * FROM edi WHERE overall_score &gt; 2 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Greater than or equal filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3E%3D%202%20LIMIT%205">SELECT * FROM edi WHERE overall_score &gt;= 2 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Equality filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3D%202.1%20LIMIT%205">SELECT * FROM edi WHERE overall_score = 2.1 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Lower than filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%202.2%20LIMIT%205">SELECT * FROM edi WHERE overall_score &lt; 2.2 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Lower than or equal filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%202.2%20LIMIT%205">SELECT * FROM edi WHERE overall_score &lt;= 2.2 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Conjunction (AND) filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%202.2%20AND%20justice_pillar_score%20%3E%201%20LIMIT%205">SELECT * FROM edi WHERE overall_score &lt;= 2.2 AND justice_pillar_score &gt; 1 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Disjunction (OR) filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20%3C%3D%202.2%20OR%20justice_pillar_score%20%3E%201%20LIMIT%205">SELECT * FROM edi WHERE overall_score &lt;= 2.2 OR justice_pillar_score &gt; 1 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: BETWEEN filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20overall_score%20BETWEEN%202%20AND%202.2%20LIMIT%205">SELECT * FROM edi WHERE overall_score BETWEEN 2 AND 2.2 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: LIKE filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20*%20FROM%20edi%20WHERE%20region%20LIKE%20'Europ%25'%20LIMIT%205">SELECT * FROM edi WHERE region LIKE &lsquo;Europ%&rsquo; LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Group results by a single column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20GROUP%20BY%20region%20LIMIT%205">SELECT region FROM edi GROUP BY region LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Group results by multiple columns</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall_score%20FROM%20edi%20GROUP%20BY%20region%2C%20overall_score%20LIMIT%205">SELECT region, overall_score FROM edi GROUP BY region, overall_score LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Aggregate functions used with GROUP BY statements</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20COUNT(*)%20as%20count%20FROM%20edi%20GROUP%20BY%20region%20LIMIT%205">SELECT region, COUNT(*) as count FROM edi GROUP BY region LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>GROUP BY: Special grouping by range function</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20count(*)%20FROM%20edi%20GROUP%20BY%20range(overall_score%2C%200%2C1%2C2%2C3%2C4)%20LIMIT%205">SELECT count(*) FROM edi GROUP BY range(overall_score, 0,1,2,3,4) LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by one column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20ORDER%20BY%20region%20LIMIT%205">SELECT region FROM edi ORDER BY region LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by one column descending</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20ORDER%20BY%20region%20DESC%20LIMIT%205">SELECT region FROM edi ORDER BY region DESC LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by multiple column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall_score%20FROM%20edi%20ORDER%20BY%20region%2C%20overall_score%20LIMIT%205">SELECT region, overall_score FROM edi ORDER BY region, overall_score LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by multiple column descending</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%2C%20overall_score%20FROM%20edi%20ORDER%20BY%20region%2C%20overall_score%20DESC%20LIMIT%205">SELECT region, overall_score FROM edi ORDER BY region, overall_score DESC LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>LIMIT: Limit the number of returned results</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205">SELECT region FROM edi LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>OFFSET: Offset the returned results</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%20OFFSET%2010">SELECT region FROM edi LIMIT 5 OFFSET 10</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>OFFSET: Offset the returned results using short syntax</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%2C%2010">SELECT region FROM edi LIMIT 5, 10</a></strong></td>
+</tr>
+</tbody></table>
+
+<p><em>Note: This table was generated automatically with the help of <a href="https://github.com/resource-watch/sql-compatibility-test">this repository</a>. If you are maintaining the docs, please do not edit manually these tables.</em></p>
+
+<h3 id="document-based-datasets">Document-based datasets</h3>
+
+<p>This section describes the SQL support for querying datasets with connector type <code class="prettyprint">document</code> and providers <code class="prettyprint">csv</code>, <code class="prettyprint">tsv</code>, <code class="prettyprint">json</code> or <code class="prettyprint">xml</code>.</p>
+
+<table><thead>
+<tr>
+<th>Supported</th>
+<th>Feature</th>
+<th>Example URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting all columns using wildcard</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20LIMIT%205">SELECT * FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Count all rows</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20count(*)%20FROM%20data">SELECT count(*) FROM data</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting specific columns</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20alert__count%20FROM%20data%20LIMIT%205">SELECT bra_biome__name, alert__count FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>SELECT: Selecting DISTINCT values for specific columns</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20DISTINCT(bra_biome__name)%20FROM%20data%20LIMIT%205">SELECT DISTINCT(bra_biome__name) FROM data LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting columns AND counting all rows</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20count(*)%20FROM%20data%20LIMIT%205">SELECT bra_biome__name, count(*) FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Aliasing aggregate function results such as AVG in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20AVG(alert__count)%20as%20alias%20FROM%20data%20LIMIT%205">SELECT AVG(alert__count) as alias FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (AVG) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20AVG(alert__count)%20FROM%20data%20LIMIT%205">SELECT AVG(alert__count) FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (MAX) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20MAX(alert__count)%20FROM%20data%20LIMIT%205">SELECT MAX(alert__count) FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (MIN) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20MIN(alert__count)%20FROM%20data%20LIMIT%205">SELECT MIN(alert__count) FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (SUM) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20SUM(alert__count)%20FROM%20data%20LIMIT%205">SELECT SUM(alert__count) FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset id in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query?sql=SELECT%20*%20FROM%209be3bf63-97fc-4bb0-b913-775ccae3cf9e%20LIMIT%205">SELECT * FROM 9be3bf63-97fc-4bb0-b913-775ccae3cf9e LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset slug in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query?sql=SELECT%20*%20FROM%20Glad-Alerts-Daily-Geostore-User-Areas_3%20LIMIT%205">SELECT * FROM Glad-Alerts-Daily-Geostore-User-Areas_3 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset tableName in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20LIMIT%205">SELECT * FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Greater than filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3E%202%20LIMIT%205">SELECT * FROM data WHERE alert__count &gt; 2 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Greater than or equal filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3E%3D%202%20LIMIT%205">SELECT * FROM data WHERE alert__count &gt;= 2 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Equality filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3D%205%20LIMIT%205">SELECT * FROM data WHERE alert__count = 5 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Lower than filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3C%208%20LIMIT%205">SELECT * FROM data WHERE alert__count &lt; 8 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Lower than or equal filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3C%3D%208%20LIMIT%205">SELECT * FROM data WHERE alert__count &lt;= 8 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Conjunction (AND) filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3C%3D%208%20AND%20alert_area__ha%20%3E%200.1%20LIMIT%205">SELECT * FROM data WHERE alert__count &lt;= 8 AND alert_area__ha &gt; 0.1 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Disjunction (OR) filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20%3C%3D%208%20OR%20alert_area__ha%20%3E%200.1%20LIMIT%205">SELECT * FROM data WHERE alert__count &lt;= 8 OR alert_area__ha &gt; 0.1 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: BETWEEN filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20alert__count%20BETWEEN%202%20AND%208%20LIMIT%205">SELECT * FROM data WHERE alert__count BETWEEN 2 AND 8 LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>WHERE: LIKE filtering</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20*%20FROM%20data%20WHERE%20bra_biome__name%20LIKE%20'Amaz%25'%20LIMIT%205">SELECT * FROM data WHERE bra_biome__name LIKE &#39;Amaz%&rsquo; LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Group results by a single column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20GROUP%20BY%20bra_biome__name%20LIMIT%205">SELECT bra_biome__name FROM data GROUP BY bra_biome__name LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Group results by multiple columns</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20alert__count%20FROM%20data%20GROUP%20BY%20bra_biome__name%2C%20alert__count%20LIMIT%205">SELECT bra_biome__name, alert__count FROM data GROUP BY bra_biome__name, alert__count LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Aggregate functions used with GROUP BY statements</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20COUNT(*)%20as%20count%20FROM%20data%20GROUP%20BY%20bra_biome__name%20LIMIT%205">SELECT bra_biome__name, COUNT(*) as count FROM data GROUP BY bra_biome__name LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Special grouping by range function</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20count(*)%20FROM%20data%20GROUP%20BY%20range(alert__count%2C%200%2C1%2C2%2C3%2C4)%20LIMIT%205">SELECT count(*) FROM data GROUP BY range(alert__count, 0,1,2,3,4) LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by one column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20ORDER%20BY%20bra_biome__name%20LIMIT%205">SELECT bra_biome__name FROM data ORDER BY bra_biome__name LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by one column descending</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20ORDER%20BY%20bra_biome__name%20DESC%20LIMIT%205">SELECT bra_biome__name FROM data ORDER BY bra_biome__name DESC LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by multiple column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20alert__count%20FROM%20data%20ORDER%20BY%20bra_biome__name%2C%20alert__count%20LIMIT%205">SELECT bra_biome__name, alert__count FROM data ORDER BY bra_biome__name, alert__count LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by multiple column descending</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%2C%20alert__count%20FROM%20data%20ORDER%20BY%20bra_biome__name%2C%20alert__count%20DESC%20LIMIT%205">SELECT bra_biome__name, alert__count FROM data ORDER BY bra_biome__name, alert__count DESC LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>LIMIT: Limit the number of returned results</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20LIMIT%205">SELECT bra_biome__name FROM data LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>OFFSET: Offset the returned results</td>
+<td><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20LIMIT%205%20OFFSET%2010">SELECT bra_biome__name FROM data LIMIT 5 OFFSET 10</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>OFFSET: Offset the returned results using short syntax</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20bra_biome__name%20FROM%20data%20LIMIT%205%2C%2010">SELECT bra_biome__name FROM data LIMIT 5, 10</a></strong></td>
+</tr>
+</tbody></table>
+
+<p><em>Note: This table was generated automatically with the help of <a href="https://github.com/resource-watch/sql-compatibility-test">this repository</a>. If you are maintaining the docs, please do not edit manually these tables.</em></p>
+
+<h4 id="troubleshooting-sql-queries-for-document-based-datasets">Troubleshooting SQL queries for document-based datasets</h4>
+
+<p>This SQL syntax supported when running queries for document-based datasets has some known limitations:</p>
+
+<ul>
+<li>Very large SQL queries may run into some parsing issues.</li>
+<li>Sorting by aggregated fields is not supported. For instance, the following statement is <strong>not</strong> supported: <code class="prettyprint">GROUP BY age ORDER BY COUNT(*)</code>.</li>
+<li>Using aggregation functions on top of scalar functions is also not possible. For instance, the following statement is <strong>not</strong> supported: <code class="prettyprint">SELECT MAX(abs(age))</code>.</li>
+<li>Sub-queries are only supported to a small degree, but the usage of <code class="prettyprint">GROUP BY</code> or <code class="prettyprint">HAVING</code> in the sub-query is not supported. For instance, the following statement <strong>is</strong> supported: <code class="prettyprint">SELECT * FROM (SELECT first_name, last_name FROM emp WHERE last_name NOT LIKE &#39;%a%&#39;) WHERE first_name LIKE &#39;A%&#39; ORDER BY 1</code>, but statements with a higher level of complexity than applying simple conditions or orderings in the sub-query might not be supported.</li>
+<li>The usage of scalar functions on nested fields in <code class="prettyprint">ORDER BY</code> or <code class="prettyprint">WHERE</code> clauses is limited. For instance, the following statement is <strong>not</strong> supported: <code class="prettyprint">ORDER BY YEAR(dep.start_date)</code>.</li>
+</ul>
+
+<p>You can read more about the limitations of using SQL with document-based datasets <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html">here</a>.</p>
+
+<h3 id="rasdaman-datasets">Rasdaman datasets</h3>
 
 <p>SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.</p>
 <pre class="highlight shell"><code>curl -XGET https://api.resourcewatch.org/v1/query?sql<span class="o">=</span>SELECT avg<span class="o">(</span>Green<span class="o">)</span> from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat &gt; 0 and  Lat &lt; 45 <span class="se">\</span>
-    -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-    -H <span class="s1">'Authorization: Bearer &lt;token&gt;'</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer &lt;token&gt;'</span>
 </code></pre>
-<h2 id="nex-gddp-queries">NEX-GDDP queries</h2>
+<h3 id="nex-gddp-datasets">NEX-GDDP datasets</h3>
 
 <p>A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data are available. These can be accessed in the following ways:</p>
 
-<h3 id="spatial-aggregates-over-a-layer">Spatial aggregates over a layer</h3>
+<h4 id="spatial-aggregates-over-a-layer">Spatial aggregates over a layer</h4>
 
+<blockquote>
 <p>Access spatial aggregates over the data by listing all dataset data for a particular year:</p>
-<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span>SELECT<span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ </span>where<span class="se">\ </span>year<span class="se">\ \=\ </span>1960
+</blockquote>
+<pre class="highlight shell"><code>curl -i -XGET <span class="s1">'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year = 1960'</span>
 </code></pre>
+<blockquote>
 <p>Access particular aggregates:</p>
-<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span>SELECT<span class="se">\ </span>avg<span class="se">\,\ </span>min<span class="se">\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ </span>where<span class="se">\ </span>year<span class="se">\ \=\ </span>1960
+</blockquote>
+<pre class="highlight shell"><code>curl -i -XGET <span class="s1">'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT avg, min from nexgddp-historical-ACCESS1_0-prmaxday where year = 1960'</span>
 </code></pre>
+<blockquote>
 <p>Calculate statistics for a range of years:</p>
-<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span>SELECT<span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ \ </span>where<span class="se">\ </span>year<span class="se">\ </span>between<span class="se">\ </span>1960<span class="se">\ </span>and<span class="se">\ </span>1962
+</blockquote>
+<pre class="highlight shell"><code>curl -i -XGET <span class="s1">'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962'</span>
 </code></pre>
+<blockquote>
 <p>You can delimit an area of interest by providing a geostore id as a parameter:</p>
-<pre class="highlight shell"><code>curl -i -XGET http<span class="se">\:</span>//api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393<span class="se">\?</span>sql<span class="se">\=</span>SELECT<span class="se">\ \*\ </span>from<span class="se">\ </span>nexgddp-historical-ACCESS1_0-prmaxday<span class="se">\ \ </span>where<span class="se">\ </span>year<span class="se">\ </span>between<span class="se">\ </span>1960<span class="se">\ </span>and<span class="se">\ </span>1962&amp;geostore<span class="se">\=</span>0279093c278a64f4c3348ff63e4cfce0
-</code></pre>
-<h2 id="download">Download</h2>
-
-<p>You can download the result of a query using the <code class="prettyprint">download</code> endpoint. </p>
-
-<aside class="warning">
-    <ul>
-    This endpoint is not supported for all the dataset providers. The following dataset connector provide support for downloads:
-        <li>Google Earth Engine</li>
-        <li>Document</li>
-        <li>Carto</li>
-        <li>BigQuery</li>
-        <li>ArcGIS FeatureService</li>
-    </ul>
-</aside>
-<pre class="highlight shell"><code><span class="c"># The id of the dataset is part of the URL</span>
-curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span class="o">=</span>SELECT <span class="k">*</span> from &lt;dataset.tableName&gt;
-
-<span class="c"># The id of the dataset is in the FROM clause</span>
-curl -XGET https://api.resourcewatch.org/v1/download?sql<span class="o">=</span>SELECT <span class="k">*</span> from &lt;dataset.id&gt;
-</code></pre>
-<p>There are two ways to call it:</p>
-
-<ul>
-<li>you can either specify the id of the dataset in the URL</li>
-<li>or you can pass it as part of the SQL query (in the FROM clause)</li>
-</ul>
-
-<p>You can also specify which file type you want to download (JSON or CSV), except for Google Earth Engine datasets (only JSON).</p>
-
-<aside class="notice">
-    By default, the API will return a CSV file (JSON file for Google Earth Engine).
-</aside>
-<pre class="highlight shell"><code><span class="c"># The format is explicitly set</span>
-curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span class="o">=</span>SELECT <span class="k">*</span> from &lt;dataset.tableName&gt;&amp;format<span class="o">=</span>json
-curl -XGET https://api.resourcewatch.org/v1/download/&lt;dataset.id&gt;?sql<span class="o">=</span>SELECT <span class="k">*</span> from &lt;dataset.tableName&gt;&amp;format<span class="o">=</span>csv
+</blockquote>
+<pre class="highlight shell"><code>curl -i -XGET <span class="s1">'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962&amp;geostore=0279093c278a64f4c3348ff63e4cfce0'</span>
 </code></pre>
           <h1 id="jiminy">Jiminy</h1>
 
-<p><a href="https://github.com/vizzuality/jiminy">Jiminy</a> is a lightweight library that powers this api endpoint whose aim is to infer which type of charts can be obtained from a dataset.</p>
-
-<p>To get the jiminy information from a query, you can do the following request:</p>
-
-<p><strong><code class="prettyprint">/jiminy?sql=select &lt;columns&gt; from &lt;dataset.slug or dataset.id&gt; limit &lt;number&gt;</code></strong></p>
-
-<p>In order to retrieve the mentioned information the name of the columns that you want to obtain the data from are required.</p>
-
-<aside class="notice">
-Remember — It is mandatory to set a limit value. If you do not set it and the dataset contains a lot of data, jiminy will try to obtain all data at once! This can produce performance issues.
-</aside>
-
 <blockquote>
-<p>To obtain jiminy information, you have to do a GET with the following query params:</p>
+<p>Example jiminy GET request providing the SQL as query param:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/jiminy?sql<span class="o">=</span><span class="k">select</span> &lt;columns&gt; from &lt;dataset.slug or dataset.id&gt; <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X GET <span class="s1">'https://api.resourcewatch.org/v1/jiminy?sql=SELECT col_1, col_2 FROM &lt;dataset.id&gt; limit &lt;number&gt;'</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
-<p>It is possible do a POST too:</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/jiminy <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "sql": "select &lt;columns&gt; from &lt;dataset.slug or dataset.id&gt;"
+<blockquote>
+<p>Example jiminy POST request providing the SQL in the request body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s1">'https://api.resourcewatch.org/v1/jiminy'</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{
+   "sql": "SELECT col_1, col_2 FROM &lt;dataset.id&gt; limit &lt;number&gt;"
   }'</span>
 </code></pre>
 <blockquote>
-<p>Real example</p>
+<p>Example with real data:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/jiminy?sql<span class="o">=</span><span class="k">select </span>satellite, confidence, track, acq_date from VIIRS-Active-Fire-Global-1490086842549 limit 1000 <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X GET <span class="s1">'https://api.resourcewatch.org/v1/jiminy?sql=SELECT iso, name_0, name_1, type_1 FROM 098b33df-6871-4e53-a5ff-b56a7d989f9a limit 10'</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
-<p>The response will be 200 if the query is correct:</p>
-<pre class="highlight json"><code><span class="w">
-</span><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"line"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pie"</span><span class="p">,</span><span class="w"> </span><span class="s2">"scatter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1d_scatter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1d_tick"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"byColumns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pie"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"bar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pie"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"1d_scatter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1d_tick"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"1d_scatter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"1d_tick"</span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"byType"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"bar"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">,</span><span class="w"> </span><span class="s2">"track"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">,</span><span class="w"> </span><span class="s2">"acq_date"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">]</span><span class="w">
+<p>The <code class="prettyprint">jiminy</code> endpoint of the RW API makes use of the <a href="https://github.com/vizzuality/jiminy">Jiminy</a> library in order to infer which type of charts can be obtained from a the execution of a SQL query on a given dataset. For a better understanding of this endpoint, it is recommended to read beforehand on how to <a href="index-rw.html#querying-datasets">query datasets</a>.</p>
+
+<p>To use this endpoint and infer the charts that you can build from a result set, you must provide a valid SQL query. This query should contain the name of the columns for which you want to infer the chart types - the usage of the wildcard selector (<code class="prettyprint">SELECT *</code>) in the SQL query is not supported by this endpoint.</p>
+
+<p><strong>Note: You must set a limit value to the SQL query provided. If you do not set it and the dataset contains a lot of data, this endpoint will try to obtain all data at once, which can result in performance issues.</strong></p>
+
+<p>Likewise with <code class="prettyprint">query</code> and <code class="prettyprint">download</code> endpoints, you can either provide the SQL as query param in a GET request, or in the body of the request as a POST request - read more <a href="index-rw.html#alternative-ways-for-querying-datasets">here</a>. Using the GET request is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same <code class="prettyprint">jiminy</code> endpoint call will see a great performance increase, even if they are made by a different application or client. Alternatively, you can also call the <code class="prettyprint">jiminy</code> endpoint using a POST request. POST requests are not cached, so you will not benefit from these speed improvements. However, GET requests can sometimes hit URL length restrictions, should your SQL query string be too long. Using a POST request is the recommended solution for these cases.</p>
+
+<h2 id="jiminy-response-body">Jiminy response body</h2>
+
+<blockquote>
+<p>Example of successful response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"bar"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pie"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"scatter"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"byColumns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"bar"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"pie"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"bar"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"pie"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"bar"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"pie"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"bar"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"pie"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"byType"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"bar"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"line"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"pie"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"scatter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                        </span><span class="s2">"name_0"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"name_1"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type_1"</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                        </span><span class="s2">"iso"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"name_1"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type_1"</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                        </span><span class="s2">"iso"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"name_0"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type_1"</span><span class="w">
+                    </span><span class="p">],</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                        </span><span class="s2">"iso"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"name_0"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"name_1"</span><span class="w">
+                    </span><span class="p">]</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"1d_scatter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"1d_tick"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_0"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"name_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                    </span><span class="s2">"type_1"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"line"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"acq_date"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"pie"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"scatter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"confidence"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"satellite"</span><span class="p">,</span><span class="w"> </span><span class="s2">"confidence"</span><span class="p">]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"1d_scatter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">,</span><span class="w"> </span><span class="s2">"acq_date"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"1d_tick"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"general"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"track"</span><span class="p">,</span><span class="w"> </span><span class="s2">"acq_date"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"satellite"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"track"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-          </span><span class="s2">"acq_date"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>For a successful response, the response body is a JSON object containing a single index <code class="prettyprint">data</code>, which describes the type of charts that can be obtained from the query provided. The following fields are usually present in the <code class="prettyprint">data</code> object:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>data.general</td>
+<td>Array</td>
+<td>An array of distinct charts that can be used to represent the data of the query.</td>
+<td><code class="prettyprint">[&quot;bar&quot;, &quot;pie&quot;]</code></td>
+</tr>
+<tr>
+<td>data.byColumns</td>
+<td>Object</td>
+<td>An object where the keys are the columns provided in the SQL query. For each the, its value is an array with the names of the charts that might be used to represent the data from the column in the key.</td>
+<td><code class="prettyprint">{ &quot;iso&quot;: [&quot;bar&quot;, &quot;pie&quot;], &quot;name_0&quot;: [&quot;bar&quot;, &quot;pie&quot;] },</code></td>
+</tr>
+<tr>
+<td>data.byType</td>
+<td>Object</td>
+<td>An object where the keys are all the charts supported by Jiminy. The values will contain the column names of the query execution that might be used to display the chart type in the key. If the chart type was not included in the <code class="prettyprint">data.general</code> field of the response body, its content will likely be empty.</td>
+<td><code class="prettyprint">{ &quot;bar&quot;: { &quot;general&quot;: [&quot;iso&quot;, &quot;name_0&quot;, &quot;name_1&quot;, &quot;type_1&quot;], &quot;columns&quot;: { &quot;iso&quot;: [], &quot;name_0&quot;: [], &quot;name_1&quot;: [], &quot;type_1&quot;: [] } } }</code></td>
+</tr>
+</tbody></table>
+
+<h2 id="jiminy-execution-errors">Jiminy execution errors</h2>
+
+<p>The <code class="prettyprint">jiminy</code> endpoint might sometimes return an error response. The following table describes the possible errors that can occur when calling this endpoint:</p>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>SQL o FS required</td>
+<td>The required <code class="prettyprint">sql</code> field is missing either as query string parameter or in the request body.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal server error</td>
+<td>The error message might vary in this case.</td>
+</tr>
+</tbody></table>
+
+<h2 id="jiminy-endpoint-parameters">Jiminy endpoint parameters</h2>
+
+<p>The <code class="prettyprint">jiminy</code> endpoint makes use of a single query parameter, which is required for a successful call of the endpoint:</p>
+
+<table><thead>
+<tr>
+<th>Query parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sql</td>
+<td>The SQL query which will be the basis for inferring the chart types.</td>
+<td>String</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+
           <h1 id="fields">Fields</h1>
 
 <h2 id="what-are-fields">What are fields?</h2>

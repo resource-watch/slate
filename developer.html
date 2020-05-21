@@ -2213,6 +2213,14 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 
 <p>Before updating the script once again in AWS Synthetics, <strong>don&rsquo;t forget to revert ALL the changes (just follow the steps in the reverse order)</strong>.</p>
 
+          <h1 id="query-transformations">Query transformations</h1>
+
+<p><strong>While the WRI API aims to make the query interface as broad and transparent as possible, some of the querying options described below will not be available for specific dataset providers, depending on this API&rsquo;s implementation or limitations on the actual data provider&rsquo;s side.</strong></p>
+
+<p>Additionally to provider-specific limitations, every SQL query is transformed by <a href="https://github.com/resource-watch/sql2json">the <code class="prettyprint">sql2json</code> microservice</a>, also maintained as <a href="https://www.npmjs.com/package/sql2json">NPM package</a>. There is a first conversion from SQL to JSON, and then from JSON to a SQL syntax that is compatible with <a href="https://github.com/NLPchina/elasticsearch-sql">the Elasticsearch SQL plugin</a>.</p>
+
+<p>You can read more about the limitations of using SQL with Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html">here</a>.</p>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
