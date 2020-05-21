@@ -20,9 +20,9 @@ includes:
   - api/contact
   - api/collections
   - api/dataset
+  - api/query
   - api/widget
   - api/layer
-  - api/query
   - api/jiminy
   - api/fields
   - api/metadata
