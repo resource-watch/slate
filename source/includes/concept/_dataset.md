@@ -1,5 +1,3 @@
-# Concepts
-
 ## Dataset
 
 One of the Resource Watch API's (RW API) goals is to provide a common interface for interacting with data hosted in different sources and formats. A **Dataset** is the Resource Watch's API way of providing users with access to data, while trying to, as much as possible, abstract and standardise operations that would otherwise fall on the user's hands to figure out. It's one of the cornerstones that many other API features build upon - and those features can help you get even more out of your data!

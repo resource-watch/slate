@@ -19,6 +19,7 @@ includes:
   - dev/subscriptions
   - dev/microservice_reference
   - dev/smoke_tests
+  - dev/query_transformations
 
 logo: logo-rw.png
 
