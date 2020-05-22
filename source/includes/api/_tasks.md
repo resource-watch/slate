@@ -43,10 +43,6 @@ To obtain all tasks:
 curl -X GET https://api.resourcewatch.org/v1/doc-importer/task
 ```
 
-<aside class="success">
-Remember — the response is jsonapi format
-</aside>
-
 > Example response:
 
 ```json
@@ -217,10 +213,6 @@ To obtain the task:
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/doc-importer/task/55b02cfd-dabf-4ad0-a04d-5501cf248a0c
 ```
-
-<aside class="success">
-Remember — the response is jsonapi format
-</aside>
 
 > Example response:
 
