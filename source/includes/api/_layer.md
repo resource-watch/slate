@@ -1,30 +1,15 @@
 # Layer
 
-## What is a Layer?
+## What is a layer?
 
-A layer is a geographical representation of a Dataset's data.
+By now, you are probably already familiar with [datasets](#dataset) and [querying](#query) them (if you are not, now is a good time to get up to speed on those). Many of the datasets you'll find on the RW API - and perhaps the datasets you are uploading too - contain georeferenced information. If that's the case, then you may want to render your data as a web map layer, and the RW API's *layer* endpoints can help you with that.
 
-Layer contains the following fields:
+As we've seen in the [layer concept docs](#layer), a RW API layer may store data in different formats, depending on the needs of its author. This is done using the several open format fields a layer has. To keep this documentation easy to understand, we'll spit our approach to layers into two sections:
 
-Field             |                                     Description                                      |    Type
------------------ | :----------------------------------------------------------------------------------: | ------:
-userId            |                                   Id of the owner                                    |    Text
-application       |                       Application to which the dataset belongs                       |   Array
-iso               |                        The isos to which the dataset belongs                         |   Array
-slug              |                            Unique identifier of the layer                            |    Text
-name              |                                  Name of the layer                                   |     Url
-description       |                               Description of the layer                               |   Array
-dataset           |                      UuId of the dataset that the layer belongs                      |    Text
-layerConfig       |                                 Custom configuration                                 |  Object
-legendConfig      |                                 Custom configuration                                 |  Object
-applicationConfig |                                 Custom configuration                                 |  Object
-staticImageConfig |                                 Custom configuration                                 |  Object
-default           |               If it's a default layer for the dataset that it belongs                | Boolean
-protected         |               If it's a protected layer (not is possible to delete if it's true)     | Boolean
-published         |                               Is the layer published?                                | Boolean
-env               | environment in witch the layer was published, one of `staging`, `preproduction` or `production` |    Text
+- We'll first discuss the details of the endpoints that allow you to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) layers, without focusing on the actual data contained in it.
+- In an upcoming section, we'll dive deeper into some of the most common structures used to store data in the layer's open format fields, and help you use that data to render an actual layer on a web application.
 
-## How obtain all layers
+## Getting all layers
 
 To obtain all layers:
 
