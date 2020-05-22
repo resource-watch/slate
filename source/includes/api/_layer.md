@@ -17,10 +17,6 @@ To obtain all layers:
 curl -X GET https://api.resourcewatch.org/v1/layer
 ```
 
-<aside class="success">
-Remember — the response is jsonapi format
-</aside>
-
 > Example response:
 
 ```json
@@ -347,10 +343,6 @@ To obtain the layer:
 curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553
 curl -X GET https://api.resourcewatch.org/v1/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553
 ```
-
-<aside class="success">
-Remember — the response is jsonapi format
-</aside>
 
 > Example response:
 

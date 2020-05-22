@@ -276,10 +276,6 @@ curl -X GET https://api.resourcewatch.org/v1/widget
 ```
 
 <aside class="success">
-Remember — the response is jsonapi format
-</aside>
-
-<aside class="success">
 Remember — <strong>the resulting list is filtered by env=production</strong> unless another env is explicitly provided as a query param. <i>A list of environments can also be provided such as e.g. "env=production,preproduction"</i>.
 </aside>
 
@@ -636,10 +632,6 @@ To obtain the widget:
 curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3
 curl -X GET https://api.resourcewatch.org/v1/widget/20ec7861-5251-40a7-9503-5ee3686a66a3
 ```
-
-<aside class="success">
-Remember — the response is jsonapi format
-</aside>
 
 > Example response:
 

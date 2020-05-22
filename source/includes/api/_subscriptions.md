@@ -374,9 +374,6 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/<subscription-id> \
 <aside class="notice">
 Remember — this endpoint is authenticated.
 </aside>
-<aside class="success">
-Remember — the response is in JSONApi format.
-</aside>
 
 > Example
 
@@ -436,10 +433,6 @@ You can get a list of the current user's subscriptions using the following endpo
 curl -X GET https://api.resourcewatch.org/v1/subscriptions \
 -H "Authorization: Bearer <your-token>"
 ```
-
-<aside class="success">
-Remember — the response is in JSONApi format.
-</aside>
 
 > Response:
 
