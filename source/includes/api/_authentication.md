@@ -4,6 +4,16 @@ The RW API uses JWT [(JSON Web Tokens)](https://tools.ietf.org/html/rfc7519) to 
 
 However, in order to perform GET requests for content that is not private, there's no need for any sort of authentication or token.
 
+## Registering a new user account
+
+*Note: Creating an user requires sending a confirmation email, so, so please ensure that you create a new user using an email account that you have access to. Otherwise you won't be able to login.*
+
+1. On the browser, visit the API's sign up page: [https://api.resourcewatch.org/auth/sign-up](https://api.resourcewatch.org/auth/sign-up).
+2. Create a new user providing an email and a password.
+3. Wait for the confirmation email and click on the link on the email.
+
+After completing these steps, you will be able to login and get your private tokens.
+
 ## How to generate your private token
 
 1. On the browser, visit the API's login page at [https://api.resourcewatch.org/auth/login](https://api.resourcewatch.org/auth/login).
