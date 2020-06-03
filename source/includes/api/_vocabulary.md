@@ -446,7 +446,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-
 
 ## Getting Vocabularies associated to a Resource
 
-You can be request all vocabularies that are associated to a particular resource.
+You can be request all vocabularies that are associated to a particular resource. It optionally accepts a `app` or `application` query parameter, that will filter the vocabulary's `application`. If none is provided, `rw` is used as default.
 
 > Getting Vocabularies related with a Dataset
 
