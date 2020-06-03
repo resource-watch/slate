@@ -310,11 +310,11 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?includes=user
 
 When fetching datasets, you can request additional entities to be loaded. The following entities are available:
 
-* `widget` - loads all widgets associated with a given dataset.
-* `layer` - loads all layers associated with a given dataset.
-* `vocabulary` - loads all vocabulary entities associated with a given dataset.
-* `metadata` - loads all metadata associated with a given dataset.
-* `user` - loads the name, email address and role of the author of the dataset. If you do not issue this request as an ADMIN user, or if no user data is available, the `user` object will be empty.
+* `widget` - loads all widgets associated with each dataset.
+* `layer` - loads all layers associated with each dataset.
+* `vocabulary` - loads all vocabulary entities associated with each dataset.
+* `metadata` - loads all metadata associated with each dataset.
+* `user` - loads the name, email address and role of the author of the dataset. If you do not issue this request as an `ADMIN` user, or if no user data is available, the `user` object will be empty.
 
 **Note:** If you include related entities (e.g. layers) with query filters, the filters will not cascade to the related entities.
 
@@ -323,14 +323,14 @@ When fetching datasets, you can request additional entities to be loaded. The fo
 > Getting a dataset by id:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057ad4fc2145
+curl -X GET "https://api.resourcewatch.org/v1/dataset/51943691-eebc-4cb4-bdfb-057ad4fc2145"
 ```
 
 
 > Getting a dataset by slug:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC
+curl -X GET "https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC"
 ```
 
 > Response (equal for both cases):
