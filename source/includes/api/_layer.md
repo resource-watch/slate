@@ -11,151 +11,166 @@ As we've seen in the [layer concept docs](#layer), a RW API layer may store data
 
 ## Getting all layers
 
-To obtain all layers:
+
+> Getting a list of layers
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer
+curl -X GET "https://api.resourcewatch.org/v1/layer"
 ```
 
 > Example response:
 
 ```json
 {
-   "data":[
-      {
-        "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
-        "type": "layer",
-        "attributes": {
-          "slug": "total-co2-emissions-by-year",
-          "userId": "5858f37140621f11066fb2f7",
-          "application": [
-            "rw"
-          ],
-          "name": "Total CO2 emissions by year",
-          "default": false,
-          "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
-          "env": "production",
-          "provider": "cartodb",
-          "iso": [],
-          "description": null,
-          "layerConfig": {
-            "account": "rw",
-            "body": {
-              "maxzoom": 18,
-              "minzoom": 3,
-              "layers": [
-                {
-                  "type": "mapnik",
-                  "options": {
-                    "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
-                    "cartocss": "",
-                    "cartocss_version": "2.3.0"
-                  }
-                }
-              ]
+    "data": [
+        {
+            "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
+            "type": "layer",
+            "attributes": {
+                "slug": "total-co2-emissions-by-year",
+                "userId": "5858f37140621f11066fb2f7",
+                "application": [
+                    "rw"
+                ],
+                "name": "Total CO2 emissions by year",
+                "default": false,
+                "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
+                "env": "production",
+                "provider": "cartodb",
+                "iso": [],
+                "description": null,
+                "layerConfig": {
+                    "account": "rw",
+                    "body": {
+                        "maxzoom": 18,
+                        "minzoom": 3,
+                        "layers": [
+                            {
+                                "type": "mapnik",
+                                "options": {
+                                    "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
+                                    "cartocss": "",
+                                    "cartocss_version": "2.3.0"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "legendConfig": {
+                    "marks": {
+                        "type": "rect",
+                        "from": {
+                            "data": "table"
+                        }
+                    }
+                },
+                "applicationConfig": {},
+                "staticImageConfig": {}
             }
-          },
-          "legendConfig": {
-            "marks": {
-              "type": "rect",
-              "from": {
-                "data": "table"
-              }
-            }
-          },
-          "applicationConfig": {},
-          "staticImageConfig": {}
         }
-      }
-   ],
-   "links":{
-      "first":"https://api.resourcewatch.org/v1/layer?page%5Bnumber%5D=1",
-      "prev":"https://api.resourcewatch.org/v1/layer?page%5Bnumber%5D=1",
-      "next":"https://api.resourcewatch.org/v1/layer?page%5Bnumber%5D=2&page%5Bsize%5D=10",
-      "last":"https://api.resourcewatch.org/v1/layer?page%5Bnumber%5D=64&page%5Bsize%5D=10",
-      "self":"https://api.resourcewatch.org/v1/layer?page%5Bnumber%5D=1&page%5Bsize%5D=10"
-   },
-   "meta": {
-      "total-pages": 63,
-      "total-items": 628,
-      "size": 10
-   }
+    ],
+    "links": {
+        "self": "https://api.resourcewatch.org/v1/layer?page[number]=1&page[size]=10",
+        "first": "https://api.resourcewatch.org/v1/layer?page[number]=1&page[size]=10",
+        "last": "https://api.resourcewatch.org/v1/layer?page[number]=634&page[size]=10",
+        "prev": "https://api.resourcewatch.org/v1/layer?page[number]=1&page[size]=10",
+        "next": "https://api.resourcewatch.org/v1/layer?page[number]=2&page[size]=10"
+    },
+    "meta": {
+        "total-pages": 63,
+        "total-items": 628,
+        "size": 10
+    }
 }
 ```
 
-### Filter params
+This endpoint allows you to list existing layers and their properties. The result is a paginated list of 10 layers, followed by metadata on total number of layers and pages, as well as useful pagination links. In the sections below, we’ll explore how you can customize this endpoint call to match your needs.   
 
-Available filters:
 
-Field     |                                     Description                                      |    Type
---------- | :----------------------------------------------------------------------------------: | ------:
-name      |                Filter the layers whose name contains the filter text                 |    Text
-dataset   |                          Filter the layers by dataset uuid                           |    Text
-sort      |                      Sort json response by specific attributes                       |    Text
-status    |                Filter layers on status (pending, saved, failed, all)                 |    Text
-published |                   Filter layers on published status (true, false)                    | Boolean
-app       |                   Filter layers on application (prep, gfw, etc..)                    |    Text
-env       | Environment in witch the layer was published, one of `staging`, `preproduction` or `production`. Defaults to `production` |    Text
-user.role | The role of the user who created the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+### Getting all layers for a dataset
 
+> Return the layers associated with a dataset
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset id>/layer"
+```
+
+When handling layers, it's common to want to limit results to those layers associated with a given dataset. Besides the [filters](#filters132) covered below, there's an additional convenience endpoint to get the layers associated with a dataset, as shown in this example. 
+ 
+
+### Pagination
+
+By default, layers are listed in pages of 10 datasets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
+
+> Custom pagination: load page 2 using 25 results per page
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/layer?page[number]=2&page[size]=25"
+```
+
+Field        |         Description          |   Type |   Default
+------------ | :--------------------------: | -----: | ----------:
+page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 10
+page[number] |       The page number        | Number | 1
+
+
+### Filters
 
 > Return the layers filtered by those whose name contains emissions
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?name=emissions
+curl -X GET "https://api.resourcewatch.org/v1/layer?name=emissions"
 ```
 
 > Return the layers filtered by dataset
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?dataset=11de2bc1-368b-42ed-a207-aaff8ece752b
-curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer
-```
-
-> Sort by name
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?sort=name
-```
-
-> Filter layers by status
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?status=failed
+curl -X GET "https://api.resourcewatch.org/v1/layer?dataset=11de2bc1-368b-42ed-a207-aaff8ece752b"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer"
 ```
 
 > Filter layers by published status
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?published=false
+curl -X GET "https://api.resourcewatch.org/v1/layer?published=false"
 ```
 
 > Filter layers by environment
 
-If no `env` is specified, `production` is used as default.
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?env=staging
+curl -X GET "https://api.resourcewatch.org/v1/layer?env=staging"
 ```
 
 > Return the layers filtered by those whose applications contain rw
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?app=rw
+curl -X GET "https://api.resourcewatch.org/v1/layer?app=rw"
 ```
 
-### Pagination params
+Available filters:
 
-Field        |       Description        |   Type
------------- | :----------------------: | -----:
-page[size]   | Number elements per page. There's a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit. | Number
-page[number] |      Number of page      | Number
+Field           |                                     Description                                       |    Type
+---------       | :----------------------------------------------------------------------------------:  | ------:
+name            |                                                                                       |    Text
+dataset         |                          Filter the layers by dataset id.                             |    Text
+published       |                   Filter layers on published status (true, false)                     | Boolean
+env             | Environment in which the layer was published, one of `staging`, `preproduction` or `production`. Defaults to `production` |    Text
+slug            |                                                                                       | Text 
+description     |                                                                                       | Text
+application/app | Filter by applications associated to this layer. Multiple values can be provided, separated by commas, which will be combined using `OR` logic. Match are not exact - any layers that have at least one of the applications specified in the filter will be returned. | Text
+iso             | ISO3 values. Multiple values can be provided, separated by commas, which will be combined using `OR` logic. Match are not exact - any layers that have at least one of the ISO codes specified in the filter will be returned.  | Text
+userId          | Id of the user associated with the layer | Text
+default         |  | Boolean
+protected       |  | Boolean
+favourite       | Shows only datasets flagged as favourites by the user. Requires being authenticated. | Boolean
+type            |  | Text
+provider        |  | Text
+userName        | Name of the user associated with the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+user.role/userRole | The role of the user associated with the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+collection      | Filter by [collection](#collections) id. Requires being authenticated. | Text 
 
-> Return the layers of page 2 with 5 elements per page
 
-```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?page[size]=5&page[number]=2
-```
 
 ### Sorting
 
@@ -166,7 +181,7 @@ Sorting by nested fields is not supported at the moment.
 > Sorting layers
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?sort=name
+curl -X GET "https://api.resourcewatch.org/v1/layer?sort=name"
 ```
 
 Multiple sorting criteria can be used, separating them by commas.
@@ -174,7 +189,7 @@ Multiple sorting criteria can be used, separating them by commas.
 > Sorting layers by multiple criteria
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?sort=name,slug
+curl -X GET "https://api.resourcewatch.org/v1/layer?sort=name,slug"
 ```
 
 You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
@@ -182,25 +197,25 @@ You can specify the sorting order by prepending the criteria with either `-` or 
 > Explicit order of sorting
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?sort=-name,+slug
+curl -X GET "https://api.resourcewatch.org/v1/layer?sort=-name,+slug"
 ```
 
 > Sorting layers by the role of the user who owns the layer
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?sort=user.role
+curl -X GET "https://api.resourcewatch.org/v1/layer?sort=user.role"
 ```
 
 ### Include related entities
 
-When loading layer data, you can optionally pass an `includes` query argument to load additional data.
+When fetching layers, you can request additional entities to be loaded. The following entities are available:
 
 #### Vocabulary
 
-Loads related vocabularies. If none are found, no `vocabulary` property will be added to the layer object.
+> Loads vocabulary associated with each layer:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?includes=vocabulary
+curl -X GET "https://api.resourcewatch.org/v1/layer?includes=vocabulary"
 ```
 
 > Example response:
@@ -208,64 +223,83 @@ curl -X GET https://api.resourcewatch.org/v1/layer?includes=vocabulary
 ```json
 {
     "data": [
-      {
-        "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
-        "type": "layer",
-        "attributes": {
-          "slug": "total-co2-emissions-by-year",
-          "userId": "5858f37140621f11066fb2f7",
-          "application": [
-            "rw"
-          ],
-          "name": "Total CO2 emissions by year",
-          "default": false,
-          "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
-          "env": "production",
-          "provider": "cartodb",
-          "iso": [],
-          "description": null,
-          "layerConfig": {
-            "account": "rw",
-            "body": {
-              "maxzoom": 18,
-              "minzoom": 3,
-              "layers": [
-                {
-                  "type": "mapnik",
-                  "options": {
-                    "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
-                    "cartocss": "",
-                    "cartocss_version": "2.3.0"
-                  }
-                }
-              ]
+        {
+            "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
+            "type": "layer",
+            "attributes": {
+                "slug": "total-co2-emissions-by-year",
+                "userId": "5858f37140621f11066fb2f7",
+                "application": [
+                    "rw"
+                ],
+                "name": "Total CO2 emissions by year",
+                "default": false,
+                "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
+                "env": "production",
+                "provider": "cartodb",
+                "iso": [],
+                "description": null,
+                "layerConfig": {
+                    "account": "rw",
+                    "body": {
+                        "maxzoom": 18,
+                        "minzoom": 3,
+                        "layers": [
+                            {
+                                "type": "mapnik",
+                                "options": {
+                                    "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
+                                    "cartocss": "",
+                                    "cartocss_version": "2.3.0"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "legendConfig": {
+                    "marks": {
+                        "type": "rect",
+                        "from": {
+                            "data": "table"
+                        }
+                    }
+                },
+                "applicationConfig": {},
+                "staticImageConfig": {},
+                "vocabulary": [
+                    {
+                        "id": "resourcewatch",
+                        "type": "vocabulary",
+                        "attributes": {
+                            "tags": [
+                                "inuncoast",
+                                "rp0002",
+                                "historical",
+                                "nosub"
+                            ],
+                            "name": "resourcewatch",
+                            "application": "rw"
+                        }
+                    }
+                ]
             }
-          },
-          "legendConfig": {
-            "marks": {
-              "type": "rect",
-              "from": {
-                "data": "table"
-              }
-            }
-          },
-          "applicationConfig": {},
-          "staticImageConfig": {},
-          "vocabulary": []
         }
-      }
-   ]
+    ]
 }
 ```
 
+Loads all vocabulary entities associated with each layer. Internally this uses the [getting vocabularies associated to a resource](#getting-vocabularies-associated-to-a-resource) endpoint, and thus it's affected by its behavior - particularly, only vocabularies associated with the `rw` application will be listed. There's currently no way to modify this behavior.
+
+
+
 #### User
 
-Loads the name and email address of the author of the layer. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
+Loads the name and email address of the author of the layer. If you request this issue as an authenticated user with `ADMIN` role, you will additionally get the author's role.
 
 If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?includes=user
+curl -X GET "https://api.resourcewatch.org/v1/layer?includes=user"
 ```
 
 > Example response:
@@ -273,56 +307,56 @@ curl -X GET https://api.resourcewatch.org/v1/layer?includes=user
 ```json
 {
     "data": [
-      {
-        "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
-        "type": "layer",
-        "attributes": {
-          "slug": "total-co2-emissions-by-year",
-          "userId": "5858f37140621f11066fb2f7",
-          "application": [
-            "rw"
-          ],
-          "name": "Total CO2 emissions by year",
-          "default": false,
-          "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
-          "env": "production",
-          "provider": "cartodb",
-          "iso": [],
-          "description": null,
-          "layerConfig": {
-            "account": "rw",
-            "body": {
-              "maxzoom": 18,
-              "minzoom": 3,
-              "layers": [
-                {
-                  "type": "mapnik",
-                  "options": {
-                    "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
-                    "cartocss": "",
-                    "cartocss_version": "2.3.0"
-                  }
+        {
+            "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
+            "type": "layer",
+            "attributes": {
+                "slug": "total-co2-emissions-by-year",
+                "userId": "5858f37140621f11066fb2f7",
+                "application": [
+                    "rw"
+                ],
+                "name": "Total CO2 emissions by year",
+                "default": false,
+                "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
+                "env": "production",
+                "provider": "cartodb",
+                "iso": [],
+                "description": null,
+                "layerConfig": {
+                    "account": "rw",
+                    "body": {
+                        "maxzoom": 18,
+                        "minzoom": 3,
+                        "layers": [
+                            {
+                                "type": "mapnik",
+                                "options": {
+                                    "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
+                                    "cartocss": "",
+                                    "cartocss_version": "2.3.0"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "legendConfig": {
+                    "marks": {
+                        "type": "rect",
+                        "from": {
+                            "data": "table"
+                        }
+                    }
+                },
+                "applicationConfig": {},
+                "staticImageConfig": {},
+                "user": {
+                    "name": "John Doe",
+                    "email": "john.doe@vizzuality.com"
                 }
-              ]
             }
-          },
-          "legendConfig": {
-            "marks": {
-              "type": "rect",
-              "from": {
-                "data": "table"
-              }
-            }
-          },
-          "applicationConfig": {},
-          "staticImageConfig": {},
-          "user": {
-              "name": "John Doe",
-              "email": "john.doe@vizzuality.com"
-          }
         }
-      }
-   ]
+    ]
 }
 ```
 
@@ -331,80 +365,90 @@ curl -X GET https://api.resourcewatch.org/v1/layer?includes=user
 You can request multiple related entities in a single request using commas to separate multiple keywords
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/layer?includes=user,vocabulary
+curl -X GET "https://api.resourcewatch.org/v1/layer?includes=user,vocabulary"
 ```
 
 
-## How obtain specific layers
+## Getting a layer by id or slug
 
-To obtain the layer:
+
+> Getting a layer by id:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553
-curl -X GET https://api.resourcewatch.org/v1/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553
+curl -X GET "https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553"
+curl -X GET "https://api.resourcewatch.org/v1/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553"
+```
+
+> Getting a layer by slug:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer/total-co2-emissions-by-year"
+curl -X GET "https://api.resourcewatch.org/v1/layer/total-co2-emissions-by-year"
 ```
 
 > Example response:
 
 ```json
 {
-  "data": {
-    "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
-    "type": "layer",
-    "attributes": {
-      "slug": "total-co2-emissions-by-year",
-      "userId": "5858f37140621f11066fb2f7",
-      "application": [
-        "rw"
-      ],
-      "name": "Total CO2 emissions by year",
-      "default": false,
-      "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
-      "env": "production",
-      "provider": "cartodb",
-      "iso": [],
-      "description": null,
-      "layerConfig": {
-        "account": "rw",
-        "body": {
-          "maxzoom": 18,
-          "minzoom": 3,
-          "layers": [
-            {
-              "type": "mapnik",
-              "options": {
-                "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
-                "cartocss": "",
-                "cartocss_version": "2.3.0"
-              }
-            }
-          ]
-        }
-      },
-      "legendConfig": {
-        "marks": {
-          "type": "rect",
-          "from": {
-            "data": "table"
-          }
-        }
-      },
-      "applicationConfig": {},
-      "staticImageConfig": {}
-    }
-  },
-  "meta": {
-    "status": "saved",
-    "published": true,
-    "updatedAt": "2017-01-23T16:51:42.571Z",
-    "createdAt": "2017-01-23T16:51:42.571Z"
-  }
+   "data": {
+       "id": "e5c3e7c5-19ae-4ca0-a461-71f1f67aa553",
+       "type": "layer",
+       "attributes": {
+           "slug": "total-co2-emissions-by-year",
+           "userId": "5858f37140621f11066fb2f7",
+           "application": [
+               "rw"
+           ],
+           "name": "Total CO2 emissions by year",
+           "default": false,
+           "dataset": "11de2bc1-368b-42ed-a207-aaff8ece752b",
+           "env": "production",
+           "provider": "cartodb",
+           "iso": [],
+           "description": null,
+           "layerConfig": {
+               "account": "rw",
+               "body": {
+                   "maxzoom": 18,
+                   "minzoom": 3,
+                   "layers": [
+                       {
+                           "type": "mapnik",
+                           "options": {
+                               "sql": "SELECT * cait_2_0_country_ghg_emissions_filtered",
+                               "cartocss": "",
+                               "cartocss_version": "2.3.0"
+                           }
+                       }
+                   ]
+               }
+           },
+           "legendConfig": {
+               "marks": {
+                   "type": "rect",
+                   "from": {
+                       "data": "table"
+                   }
+               }
+           },
+           "applicationConfig": {},
+           "staticImageConfig": {}
+       }
+   },
+   "meta": {
+       "status": "saved",
+       "published": true,
+       "updatedAt": "2017-01-23T16:51:42.571Z",
+       "createdAt": "2017-01-23T16:51:42.571Z"
+   }
 }
 ```
 
+If you know the id or the `slug` of a dataset, then you can access it directly. Both id and `slug` are case-sensitive.
+
 ### Include related entities
 
-You can load related `user` and `vocabulary` data in the same request. See [this section](#include-related-layer-entities) for more details.
+You can load related `user` and `vocabulary` data in the same request. See [this section](#include-related-entities135) for more details.
 
 
 ## Create a Layer
@@ -430,7 +474,7 @@ It is possible to create a layer that has a different `env` property to its pare
 > To create a layer, you have to do a POST request with the following body:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -445,7 +489,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer \
 > The following structure was previously supported but should now be considered deprecated:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -479,7 +523,7 @@ env               | The environment to which the layer belongs |   Text |       
 > To create a layer, you have to do a POST request with the following body:
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id> \
+curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -505,7 +549,7 @@ In order to perform this operation, the following conditions must be met:
 
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id> \
+curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
