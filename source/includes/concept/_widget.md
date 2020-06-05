@@ -6,7 +6,7 @@ A **widget** is a visual specification of how to style and render the data of a 
 
 As with layers, each widget has a single dataset associated with it, and a dataset can be associated with many widgets. You can represent the same data in different ways by creating different widgets for the same dataset. The same widget can store independent configuration values for each RW API based application. It can also contain the required configuration for rendering the same visualization using different rendering tools.
 
-However, this association with the dataset is only for organizational purposes. As such, like in the case of layers, the widget itself does not interact with the dataset data. You can either use the widget's `queryUrl` field to store the query to get the widget's data or store it inside the free form `widgetConfig` object. In any of these cases, it is your responsibility as an API user to query the data that will be used for rendering the widget.
+However, this association between widgets and datasets is only for organizational purposes. As such, like in the case of layers, the widget itself does not interact with the dataset data. You can either use the widget's `queryUrl` field to store the query to get the widget's data or store it inside the free form `widgetConfig` object. In any of these cases, it is your responsibility as an API user to query the data that will be used for rendering the widget.
 
 In the [widget endpoint documentation](#widget7), you can get into more detail on how you can manage widgets.
 
