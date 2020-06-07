@@ -98,6 +98,175 @@ curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset id>/layer"
 When handling layers, it's common to want to limit results to those layers associated with a given dataset. Besides the [filters](#filters132) covered below, there's an additional convenience endpoint to get the layers associated with a dataset, as shown in this example. 
  
 
+### Getting all layers for multiple datasets
+
+> Return all layers associated with two datasets
+
+```shell
+curl -X POST "https://api.resourcewatch.org/layer/find-by-ids" \
+-H "Authorization: Bearer <your-token>" \
+-H 'Content-Type: application/json' \
+-d '{
+	"ids": ["06c44f9a-aae7-401e-874c-de13b7764959", "125b181c-653a-4a27-8a5f-e507c5a7c530"]
+}'
+```
+
+```json
+{
+    "data": [
+        {
+            "id": "0dc39924-5736-4898-bda4-49cdc2f3b208",
+            "type": "layer",
+            "attributes": {
+                "name": "NOAA NEXt-Generation RADar (NEXRAD) Products (Locations)",
+                "slug": "noaa-next-generation-radar-nexrad-products-locations",
+                "dataset": "0b9e546c-f42a-4b26-bad3-7d606f58961c",
+                "description": "",
+                "application": [
+                    "prep"
+                ],
+                "iso": [
+                    "USA"
+                ],
+                "provider": "arcgis",
+                "userId": "legacy",
+                "default": true,
+                "protected": false,
+                "published": false,
+                "env": "production",
+                "layerConfig": {
+                    "body": {
+                        "useCors": false,
+                        "layers": [
+                            0
+                        ],
+                        "url": "https://gis.ncdc.noaa.gov/arcgis/rest/services/cdo/nexrad/MapServer"
+                    },
+                    "type": "dynamicMapLayer"
+                },
+                "legendConfig": {
+                    "type": "basic",
+                    "items": [
+                        {
+                            "name": "NEXRAD",
+                            "color": "#FF0000",
+                            "icon": "http://gis.ncdc.noaa.gov/arcgis/rest/services/cdo/nexrad/MapServer/0/images/47768c7d812818af98d8da03a04d4fe4"
+                        }
+                    ]
+                },
+                "interactionConfig": {},
+                "applicationConfig": {},
+                "staticImageConfig": {},
+                "createdAt": "2016-09-07T14:50:22.578Z",
+                "updatedAt": "2017-12-18T12:08:25.703Z"
+            }
+        },
+        {
+            "id": "0b021478-f4d3-4a1e-ae88-ab97f0085bc9",
+            "type": "layer",
+            "attributes": {
+                "name": "Projected change in average precipitation (in)",
+                "slug": "projected-change-in-average-precipitation-between-u-s",
+                "dataset": "d443beca-d199-4872-9d7d-d82c45e43151",
+                "description": "Projected change in average precipitation for the A2 emissions scenario.",
+                "application": [
+                    "prep"
+                ],
+                "iso": [
+                    "USA"
+                ],
+                "provider": "arcgis",
+                "userId": "legacy",
+                "default": true,
+                "protected": false,
+                "published": false,
+                "env": "production",
+                "layerConfig": {
+                    "body": {
+                        "use-cors": false,
+                        "layers": [
+                            12
+                        ],
+                        "url": "https://gis-gfw.wri.org/arcgis/rest/services/prep/nca_figures/MapServer"
+                    },
+                    "zoom": 4,
+                    "center": {
+                        "lat": 39.6395375643667,
+                        "lng": -99.84375
+                    },
+                    "type": "dynamicMapLayer",
+                    "bbox": [
+                        -125.61,
+                        24.73,
+                        -66.81,
+                        49.07
+                    ]
+                },
+                "legendConfig": {
+                    "type": "choropleth",
+                    "items": [
+                        {
+                            "value": "< -90",
+                            "color": "#8C5107"
+                        },
+                        {
+                            "value": "-90 - -60",
+                            "color": "#BF822B"
+                        }
+                    ]
+                },
+                "interactionConfig": {},
+                "applicationConfig": {},
+                "staticImageConfig": {},
+                "createdAt": "2016-09-15T13:47:39.829Z",
+                "updatedAt": "2018-03-02T20:54:17.260Z"
+            }
+        }
+    ]
+}
+```
+
+This endpoint allows authenticated users to load all layers belonging to multiple datasets in a single request. 
+
+> Return all layers associated with two datasets, that are associated with either `rw` or `prep` applications 
+
+```shell
+curl -X POST "https://api.resourcewatch.org/layer/find-by-ids" \
+-H "Authorization: Bearer <your-token>" \
+-H 'Content-Type: application/json' \
+-d '{
+	"ids": ["06c44f9a-aae7-401e-874c-de13b7764959", "125b181c-653a-4a27-8a5f-e507c5a7c530"],
+    "app" "rw,prep"
+}'
+```
+
+> Return all layers associated with two datasets, that are associated with both `rw` and `prep` applications simultaneously 
+
+```shell
+curl -X POST "https://api.resourcewatch.org/layer/find-by-ids" \
+-H "Authorization: Bearer <your-token>" \
+-H 'Content-Type: application/json' \
+-d '{
+	"ids": ["06c44f9a-aae7-401e-874c-de13b7764959", "125b181c-653a-4a27-8a5f-e507c5a7c530"],
+    "app" "rw@prep"
+}'
+```
+
+Besides the required `ids` array, your request body may optionally include a `app` string value if you'd like to filter the returned layers by their `application`:
+
+- Use a single value, like `rw`, if you want to show only layers that have `rw` as one of their applications. 
+- Use a comma separated list, like `rw,prep`, if you want to show only layers that have `rw` or `prep` as one of their applications.
+- Use a @ separated list, like `rw@prep`, if you want to show only layers that have both `rw` and `prep` as their applications.
+- None of the filters require exact matching - a layer that simultaneously contain the applications `rw`, `prep` and `gfw` would match all 3 filters above.
+
+#### Errors for creating a dataset
+
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | You are not authenticated.
+
+
 ### Pagination
 
 By default, layers are listed in pages of 10 datasets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
@@ -451,57 +620,87 @@ If you know the id or the `slug` of a dataset, then you can access it directly. 
 You can load related `user` and `vocabulary` data in the same request. See [this section](#include-related-entities135) for more details.
 
 
-## Create a Layer
+## Creating a layer
 
-To create a layer, you need to define all of the required fields in the request body. The fields that compose a layer are:
+> To create a layer, you need to provide at least the following details:
 
-Field             |                                                                         Description                                                                         |   Type |                                          Values | Required
------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------: | -----: | ----------------------------------------------: | -------:
-name              |                                                                      Name of the layer                                                                      |   Text |                                        Any Text |      Yes
-description       |                                                                 Description of the dataset                                                                  |   Text |                                        Any text |       No
-application       |                                                           Application to which the layer belongs                                                            |  Array | gfw, forest-atlas, rw, prep, aqueduct, data4sdg |      Yes
-layerConfig       | Custom configuration, [rw definition example](https://github.com/resource-watch/notebooks/blob/develop/ResourceWatch/Api_definition/layer_definition.ipynb) | Object |                                    Valid object |       No
-legendConfig      |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
-applicationConfig |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
-staticImageConfig |                                                                    Custom configuration                                                                     | Object |                                    Valid object |       No
-iso               |                                                               Isos to which the layer belongs                                                               |  Array |                                         BRA, ES |       No
-dataset           |                                                                     UuId of the dataset                                                                     |   Text |                                 Uuid of Dataset |       No
-protected         |                                            If it's a protected layer (not is possible to delete if it's true)                                               |   Boolean |                                 true-false |       No
-env         |                                            Environment of the Layer. Set to 'production' by default                                               |   String |                                 Valid string |       No
-
-It is possible to create a layer that has a different `env` property to its parent dataset.
-
-> To create a layer, you have to do a POST request with the following body:
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer" \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90/layer" \
+-H "Content-Type: application/json" \
 -H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
- '{
-    "application":[
-       "your", "apps"
+-d  \
+'{
+  "layer": {
+    "application": [
+      "rw"
     ],
-    "name":"Example layer",
-    "status": 1
+    "name": "Water stress",
+    "description": "water stress"
+  }
 }'
 ```
 
-> The following structure was previously supported but should now be considered deprecated:
+> Response:
 
-```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer" \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
- '{
-   "layer": {
-      "application":[
-         "your", "apps"
-      ],
-      "name":"Example layer",
-      "status": 1
-   }
-}'
+
+```json
+{
+    "data": {
+        "id": "bd8a36df-2e52-4b2d-b7be-a48bdcd7c769",
+        "type": "layer",
+        "attributes": {
+            "name": "Water stress",
+            "slug": "Water-stress_7",
+            "dataset": "7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90",
+            "description": "water stress",
+            "application": [
+                "rw"
+            ],
+            "iso": [],
+            "userId": "5dbadb06df2dc74d2ad054fb",
+            "default": false,
+            "protected": false,
+            "published": true,
+            "env": "production",
+            "layerConfig": {},
+            "legendConfig": {},
+            "interactionConfig": {},
+            "applicationConfig": {},
+            "staticImageConfig": {},
+            "createdAt": "2020-06-04T14:28:24.575Z",
+            "updatedAt": "2020-06-04T14:28:24.575Z"
+        }
+    }
+}
 ```
+
+In this section we'll guide you through the process of creating a layer in the RW API. Layer creation is available to all registered API users, and will allow you to store your own layer visualisation settings on the API, for reusing and sharing.
+
+Before creating a layer, there are a few things you must know and do:
+
+- In order to be able to create a layer, you need to be [authenticated](#authentication).
+- Depending on your user account's role, you may have permission to create a layer but not delete it afterwards.
+- The layers you create on the RW API will be publicly visible and available to other users.
+
+Creating a layer is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [layer reference](#layer-reference) section, but the minimum field list you must specify for all layers is:
+
+- name
+- description 
+- application
+
+The layer service was built to be very flexible, and not be restricted to specific layer rendering libraries or tools. This gives you the freedom to use virtually any rendering technology you want, but it also means you'll have to make additional decisions on how to structure your data into the different open format fields provided by a RW API layer. Further below we'll show you some examples of how existing applications use different rendering tools with the layer endpoints, to give you an idea on how you can structure your own data, and also as a way to help you get started creating your first layers for your own custom applications.
+
+#### Errors for creating a layer
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | `<field>`: `<field>` can not be empty | Your are missing a required field value.
+400            | - `<field>`: must be a `<restriction>` | The value provided for the mentioned field does not match the requirements.
+401            | Unauthorized   | You are not authenticated.
+403            | Forbidden      | You are trying to create a layer with one or more `application` values that are not associated with your user account. 
+404            | Dataset not found | The provided dataset id does not exist. 
+404            | Error: StatusCodeError: 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset not found\"}]} | The provided dataset exists but is not present on the [graph](#graph).
 
 ## Update a layer
 
@@ -568,7 +767,7 @@ dataset                 | String         | Yes                  |               
 slug                    | String         | Yes (autogenerated)  |                            | Slug of the layer. Auto generated on creation. Cannot be modified by users.  
 description             | String         | No                   |                            | User defined description of the layer.   
 application             | Array          | Yes                  |                            | Applications associated with this layer.                                   
-iso                     | Array          | Yes                  |                            | List of ISO3 codes of the countries that relate to the layer. If empty (or contains a single element: 'global') then the layer is a global layer.
+iso                     | Array          | No                   |                            | List of ISO3 codes of the countries that relate to the layer. If empty (or contains a single element: 'global') then the layer is a global layer.
 provider                | String         | No                   |                            | Layer provider. It typically identifies the source service for the data displayed in the layer.
 type                    | String         | No                   |                            | Layer type.
 userId                  | String         | Yes (autopopulated)  |                            | Id of the user who created the layer. Set automatically on creation. Cannot be modified by users.
