@@ -14,6 +14,8 @@ includes:
   - concept/intro
   - concept/dataset
   - concept/query
+  - concept/layer
+  - concept/widget
   - api/authentication
   - api/contact
   - api/collections
