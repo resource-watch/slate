@@ -1245,7 +1245,7 @@ Resets a dataset's `status` to `saved` and clears its errors. Keep in mind that 
 
 In order to recover a dataset, the user must be logged in and have the `ADMIN` role.
 
-#### Errors for recovering a dataset's cache
+#### Errors for recovering a dataset
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
