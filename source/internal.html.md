@@ -11,6 +11,7 @@ toc_footers:
 
 includes:
   - internal/dataset
+  - internal/layer
 
 logo: logo-rw.png
 
