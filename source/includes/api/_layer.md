@@ -631,13 +631,11 @@ curl -X POST "https://api.resourcewatch.org/v1/dataset/7fa6ec77-5ab0-43f4-9a4c-a
 -H "Authorization: Bearer <your-token>" \
 -d  \
 '{
-  "layer": {
     "application": [
       "rw"
     ],
     "name": "Water stress",
     "description": "water stress"
-  }
 }'
 ```
 
@@ -689,6 +687,8 @@ Creating a layer is done using a POST request and passing the relevant data as b
 - description 
 - application
 
+There's also a dependency on a dataset id, as it is required to build the POST URL. As noted on the [layer concept](#layer) documentation, a layer is meant to hold the rendering details of a layer, but not the actual data - that should be part of the dataset. While this is not enforced - it's up to your rendering tool to load the data, and it can do it from a RW API dataset of from anywhere else - it's common and best practice to have the data for a layer be sourced from the dataset that's associated with it.
+
 The layer service was built to be very flexible, and not be restricted to specific layer rendering libraries or tools. This gives you the freedom to use virtually any rendering technology you want, but it also means you'll have to make additional decisions on how to structure your data into the different open format fields provided by a RW API layer. Further below we'll show you some examples of how existing applications use different rendering tools with the layer endpoints, to give you an idea on how you can structure your own data, and also as a way to help you get started creating your first layers for your own custom applications.
 
 #### Errors for creating a layer
@@ -702,39 +702,40 @@ Error code     | Error message  | Description
 404            | Dataset not found | The provided dataset id does not exist. 
 404            | Error: StatusCodeError: 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset not found\"}]} | The provided dataset exists but is not present on the [graph](#graph).
 
-## Update a layer
+## Updating a layer
 
-To update a layer, you need to define all of the required fields in the request body. The fields that compose a layer are:
-
-Field             |              Description               |   Type |                                          Values | Required
------------------ | :------------------------------------: | -----: | ----------------------------------------------: | -------:
-name              |           Name of the layer            |   Text |                                        Any Text |      Yes
-description       |       Description of the dataset       |   Text |                                        Any text |       No
-application       | Application to which the layer belongs |  Array | gfw, forest-atlas, rw, prep, aqueduct, data4sdg |      Yes
-layerConfig       |          Custom configuration          | Object |                                    Valid object |       No
-legendConfig      |          Custom configuration          | Object |                                    Valid object |       No
-applicationConfig |          Custom configuration          | Object |                                    Valid object |       No
-staticImageConfig |          Custom configuration          | Object |                                    Valid object |       No
-iso               |  The isos to which the layer belongs   |  Array |                                         BRA, ES |       No
-dataset           |          UuId of the dataset           |   Text |                                 Uuid of Dataset |       No
-env               | The environment to which the layer belongs |   Text |                                    Any Text |       No
-
-> To create a layer, you have to do a POST request with the following body:
+> Example PATCH request that updates a layer's name:
 
 ```shell
 curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>" \
 -H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
- '{
-   "layer": {
-      "application":[
-         "your", "apps"
-      ],
-      "name":"New Example layer Name",
-      "layerConfig": {}
-   }
+-H "Content-Type: application/json" -d \
+'{
+  "name":"foo"
 }'
 ```
+
+The update layer endpoint allows you to modify the details of an existing layer. As noted on the [layer concept](#layer) documentation, the layer object stores the details of how layer is meant to be rendered, but does not contain the actual data. As such, if you are looking to update the data that's being displayed on your map, this is probably not the endpoint you're looking for - you may want to [update your dataset](#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
+
+Unless specified otherwise in their description, all the fields present in the [layer reference](#layer-reference) section can be updated using this endpoint. When passing new values for Object type fields, the new value will fully overwrite the previous one. It’s up to you, as an API user, to build any merging logic into your application.
+
+To perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the layer
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the layer's owner (through the `userId` field of the layer)
+
+#### Errors for updating a layer
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | - `<field>`: must be a `<restriction>` | The value provided for the mentioned field does not match the requirements.
+401            | Unauthorized   | You need to be logged in to be able to update a layer.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the layer's owner (through the `userId` field of the layer).
+403            | Forbidden      | You are trying to update a layer with one or more `application` values that are not associated with your user account. 
+404            | Layer with id <id> doesn't exist   | A layer with the provided id does not exist.
+404            | Dataset not found   | A dataset with the provided id does not exist.
 
 ## Delete a Layer
 
