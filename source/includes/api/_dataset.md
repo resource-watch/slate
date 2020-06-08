@@ -1139,6 +1139,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id> \
 -H "Content-Type: application/json"
 ```
 
+#### Errors for deleting a dataset
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
