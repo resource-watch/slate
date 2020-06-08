@@ -84,7 +84,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer"
 }
 ```
 
-This endpoint allows you to list existing layers and their properties. The result is a paginated list of 10 layers, followed by metadata on total number of layers and pages, as well as useful pagination links. In the sections below, we’ll explore how you can customize this endpoint call to match your needs.   
+This endpoint allows you to list existing layers and their properties. The result is a paginated list of 10 layers, followed by metadata on total number of layers and pages, as well as useful pagination links. By default, only layers with `env` value `production` are displayed. In the sections below, we’ll explore how you can customize this endpoint call to match your needs.
 
 
 ### Getting all layers for a dataset
@@ -107,7 +107,7 @@ curl -X POST "https://api.resourcewatch.org/layer/find-by-ids" \
 -H "Authorization: Bearer <your-token>" \
 -H 'Content-Type: application/json' \
 -d '{
-	"ids": ["06c44f9a-aae7-401e-874c-de13b7764959", "125b181c-653a-4a27-8a5f-e507c5a7c530"]
+	"ids": ["<dataset 1 id>", "<dataset 2 id>"]
 }'
 ```
 
@@ -235,7 +235,7 @@ curl -X POST "https://api.resourcewatch.org/layer/find-by-ids" \
 -H "Authorization: Bearer <your-token>" \
 -H 'Content-Type: application/json' \
 -d '{
-	"ids": ["06c44f9a-aae7-401e-874c-de13b7764959", "125b181c-653a-4a27-8a5f-e507c5a7c530"],
+	"ids": ["<dataset 1 id>", "<dataset 2 id>"],
     "app" "rw,prep"
 }'
 ```
@@ -247,7 +247,7 @@ curl -X POST "https://api.resourcewatch.org/layer/find-by-ids" \
 -H "Authorization: Bearer <your-token>" \
 -H 'Content-Type: application/json' \
 -d '{
-	"ids": ["06c44f9a-aae7-401e-874c-de13b7764959", "125b181c-653a-4a27-8a5f-e507c5a7c530"],
+	"ids": ["<dataset 1 id>", "<dataset 2 id>"],
     "app" "rw@prep"
 }'
 ```
@@ -544,15 +544,15 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?includes=user,vocabulary"
 > Getting a layer by id:
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553"
-curl -X GET "https://api.resourcewatch.org/v1/layer/e5c3e7c5-19ae-4ca0-a461-71f1f67aa553"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>"
+curl -X GET "https://api.resourcewatch.org/v1/layer/<layer_id>"
 ```
 
 > Getting a layer by slug:
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/11de2bc1-368b-42ed-a207-aaff8ece752b/layer/total-co2-emissions-by-year"
-curl -X GET "https://api.resourcewatch.org/v1/layer/total-co2-emissions-by-year"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_slug>"
+curl -X GET "https://api.resourcewatch.org/v1/layer/<layer_slug>"
 ```
 
 > Example response:
@@ -626,7 +626,7 @@ You can load related `user` and `vocabulary` data in the same request. See [this
 
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90/layer" \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer" \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <your-token>" \
 -d  \
@@ -744,7 +744,7 @@ Error code     | Error message  | Description
 > Example DELETE request that deletes a layer:
 
 ```shell
-curl -X DELETE "https://api.resourcewatch.org/v1/dataset/7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90/layer/bd8a36df-2e52-4b2d-b7be-a48bdcd7c769" \
+curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
