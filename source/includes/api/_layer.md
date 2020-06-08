@@ -737,22 +737,73 @@ Error code     | Error message  | Description
 404            | Layer with id <id> doesn't exist   | A layer with the provided id does not exist.
 404            | Dataset not found   | A dataset with the provided id does not exist.
 
-## Delete a Layer
+## Deleting a layer
 
-In order to perform this operation, the following conditions must be met:
+> Example DELETE request that deletes a layer:
+
+```shell
+curl -X DELETE "https://api.resourcewatch.org/v1/dataset/7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90/layer/bd8a36df-2e52-4b2d-b7be-a48bdcd7c769" \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+> Response:
+
+```json
+{
+    "data": {
+        "id": "bd8a36df-2e52-4b2d-b7be-a48bdcd7c769",
+        "type": "layer",
+        "attributes": {
+            "name": "Water stress",
+            "slug": "Water-stress_7",
+            "dataset": "7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90",
+            "description": "water stress",
+            "application": [
+                "rw"
+            ],
+            "iso": [],
+            "userId": "5dbadb06df2dc74d2ad054fb",
+            "default": false,
+            "protected": false,
+            "published": true,
+            "env": "production",
+            "layerConfig": {},
+            "legendConfig": {},
+            "interactionConfig": {},
+            "applicationConfig": {},
+            "staticImageConfig": {},
+            "createdAt": "2020-06-04T14:28:24.575Z",
+            "updatedAt": "2020-06-04T14:28:24.575Z"
+        }
+    }
+}
+```
+
+
+Use this endpoint if you'd like to delete a layer from the RW API. As a layer object does not store the actual data being displayed, this will only delete the layer settings, but the actual data will continue to be available at its source.
+
+Besides deleting the layer itself, this endpoint also deletes graph vocabularies and metadata related to the layer itself. These delete operations are issued after the layer itself is deleted. The process is not atomic, and the output of the API request is based solely on the result of the deletion of the layer itself. For example, is the metadata service is temporarily unavailable when you issue your delete layer request, the layer itself will be deleted, but the associated metadata will continue to exist. The response will not reflect the failure to delete metadata in any way.
+
+In order to delete a layer, the following conditions must be met:
 
 - the layer's `protected` property must be set to `false`.
-- the user must be logged in and belong to the same application as the layer
+- the user must be logged in and belong to the same application as the layer.
 - the user must match one of the following:
   - have role `ADMIN`
   - have role `MANAGER` and be the layer's owner (through the `userId` field of the layer)
 
 
-```shell
-curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>" \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"
-```
+#### Errors for deleting a layer
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | Layer is protected | You are attempting to delete a layer that has `protected` set to prevent deletion.
+401            | Unauthorized   | You need to be logged in to be able to delete a layer.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the layer's owner (through the `userId` field of the layer)
+404            | Dataset not found | A dataset with the provided id does not exist.
+404            | Layer with id <id> doesn't exist   | A layer with the provided id does not exist.
+
 
 ## Layer reference
 
