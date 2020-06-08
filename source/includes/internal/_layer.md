@@ -12,7 +12,7 @@ curl -X PATCH "https://api.resourcewatch.org/v1/layer/change-environment/<datase
 
 This endpoints updates the `env` value of all layers associated with the given dataset id. It's only available to other microservices, and cannot be called directly by an API user. Its currently used when a dataset's `env` value is updated.
 
-The update process is not atomic.
+The update process is not atomic. A successful request will return a 204 `No content` response.
 
 #### Errors for updating the env for all layers for a dataset
 
