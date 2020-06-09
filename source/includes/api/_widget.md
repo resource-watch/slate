@@ -2,56 +2,16 @@
 
 ## What is a widget?
 
-A widget is a graphic representation of a Dataset's data. Most of them are defined with [Vega grammar](#what-is-vega) but we can also find other custom definitions. Here are the [RW widgets definitions](https://github.com/resource-watch/notebooks/blob/develop/ResourceWatch/Api_definition/widget_definition.ipynb).
-
-Widgets contain the following fields:
-
-Field        |                         Description                          |    Type
------------- | :----------------------------------------------------------: | ------:
-userId       |                       Id of the owner                        |    Text
-application  |           Application to which the dataset belongs           |   Array
-slug         |               Unique identifier of the widget                |    Text
-name         |                      Name of the widget                      |     Url
-description  |                  Description of the widget                   |   Array
-source       |                Publisher of the original code                |    Text
-sourceUrl    |                    Link to publisher page                    |     Url
-layerId      |             UuId of the relationship with layer              |  String
-dataset      |         UuId of the dataset that the widget belongs          |    Text
-authors      |                     Name of the authors                      |    Text
-queryUrl     |             Url with the data of the chart shows             |    Text
-widgetConfig |                     Custom configuration                     |  Object
-template     |   If it's a template (base schema to create other widgets)   | Boolean
-default      |   If it's a default widget for the dataset that it belongs   | Boolean
-protected    |  If it's a protected widget (not is possible to delete if it's true)   | Boolean
-published    |                   If it's available to use                   |    Text
-freeze       |                   If the data is frozen                      |    Boolean
-verified     |                If it's verified by other user                |    Text
-env          |  Environment can be one of `production` or `preproduction`. _By default, it's set to "production" unless specified otherwise on creation/update_   |    Text
-thumbnailUrl |             Url of the widget's thumbnail, if one exists     |    Text
-createdAt    |             Date in which the widget was created             |    Date
-updatedAt    |             Date in which the widget was last updated        |    Date
-
-
-### What is Vega?
-
-Vega is a visualization grammar; a declarative format for creating, saving and sharing interactive visualization designs. This wiki contains documentation and learning materials for getting up and running with Vega. [More info](https://github.com/vega/vega/wiki)
+In a nutshell, a RW API widget is a toolset to help you render your data in a visually more appealing way. The [widget concept documentation](#widget) will give you a more detailed description of this, and we encourage you to read it before proceeding. We also recommend you take a look at our section about [Vega](#widget-configuration-using-vega-grammar) if you plan on reusing existing widgets or uploading widgets that are reusable by other users. The RW API does not require you to use Vega, but we highly recommend that you do, as it's the technology used by many of the widgets you'll find on the RW API.
 
 
 ## Getting all widgets
 
-To obtain all widgets:
+> Getting a list of widgets
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget"
 ```
-
-<aside class="success">
-Remember — the response is jsonapi format
-</aside>
-
-<aside class="success">
-Remember — <strong>the resulting list is filtered by env=production</strong> unless another env is explicitly provided as a query param. <i>A list of environments can also be provided such as e.g. "env=production,preproduction"</i>.
-</aside>
 
 > Example response:
 
@@ -59,32 +19,36 @@ Remember — <strong>the resulting list is filtered by env=production</strong> u
 {
    "data":[
       {
-         "id":"8f67fadd-d8df-4a28-82dd-a22a337d71b9",
-         "type":"widget",
-         "attributes":{
-            "userId":"5858f37140621f11066fb2f7",
-            "application":[
-               "aqueduct"
-            ],
-            "slug":"percentage-of-country-s-population-is-at-high-risk-of-hunger",
-            "name":"Percentage of country's population at high risk of hunger.",
-            "description":"",
-            "source":"",
-            "sourceUrl":"",
-            "layerId":null,
-            "dataset":"f1d24950-c764-4f90-950a-4541f798eb95",
-            "authors":"",
-            "queryUrl":"query/f1d24950-c764-4f90-950a-4541f798eb95?sql=select * from crops",
-            "widgetConfig":{
-                ...
-            },
-            "template":false,
-            "default":true,
-            "published":true,
-            "freeze": false,
-            "verified":false
+         "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+         "type": "widget",
+         "attributes": {
+             "name": "Example Widget",
+             "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+             "slug": "example-widget",
+             "userId": "5820ad9469a0287982f4cd18",
+             "description": null,
+             "source": null,
+             "sourceUrl": null,
+             "authors": null,
+             "application": [
+                 "rw"
+             ],
+             "verified": false,
+             "default": false,
+             "protected": false,
+             "defaultEditableWidget": false,
+             "published": true,
+             "freeze": false,
+             "env": "production",
+             "queryUrl": null,
+             "widgetConfig": "{}",
+             "template": false,
+             "layerId": null,
+             "createdAt": "2017-02-08T15:30:34.505Z",
+             "updatedAt": "2017-02-08T15:30:34.505Z"
          }
-      }
+      },
+      {...}
    ],
    "links":{
       "first":"https://api.resourcewatch.org/v1/widget?page%5Bnumber%5D=1",
@@ -101,149 +65,174 @@ Remember — <strong>the resulting list is filtered by env=production</strong> u
 }
 ```
 
-Available filters parameters:
+This endpoint allows you to list existing widgets and their properties. The result is a paginated list of 10 widgets, followed by metadata on total number of widgets and pages, as well as useful pagination links. By default, only widgets with `env` value `production` are displayed. In the sections below, we’ll explore how you can customize this endpoint call to match your needs.
 
-Field     |                         Description                          |    Type
---------- | :----------------------------------------------------------: | ------:
-name      |    Filter the widgets whose name contains the filter text    |    Text
-dataset   |              Filter the widgets by dataset uuid              |    Text
-sort      |          Sort json response by specific attributes           |    Text
-published |       Filter widgets on published status (true, false)       | Boolean
-freeze    |       Filter widgets on freeze status (true, false)          | Boolean
-verified  |           Filter by verified status (true, false)            | Boolean
-template  |           Filter by template status (true, false)            | Boolean
-default   |            Filter by default status (true, false)            | Boolean
-app       |       Filter widgets on application (prep, gfw, etc..)       |    Text
-env       |   Environment can be one of `production` or `preproduction`  |    Text
-userId    |   Filter widgets created by a specific user                  |    Text
-favourite |   Filter favourited widgets of an user                       | Boolean
-collection |  Filter widgets based on an user collection                 |    Text
-user.role | The role of the user who created the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
 
-<aside class="notice">
-   Using `userId` filter will return widgets created/cloned by the user. This filter is not compatible with `favourite` or `collection`.
-   If you want to fetch favourited widgets, or specific ones from a collection, do not include the `userId` param.
-</aside>
+### Getting all widgets for a dataset
 
-> Return the widgets filtered whose name contains glad
+> Return the widgets associated with a dataset
+
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?name=glad"
-```
-
-> Return the widgets filtered by dataset
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?dataset=d02df2f6-d80c-4274-bb6f-f062061655c4"
-curl -X GET "https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget""
-```
-
-> Sort by name
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?sort=name"
-```
-
-> Filter widgets by published status
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?published=false"
-```
-
-> Filter widgets by verified status
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?verified=false"
-```
-
-> Return the widgets filtered by template
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?template=true"
-```
-
-> Filter widgets by default option
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?default=true"
-```
-
-> Return widgets whose applications contain rw
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?app=rw"
-```
-
-### Getting all widgets for a specific dataset
-
-To obtain the widget:
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3"
-curl -X GET "https://api.resourcewatch.org/v1/widget/20ec7861-5251-40a7-9503-5ee3686a66a3"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget"
 ```
 
 > Example response:
 
 ```json
 {
-  "data": {
-    "id": "20ec7861-5251-40a7-9503-5ee3686a66a3",
-    "type": "widget",
-    "attributes": {
-      "userId": "57a0693b49c36b265ba3bec8",
-      "application": [
-        "rw"
-      ],
-      "slug": "estimated-c02-emission",
-      "name": "Estimated C02 emission",
-      "description": null,
-      "source": "",
-      "sourceUrl": null,
-      "layerId": null,
-      "dataset": "d02df2f6-d80c-4274-bb6f-f062061655c4",
-      "authors": null,
-      "queryUrl": "query/d02df2f6-d80c-4274-bb6f-f062061655c4?sql=select country, rank, iso3, total from estimated_co2_emission_filtered",
-      "widgetConfig": {
-        "data": [ ... ],
-        "marks": [ ... ],
-        "scales": [ ... ],
-        "padding": {
-          "top": 40,
-          "left": 20,
-          "right": 20,
-          "bottom": 0
-        }
-      },
-      "template": false,
-      "default": false,
-      "published": true,
-      "verified": false
+    "data": [
+        {
+            "id": "73f00267-fe34-42aa-a611-13b102f38d75",
+            "type": "widget",
+            "attributes": {
+                "name": "Precipitation Change in Puget Sound",
+                "dataset": "06c44f9a-aae7-401e-874c-de13b7764959",
+                "slug": "precipitation-change",
+                "userId": "58333dcfd9f39b189ca44c75",
+                "description": "NOAA nCLIMDIV Precipitation: Historical Precipitation",
+                "source": null,
+                "sourceUrl": null,
+                "authors": null,
+                "application": [
+                    "prep"
+                ],
+                "verified": false,
+                "default": true,
+                "protected": false,
+                "defaultEditableWidget": false,
+                "published": true,
+                "freeze": false,
+                "env": "production",
+                "queryUrl": "query/06c44f9a-aae7-401e-874c-de13b7764959?sql=select annual as x, year as y from index_06c44f9aaae7401e874cde13b7764959%20order%20by%20year%20asc",
+                "widgetConfig": {...},
+                "template": false,
+                "layerId": null,
+                "createdAt": "2016-08-03T16:17:06.863Z",
+                "updatedAt": "2017-03-21T16:07:57.631Z"
+            }
+        },
+        {...}
+    ],
+    "links": {
+        "self": "http://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959/widget?page[number]=1&page[size]=10",
+        "first": "http://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959/widget?page[number]=1&page[size]=10",
+        "last": "http://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959/widget?page[number]=2&page[size]=10",
+        "prev": "http://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959/widget?page[number]=1&page[size]=10",
+        "next": "http://api.resourcewatch.org/v1/dataset/06c44f9a-aae7-401e-874c-de13b7764959/widget?page[number]=2&page[size]=10"
+    },
+    "meta": {
+        "total-pages": 2,
+        "total-items": 18,
+        "size": 10
     }
-  },
-  "meta": {
-    "status": "saved",
-    "published": true,
-    "verified": false,
-    "updated_at": "2017-01-17T17:50:45.655Z",
-    "created_at": "2016-06-06T15:12:38.749Z"
-  }
 }
 ```
 
+When handling widgets, it's common to want to limit results to those widgets associated with a given dataset. Besides the [filters](#filters135) covered below, there's an additional convenience endpoint to get the widgets associated with a dataset, as shown in this example. 
 
-### Pagination params
+### Getting all widgets for multiple datasets
 
-Field        |       Description        |   Type
------------- | :----------------------: | -----:
-page[size]   | Number elements per page. There's a limit of 100 to the size of each page, which is not being enforced at the moment, but queries for larger page sizes are not supported. This means future requests may fail if not respecting the page size limit. | Number
-page[number] |      Number of page      | Number
-
-> Return the widgets from page 2, with 5 elements per page
+> Return all widgets associated with two datasets
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2"
+curl -X POST "https://api.resourcewatch.org/widget/find-by-ids" \
+-H "Authorization: Bearer <your-token>" \
+-H 'Content-Type: application/json' \
+-d '{
+	"ids": ["<dataset 1 id>", "<dataset 2 id>"]
+}'
 ```
+
+> Example response:
+
+```json
+{
+    "data": [
+        {
+            "id": "73f00267-fe34-42aa-a611-13b102f38d75",
+            "type": "widget",
+            "attributes": {
+                "name": "Precipitation Change in Puget Sound",
+                "dataset": "06c44f9a-aae7-401e-874c-de13b7764959",
+                "slug": "precipitation-change",
+                "userId": "58333dcfd9f39b189ca44c75",
+                "description": "NOAA nCLIMDIV Precipitation: Historical Precipitation",
+                "source": null,
+                "sourceUrl": null,
+                "authors": null,
+                "application": [
+                    "prep"
+                ],
+                "verified": false,
+                "default": true,
+                "protected": false,
+                "defaultEditableWidget": false,
+                "published": true,
+                "freeze": false,
+                "env": "production",
+                "queryUrl": "query/06c44f9a-aae7-401e-874c-de13b7764959?sql=select annual as x, year as y from index_06c44f9aaae7401e874cde13b7764959%20order%20by%20year%20asc",
+                "widgetConfig": {...}
+            }
+        },
+        {...}
+    ]
+}
+```
+
+This endpoint allows authenticated users to load all widgets belonging to multiple datasets in a single request. 
+
+> Return all widgets associated with two datasets, that are associated with either `rw` or `prep` applications 
+
+```shell
+curl -X POST "https://api.resourcewatch.org/widget/find-by-ids" \
+-H "Authorization: Bearer <your-token>" \
+-H 'Content-Type: application/json' \
+-d '{
+	"ids": ["<dataset 1 id>", "<dataset 2 id>"],
+    "app" "rw,prep"
+}'
+```
+
+> Return all widgets associated with two datasets, that are associated with both `rw` and `prep` applications simultaneously 
+
+```shell
+curl -X POST "https://api.resourcewatch.org/widget/find-by-ids" \
+-H "Authorization: Bearer <your-token>" \
+-H 'Content-Type: application/json' \
+-d '{
+	"ids": ["<dataset 1 id>", "<dataset 2 id>"],
+    "app" "rw@prep"
+}'
+```
+
+Besides the required `ids` array, your request body may optionally include a `app` string value if you'd like to filter the returned widgets by their `application`:
+
+- Use a single value, like `rw`, if you want to show only widgets that have `rw` as one of their applications. 
+- Use a comma separated list, like `rw,prep`, if you want to show only widgets that have `rw` or `prep` as one of their applications.
+- Use a @ separated list, like `rw@prep`, if you want to show only widgets that have both `rw` and `prep` as their applications.
+- None of the filters require exact matching - a widget that simultaneously contain the applications `rw`, `prep` and `gfw` would match all 3 filters above.
+
+Please note that, unlike [getting all widgets](#getting-all-widgets) or [getting all widgets for a dataset](#getting-all-widgets-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination135), [filtering](#filters136) or [sorting](#sorting137) arguments described in their respective sections.
+
+
+### Pagination
+
+By default, widgets are listed in pages of 10 widgets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
+
+> Custom pagination: load page 2 using 25 results per page
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget?page[number]=2&page[size]=25"
+```
+
+Field        |         Description          |   Type |   Default
+------------ | :--------------------------: | -----: | ----------:
+page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 10
+page[number] |       The page number        | Number | 1
+
+### Filters
+
 
 ### Sorting
 
