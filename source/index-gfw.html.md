@@ -21,8 +21,8 @@ includes:
   - api/collections
   - api/dataset
   - api/query
-  - api/widget
   - api/layer
+  - api/widget
   - api/fields
   - api/metadata
   - api/vocabulary
