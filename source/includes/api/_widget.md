@@ -174,6 +174,64 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?default=true"
 curl -X GET "https://api.resourcewatch.org/v1/widget?app=rw"
 ```
 
+### Getting all widgets for a specific dataset
+
+To obtain the widget:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3"
+curl -X GET "https://api.resourcewatch.org/v1/widget/20ec7861-5251-40a7-9503-5ee3686a66a3"
+```
+
+> Example response:
+
+```json
+{
+  "data": {
+    "id": "20ec7861-5251-40a7-9503-5ee3686a66a3",
+    "type": "widget",
+    "attributes": {
+      "userId": "57a0693b49c36b265ba3bec8",
+      "application": [
+        "rw"
+      ],
+      "slug": "estimated-c02-emission",
+      "name": "Estimated C02 emission",
+      "description": null,
+      "source": "",
+      "sourceUrl": null,
+      "layerId": null,
+      "dataset": "d02df2f6-d80c-4274-bb6f-f062061655c4",
+      "authors": null,
+      "queryUrl": "query/d02df2f6-d80c-4274-bb6f-f062061655c4?sql=select country, rank, iso3, total from estimated_co2_emission_filtered",
+      "widgetConfig": {
+        "data": [ ... ],
+        "marks": [ ... ],
+        "scales": [ ... ],
+        "padding": {
+          "top": 40,
+          "left": 20,
+          "right": 20,
+          "bottom": 0
+        }
+      },
+      "template": false,
+      "default": false,
+      "published": true,
+      "verified": false
+    }
+  },
+  "meta": {
+    "status": "saved",
+    "published": true,
+    "verified": false,
+    "updated_at": "2017-01-17T17:50:45.655Z",
+    "created_at": "2016-06-06T15:12:38.749Z"
+  }
+}
+```
+
+
 ### Pagination params
 
 Field        |       Description        |   Type
@@ -628,65 +686,6 @@ You can request multiple related entities in a single request using commas to se
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata,user,vocabulary"
 ```
-
-
-## Getting all widgets for a specific dataset
-
-To obtain the widget:
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3"
-curl -X GET "https://api.resourcewatch.org/v1/widget/20ec7861-5251-40a7-9503-5ee3686a66a3"
-```
-
-> Example response:
-
-```json
-{
-  "data": {
-    "id": "20ec7861-5251-40a7-9503-5ee3686a66a3",
-    "type": "widget",
-    "attributes": {
-      "userId": "57a0693b49c36b265ba3bec8",
-      "application": [
-        "rw"
-      ],
-      "slug": "estimated-c02-emission",
-      "name": "Estimated C02 emission",
-      "description": null,
-      "source": "",
-      "sourceUrl": null,
-      "layerId": null,
-      "dataset": "d02df2f6-d80c-4274-bb6f-f062061655c4",
-      "authors": null,
-      "queryUrl": "query/d02df2f6-d80c-4274-bb6f-f062061655c4?sql=select country, rank, iso3, total from estimated_co2_emission_filtered",
-      "widgetConfig": {
-        "data": [ ... ],
-        "marks": [ ... ],
-        "scales": [ ... ],
-        "padding": {
-          "top": 40,
-          "left": 20,
-          "right": 20,
-          "bottom": 0
-        }
-      },
-      "template": false,
-      "default": false,
-      "published": true,
-      "verified": false
-    }
-  },
-  "meta": {
-    "status": "saved",
-    "published": true,
-    "verified": false,
-    "updated_at": "2017-01-17T17:50:45.655Z",
-    "created_at": "2016-06-06T15:12:38.749Z"
-  }
-}
-```
-
 
 ## Creating a widget
 
