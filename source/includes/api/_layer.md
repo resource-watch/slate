@@ -92,7 +92,7 @@ This endpoint allows you to list existing layers and their properties. The resul
 > Return the layers associated with a dataset
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset id>/layer"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer"
 ```
 
 When handling layers, it's common to want to limit results to those layers associated with a given dataset. Besides the [filters](#filters132) covered below, there's an additional convenience endpoint to get the layers associated with a dataset, as shown in this example. 
@@ -259,17 +259,12 @@ Besides the required `ids` array, your request body may optionally include a `ap
 - Use a @ separated list, like `rw@prep`, if you want to show only layers that have both `rw` and `prep` as their applications.
 - None of the filters require exact matching - a layer that simultaneously contain the applications `rw`, `prep` and `gfw` would match all 3 filters above.
 
-#### Errors for creating a dataset
-
-
-Error code     | Error message  | Description
--------------- | -------------- | --------------
-401            | Unauthorized   | You are not authenticated.
-
+Please note that, unlike [getting all layers](#getting-all-layers) or [getting all layers for a dataset](#getting-all-layers-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination136), [filtering](#filters137) or [sorting](#sorting138) arguments described in their respective sections.
+ 
 
 ### Pagination
 
-By default, layers are listed in pages of 10 datasets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
+By default, layers are listed in pages of 10 layers each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
 
 > Custom pagination: load page 2 using 25 results per page
 
