@@ -1,6 +1,6 @@
 # Widget
 
-## What is a Widget?
+## What is a widget?
 
 A widget is a graphic representation of a Dataset's data. Most of them are defined with [Vega grammar](#what-is-vega) but we can also find other custom definitions. Here are the [RW widgets definitions](https://github.com/resource-watch/notebooks/blob/develop/ResourceWatch/Api_definition/widget_definition.ipynb).
 
@@ -36,244 +36,18 @@ updatedAt    |             Date in which the widget was last updated        |   
 
 Vega is a visualization grammar; a declarative format for creating, saving and sharing interactive visualization designs. This wiki contains documentation and learning materials for getting up and running with Vega. [More info](https://github.com/vega/vega/wiki)
 
-## How obtain a single widget
 
-```shell
-curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943
-```
-
-> Example response:
-
-```json
-{
-    "data": {
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example Carto Dataset6",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z"
-        }
-    }
-}
-```
-
-### Customize the query url of a widget
-
-The `queryUrl` query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the `queryUrl` will be pass to the microservice.
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl=/v1/query?sql=Select%20*%20from%20data&geostore=ungeostore
-```
-
-
-### Include related entities
-
-When loading widget data, you can optionally pass an `includes` query argument to load additional data.
-
-#### Vocabulary
-
-Loads related vocabularies. If none are found, an empty array is returned.
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=vocabulary
-```
-
-> Example response:
-
-```json
-{
-    "data": {
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example Carto Dataset6",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z",
-            "vocabulary": []
-        }
-    }
-}
-```
-
-#### User
-
-Loads the name and email address of the author of the widget. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
-
-If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=user
-```
-
-> Example response:
-
-```json
-{
-    "data": {
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example Carto Dataset6",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z",
-            "user": {
-              "name": "John Sample",
-              "email": "john.sample@vizzuality.com"
-            }
-        }
-    }
-}
-```
-
-#### Metadata
-
-Loads the metadata available for the widget. If none are found, an empty array is returned.
-
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata
-```
-
-> Example response:
-
-```json
-{
-    "data": {
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example Carto Dataset6",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z",
-            "metadata": [
-              {
-                "id": "5aeb1c74a096b50010f3843f",
-                "type": "metadata",
-                "attributes": {
-                  "dataset": "86777822-d995-49cd-b9c3-d4ea4f82c0a3",
-                  "application": "rw",
-                  "resource": {
-                    "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-                    "type": "widget"
-                  },
-                  "language": "en",
-                  "info": {
-                    "caption": "t",
-                    "widgetLinks": []
-                  },
-                  "createdAt": "2018-05-03T14:28:04.482Z",
-                  "updatedAt": "2018-06-07T11:30:40.054Z",
-                  "status": "published"
-                }
-              }
-            ]
-          }
-        }
-    }
-}
-```
-
-#### Requesting multiple additional entities
-
-You can request multiple related entities in a single request using commas to separate multiple keywords
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata,user,vocabulary
-```
-
-
-## How to obtain all widgets
+## Getting all widgets
 
 To obtain all widgets:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget
+curl -X GET "https://api.resourcewatch.org/v1/widget"
 ```
+
+<aside class="success">
+Remember — the response is jsonapi format
+</aside>
 
 <aside class="success">
 Remember — <strong>the resulting list is filtered by env=production</strong> unless another env is explicitly provided as a query param. <i>A list of environments can also be provided such as e.g. "env=production,preproduction"</i>.
@@ -354,50 +128,50 @@ user.role | The role of the user who created the layer. If the requesting user d
 > Return the widgets filtered whose name contains glad
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?name=glad
+curl -X GET "https://api.resourcewatch.org/v1/widget?name=glad"
 ```
 
 > Return the widgets filtered by dataset
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?dataset=d02df2f6-d80c-4274-bb6f-f062061655c4
-curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget
+curl -X GET "https://api.resourcewatch.org/v1/widget?dataset=d02df2f6-d80c-4274-bb6f-f062061655c4"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget""
 ```
 
 > Sort by name
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?sort=name
+curl -X GET "https://api.resourcewatch.org/v1/widget?sort=name"
 ```
 
 > Filter widgets by published status
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?published=false
+curl -X GET "https://api.resourcewatch.org/v1/widget?published=false"
 ```
 
 > Filter widgets by verified status
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?verified=false
+curl -X GET "https://api.resourcewatch.org/v1/widget?verified=false"
 ```
 
 > Return the widgets filtered by template
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?template=true
+curl -X GET "https://api.resourcewatch.org/v1/widget?template=true"
 ```
 
 > Filter widgets by default option
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?default=true
+curl -X GET "https://api.resourcewatch.org/v1/widget?default=true"
 ```
 
 > Return widgets whose applications contain rw
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?app=rw
+curl -X GET "https://api.resourcewatch.org/v1/widget?app=rw"
 ```
 
 ### Pagination params
@@ -410,7 +184,7 @@ page[number] |      Number of page      | Number
 > Return the widgets from page 2, with 5 elements per page
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2
+curl -X GET "https://api.resourcewatch.org/v1/widget?page[size]=5&page[number]=2"
 ```
 
 ### Sorting
@@ -422,7 +196,7 @@ Sorting by nested fields is not supported at the moment.
 > Sorting widgets
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?sort=name
+curl -X GET "https://api.resourcewatch.org/v1/widget?sort=name"
 ```
 
 Multiple sorting criteria can be used, separating them by commas.
@@ -431,21 +205,21 @@ Multiple sorting criteria can be used, separating them by commas.
 > Sorting widgets by multiple criteria
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?sort=name,slug
+curl -X GET "https://api.resourcewatch.org/v1/widget?sort=name,slug"
 ```
 
-You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
+You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
 
 > Explicit order of sorting
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?sort=-name,+slug
+curl -X GET "https://api.resourcewatch.org/v1/widget?sort=-name,+slug"
 ```
 
 > Sorting widgets by the role of the user who owns the widget
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?sort=user.role
+curl -X GET "https://api.resourcewatch.org/v1/widget?sort=user.role"
 ```
 
 ### Include related entities
@@ -457,7 +231,7 @@ When loading widget data, you can optionally pass an `includes` query argument t
 Loads related vocabularies. If none are found, an empty array is returned.
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?includes=vocabulary
+curl -X GET "https://api.resourcewatch.org/v1/widget?includes=vocabulary"
 ```
 
 > Example response:
@@ -503,7 +277,7 @@ curl -X GET https://api.resourcewatch.org/v1/widget?includes=vocabulary
 Loads the name and email address of the author of the widget. If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?includes=user
+curl -X GET "https://api.resourcewatch.org/v1/widget?includes=user"
 ```
 
 > Example response:
@@ -553,7 +327,7 @@ Loads the metadata available for the widget. If none are found, an empty array i
 
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?includes=metadata
+curl -X GET "https://api.resourcewatch.org/v1/widget?includes=metadata"
 ```
 
 > Example response:
@@ -621,16 +395,248 @@ curl -X GET https://api.resourcewatch.org/v1/widget?includes=metadata
 You can request multiple related entities in a single request using commas to separate multiple keywords
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/widget?includes=metadata,user,vocabulary
+curl -X GET "https://api.resourcewatch.org/v1/widget?includes=metadata,user,vocabulary"
 ```
 
-## How to obtain a widget for a specific dataset
+
+## Getting a widget by id
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943"
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z"
+        }
+    }
+}
+```
+
+### Customize the query url of a widget
+
+The `queryUrl` query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the `queryUrl` will be pass to the microservice.
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl=/v1/query?sql=Select%20*%20from%20data&geostore=ungeostore"
+```
+
+
+### Include related entities
+
+When loading widget data, you can optionally pass an `includes` query argument to load additional data.
+
+#### Vocabulary
+
+Loads related vocabularies. If none are found, an empty array is returned.
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=vocabulary"
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "vocabulary": []
+        }
+    }
+}
+```
+
+#### User
+
+Loads the name and email address of the author of the widget. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
+
+If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=user"
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "user": {
+              "name": "John Sample",
+              "email": "john.sample@vizzuality.com"
+            }
+        }
+    }
+}
+```
+
+#### Metadata
+
+Loads the metadata available for the widget. If none are found, an empty array is returned.
+
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata"
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Carto Dataset6",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-carto-dataset6",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": null,
+            "widgetConfig": "{}",
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z",
+            "metadata": [
+              {
+                "id": "5aeb1c74a096b50010f3843f",
+                "type": "metadata",
+                "attributes": {
+                  "dataset": "86777822-d995-49cd-b9c3-d4ea4f82c0a3",
+                  "application": "rw",
+                  "resource": {
+                    "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+                    "type": "widget"
+                  },
+                  "language": "en",
+                  "info": {
+                    "caption": "t",
+                    "widgetLinks": []
+                  },
+                  "createdAt": "2018-05-03T14:28:04.482Z",
+                  "updatedAt": "2018-06-07T11:30:40.054Z",
+                  "status": "published"
+                }
+              }
+            ]
+          }
+        }
+    }
+}
+```
+
+#### Requesting multiple additional entities
+
+You can request multiple related entities in a single request using commas to separate multiple keywords
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata,user,vocabulary"
+```
+
+
+## Getting all widgets for a specific dataset
 
 To obtain the widget:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3
-curl -X GET https://api.resourcewatch.org/v1/widget/20ec7861-5251-40a7-9503-5ee3686a66a3
+curl -X GET "https://api.resourcewatch.org/v1/dataset/d02df2f6-d80c-4274-bb6f-f062061655c4/widget/20ec7861-5251-40a7-9503-5ee3686a66a3"
+curl -X GET "https://api.resourcewatch.org/v1/widget/20ec7861-5251-40a7-9503-5ee3686a66a3"
 ```
 
 > Example response:
@@ -681,7 +687,8 @@ curl -X GET https://api.resourcewatch.org/v1/widget/20ec7861-5251-40a7-9503-5ee3
 }
 ```
 
-## Create a Widget
+
+## Creating a widget
 
 To create a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
 
@@ -710,7 +717,7 @@ It is possible to create a widget that has a different `env` property to its par
 > To create a widget, you have to do a POST request with the following body:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -729,7 +736,7 @@ Creating a widget will cause a thumbnail to be generated in the background for t
 </aside>
 
 
-## Update a Widget
+## Updating a widget
 
 
 To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
@@ -759,7 +766,7 @@ A user with role `USER` can update their own widgets, based on the `userId` fiel
 > To update a widget, you have to do a PATCH request with the following body:
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id> \
+curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -778,7 +785,7 @@ Updating a widget will cause a thumbnail to be generated in the background for t
 </aside>
 
 
-## Clone a Widget
+## Cloning a widget
 
 You can clone an existing widget as long as you have permissions to the applications associated with it. Basic usage requires no body params, but you can optionally pass a new `name` or `description` to be used in the creation of the new widget.
 
@@ -786,13 +793,13 @@ You can clone an existing widget as long as you have permissions to the applicat
 > To clone a widget, you should use one of the following POST requests:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/widget/<widget_id>/clone \
+curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id>/clone" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
@@ -801,7 +808,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widge
 
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/widget/<widget_id>/clone \
+curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id>/clone" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -812,7 +819,7 @@ curl -X POST https://api.resourcewatch.org/v1/widget/<widget_id>/clone \
 ```
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -831,7 +838,7 @@ User IDs provided this way are not validated.
 </aside>
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/widget/<widget_id>/clone \
+curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id>/clone" \
 -H "Authorization: Bearer <microservice-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -844,7 +851,7 @@ Cloning a widget will cause a thumbnail to be generated in the background for th
 </aside>
 
 
-## Delete a Widget
+## Deleting a widget
 
 Who can delete Widgets?
 
@@ -856,10 +863,11 @@ Who can delete Widgets?
 </aside>
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id> \
+curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
+
 
 ## Widget reference
 
