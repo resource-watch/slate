@@ -8,7 +8,7 @@ As with layers, each widget has a single dataset associated with it, and a datas
 
 However, this association between widgets and datasets is only for organizational purposes. As such, like in the case of layers, the widget itself does not interact with the dataset data. You can either use the widget's `queryUrl` field to store the query to get the widget's data or store it inside the free form `widgetConfig` object. In any of these cases, it is your responsibility as an API user to query the data that will be used for rendering the widget.
 
-In the [widget endpoint documentation](#widget7), you can get into more detail on how you can manage widgets.
+In the [widget endpoint documentation](#widget9), you can get into more detail on how you can manage widgets.
 
 ### Widget configuration using Vega grammar
 
