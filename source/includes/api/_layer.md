@@ -259,7 +259,7 @@ Besides the required `ids` array, your request body may optionally include a `ap
 - Use a @ separated list, like `rw@prep`, if you want to show only layers that have both `rw` and `prep` as their applications.
 - None of the filters require exact matching - a layer that simultaneously contain the applications `rw`, `prep` and `gfw` would match all 3 filters above.
 
-Please note that, unlike [getting all layers](#getting-all-layers) or [getting all layers for a dataset](#getting-all-layers-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination136), [filtering](#filters137) or [sorting](#sorting138) arguments described in their respective sections.
+Please note that, unlike [getting all layers](#getting-all-layers) or [getting all layers for a dataset](#getting-all-layers-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination136), [filtering](#filters137), [sorting](#sorting138) or [including related entities](#include-related-entities138) described in their respective sections.
  
 
 ### Pagination
