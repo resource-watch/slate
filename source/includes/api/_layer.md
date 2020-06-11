@@ -322,7 +322,7 @@ The layer list endpoints provide a wide range of filters that you can use to tai
 Additionally, you can use the following filters:
 
 - `collection`: filters by a [collection](#collections) id. Requires being authenticated.
-- `favourite`: if defined, only the widgets set by the user as [favorites](#favorites) will be returned. Requires being authenticated.
+- `favourite`: if defined, only the layers set by the user as [favorites](#favorites) will be returned. Requires being authenticated.
 
 
 Multiple parameters can be combined into a complex `and` logic filter. Depending on the type of the field you're filtering by, the following behavior is available:
