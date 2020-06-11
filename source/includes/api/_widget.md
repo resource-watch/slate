@@ -738,50 +738,100 @@ You can load related `user`, `vocabulary` and `metadata` data in the same reques
 
 ## Creating a widget
 
-To create a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
-
-Field        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-name         |           Name of the widget            |    Text |                                        Any Text |      Yes
-description  |       Description of the dataset        |    Text |                                        Any text |       No
-source       |     Publisher of the original code      |    Text |                                        Any text |       No
-sourceUrl    |         Link to publisher page          |    Text |                                         Any url |       No
-application  | Application to which the widget belongs |   Array | gfw, forest-atlas, rw, prep, aqueduct, data4sdg |      Yes
-authors      |           Name of the authors           |    Text |                                        Any text |       No
-queryUrl     |  Url with the data of the chart shows   |    Text |                                 Any valid query |       No
-widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
-published    |        If it's available to use         | Boolean |                                    true - false |       No
-freeze       |        If the data is frozen            | Boolean |                                    true - false |       No
-protected    |        If it's a protected widget (not is possible to delete if it's true)         | Boolean |   true - false |       No
-verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
-template     |           If it's a template            | Boolean |                                    true - false |       No
-default      |       If it's default for dataset       | Boolean |                                    true - false |       No
-layerId      |   UuId of the relationship with layer   |    Text |                                   Uuid of layer |       No
-dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
-env         |                                            Environment of the Widget. Set to 'production' by default                                               |   String |                                 Valid string |       No
-
-It is possible to create a widget that has a different `env` property to its parent dataset.
-
-> To create a widget, you have to do a POST request with the following body:
+> To create a widget, you need to provide at least the following details:
 
 ```shell
 curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
-   "widget": {
-      "application":[
-         "your", "apps"
-      ],
-      "name":"Example Widget"
-      "published": true
-   }
-}'
+    "application":[
+      "gfw"
+    ],
+    "name":"Example Widget"
+  }'
+
+
+curl -X POST "https://api.resourcewatch.org/v1/widget" \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "application":[
+      "gfw"
+    ],
+    "name":"Example Widget",
+    "dataset": "7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"    
+  }'
 ```
 
-<aside class="notice">
-Creating a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
-</aside>
+> Response
+
+```json
+{
+    "data": {
+        "id": "7946bca1-6c2a-4329-a127-558ef9551eba",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Widget",
+            "dataset": "7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90",
+            "slug": "Example-Widget_2",
+            "userId": "5dbadb0adf2dc74d2ad05dfb",
+            "application": [
+                "gfw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "template": false,
+            "createdAt": "2020-06-11T14:13:19.677Z",
+            "updatedAt": "2020-06-11T14:13:19.677Z"
+        }
+    }
+}
+```
+In this section we'll guide you through the process of creating a widget in the RW API. Widget creation is available to all registered API users, and will allow you to store your own widget visualisation settings on the API, for reusing and sharing.
+
+Before creating a widget, there are a few things you must know and do:
+
+- In order to be able to create a widget, you need to be [authenticated](#authentication).
+- Depending on your user account's role, you may have permission to create a widget but not delete it afterwards.
+- The widgets you create on the RW API will be publicly visible and available to other users.
+
+Creating a widget is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [widget reference](#widget-reference) section, but the minimum field list you must specify for all widgets is:
+
+- name
+- application
+- dataset - which can be specified either through the URL or the POST body.
+
+The widget service was built to be very flexible, and not be restricted to specific widget rendering libraries or tools. While we recommend using [Vega](#widget-configuration-using-vega-grammar), it's up to you to decide which library to use, and how to save your custom data within a widget's `widgetConfig` field. While there is no hard limit on this, widgets that rely on excessively large `widgetConfig` objects have been known to cause issues, so we recommend being mindful of this.
+
+
+#### Widget thumbnails
+
+> Preview of the thumbnail of a widget
+
+```shell
+curl -X GET "https://resourcewatch.org/embed/widget/<widget_id>"
+```
+
+When a widget is created or updated, the RW API will automatically try to generate a thumbnail preview of it. This is done using the renderer that's part of the [Resource Watch](https://resourcewatch.org) website, and will only produce a thumbnail if your widget uses the same approach as the RW website for declaring its widgets. Searching for widgets belonging to the `rw` application will give you an idea of how this is achieved.
+
+The thumbnail process is asynchronous, meaning it may take up to one minute for your newly created or updated widget to have a valid and/or up to date `thumbnailUrl` value. If the thumbnail generation process fails (for example, if you decide to use a different rendering tool and data structure), the thumbnail generation will fail silently, but will not affect the actual widget creation or update process.
+
+
+#### Errors for creating a widget
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | `<field>`: `<field>` can not be empty | Your are missing a required field value.
+400            | - `<field>`: must be a `<restriction>` | The value provided for the mentioned field does not match the requirements.
+401            | Unauthorized   | You are not authenticated.
+403            | Forbidden      | You are trying to create a widget with one or more `application` values that are not associated with your user account. 
+404            | Dataset not found | The provided dataset id does not exist. 
 
 
 ## Updating a widget
