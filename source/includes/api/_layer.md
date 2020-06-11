@@ -312,28 +312,19 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?env=staging"
 curl -X GET "https://api.resourcewatch.org/v1/layer?app=rw"
 ```
 
-Available filters:
+The layer list endpoints provide a wide range of filters that you can use to tailor your layer listing. The great majority of the layer fields you'll find on the [layer reference](#layer-reference) section can be used as filters when listing layers, with the following exceptions:
 
-Field           |                                     Description                                       |    Type
----------       | :----------------------------------------------------------------------------------:  | ------:
-name            |                                                                                       |    Text
-dataset         |                          Filter the layers by dataset id.                             |    Text
-published       |                   Filter layers on published status (true, false)                     | Boolean
-env             | Environment in which the layer was published, one of `staging`, `preproduction` or `production`. Defaults to `production` |    Text
-slug            |                                                                                       | Text 
-description     |                                                                                       | Text
-application/app | Filter by applications associated to this layer. Multiple values can be provided, separated by commas, which will be combined using `OR` logic. Match are not exact - any layers that have at least one of the applications specified in the filter will be returned. | Text
-iso             | ISO3 values. Multiple values can be provided, separated by commas, which will be combined using `OR` logic. Match are not exact - any layers that have at least one of the ISO codes specified in the filter will be returned.  | Text
-userId          | Id of the user associated with the layer | Text
-default         |  | Boolean
-protected       |  | Boolean
-favourite       | Shows only datasets flagged as favourites by the user. Requires being authenticated. | Boolean
-type            |  | Text
-provider        |  | Text
-userName        | Name of the user associated with the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
-user.role/userRole | The role of the user associated with the layer. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
-collection      | Filter by [collection](#collections) id. Requires being authenticated. | Text 
+- `id`
+- `userName`
+- `userRole`: filtering by the role of the owning user can be done using the `user.role` query argument. If the requesting user does not have the ADMIN role, this filter is ignored.
+- Filtering by fields of type `Object` is not supported.
 
+Additionally, you can use the `collection` parameter to filter by a [collection](#collections) id. Requires being authenticated.
+
+Multiple parameters can be combined into a complex `and` logic filter. Depending on the type of the field you're filtering by, the following behavior is available:
+ 
+- String type fields support both regular expressions and partial matches.
+- Array type fields support `,` as `OR` and `@` as `AND` separators for multiple values.
 
 
 ### Sorting
