@@ -319,7 +319,11 @@ The layer list endpoints provide a wide range of filters that you can use to tai
 - `userRole`: filtering by the role of the owning user can be done using the `user.role` query argument. If the requesting user does not have the ADMIN role, this filter is ignored.
 - Filtering by fields of type `Object` is not supported.
 
-Additionally, you can use the `collection` parameter to filter by a [collection](#collections) id. Requires being authenticated.
+Additionally, you can use the following filters:
+
+- `collection`: filters by a [collection](#collections) id. Requires being authenticated.
+- `favourite`: if defined, only the widgets set by the user as [favorites](#favorites) will be returned. Requires being authenticated.
+
 
 Multiple parameters can be combined into a complex `and` logic filter. Depending on the type of the field you're filtering by, the following behavior is available:
  
