@@ -279,7 +279,7 @@ Multiple parameters can be combined into a complex `and` logic filter. Depending
 
 ### Sorting
 
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the widget, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the widget, as well as `user.name` and `user.role` (sorting by user data is restricted to `ADMIN` users).
 
 Sorting by nested fields is not supported at the moment.
 
@@ -328,43 +328,58 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=vocabulary"
 
 ```json
 {
-    "data": [{
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example Carto Dataset6",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z",
-            "vocabulary": []
+    "data": [
+        {
+            "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+            "type": "widget",
+            "attributes": {
+                "name": "Example widget",
+                "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+                "slug": "example-widget",
+                "userId": "5820ad9469a0287982f4cd18",
+                "description": null,
+                "source": null,
+                "sourceUrl": null,
+                "authors": null,
+                "application": [
+                    "rw"
+                ],
+                "verified": false,
+                "default": false,
+                "protected": false,
+                "defaultEditableWidget": false,
+                "published": true,
+                "freeze": false,
+                "env": "production",
+                "queryUrl": null,
+                "widgetConfig": "{}",
+                "template": false,
+                "layerId": null,
+                "createdAt": "2017-02-08T15:30:34.505Z",
+                "updatedAt": "2017-02-08T15:30:34.505Z",
+                "vocabulary": [
+                    {
+                        "id": "resourcewatch",
+                        "type": "vocabulary",
+                        "attributes": {
+                            "tags": [
+                                "inuncoast",
+                                "rp0002",
+                                "historical",
+                                "nosub"
+                            ],
+                            "name": "resourcewatch",
+                            "application": "rw"
+                        }
+                    }
+                ]
+            }
         }
-    }]
+    ]
 }
 ```
 
 #### User
-
-Loads the name and email address of the author of the widget. If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?includes=user"
@@ -378,9 +393,9 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=user"
         "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
         "type": "widget",
         "attributes": {
-            "name": "Example Carto Dataset6",
+            "name": "Example widget",
             "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
+            "slug": "example-widget",
             "userId": "5820ad9469a0287982f4cd18",
             "description": null,
             "source": null,
@@ -411,10 +426,10 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=user"
 }
 ```
 
+Loads the name and email address of the author of the widget. If the user issuing the request has role `ADMIN`, the response will also display the role of the widget's author. If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
+
+
 #### Metadata
-
-Loads the metadata available for the widget. If none are found, an empty array is returned.
-
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?includes=metadata"
@@ -424,69 +439,73 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=metadata"
 
 ```json
 {
-    "data": [{
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example Carto Dataset6",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z",
-            "metadata": [
-              {
-                "id": "5aeb1c74a096b50010f3843f",
-                "type": "metadata",
-                "attributes": {
-                  "dataset": "86777822-d995-49cd-b9c3-d4ea4f82c0a3",
-                  "application": "rw",
-                  "resource": {
-                    "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-                    "type": "widget"
-                  },
-                  "language": "en",
-                  "info": {
-                    "caption": "t",
-                    "widgetLinks": []
-                  },
-                  "createdAt": "2018-05-03T14:28:04.482Z",
-                  "updatedAt": "2018-06-07T11:30:40.054Z",
-                  "status": "published"
-                }
-              }
-            ]
-          }
-        }]
-    }
+    "data": [
+        {
+            "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+            "type": "widget",
+            "attributes": {
+                "name": "Example widget",
+                "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+                "slug": "example-widget",
+                "userId": "5820ad9469a0287982f4cd18",
+                "description": null,
+                "source": null,
+                "sourceUrl": null,
+                "authors": null,
+                "application": [
+                    "rw"
+                ],
+                "verified": false,
+                "default": false,
+                "protected": false,
+                "defaultEditableWidget": false,
+                "published": true,
+                "freeze": false,
+                "env": "production",
+                "queryUrl": null,
+                "widgetConfig": "{}",
+                "template": false,
+                "layerId": null,
+                "createdAt": "2017-02-08T15:30:34.505Z",
+                "updatedAt": "2017-02-08T15:30:34.505Z",
+                "metadata": [
+                    {
+                        "id": "5aeb1c74a096b50010f3843f",
+                        "type": "metadata",
+                        "attributes": {
+                            "dataset": "86777822-d995-49cd-b9c3-d4ea4f82c0a3",
+                            "application": "rw",
+                            "resource": {
+                                "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+                                "type": "widget"
+                            },
+                            "language": "en",
+                            "info": {
+                                "caption": "t",
+                                "widgetLinks": []
+                            },
+                            "createdAt": "2018-05-03T14:28:04.482Z",
+                            "updatedAt": "2018-06-07T11:30:40.054Z",
+                            "status": "published"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
 }
 ```
 
-#### Requesting multiple additional entities
+Loads the metadata available for the widget. If none are found, an empty array is returned.
 
-You can request multiple related entities in a single request using commas to separate multiple keywords
+
+#### Requesting multiple additional entities
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?includes=metadata,user,vocabulary"
 ```
+
+You can request multiple related entities in a single request using commas to separate multiple keywords
 
 
 ## Getting a widget by id
@@ -503,9 +522,9 @@ curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde
         "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
         "type": "widget",
         "attributes": {
-            "name": "Example Carto Dataset6",
+            "name": "Example widget",
             "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
+            "slug": "example-widget",
             "userId": "5820ad9469a0287982f4cd18",
             "description": null,
             "source": null,
@@ -561,9 +580,9 @@ curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde
         "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
         "type": "widget",
         "attributes": {
-            "name": "Example Carto Dataset6",
+            "name": "Example widget",
             "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
+            "slug": "example-widget",
             "userId": "5820ad9469a0287982f4cd18",
             "description": null,
             "source": null,
@@ -609,9 +628,9 @@ curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde
         "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
         "type": "widget",
         "attributes": {
-            "name": "Example Carto Dataset6",
+            "name": "Example widget",
             "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
+            "slug": "example-widget",
             "userId": "5820ad9469a0287982f4cd18",
             "description": null,
             "source": null,
@@ -659,9 +678,9 @@ curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde
         "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
         "type": "widget",
         "attributes": {
-            "name": "Example Carto Dataset6",
+            "name": "Example widget",
             "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-carto-dataset6",
+            "slug": "example-widget",
             "userId": "5820ad9469a0287982f4cd18",
             "description": null,
             "source": null,
@@ -756,7 +775,7 @@ curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget" \
       "application":[
          "your", "apps"
       ],
-      "name":"Example Carto Dataset"
+      "name":"Example Widget"
       "published": true
    }
 }'
@@ -805,7 +824,7 @@ curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<wid
       "application":[
          "your", "apps"
       ],
-      "name":"New Example Carto Dataset Name",
+      "name":"New Example Widget Name",
       "widgetConfig": {}
    }
 }'
