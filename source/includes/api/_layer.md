@@ -603,7 +603,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer/<layer_slug>"
 }
 ```
 
-If you know the id or the `slug` of a dataset, then you can access it directly. Both id and `slug` are case-sensitive.
+If you know the id or the `slug` of a layer, then you can access it directly. Both id and `slug` are case-sensitive.
 
 ### Include related entities
 
