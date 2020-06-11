@@ -515,8 +515,11 @@ You can request multiple related entities in a single request using commas to se
 
 ## Getting a widget by id
 
+> Getting a widget by id:
+
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943"
+curl -X GET "https://api.resourcewatch.org/v1/widget/<widget_id>"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>"
 ```
 
 > Example response:
@@ -556,192 +559,182 @@ curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde
 }
 ```
 
-### Customize the query url of a widget
+If you know the `id` of a widget, then you can access it directly. Ids are case-sensitive.
 
-The `queryUrl` query parameter can be set if the user needs to modify the final url that will be requested. All parameters indicated in the `queryUrl` will be pass to the microservice.
+
+### Overwrite the query url of a widget response
+
+> Getting a widget by id with a custom query url value:
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget/049f074a-3528-427d-922b-3c2320e9caf6?queryUrl=/v1/query?sql=Select%20*%20from%20data&geostore=ungeostore"
+curl -X GET "https://api.resourcewatch.org/v1/widget/<widget_id>?queryUrl=/v1/query?sql=Select%20*%20from%20data"
 ```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example widget",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-widget",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": "/v1/query?sql=Select * from data",
+            "widgetConfig": {
+                "data": {
+                    "url": "/v1/query?sql=Select * from data"
+                }
+            },
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z"
+        }
+    }
+}
+```
+
+When getting a single widget, you can optionally provide a `queryUrl` query parameter. If provided, this parameter will overwrite the following response values:
+
+- `data.attributes.queryUrl`
+- `data.attributes.widgetConfig.data.url`
+- `data.attributes.widgetConfig.data[0].url`
+ 
+This overwrite will only happen if a previous value already existed for the respective field. Also, keep in mind that these changes will NOT be persisted to the database, and will only affect the current request's response. 
+ 
+### Customize the query url of a widget response
+
+> Getting a widget by id with a custom query url parameters:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget/<widget_id>?geostore=ungeostore"
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example widget",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-widget",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": "<previous queryUrl value>?geostore=ungeostore",
+            "widgetConfig": {
+                "data": {
+                    "url": "<previous widgetConfig.data.url value>?geostore=ungeostore"
+                }
+            },
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z"
+        }
+    }
+}
+```
+
+
+> Getting a widget by id with a custom query url value parameters:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/widget/<widget_id>?queryUrl=/v1/query?sql=Select%20*%20from%20data&geostore=ungeostore"
+```
+
+> Example response:
+
+
+```json
+{
+    "data": {
+        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
+        "type": "widget",
+        "attributes": {
+            "name": "Example widget",
+            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
+            "slug": "example-widget",
+            "userId": "5820ad9469a0287982f4cd18",
+            "description": null,
+            "source": null,
+            "sourceUrl": null,
+            "authors": null,
+            "application": [
+                "rw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "queryUrl": "/v1/query?sql=Select * from data&geostore=ungeostore",
+            "widgetConfig": {
+                "data": {
+                    "url": "/v1/query?sql=Select * from data&geostore=ungeostore"
+                }
+            },
+            "template": false,
+            "layerId": null,
+            "createdAt": "2017-02-08T15:30:34.505Z",
+            "updatedAt": "2017-02-08T15:30:34.505Z"
+        }
+    }
+}
+```
+
+When getting a single widget, you can optionally provide additional custom query parameter. These parameters will be appended to the following response values:
+
+- `data.attributes.queryUrl`
+- `data.attributes.widgetConfig.data.url`
+- `data.attributes.widgetConfig.data[0].url`
+
+The widget service assumes these values are URLs, and will append your custom query parameters as such:
+
+- If the value already has a `?` character present, your custom query parameters will be appended with `&` preceding them. 
+- If no `?` is present, the first custom query parameter will be appended with a `?`, and the following with a `&` before them.
+
+This overwrite will only happen if a previous value already existed for the respective field. Also, keep in mind that these changes will NOT be persisted to the database, and will only affect the current request's response. You can combine these custom query parameters with an [overwritten query url](#overwrite-the-query-url-of-a-widget-response), as seen on the included example.
 
 
 ### Include related entities
 
-When loading widget data, you can optionally pass an `includes` query argument to load additional data.
+You can load related `user`, `vocabulary` and `metadata` data in the same request. See [this section](#include-related-entities137) for more details.
 
-#### Vocabulary
-
-Loads related vocabularies. If none are found, an empty array is returned.
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=vocabulary"
-```
-
-> Example response:
-
-```json
-{
-    "data": {
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example widget",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-widget",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z",
-            "vocabulary": []
-        }
-    }
-}
-```
-
-#### User
-
-Loads the name and email address of the author of the widget. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author's role.
-
-If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=user"
-```
-
-> Example response:
-
-```json
-{
-    "data": {
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example widget",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-widget",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z",
-            "user": {
-              "name": "John Sample",
-              "email": "john.sample@vizzuality.com"
-            }
-        }
-    }
-}
-```
-
-#### Metadata
-
-Loads the metadata available for the widget. If none are found, an empty array is returned.
-
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata"
-```
-
-> Example response:
-
-```json
-{
-    "data": {
-        "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-        "type": "widget",
-        "attributes": {
-            "name": "Example widget",
-            "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
-            "slug": "example-widget",
-            "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
-            "source": null,
-            "sourceUrl": null,
-            "authors": null,
-            "application": [
-                "rw"
-            ],
-            "verified": false,
-            "default": false,
-            "protected": false,
-            "defaultEditableWidget": false,
-            "published": true,
-            "freeze": false,
-            "env": "production",
-            "queryUrl": null,
-            "widgetConfig": "{}",
-            "template": false,
-            "layerId": null,
-            "createdAt": "2017-02-08T15:30:34.505Z",
-            "updatedAt": "2017-02-08T15:30:34.505Z",
-            "metadata": [
-              {
-                "id": "5aeb1c74a096b50010f3843f",
-                "type": "metadata",
-                "attributes": {
-                  "dataset": "86777822-d995-49cd-b9c3-d4ea4f82c0a3",
-                  "application": "rw",
-                  "resource": {
-                    "id": "51851e22-1eda-4bf5-bbcc-cde3f9a3a943",
-                    "type": "widget"
-                  },
-                  "language": "en",
-                  "info": {
-                    "caption": "t",
-                    "widgetLinks": []
-                  },
-                  "createdAt": "2018-05-03T14:28:04.482Z",
-                  "updatedAt": "2018-06-07T11:30:40.054Z",
-                  "status": "published"
-                }
-              }
-            ]
-          }
-        }
-    }
-}
-```
-
-#### Requesting multiple additional entities
-
-You can request multiple related entities in a single request using commas to separate multiple keywords
-
-```shell
-curl -X GET "https://api.resourcewatch.org/v1/widget/51851e22-1eda-4bf5-bbcc-cde3f9a3a943?includes=metadata,user,vocabulary"
-```
 
 ## Creating a widget
 
