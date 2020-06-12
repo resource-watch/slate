@@ -836,51 +836,52 @@ Error code     | Error message  | Description
 
 ## Updating a widget
 
+> To update a widget, you have to do one of the following PATCH requests:
 
-To update a widget, you need to define all of the required fields in the request body. The fields that compose a widget are:
-
-Field        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-name         |           Name of the widget            |    Text |                                        Any Text |      Yes
-description  |       Description of the dataset        |    Text |                                        Any text |       No
-source       |     Publisher of the original code      |    Text |                                        Any text |       No
-sourceUrl    |         Link to publisher page          |    Text |                                         Any url |       No
-application  | Application to which the widget belongs |   Array | gfw, forest-atlas, rw, prep, aqueduct, data4sdg |      Yes
-authors      |           Name of the authors           |    Text |                                        Any text |       No
-queryUrl     |  Url with the data of the chart shows   |    Text |                                 Any valid query |       No
-widgetConfig |           Vega configuration            |  Object |                                    Valid object |       No
-published    |        If it's available to use         | Boolean |                                    true - false |       No
-freeze       |        If the data is frozen            | Boolean |                                    true - false |       No
-verified     |     If it's verified by other user      | Boolean |                                    true - false |       No
-template     |           If it's a template            | Boolean |                                    true - false |       No
-default      |       If it's default for dataset       | Boolean |                                    true - false |       No
-layerId      |   UuId of the relationship with layer   |    Text |                                   Uuid of layer |       No
-dataset      |           UuId of the dataset           |    Text |                                 Uuid of Dataset |       No
-env          |               Environment               |    Text |                 `production` or `preproduction` |      Yes
-
-
-A user with role `USER` can update their own widgets, based on the `userId` field. A user with `ADMIN` role can update any widget.
-
-> To update a widget, you have to do a PATCH request with the following body:
 
 ```shell
 curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
-   "widget": {
-      "application":[
-         "your", "apps"
-      ],
-      "name":"New Example Widget Name",
-      "widgetConfig": {}
-   }
-}'
+    "name":"New Example Widget Name"
+ }'
+
+
+curl -X PATCH "https://api.resourcewatch.org/v1/widget/<widget_id>" \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "name":"New Example Widget Name",
+    "dataset":"<dataset_id>
+ }'
 ```
 
-<aside class="notice">
-Updating a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
-</aside>
+The update widget endpoint allows you to modify the details of an existing widget. As noted on the [widget concept](#widget) documentation, the widget object stores the details of how widget is meant to be rendered, but may not contain the actual data. As such, if you are looking to update the data that's being displayed on your widget, this is probably not the endpoint you're looking for - you may want to [update your dataset](#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
+
+Unless specified otherwise in their description, all the fields present in the [widget reference](#widget-reference) section can be updated using this endpoint. When passing new values for Object type fields, like `widgetConfig`, the new value will fully overwrite the previous one. It’s up to you, as an API user, to build any merging logic into your application.
+
+To perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the widget
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` or `USER` and be the widget's owner (through the `userId` field of the widget)
+
+#### Widget thumbnails
+
+When a widget is updated, a new thumbnail is generated. Refer to [this section](#widget-thumbnails) for details on this process. 
+
+#### Errors for updating a widget
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | - `<field>`: must be a `<restriction>` | The value provided for the mentioned field does not match the requirements.
+401            | Unauthorized   | You need to be logged in to be able to update a widget.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` or `USER` and be the widget's owner (through the `userId` field of the widget).
+403            | Forbidden      | You are trying to update a widget with one or more `application` values that are not associated with your user account. 
+404            | Widget with id <id> doesn't exist   | A widget with the provided id does not exist.
+404            | Dataset not found   | A dataset with the provided id does not exist.
 
 
 ## Cloning a widget
