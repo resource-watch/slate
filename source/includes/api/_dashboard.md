@@ -135,7 +135,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=user.role
 
 Multiple sorting criteria can be used, separating them by commas.
 
-You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
 The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dashboard, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
 
