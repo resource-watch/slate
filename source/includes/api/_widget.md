@@ -1043,20 +1043,63 @@ Error code     | Error message  | Description
 
 ## Deleting a widget
 
-Who can delete Widgets?
-
-- Users with the `MANAGER` role who are in the same app as the widget and are in the widget's `userId`
-- Users with the `ADMIN` role who are in the same app as the widget.
-
-<aside class="notice">
-   The endpoints `/widget/:widget` and `/dataset/:dataset/widget/:widget` perform the same action, with the only difference being that the latter checks if the dataset exists before deleting the widget.
-</aside>
+> Example DELETE request that deletes a widget:
 
 ```shell
 curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
+
+
+curl -X DELETE "https://api.resourcewatch.org/v1/widget/<widget_id>" \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
 ```
+
+> Response
+
+```json
+{
+    "data": {
+        "id": "7946bca1-6c2a-4329-a127-558ef9551eba",
+        "type": "widget",
+        "attributes": {
+            "name": "name for the cloned widget",
+            "description": "description of the cloned widget",
+            "dataset": "7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90",
+            "slug": "Example-Widget_2",
+            "userId": "5dbadb0adf2dc74d2ad05dfb",
+            "application": [
+                "gfw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "template": false,
+            "createdAt": "2020-06-11T14:13:19.677Z",
+            "updatedAt": "2020-06-11T14:13:19.677Z"
+        }
+    }
+}
+```
+
+
+Use this endpoint if you'd like to delete a widget from the RW API. As a widget object may not store the actual data being displayed, this may only delete the widget settings, but the actual data may continue to be available at its source.
+
+Besides deleting the widget itself, this endpoint also deletes graph vocabularies and metadata related to the widget itself. These delete operations are issued after the widget itself is deleted. The process is not atomic, and the output of the API request is based solely on the result of the deletion of the widget itself. For example, is the metadata service is temporarily unavailable when you issue your delete widget request, the widget itself will be deleted, but the associated metadata will continue to exist. The response will not reflect the failure to delete metadata in any way.
+
+In order to delete a widget, the following conditions must be met:
+
+- the widget's `protected` property must be set to `false`.
+- the user must be logged in and belong to the same application as the widget.
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the widget's owner (through the `userId` field of the widget)
+
 
 
 ## Widget reference
