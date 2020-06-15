@@ -303,7 +303,7 @@ Multiple sorting criteria can be used, separating them by commas.
 curl -X GET "https://api.resourcewatch.org/v1/widget?sort=name,slug"
 ```
 
-You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
 > Explicit order of sorting
 
@@ -317,7 +317,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?sort=-name,+slug"
 curl -X GET "https://api.resourcewatch.org/v1/widget?sort=user.role"
 ```
 
-### Include related entities
+### Include entities associated with the widgets
 
 When loading widget data, you can optionally pass an `includes` query argument to load additional data.
 
@@ -731,9 +731,9 @@ The widget service assumes these values are URLs, and will append your custom qu
 This overwrite will only happen if a previous value already existed for the respective field. Also, keep in mind that these changes will NOT be persisted to the database, and will only affect the current request's response. You can combine these custom query parameters with an [overwritten query url](#overwrite-the-query-url-of-a-widget-response), as seen on the included example.
 
 
-### Include related entities
+### Include entities associated with the widget
 
-You can load related `user`, `vocabulary` and `metadata` data in the same request. See [this section](#include-related-entities137) for more details.
+You can load related `user`, `vocabulary` and `metadata` data in the same request. See [this section](#include-entities-associated-with-the-widgets) for more details.
 
 
 ## Creating a widget
