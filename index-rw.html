@@ -269,6 +269,48 @@
 
 <p>Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we&rsquo;ve achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provider, but not for another. The <a href="#supported-sql-syntax-reference">supported SQL syntax reference</a> below has more details on these limitations, per provider.  </p>
 
+          <h2 id="layer">Layer</h2>
+
+<p>Apart from the possibility of fetching data from multiple data sources using a common interface, the RW API provides you with features to help you visualize such data. A <strong>layer</strong> is one of the resources that you can use to help you make custom visualizations for your data, and they play a very important role when visualizing datasets that contain geospatial data.</p>
+
+<p>A layer is a visual specification of how the data of a dataset can be rendered and styled on a map. </p>
+
+<p>Each layer has a single dataset associated with it, and a dataset can be associated with multiple layers - you can represent the same data in many different ways by creating different layers for the same dataset. The same layer can store independent configuration values for each RW API based application, and can contain the data necessary for rendering the same visualisation using different rendering tools, like <a href="https://leafletjs.com/">Leaflet</a>, <a href="https://www.mapbox.com/">Mapbox</a> or <a href="https://github.com/Vizzuality/layer-manager">Layer Manager</a>.</p>
+
+<p>In the <a href="#layer8">layer endpoint documentation</a>, we&rsquo;ll go into more detail on how you can manage layers, as well as the existing limitations that you might run into when using layers. However, for now, there are 3 high-level ideas that you should keep in mind:</p>
+
+<h3 id="the-layer-does-not-interact-with-dataset-data">The layer does not interact with dataset data</h3>
+
+<p>Layers store visual configurations needed for rendering styling a given dataset&rsquo;s data. However, they do not interact with the dataset data in any way. It is your responsibility, as a RW API user, to build the appropriate queries to retrieve the data that you want to display (read more about <a href="#dataset">datasets</a> or <a href="#query">how you can query datasets to obtain their data</a>). Remember, use layers as a complement of dataset queries, not a replacement.</p>
+
+<h3 id="most-of-layer-fields-are-free-form">Most of layer fields are free-form</h3>
+
+<p>Many of the fields in the layer object are free-form, meaning the RW API does not apply any restriction to whatever is saved in those fields. This is great, because it allows for a very high level of flexibility for users, but has the downside of making it harder to document how to use layers. We tried our best to provide clear and consistent specifications for all the fields of a layer, but keep in mind that this high level of flexibility makes it harder to deliver a concrete description.</p>
+
+<h3 id="different-applications-use-layers-in-different-ways">Different applications use layers in different ways</h3>
+
+<p>At the moment, most applications using the layer endpoints have adapted layers to tailor fit their needs, taking advantage of the flexibility that free-form fields bring. This means that, when navigating through the catalog of available layers, you might run into very different ways of implementing and using layers. Once again, we will try our best to cover the different ways of using and managing layers, but keep in mind that there is currently no standard way of using layers.</p>
+
+          <h2 id="widget">Widget</h2>
+
+<p>You have fetched your data from your <a href="#dataset">dataset</a> using <a href="#query">queries</a>. And you know how to build custom visualizations for geospatial data using <a href="#layer">layers</a>. Yet, sometimes you want to build a plain graphical representation of your data - whether it is geo-referenced or not: this is when <strong>widgets</strong> come in handy.</p>
+
+<p>A <strong>widget</strong> is a visual specification of how to style and render the data of a dataset (think pie, bar or line charts).</p>
+
+<p>As with layers, each widget has a single dataset associated with it, and a dataset can be associated with many widgets. You can represent the same data in different ways by creating different widgets for the same dataset. The same widget can store independent configuration values for each RW API based application. It can also contain the required configuration for rendering the same visualization using different rendering tools.</p>
+
+<p>However, this association between widgets and datasets is only for organizational purposes. As such, like in the case of layers, the widget itself does not interact with the dataset data. You can either use the widget&rsquo;s <code class="prettyprint">queryUrl</code> field to store the query to get the widget&rsquo;s data or store it inside the free form <code class="prettyprint">widgetConfig</code> object. In any of these cases, it is your responsibility as an API user to query the data that will be used for rendering the widget.</p>
+
+<p>In the <a href="#widget7">widget endpoint documentation</a>, you can get into more detail on how you can manage widgets.</p>
+
+<h3 id="widget-configuration-using-vega-grammar">Widget configuration using Vega grammar</h3>
+
+<p>As in the case of layers (where many fields are free-form), the RW API does not apply any restriction to the data saved in the widget configuration field (<code class="prettyprint">widgetConfig</code>). This allows for a very high level of flexibility for users but has the downside of making it harder to document how to use widgets.</p>
+
+<p>However, the existing widgets&rsquo; standard approach for building widget configuration objects is using <a href="https://github.com/vega/vega">Vega grammar</a>. Vega is a visualization grammar, a declarative format for creating interactive visualization designs. You can then use a chart library that supports Vega grammar syntax (such as <a href="https://d3js.org/">d3.js</a>) to render the widget and get your graphical representation.</p>
+
+<p>Please note that, in any case, you can use whatever configuration format you wish since the <code class="prettyprint">widgetConfig</code> field is free-form.</p>
+
           <h1 id="authentication">Authentication</h1>
 
 <p>The RW API uses JWT <a href="https://tools.ietf.org/html/rfc7519">(JSON Web Tokens)</a> to identify and authenticate its users. This token must be provided inside an <code class="prettyprint">Authorization</code> header, with the form <code class="prettyprint">Bearer: &lt;token&gt;</code>.</p>
