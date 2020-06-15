@@ -897,7 +897,7 @@ To perform this operation, the following conditions must be met:
 - the user must be logged in and belong to the same application as the widget
 - the user must match one of the following:
   - have role `ADMIN`
-  - have role `MANAGER` or `USER` and be the widget's owner (through the `userId` field of the widget)
+  - have role `MANAGER` or `USER` and be the widget's owner (through the `userId` field of the widget) and belong to all the applications associated with the widget.
 
 #### Widget thumbnails
 
@@ -909,7 +909,7 @@ Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | - `<field>`: must be a `<restriction>` | The value provided for the mentioned field does not match the requirements.
 401            | Unauthorized   | You need to be logged in to be able to update a widget.
-403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` or `USER` and be the widget's owner (through the `userId` field of the widget).
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` or `USER` and be the widget's owner (through the `userId` field of the widget) and belong to all the applications associated with the widget.
 403            | Forbidden      | You are trying to update a widget with one or more `application` values that are not associated with your user account. 
 404            | Widget with id <id> doesn't exist   | A widget with the provided id does not exist.
 404            | Dataset not found   | A dataset with the provided id does not exist.
@@ -917,78 +917,99 @@ Error code     | Error message  | Description
 
 ## Cloning a widget
 
-You can clone an existing widget as long as you have permissions to the applications associated with it. Basic usage requires no body params, but you can optionally pass a new `name` or `description` to be used in the creation of the new widget.
-
-
 > To clone a widget, you should use one of the following POST requests:
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id>/clone" \
+curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id_or_slug>/clone" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone" \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id_or_slug>/clone" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
 
-> You can optionally set a new name or description:
 
+> Response
 
-```shell
-curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id>/clone" \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
- '{
-   "name": "name for the cloned widget",
-   "description": "
-   "name": "name for the cloned widget", for the cloned widget",
-}'
+```json
+{
+    "data": {
+        "id": "7946bca1-6c2a-4329-a127-558ef9551eba",
+        "type": "widget",
+        "attributes": {
+            "name": "Example Widget",
+            "dataset": "7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90",
+            "slug": "Example-Widget_2",
+            "userId": "5dbadb0adf2dc74d2ad05dfb",
+            "application": [
+                "gfw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "template": false,
+            "createdAt": "2020-06-11T14:13:19.677Z",
+            "updatedAt": "2020-06-11T14:13:19.677Z"
+        }
+    }
+}
 ```
 
-```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/clone" \
--H "Authorization: Bearer <your-token>" \
--H "Content-Type: application/json"  -d \
- '{
-   "name": "name for the cloned widget",
-   "description": "
-   "name": "name for the cloned widget", for the cloned widget",
-}'
-```
+This endpoint allows you to duplicate an existing widget. The newly created widget is identical to the old one, except:
 
-You can clone an existing widget as long as you have permissions to the applications associated with it. Basic usage requires no body params, but you can optionally pass a new `name` or `description` to be used in the creation of the new widget.
+- The `userId` will be the id of the user who issued the clone request
+- `name` and `description` will be the same but can optionally be modified by the clone request (see the provided example)
+- `createdAt` and `updatedAt` will have the current time.
 
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the widget
 - the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` or `USER` and be the widget's owner (through the `userId` field of the widget)
+  - have role `ADMIN` or `MANAGER`
+  - have role `USER` and be the widget's owner (through the `userId` field of the widget) and belong to all the applications associated with the widget.
   
-### Cloning widgets from other microservices
-
-When cloning a widget, the newly created clone will take the `userId` of the originating request. If you call this endpoint as an authenticated user from your custom application, that means it will get that authenticated user's `userId`. However, if invoked from another API microservice, that `userId` is no longer available. In this scenario, when the request to clone is originated internally, you can optionally pass a `userÌd` body value that will be set as the `userId` of the newly created widget.
-
-<aside class="warning">
-User IDs provided this way are not validated.
-</aside>
+> Cloning a widget while optionally setting a new name or description:
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id>/clone" \
--H "Authorization: Bearer <microservice-token>" \
+curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id_or_slug>/clone" \
+-H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
-   "userId": "123456789",
+   "name": "name for the cloned widget",
+   "description": "description of the cloned widget"
 }'
 ```
 
-<aside class="notice">
-Cloning a widget will cause a thumbnail to be generated in the background for the new widget. As it is generated asyncronously, the newly generated thumbnail url may only become available on subsequent requests.
-</aside>
+```shell
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id_or_slug>/clone" \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+   "name": "name for the cloned widget",
+   "description": "description of the cloned widget"
+}'
+```
 
+#### Widget thumbnails
+
+When a widget is cloned, a new thumbnail is generated. Refer to [this section](#widget-thumbnails) for details on this process.
+
+
+#### Errors for cloning a widget
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | You need to be logged in to be able to clone a widget.
+403            | Forbidden      | You need to either have the `ADMIN` or `MANAGER` role, or have role `USER` and be the widget's owner (through the `userId` field of the widget) and belong to all the applications associated with the widget.
+404            | Widget with id <id> doesn't exist   | A widget with the provided id or slug does not exist.
+  
 
 ## Deleting a widget
 
