@@ -7,7 +7,7 @@ By now, you are probably already familiar with [datasets](#dataset) and [queryin
 As we've seen in the [layer concept docs](#layer), a RW API layer may store data in different formats, depending on the needs of its author. This is done using the several open format fields a layer has. To keep this documentation easy to understand, we'll spit our approach to layers into two sections:
 
 - We'll first discuss the details of the endpoints that allow you to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) layers, without focusing on the actual data contained in it.
-- In an upcoming section, we'll dive deeper into some of the most common structures used to store data in the layer's open format fields, and help you use that data to render an actual layer on a web application.
+- In an future version of these docs, we'll dive deeper into some of the most common structures used to store data in the layer's open format fields, and help you use that data to render an actual layer on a web application.
 
 ## Getting all layers
 
