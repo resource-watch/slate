@@ -26,7 +26,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget"
              "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
              "slug": "example-widget",
              "userId": "5820ad9469a0287982f4cd18",
-             "description": null,
+             "description": "",
              "source": null,
              "sourceUrl": null,
              "authors": null,
@@ -402,7 +402,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=user"
             "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
             "slug": "example-widget",
             "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
+            "description": "",
             "source": null,
             "sourceUrl": null,
             "authors": null,
@@ -453,7 +453,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=metadata"
                 "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
                 "slug": "example-widget",
                 "userId": "5820ad9469a0287982f4cd18",
-                "description": null,
+                "description": "",
                 "source": null,
                 "sourceUrl": null,
                 "authors": null,
@@ -534,7 +534,7 @@ curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widge
             "dataset": "be76f130-ed4e-4972-827d-aef8e0dc6b18",
             "slug": "example-widget",
             "userId": "5820ad9469a0287982f4cd18",
-            "description": null,
+            "description": "",
             "source": null,
             "sourceUrl": null,
             "authors": null,
@@ -931,7 +931,6 @@ curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widg
 -H "Content-Type: application/json"
 ```
 
-
 > Response
 
 ```json
@@ -995,6 +994,37 @@ curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widg
    "name": "name for the cloned widget",
    "description": "description of the cloned widget"
 }'
+```
+
+> Response
+
+```json
+{
+    "data": {
+        "id": "7946bca1-6c2a-4329-a127-558ef9551eba",
+        "type": "widget",
+        "attributes": {
+            "name": "name for the cloned widget",
+            "description": "description of the cloned widget",
+            "dataset": "7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90",
+            "slug": "Example-Widget_2",
+            "userId": "5dbadb0adf2dc74d2ad05dfb",
+            "application": [
+                "gfw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "template": false,
+            "createdAt": "2020-06-11T14:13:19.677Z",
+            "updatedAt": "2020-06-11T14:13:19.677Z"
+        }
+    }
+}
 ```
 
 #### Widget thumbnails
