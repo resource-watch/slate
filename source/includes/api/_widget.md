@@ -793,6 +793,7 @@ curl -X POST "https://api.resourcewatch.org/v1/widget" \
     }
 }
 ```
+
 In this section we'll guide you through the process of creating a widget in the RW API. Widget creation is available to all registered API users, and will allow you to store your own widget visualisation settings on the API, for reusing and sharing.
 
 Before creating a widget, there are a few things you must know and do:
@@ -840,7 +841,7 @@ Error code     | Error message  | Description
 
 
 ```shell
-curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>" \
+curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id_or_slug>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -848,13 +849,43 @@ curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<wid
  }'
 
 
-curl -X PATCH "https://api.resourcewatch.org/v1/widget/<widget_id>" \
+curl -X PATCH "https://api.resourcewatch.org/v1/widget/<widget_id_or_slug>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
     "name":"New Example Widget Name",
     "dataset":"<dataset_id>
  }'
+```
+
+> Response
+
+```json
+{
+    "data": {
+        "id": "7946bca1-6c2a-4329-a127-558ef9551eba",
+        "type": "widget",
+        "attributes": {
+            "name": "New Example Widget Name",
+            "dataset": "7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90",
+            "slug": "Example-Widget_2",
+            "userId": "5dbadb0adf2dc74d2ad05dfb",
+            "application": [
+                "gfw"
+            ],
+            "verified": false,
+            "default": false,
+            "protected": false,
+            "defaultEditableWidget": false,
+            "published": true,
+            "freeze": false,
+            "env": "production",
+            "template": false,
+            "createdAt": "2020-06-11T14:13:19.677Z",
+            "updatedAt": "2020-06-11T14:13:19.677Z"
+        }
+    }
+}
 ```
 
 The update widget endpoint allows you to modify the details of an existing widget. As noted on the [widget concept](#widget) documentation, the widget object stores the details of how widget is meant to be rendered, but may not contain the actual data. As such, if you are looking to update the data that's being displayed on your widget, this is probably not the endpoint you're looking for - you may want to [update your dataset](#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
@@ -928,6 +959,15 @@ curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widg
 }'
 ```
 
+You can clone an existing widget as long as you have permissions to the applications associated with it. Basic usage requires no body params, but you can optionally pass a new `name` or `description` to be used in the creation of the new widget.
+
+To perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the widget
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` or `USER` and be the widget's owner (through the `userId` field of the widget)
+  
 ### Cloning widgets from other microservices
 
 When cloning a widget, the newly created clone will take the `userId` of the originating request. If you call this endpoint as an authenticated user from your custom application, that means it will get that authenticated user's `userId`. However, if invoked from another API microservice, that `userId` is no longer available. In this scenario, when the request to clone is originated internally, you can optionally pass a `userÌd` body value that will be set as the `userId` of the newly created widget.
