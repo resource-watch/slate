@@ -671,7 +671,7 @@ Before creating a layer, there are a few things you must know and do:
 - Depending on your user account's role, you may have permission to create a layer but not delete it afterwards.
 - The layers you create on the RW API will be publicly visible and available to other users.
 
-Creating a layer is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [layer reference](#layer-reference) section, but the minimum field list you must specify for all layers is:
+Creating a layer is done using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [layer reference](#layer-reference) section, but the minimum field list you must specify for all layers is:
 
 - name
 - description 
