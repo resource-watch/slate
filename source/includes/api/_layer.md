@@ -259,7 +259,7 @@ Besides the required `ids` array, your request body may optionally include a `ap
 - Use a @ separated list, like `rw@prep`, if you want to show only layers that have both `rw` and `prep` as their applications.
 - None of the filters require exact matching - a layer that simultaneously contain the applications `rw`, `prep` and `gfw` would match all 3 filters above.
 
-Please note that, unlike [getting all layers](#getting-all-layers) or [getting all layers for a dataset](#getting-all-layers-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination136), [filtering](#filters137), [sorting](#sorting138) or [including related entities](#include-related-entities138) described in their respective sections.
+Please note that, unlike [getting all layers](#getting-all-layers) or [getting all layers for a dataset](#getting-all-layers-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination136), [filtering](#filters137), [sorting](#sorting138) or [including related entities](#include-related-layer-entities138) described in their respective sections.
  
 
 ### Pagination
@@ -365,7 +365,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?sort=-name,+slug"
 curl -X GET "https://api.resourcewatch.org/v1/layer?sort=user.role"
 ```
 
-### Include related entities
+### Include entities associated with the layers
 
 When fetching layers, you can request additional entities to be loaded. The following entities are available:
 
@@ -605,9 +605,9 @@ curl -X GET "https://api.resourcewatch.org/v1/layer/<layer_slug>"
 
 If you know the id or the `slug` of a layer, then you can access it directly. Both id and `slug` are case-sensitive.
 
-### Include related entities
+### Include entities associated with the layer
 
-You can load related `user` and `vocabulary` data in the same request. See [this section](#include-related-entities135) for more details.
+You can load related `user` and `vocabulary` data in the same request. See [this section](#include-entities-associated-with-the-layers) for more details.
 
 
 ## Creating a layer

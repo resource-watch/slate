@@ -245,7 +245,7 @@ Special search criteria must be used as sole sorting criteria, as it's not possi
 
 You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
-### Include related entities
+### Include entities associated with the datasets
 
 > Loads metadata and widgets associated with each dataset:
 
@@ -374,7 +374,7 @@ curl -X GET "https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC"
 
 If you know the id or the `slug` of a dataset, then you can access it directly. Both id and `slug` are case-sensitive.
 
-Using this endpoint, you can also [include related entities](#include-related-entities), in the same way you do when loading multiple datasets. 
+Using this endpoint, you can also [include entities associated with the dataset](#include-entities-associated-with-the-datasets), in the same way you do when loading multiple datasets. 
 
 > Getting a dataset by its including its relationships:
 
