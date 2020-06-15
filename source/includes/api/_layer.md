@@ -351,7 +351,7 @@ Multiple sorting criteria can be used, separating them by commas.
 curl -X GET "https://api.resourcewatch.org/v1/layer?sort=name,slug"
 ```
 
-You can specify the sorting order by prepending the criteria with either `-` or `+`. By default, `asc` order is assumed.
+You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
 > Explicit order of sorting
 
