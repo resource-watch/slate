@@ -35,6 +35,73 @@ Both queries can contain two special keywords: `{begin}` and `{end}`. These will
 
 *Please note that, for readability purposes, the special characters in example on the side are not properly escaped. Don't forget all special characters must be properly escaped for the queries to be correctly executed.*
 
+## Get subscriptions owned by the request user
+
+> Getting the subscriptions for the request user:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```json
+{
+  "data": [
+    {
+      "type": "subscription",
+      "id": "587cc014f3b3f6280058e478",
+      "attributes": {
+        "name": "test",
+        "createdAt": "2017-01-16T12:45:08.434Z",
+        "userId": "57a063da096c4eda523e99ae",
+        "resource": {
+          "type": "EMAIL",
+          "content": "pepe@gmail.com"
+        },
+        "datasets": [
+          "viirs-active-fires"
+        ],
+        "params": {
+          "iso": {
+            "region": null,
+            "country": null
+          },
+          "wdpaid": null,
+          "use": null,
+          "useid": null,
+          "geostore": "50601ff9257df221e808af427cb47701"
+        },
+        "confirmed": false,
+        "language": "en",
+        "datasetsQuery": [],
+        "env": "production"
+      }
+    }
+  ]
+}
+```
+
+This endpoint will allow you to get the list of subscriptions owned by the user who performed the request (identified by the access token). This, in order to use this endpoint, you must be logged in (i.e. a token must be provided). In the sections below, we’ll explore how you can customize this endpoint call to match your needs.
+
+For a detailed description of each field, check out the [Subscription reference](#subscription-reference) section.
+
+### Pagination
+
+No pagination is applied for the `v1/subscriptions` endpoint. Since only the subscriptions owned by the user who performs the request are returned, all subscriptions are always returned.
+
+### Filters
+
+The `v1/subscriptions` endpoint supports the following optional query parameters as filters:
+
+Field       |  Description                                             | Type   | Default value
+----------- | :------------------------------------------------------: | -----: | ---------------:
+application | Application to which the subscription is associated.     | String | 'gfw'
+env         | The environment to which the subscription is associated. | String | 'production'
+
+**Deprecation notice:** the default value for the `application` filter (currently, `gfw`) will be removed and the `application` filter will then have no default value. We recommend reviewing your application to ensure you set and load the correct `application` explicitly.
+
 ## Subscription reference
 
 This section gives you a complete view at the properties that are maintained as part of a subscription. When interacting with a subscription (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
