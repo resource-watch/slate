@@ -44,7 +44,7 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions \
 -H "Authorization: Bearer <your-token>"
 ```
 
-> Response:
+> Example response:
 
 ```json
 {
@@ -53,29 +53,20 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions \
       "type": "subscription",
       "id": "587cc014f3b3f6280058e478",
       "attributes": {
-        "name": "test",
-        "createdAt": "2017-01-16T12:45:08.434Z",
+        "name": "Test subscription",
+        "createdAt": "2020-01-16T12:45:08.434Z",
         "userId": "57a063da096c4eda523e99ae",
         "resource": {
           "type": "EMAIL",
-          "content": "pepe@gmail.com"
+          "content": "example@wri.org"
         },
-        "datasets": [
-          "viirs-active-fires"
-        ],
+        "datasets": ["viirs-active-fires"],
+        "datasetsQuery": [],
         "params": {
-          "iso": {
-            "region": null,
-            "country": null
-          },
-          "wdpaid": null,
-          "use": null,
-          "useid": null,
           "geostore": "50601ff9257df221e808af427cb47701"
         },
         "confirmed": false,
         "language": "en",
-        "datasetsQuery": [],
         "env": "production"
       }
     }
@@ -101,6 +92,47 @@ application | Application to which the subscription is associated.     | String 
 env         | The environment to which the subscription is associated. | String | 'production'
 
 **Deprecation notice:** the default value for the `application` filter (currently, `gfw`) will be removed and the `application` filter will then have no default value. We recommend reviewing your application to ensure you set and load the correct `application` explicitly.
+
+## Get a subscription by id
+
+> Example call for getting a subscription by its id:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/587cc014f3b3f6280058e478 \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Response:
+
+```json
+{
+  "data": {
+    "type": "subscription",
+    "id": "587cc014f3b3f6280058e478",
+    "attributes": {
+      "name": "Test subscription",
+      "createdAt": "2020-01-16T12:45:08.434Z",
+      "userId": "57a063da096c4eda523e99ae",
+      "resource": {
+        "type": "EMAIL",
+        "content": "example@wri.org"
+      },
+      "datasets": ["viirs-active-fires"],
+      "datasetsQuery": [],
+      "params": {
+        "geostore": "50601ff9257df221e808af427cb47701"
+      },
+      "confirmed": false,
+      "language": "en",
+      "env": "production"
+    }
+  }
+}
+```
+
+If you know the id of a subscription, then you can access it directly, by performing a GET request to the `v1/subscriptions/:id` endpoint.
+
+**Please keep in mind that, similarly to the `GET /v1/subscriptions` endpoint, this endpoint will only return subscriptions that are owned by the user who performed the request.** If you are trying to get a subscription that does not belong to you, the request will fail with status code 404 Not Found.
 
 ## Subscription reference
 
