@@ -6,6 +6,35 @@ A subscription allows you to subscribe and get notified of updates on a datasets
 
 In the following sections, you will understand how you can interact and manage subscriptions using the RW API, and use them to get notified via email or webhook of updates to the data of datasets. We will also dive into the process of confirming subscriptions, as well as how to unsubscribe a given subscription.
 
+## Subscribable datasets
+
+> Example of a subscribable dataset
+
+```json
+{
+  "name": "Example dataset",
+  "application": ["app"],
+  "provider": "carto",
+  ...
+  "subscribable": {
+    "test": {
+      "dataQuery": "SELECT * FROM dataset-name  WHERE 'reported_date' >= '{{begin}}' AND 'reported_date' <= '{{end}}' AND 'number_dead' > 0 ORDER BY reported_date DESC LIMIT 10",
+      "subscriptionQuery": "SELECT COUNT(*) FROM dataset-name WHERE 'reported_date' >= '{begin}' AND 'reported_date' <= '{end}' AND 'number' > 0"
+    }
+  }
+}
+```
+
+In order to create a subscription for a given dataset, the dataset must be prepared to accept subscriptions. This can be achieved by declaring some queries in the  `subscribable` property of a dataset.
+
+Inside the `subscribable` object, one (or many) sub-objects can be declared. In the provided example, an object is provided in the key `test` is provided, including both a `dataQuery` and a `subscriptionQuery`.
+
+The `dataQuery` will be evaluated as the subscription's content, while the `subscriptionQuery` will be evaluated to check if a subscription has changed since the last update.
+
+Both queries can contain two special keywords: `{begin}` and `{end}`. These will be replaced with ISO-formatted dates on runtime (with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively).
+
+*Please note that, for readability purposes, the special characters in example on the side are not properly escaped. Don't forget all special characters must be properly escaped for the queries to be correctly executed.*
+
 ## Subscription reference
 
 This section gives you a complete view at the properties that are maintained as part of a subscription. When interacting with a subscription (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
