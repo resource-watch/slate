@@ -29,6 +29,7 @@ includes:
   - api/vocabulary
   - api/geostore
   - api/subscriptions
+  - api/subscriptions_new
   - api/favourites
   - api/graph
   - api/areas
