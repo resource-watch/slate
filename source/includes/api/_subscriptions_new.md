@@ -555,6 +555,174 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
 
 You can use the endpoint `v1/subscriptions/:id/unsubscribe` (exemplified on the side) for unsubscribing from a subscription. As with most of the other subscription endpoints, please keep in mind that you must be authenticated in order to use this endpoint.
 
+## Subscription statistics
+
+The following section details the endpoints that can be used to access statistics on the usage of subscriptions.
+
+**The usage of the following endpoints is restricted to AMIN users.**
+
+### General subscription statistics
+
+> Example GET request to obtain general subscription statistics:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=:start&end=:end \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+{
+  "topSubscriptions": {
+    "geostore": 1000,
+    "country": 30,
+    "region": 20,
+    "wdpa": 10,
+    "use": 1
+  },
+  "info": {
+    "numSubscriptions": 1000,
+    "totalSubscriptions": 6000,
+    "usersWithSubscriptions": 1000,
+    "totalEmailsSentInThisQ": 0,
+    "totalEmailsSended": 0
+  },
+  "usersWithSubscription": 119,
+  "newUsers": 210,
+  "groupStatistics": {
+    "glad-alerts": {
+      "country": 15,
+      "region": 28,
+      "use": 1,
+      "wdpa": 9,
+      "geostore": 1305,
+      "countries": {
+        "CHL": 1,
+        "IDN": 3,
+        ...
+      },
+      "regions": {
+        "1": 1,
+        "2": 2,
+        ...
+      },
+      "wdpas": {
+        "130": 1,
+        "34043": 5,
+        ...
+      },
+      "countryTop": {
+        "name": "IDN",
+        "value": 3
+      },
+      "regionTop": {
+        "nameRegion": 12,
+        "nameCountry": "IDN",
+        "value": 2
+      },
+      "wdpaTop": {
+        "id": 34043,
+        "value": 5
+      }
+    },
+    "prodes-loss": {...},
+    "umd-loss-gain": {...},
+    "terrai-alerts": {...},
+    "viirs-active-fires": {...},
+    "imazon-alerts": {...},
+    "forma250GFW": {...},
+    "forma-alerts": {...},
+    "story": {...},
+    "63f34231-7369-4622-81f1-28a144d17835": {...}
+  }
+}
+```
+
+The `v1/subscriptions/statistics` endpoint can be used to access all the data regarding the subscription notifications that have been sent.
+
+#### Filters
+
+This endpoint supports the following query parameters as filters:
+
+Field       |             Description                                                              | Type   | Default | Example    |
+----------- | :----------------------------------------------------------------------------------: | -----: | ------: | ---------: |
+start       | The start of the date range to fetch the statistics. **This parameter is required.** | String | None    | 01-01-2020 |
+end         | The end of the date range to fetch the statistics. **This parameter is required.**   | String | None    | 02-20-2020 |
+application | The application for which the statistics will be fetched.                            | String | 'gfw'   | 'rw'       |
+
+### Grouped subscription statistics
+
+> Example GET request to obtain grouped subscription statistics:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=:start&end=:end \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+{
+  "glad-alerts": {
+    "country": 15,
+    "region": 28,
+    "use": 1,
+    "wdpa": 9,
+    "geostore": 1305,
+    "countries": {
+      "CHL": 1,
+      "IDN": 3,
+      ...
+    },
+    "regions": {
+      "1": 1,
+      "2": 2,
+      ...
+    },
+    "wdpas": {
+      "130": 1,
+      "34043": 5,
+      ...
+    },
+    "countryTop": {
+      "name": "IDN",
+      "value": 3
+    },
+    "regionTop": {
+      "nameRegion": 12,
+      "nameCountry": "IDN",
+      "value": 2
+    },
+    "wdpaTop": {
+      "id": 34043,
+      "value": 5
+    }
+  },
+  "prodes-loss": {...},
+  "umd-loss-gain": {...},
+  "terrai-alerts": {...},
+  "viirs-active-fires": {...},
+  "imazon-alerts": {...},
+  "forma250GFW": {...},
+  "forma-alerts": {...},
+  "story": {...},
+  "63f34231-7369-4622-81f1-28a144d17835": {...}
+}
+```
+
+The `v1/subscriptions/statistics-group` endpoint can be used to access data regarding the subscription notifications that have been sent, grouped by the the dataset of the subscription. The output of this endpoint is a subset of the output of the `v1/subscriptions/statistics` endpoint.
+
+#### Filters
+
+This endpoint supports the following query parameters as filters:
+
+Field       |             Description                                                              | Type   | Default | Example    |
+----------- | :----------------------------------------------------------------------------------: | -----: | ------: | ---------: |
+start       | The start of the date range to fetch the statistics. **This parameter is required.** | String | None    | 01-01-2020 |
+end         | The end of the date range to fetch the statistics. **This parameter is required.**   | String | None    | 02-20-2020 |
+application | The application for which the statistics will be fetched.                            | String | 'gfw'   | 'rw'       |
+
 ## Subscription reference
 
 This section gives you a complete view at the properties that are maintained as part of a subscription. When interacting with a subscription (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
