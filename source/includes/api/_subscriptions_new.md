@@ -163,6 +163,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
       "content": "henrique.pacheco@vizzuality.com"
     },
     "params": {},
+    "application": "gfw",
     "language": "en"
   }'
 ```
@@ -197,9 +198,206 @@ This section will guide you through the process of creating a basic subscription
 * `datasets` or `datasetsQuery`
 * `resource` (which includes `resource.type` and `resource.content`)
 * `params`
+* `application`
 * `language`
 
 If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. **Please keep in mind that you must be authenticated in order to create and/or manage subscriptions.**
+
+### Customizing the geographic area for the subscription
+
+When it comes to geo-referenced data, subscriptions are intrinsically tied to a geographic area of interest. This association enables users to create subscriptions to be notified of changes in the data of a dataset, but only if there are changes in the data of the dataset relative to the concrete geographic area of the world they are interested in. The specification of the geographic information for the subscription should be done in the `params` field of the subscription.
+
+#### Subscribing to an area of interest
+
+> Creating a subscription providing the id of an area of interest in the params field:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": ["<dataset-id>"],
+    "params": {
+      "area": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'
+```
+
+A subscription can refer to a specific area of interest that has been created using the [RW API Areas service](#areas). If this is the case, you should first create your area of interest using the `/v1/areas` endpoints, grab the id of the area of interest you wish to subscribe to and provide it in the `params.area` field of the request body when creating the subscription.
+
+Field         | Description                                                    | Type
+------------- | :------------------------------------------------------------: | ----------------:
+`params`      | Geographic area of the subscription                            | Object
+`params.area` | Id of area of interest from the [RW API Areas service](#areas) | String
+
+#### Subscribing to a country
+
+> Creating a subscription providing an ISO code in the params field:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": ["<dataset-id>"],
+    "params": {
+      "iso": {
+        "country": "BRA"
+      }
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'
+```
+
+A subscription can refer to a specific country by the country's 3-letter ISO code. If this is the case, you should provide the country code in the `params.iso.country` field of the request body when creating the subscription.
+
+Field                 | Description                                                    | Type
+--------------------- | :------------------------------------------------------------: | ----------------:
+`params`              | Geographic area of the subscription                            | Object
+`params.iso`          | Country, region or subregion information for the subscription  | Object
+`params.iso.country`  | ISO 3-letter code of the country to subscribe                  | String
+
+#### Subscribing to a country region (or subregion)
+
+> Creating a subscription providing an ISO code, a region code and (optionally) a subregion code in the params field:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": ["<dataset-id>"],
+    "params": {
+      "iso": {
+        "country": "BRA",
+        "region": "1",
+        "subregion": "2"
+      }
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'
+```
+
+A subscription can refer to a specific country region (or subregion) by the country's 3-letter ISO code and the region (and subregion) id. If this is the case, you should provide the country code in the `params.iso.country` field, the region id in the `params.iso.region` field, and optionally the subregion id in the `params.iso.subregion` field, when creating the subscription.
+
+Field                 | Description                                                    | Type
+--------------------- | :------------------------------------------------------------: | ----------------:
+`params`              | Geographic area of the subscription                            | Object
+`params.iso`          | Country, region or subregion information for the subscription  | Object
+`params.iso.country`  | ISO 3-letter code of the country to subscribe                  | String
+`params.iso.region`   | Region id to subscribe                                         | String
+`params.iso.subregion`| Subregion id to subscribe (optional)                           | String
+
+#### Subscribing to a protected area from World Database on Protected Areas
+
+> Creating a subscription providing a WDPA id in the params field:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": ["<dataset-id>"],
+    "params": {
+      "wdpaid": "32054"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'
+```
+
+A subscription can refer to a specific protected area by the id of that area in the World Database on Protected Areas. If this is the case, you should provide the WDPA id in the `params.wdpaid` field when creating the subscription.
+
+Field                 | Description                                                    | Type
+--------------------- | :------------------------------------------------------------: | ----------------:
+`params`              | Geographic area of the subscription                            | Object
+`params.wdpaid`       | Id of the protected area in the WDPA                           | String
+
+#### Subscribing to a geostore
+
+> Creating a subscription providing the id of a geostore in the params field:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": ["<dataset-id>"],
+    "params": {
+      "geostore": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'
+```
+
+A subscription can refer to a specific geostore that has been created using the [RW API Geostore service](#geostore). If this is the case, you should first create your geostore using the `/v2/geostore` endpoints, grab the id of the geostore you wish to subscribe to and provide it in the `params.geostore` field of the request body when creating the subscription.
+
+Field                 | Description                                                    | Type
+--------------------- | :------------------------------------------------------------: | ----------------:
+`params`              | Geographic area of the subscription                            | Object
+`params.geostore`     | Id of the geostore to subscribe to.                            | String
+
+#### Subscribing to land use areas
+
+> Creating a subscription providing the id of a land use area in the params field:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": ["<dataset-id>"],
+    "params": {
+      "use": "mining",
+      "useid": "234"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'
+```
+
+A subscription can refer to a land use area provided by different datasets. At this point, the following land use datasets are supported: `"mining"` for mining areas, `"logging"` for Congo Basin logging roads, `"oilpalm"` for palm oil plantations or `"fiber"` for wood fiber plantations. If this is the case, you should provide the name of the land use dataset you wish to use in the `params.use` field, and the id of the area in the `params.useid` field of the request body when creating the subscription.
+
+Field                 | Description                                                    | Type
+--------------------- | :------------------------------------------------------------: | ----------------:
+`params`              | Geographic area of the subscription                            | Object
+`params.use`          | The type of land use you want to subscribe to. Can be one of `"mining"`, `"logging"`, `"oilpalm"` or `"fiber"`. | String
+`params.useid`        | The id of the land use area you want to subscribe to.          | String
 
 ### Creating subscriptions for other users
 
@@ -269,7 +467,7 @@ resource.type    | Enum    | Yes                 |                     | The typ
 resource.content | String  | Yes                 |                     | The object to be notified: should be a valid email case `resource.type` is `"EMAIL"`, and a valid URL case `resource.type` is `"URL"`.
 datasets         | Array   | No                  | `[]`                | An array of dataset ids that this subscription is tracking.
 datasetsQuery    | Array   | No                  | `[]`                | An alternative way of stating the datasets that this subscription is tracking.
-params           | Object  | No                  | `{}`                | Parameters for customizing the tracking of this subscription. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).
+params           | Object  | No                  | `{}`                | Determines the area of interest that this subscription should track. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).
 userId           | String  | Yes                 | (auto-populated)    | Id of the user who owns the subscription. Set automatically on creation. Cannot be modified by users.
 language         | String  | No                  | `'en'`              | The language for this subscription. Useful for customizing email notifications according to the language of the subscription. Possible values include `'en'`, `'es'`, `'fr'`, `'pt'` or `'zh'`.
 application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription.
