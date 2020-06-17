@@ -93,6 +93,12 @@ env         | The environment to which the subscription is associated. | String 
 
 **Deprecation notice:** the default value for the `application` filter (currently, `gfw`) will be removed and the `application` filter will then have no default value. We recommend reviewing your application to ensure you set and load the correct `application` explicitly.
 
+### Errors for getting subscriptions
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | No valid token was provided in the request headers.
+
 ## Get a subscription by id
 
 > Example call for getting a subscription by its id:
@@ -133,6 +139,14 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/587cc014f3b3f6280058e
 If you know the id of a subscription, then you can access it directly, by performing a GET request to the `v1/subscriptions/:id` endpoint.
 
 **Please keep in mind that, similarly to the `GET /v1/subscriptions` endpoint, this endpoint will only return subscriptions that are owned by the user who performed the request.** If you are trying to get a subscription that does not belong to you, the request will fail with status code 404 Not Found.
+
+### Errors for getting subscriptions by id
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | ID is not valid| The id provided is not a valid subscription id.
+401            | Unauthorized   | No valid token was provided in the request headers.
+404            | Subscription not found | Either no subscription exists with the provided id, or the subscription with the id provided is not owned by the user who performed the request.
 
 ## Creating a subscription
 
@@ -186,6 +200,10 @@ This section will guide you through the process of creating a basic subscription
 * `language`
 
 If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. **Please keep in mind that you must be authenticated in order to create and/or manage subscriptions.**
+
+### Creating subscriptions for other users
+
+As a rule of thumb, you can only create and manage subscriptions for your user. However, in some specific cases, it may make sense to create subscriptions while impersonating other users. If you are interested in fetching or managing subscriptions that are owned by other users, take a look at [this section in the developer docs](/developer.html#subscriptions).
 
 ## Subscription lifecycle
 
