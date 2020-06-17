@@ -403,6 +403,81 @@ Field                 | Description                                             
 
 As a rule of thumb, you can only create and manage subscriptions for your user. However, in some specific cases, it may make sense to create subscriptions while impersonating other users. If you are interested in fetching or managing subscriptions that are owned by other users, take a look at [this section in the developer docs](/developer.html#subscriptions).
 
+## Updating a subscription
+
+> Example PATCH request for updating a subscription by id:
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
+-H "Authorization: Bearer <your-token>"
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": ["20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"],
+    "params": {
+      "geostore": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "application": "rw",
+    "language": "fr",
+    "env": "staging",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'
+```
+
+> Example response:
+
+```json
+{
+  "data": {
+    "type": "subscription",
+    "id": "5ee79291a67d9a001b11043a",
+    "attributes": {
+      "createdAt": "2020-06-15T15:24:01.806Z",
+      "userId": "5ed75dd2a82a420010ed066b",
+      "resource": {
+        "type": "EMAIL",
+        "content": "email@address.com"
+      },
+      "datasets": ["20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"],
+      "params": {
+        "geostore": "35a6d982388ee5c4e141c2bceac3fb72"
+      },
+      "confirmed": true,
+      "language": "fr",
+      "datasetsQuery": [],
+      "env": "staging"
+    }
+  }
+}
+```
+
+**As with most of subscription endpoints, this endpoint requires authentication. Additionally, you must be the owner of the subscription in order to update it, otherwise the request will fail with `404 Not Found`.**
+
+To update a subscription, you should use the PATCH `v1/subscriptions/:id` endpoint. Updating a subscription follows the same validations as when creating a new one - i.e. partial updates are not supported. You must provide all the required fields of the subscription for the update to be successful. The minimum fields list you must specify to update a subscription is:
+
+* `datasets` or `datasetsQuery`
+* `resource` (which includes `resource.type` and `resource.content`)
+* `params`
+* `application`
+* `language`
+
+If the update of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the updated subscription object.
+
+*Note: Updating a subscription does not require confirming it. A confirmed subscription will stay confirmed after an update.*
+
+## Deleting subscriptions
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
+-H "Authorization: Bearer <your-token>"
+```
+
+**As with most of subscription endpoints, this endpoint requires authentication. Additionally, you must be the owner of the subscription in order to delete it, otherwise the request will fail with `404 Not Found`.**
+
+To delete a subscription, you should use the DELETE `v1/subscriptions/:id` endpoint. If the deletion of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the deleted subscription object.
+
 ## Subscription lifecycle
 
 You have created your subscription using [the endpoint for creating subscriptions](#creating-a-subscription). But, if you notice the subscription object returned after creation, you will be able to see that the subscription `confirmed` field is set to `false`. This means that this subscription is not confirmed yet.
