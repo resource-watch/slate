@@ -134,6 +134,107 @@ If you know the id of a subscription, then you can access it directly, by perfor
 
 **Please keep in mind that, similarly to the `GET /v1/subscriptions` endpoint, this endpoint will only return subscriptions that are owned by the user who performed the request.** If you are trying to get a subscription that does not belong to you, the request will fail with status code 404 Not Found.
 
+## Creating a subscription
+
+> Example POST request to create a subscription providing the bare minimum body fields:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
+    "resource": {
+      "type": "EMAIL",
+      "content": "henrique.pacheco@vizzuality.com"
+    },
+    "params": {},
+    "language": "en"
+  }'
+```
+
+> Example response:
+
+```json
+{
+  "data": {
+    "type": "subscription",
+    "id": "5eea1e6cfd754e001b28cb2b",
+    "attributes": {
+      "createdAt": "2020-06-17T13:45:16.222Z",
+      "userId": "5ed75dd2a82a420010ed066b",
+      "resource": {
+        "type": "EMAIL",
+        "content": "henrique.pacheco@vizzuality.com"
+      },
+      "datasets": ["20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"],
+      "params": {},
+      "confirmed": false,
+      "language": "en",
+      "datasetsQuery": [],
+      "env": "production"
+    }
+  }
+}
+```
+
+This section will guide you through the process of creating a basic subscription in the RW API. Creating a subscription is done using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [subscription reference](#subscription-reference) section, but the minimum field list you must specify for all subscriptions is:
+
+* `datasets` or `datasetsQuery`
+* `resource` (which includes `resource.type` and `resource.content`)
+* `params`
+* `language`
+
+If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. **Please keep in mind that you must be authenticated in order to create and/or manage subscriptions.**
+
+## Subscription lifecycle
+
+You have created your subscription using [the endpoint for creating subscriptions](#creating-a-subscription). But, if you notice the subscription object returned after creation, you will be able to see that the subscription `confirmed` field is set to `false`. This means that this subscription is not confirmed yet.
+
+For the subscription to be usable (i.e. in order to be notified via email or webhook), you will first need to confirm it. Check more information about confirming subscriptions in the [confirming a subscription](#confirming-a-subscription) section.
+
+If confirming subscriptions using a HTTP request is not an option, and for some reason you have lost the confirmation email, you can check the [resending confirmation emails](#resending-the-subscription-confirmation-email) section for more information on how to resend the confirmation email.
+
+If, at any point, you want to stop receiving email or webhook notifications, you can check the [unsubscribing](#unsubscribing) section for details on how to stop receiving notifications for your subscriptions.
+
+### Confirming a subscription
+
+> Example GET request to confirm a subscription:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
+```
+
+Upon creation of the subscription, a confirmation email is sent to the email of the user who created the subscription. This email will contain a link, which you will need to click in order to confirm the subscription. You can also confirm the subscription by performing a GET request to the `v1/subscriptions/:id/confirm` endpoint, as exemplified on the side.
+
+*Manually calling this endpoint will redirect you to the GFW application.*
+
+### Resending the subscription confirmation email
+
+> Example GET request to resend the confirmation email for a subscription:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmation \
+-H "Authorization: Bearer <your-token>"
+```
+
+For convenience, the RW API offers an additional endpoint to resend the confirmation email. In order to do this, you should perform a GET request to the `v1/subscriptions/:id/send_confirmation`. As with most of the other subscription endpoints, please keep in mind that you must be authenticated in order to use this endpoint.
+
+*Manually calling this endpoint will redirect you to the GFW application.*
+
+### Unsubscribing
+
+> Example GET request to unsubscribe:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
+-H "Authorization: Bearer <your-token>"
+```
+
+**Note: unsubscribing is equivalent to deleting the subscription**.
+
+You can use the endpoint `v1/subscriptions/:id/unsubscribe` (exemplified on the side) for unsubscribing from a subscription. As with most of the other subscription endpoints, please keep in mind that you must be authenticated in order to use this endpoint.
+
 ## Subscription reference
 
 This section gives you a complete view at the properties that are maintained as part of a subscription. When interacting with a subscription (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
@@ -144,7 +245,7 @@ Filter           | Type    | Required            | Default value       | Descrip
 ---------------- | ------- | ------------------- |-------------------- | ------------------------------------------------------------------
 id               | String  | Yes                 | (auto-generated)    | Unique Id of the subscription. Auto generated on creation. Cannot be modified by users.
 name             | String  | No                  |                     | The name of the subscription.
-confirmed        | Boolean | No                  | false               | If the subscription is confirmed or not.
+confirmed        | Boolean | No                  | false               | If the subscription is confirmed or not. Cannot be modified by users, only through the usage of the confirm and unsubscribe endpoints. (TODO: missing refs!)
 resource         | Object  | Yes                 |                     | An object containing the data for who (or what) should be notified on dataset data changes.
 resource.type    | Enum    | Yes                 |                     | The type of resource to be notified. Can take the values of `"EMAIL"` (for an email notification) or `"URL"` for a webhook notification.
 resource.content | String  | Yes                 |                     | The object to be notified: should be a valid email case `resource.type` is `"EMAIL"`, and a valid URL case `resource.type` is `"URL"`.
@@ -152,7 +253,7 @@ datasets         | Array   | No                  | `[]`                | An arra
 datasetsQuery    | Array   | No                  | `[]`                | An alternative way of stating the datasets that this subscription is tracking.
 params           | Object  | No                  | `{}`                | Parameters for customizing the tracking of this subscription. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).
 userId           | String  | Yes                 | (auto-populated)    | Id of the user who owns the subscription. Set automatically on creation. Cannot be modified by users.
-language         | String  | No                  | `'en'`              | The language for this subscription. Useful for customizing email notifications according to the language of the subscription.
+language         | String  | No                  | `'en'`              | The language for this subscription. Useful for customizing email notifications according to the language of the subscription. Possible values include `'en'`, `'es'`, `'fr'`, `'pt'` or `'zh'`.
 application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription.
 env              | String  | Yes                 | `'production'`      | Environment to which the subscription belongs.
 createdAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was created. Cannot be modified by users.
