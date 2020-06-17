@@ -469,9 +469,38 @@ If the update of the subscription is successful, the HTTP response code will be 
 
 ## Deleting subscriptions
 
+> Example DELETE request for deleting a subscription by its id:
+
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
+curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id \
 -H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+{
+  "data": {
+    "type": "subscription",
+    "id": "5ee79291a67d9a001b11043a",
+    "attributes": {
+      "createdAt": "2020-06-15T15:24:01.806Z",
+      "userId": "5ed75dd2a82a420010ed066b",
+      "resource": {
+        "type": "EMAIL",
+        "content": "email@address.com"
+      },
+      "datasets": ["20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"],
+      "params": {
+        "geostore": "35a6d982388ee5c4e141c2bceac3fb72"
+      },
+      "confirmed": true,
+      "language": "fr",
+      "datasetsQuery": [],
+      "env": "staging"
+    }
+  }
+}
 ```
 
 **As with most of subscription endpoints, this endpoint requires authentication. Additionally, you must be the owner of the subscription in order to delete it, otherwise the request will fail with `404 Not Found`.**
