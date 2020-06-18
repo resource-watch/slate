@@ -2,9 +2,11 @@
 
 ## What is a subscription?
 
-A subscription allows you to subscribe and get notified of updates on a datasets' data. We strongly recommend that you read the [dataset concept](#dataset) and [dataset endpoint](#dataset6) sections before proceeding.
+A subscription allows you to get notified of updates on a datasets' data. We strongly recommend that you read the [dataset concept](#dataset) and [dataset endpoint](#dataset6) sections before proceeding.
 
-In the following sections, you will understand how you can interact and manage subscriptions using the RW API, and use them to get notified via email or webhook of updates to the data of datasets. We will also dive into the process of confirming subscriptions, as well as how to unsubscribe a given subscription.
+In the following sections, you will understand how you can interact and manage subscriptions using the RW API. We will see how we can customize subscriptions so that we only get notified for changes in dataset's data for specific geographic regions. You will learn how to use them to get notified via email or calls to a webhook. We will also dive into subscription lifecycle, and understand how we can confirm subscriptions, resend confirmation emails and how to unsubscribe and stop receiving notifications.
+
+However, we will start by understanding how we can prepare datasets to interact with subscriptions. Stay tunned!
 
 ## Subscribable datasets
 
@@ -27,9 +29,9 @@ In the following sections, you will understand how you can interact and manage s
 
 In order to create a subscription for a given dataset, the dataset must be prepared to accept subscriptions. This can be achieved by declaring some queries in the  `subscribable` property of a dataset.
 
-Inside the `subscribable` object, one (or many) sub-objects can be declared. In the provided example, an object is provided in the key `test` is provided, including both a `dataQuery` and a `subscriptionQuery`.
+Inside the `subscribable` object, one (or many) sub-objects can be declared. In the example on the side, an object is provided in the key `test` is provided, including both a `dataQuery` and a `subscriptionQuery`.
 
-The `dataQuery` will be evaluated as the subscription's content, while the `subscriptionQuery` will be evaluated to check if a subscription has changed since the last update.
+`dataQuery` and `subscriptionQuery` should always be present inside each sub-object of the `subscribable` dataset's field. The first will be evaluated as the subscription's content, while the latter will be evaluated to check if a subscription has changed since the last update.
 
 Both queries can contain two special keywords: `{begin}` and `{end}`. These will be replaced with ISO-formatted dates on runtime (with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively).
 
@@ -202,6 +204,16 @@ This section will guide you through the process of creating a basic subscription
 * `language`
 
 If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. **Please keep in mind that you must be authenticated in order to create and/or manage subscriptions.**
+
+### Errors for creating subscriptions
+
+Error code     | Error message                       | Description
+-------------- | ----------------------------------- | --------------
+400            | Datasets or datasetsQuery required  | You didn't provide one of the required fields.
+400            | Language required                   | You didn't provide one of the required fields.
+400            | Resource required                   | You didn't provide one of the required fields.
+400            | Params required                     | You didn't provide one of the required fields.
+401            | Unauthorized                        | No valid token was provided in the request headers.
 
 ### Customizing the geographic area for the subscription
 
@@ -467,6 +479,18 @@ If the update of the subscription is successful, the HTTP response code will be 
 
 *Note: Updating a subscription does not require confirming it. A confirmed subscription will stay confirmed after an update.*
 
+### Errors for updating subscriptions
+
+Error code     | Error message                       | Description
+-------------- | ----------------------------------- | --------------
+400            | Datasets or datasetsQuery required  | You didn't provide one of the required fields.
+400            | Language required                   | You didn't provide one of the required fields.
+400            | Resource required                   | You didn't provide one of the required fields.
+400            | Params required                     | You didn't provide one of the required fields.
+400            | Id is not valid                     | The id provided is not valid.
+401            | Unauthorized                        | No valid token was provided in the request headers.
+404            | Subscription not found              | Either a subscription with the id provided does not exist or it is not owned by the user who performed the request.
+
 ## Deleting subscriptions
 
 > Example DELETE request for deleting a subscription by its id:
@@ -506,6 +530,14 @@ curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id \
 **As with most of subscription endpoints, this endpoint requires authentication. Additionally, you must be the owner of the subscription in order to delete it, otherwise the request will fail with `404 Not Found`.**
 
 To delete a subscription, you should use the DELETE `v1/subscriptions/:id` endpoint. If the deletion of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the deleted subscription object.
+
+### Errors for deleting subscriptions
+
+Error code     | Error message                       | Description
+-------------- | ----------------------------------- | --------------
+400            | Id is not valid                     | The id provided is not valid.
+401            | Unauthorized                        | No valid token was provided in the request headers.
+404            | Subscription not found              | Either a subscription with the id provided does not exist or it is not owned by the user who performed the request.
 
 ## Subscription lifecycle
 
