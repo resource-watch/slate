@@ -297,6 +297,125 @@
 
 <p><strong>Important</strong>: as BigQuery is billed by query, opening this connector to the world could have a large impact on the API&rsquo;s cost. As such, creating BigQuery datasets is restricted to specific users. </p>
 
+          <h1 id="layer">Layer</h1>
+
+<h2 id="updating-the-env-for-all-layers-for-a-dataset">Updating the env for all layers for a dataset</h2>
+
+<blockquote>
+<p>Example PATCH request that sets all layer for the given dataset to the defined env:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/layer/change-environment/&lt;dataset_id&gt;/&lt;env&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoints updates the <code class="prettyprint">env</code> value of all layers associated with the given dataset id. It&rsquo;s only available to other microservices, and cannot be called directly by an API user. Its currently used when a dataset&rsquo;s <code class="prettyprint">env</code> value is updated.</p>
+
+<p>The update process is not atomic. A successful request will return a 204 <code class="prettyprint">No content</code> response.</p>
+
+<h4 id="errors-for-updating-the-env-for-all-layers-for-a-dataset">Errors for updating the env for all layers for a dataset</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to update layers.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>This endpoint is only available to microservices, through their special token.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset not found</td>
+<td>A dataset with the provided id does not exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-all-layers-for-a-dataset">Deleting all layers for a dataset</h2>
+
+<blockquote>
+<p>Example DELETE request that deletes all layers for a dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bd8a36df-2e52-4b2d-b7be-a48bdcd7c769"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Water stress"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Water-stress_7"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"water stress"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"rw"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb06df2dc74d2ad054fb"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"layerConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"legendConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"interactionConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"applicationConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"staticImageConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-04T14:28:24.575Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-04T14:28:24.575Z"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w"> 
+        </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoints allows deleting all layers for a given dataset id. It&rsquo;s only available to other microservices, and cannot be called directly by an API user. Its currently used when a dataset is deleted, and all its layers need to be deleted in the process.</p>
+
+<p>Like when deleting a single layer by id, deleting layers this way will also delete vocabulary tags and metadata associated with the layer, in a non-atomic way, and any failure while deleting those associated elements will also not be reflected on the response.</p>
+
+<p>Unlike when deleting a single layer, when deleting layers this way, the <code class="prettyprint">protected</code> value is ignored, and layers will be deleted even if its value is set to true.</p>
+
+<p>The process of deleting multiple layers is not atomic. Layers will be deleted using a random order, and a failure in deleting one of them will produce an error, but already deleted layers will not be rolled back.</p>
+
+<h4 id="errors-for-deleting-all-layers-for-a-dataset">Errors for deleting all layers for a dataset</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to delete layers.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>This endpoint is only available to microservices, through their special token.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset not found</td>
+<td>A dataset with the provided id does not exist.</td>
+</tr>
+</tbody></table>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
