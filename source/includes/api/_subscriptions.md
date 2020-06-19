@@ -2,11 +2,11 @@
 
 ## What is a subscription?
 
-A subscription allows you to get notified of updates on a datasets' data. We strongly recommend that you read the [dataset concept](#dataset) and [dataset endpoint](#dataset6) sections before proceeding.
+A subscription allows you to get notified of updates on a datasets' data. We strongly recommend that you read the [dataset concept](#dataset) and [dataset endpoints](#dataset6) sections before proceeding.
 
-In the following sections, you will understand how you can interact and manage subscriptions using the RW API. We will see how we can customize subscriptions so that we only get notified for changes in dataset's data for specific geographic regions. You will learn how to use them to get notified via email or calls to a webhook. We will also dive into subscription lifecycle, and understand how we can confirm subscriptions, resend confirmation emails and how to unsubscribe and stop receiving notifications.
+In the following sections, we will cover how you can interact and manage subscriptions in the RW API. We will see how you can customize subscriptions so that we only get notified for changes in a dataset's data for specific geographic regions. You will learn how to use them to get notified via email or calls to a URL you provide. We will also dive into subscription lifecycle, and understand how we can confirm subscriptions, resend confirmation emails and how to unsubscribe and stop receiving notifications.
 
-However, we will start by understanding how we can prepare datasets to interact with subscriptions. Stay tunned!
+However, we will start by understanding how we can prepare datasets to support subscriptions.
 
 ## Subscribable datasets
 
@@ -27,22 +27,24 @@ However, we will start by understanding how we can prepare datasets to interact 
 }
 ```
 
-In order to create a subscription for a given dataset, the dataset must be prepared to accept subscriptions. This can be achieved by declaring some queries in the  `subscribable` property of a dataset.
+Before we go into the details of managing subscriptions, it's important to understand that, while you can create a subscription for *any* dataset, some conditions must be met by the dataset for its corresponding subscriptions to be functional and actually work as described here. 
 
-Inside the `subscribable` object, one (or many) sub-objects can be declared. In the example on the side, an object is provided in the key `test` is provided, including both a `dataQuery` and a `subscriptionQuery`.
+In order to support a functional subscription, a dataset must have some queries defined in its `subscribable` property. In this property, of type object, one (or many) sub-objects need to be declared. In the example on the side, an object is provided in the key `test`, including both a `dataQuery` and a `subscriptionQuery`.
 
 `dataQuery` and `subscriptionQuery` should always be present inside each sub-object of the `subscribable` dataset's field. The first will be evaluated as the subscription's content, while the latter will be evaluated to check if a subscription has changed since the last update.
 
 Both queries can contain two special keywords: `{begin}` and `{end}`. These will be replaced with ISO-formatted dates on runtime (with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively).
 
+For more details on how you can modify the `subscribable` property of a dataset, check out the documentation on [updating a dataset](#updating-a-dataset).
+
 *Please note that, for readability purposes, the special characters in example on the side are not properly escaped. Don't forget all special characters must be properly escaped for the queries to be correctly executed.*
 
-## Get subscriptions owned by the request user
+## Getting subscriptions owned by the request user
 
 > Getting the subscriptions for the request user:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions \
+curl -X GET "https://api.resourcewatch.org/v1/subscriptions" \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -76,13 +78,9 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions \
 }
 ```
 
-This endpoint will allow you to get the list of subscriptions owned by the user who performed the request (identified by the access token). This, in order to use this endpoint, you must be logged in (i.e. a token must be provided). In the sections below, we’ll explore how you can customize this endpoint call to match your needs.
+This endpoint will allow you to get all the subscriptions owned by the user who performed the request (identified by the access token). To use this endpoint, you must be logged in (i.e. a token must be provided). In the sections below, we’ll explore how you can customize this endpoint call to match your needs.
 
 For a detailed description of each field, check out the [Subscription reference](#subscription-reference) section.
-
-### Pagination
-
-No pagination is applied for the `v1/subscriptions` endpoint. Since only the subscriptions owned by the user who performs the request are returned, all subscriptions are always returned.
 
 ### Filters
 
@@ -101,12 +99,12 @@ Error code     | Error message  | Description
 -------------- | -------------- | --------------
 401            | Unauthorized   | No valid token was provided in the request headers.
 
-## Get a subscription by id
+## Getting a subscription by id
 
 > Example call for getting a subscription by its id:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/587cc014f3b3f6280058e478 \
+curl -X GET "https://api.resourcewatch.org/v1/subscriptions/<subscription_id>" \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -138,9 +136,7 @@ curl -X GET https://api.resourcewatch.org/v1/subscriptions/587cc014f3b3f6280058e
 }
 ```
 
-If you know the id of a subscription, then you can access it directly, by performing a GET request to the `v1/subscriptions/:id` endpoint.
-
-**Please keep in mind that, similarly to the `GET /v1/subscriptions` endpoint, this endpoint will only return subscriptions that are owned by the user who performed the request.** If you are trying to get a subscription that does not belong to you, the request will fail with status code 404 Not Found.
+If you know the id of a subscription, then you can access it directly by performing a GET request to the `v1/subscriptions/:id` endpoint. Keep in mind that this will only match subscriptions that are owned by the user who performed the request.
 
 ### Errors for getting subscriptions by id
 
@@ -155,14 +151,14 @@ Error code     | Error message  | Description
 > Example POST request to create a subscription providing the bare minimum body fields:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
     "datasets": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
     "resource": {
       "type": "EMAIL",
-      "content": "henrique.pacheco@vizzuality.com"
+      "content": "example@wri.org"
     },
     "params": {},
     "application": "gfw",
@@ -182,7 +178,7 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
       "userId": "5ed75dd2a82a420010ed066b",
       "resource": {
         "type": "EMAIL",
-        "content": "henrique.pacheco@vizzuality.com"
+        "content": "example@wri.org"
       },
       "datasets": ["20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"],
       "params": {},
@@ -195,24 +191,21 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
 }
 ```
 
-This section will guide you through the process of creating a basic subscription in the RW API. Creating a subscription is done using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [subscription reference](#subscription-reference) section, but the minimum field list you must specify for all subscriptions is:
+This section will guide you through the process of creating a basic subscription in the RW API. Creating a subscription can be done by any logged user using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [subscription reference](#subscription-reference) section, but the minimum field list you must specify for all subscriptions are:
 
 * `datasets` or `datasetsQuery`
-* `resource` (which includes `resource.type` and `resource.content`)
+* `resource` (which must include both `resource.type` and `resource.content`)
 * `params`
 * `application`
 * `language`
 
-If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. **Please keep in mind that you must be authenticated in order to create and/or manage subscriptions.**
+If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. Please note that **subscriptions must be confirmed** before they become active - refer to the [subscription lifecycle](#subscription-lifecycle) for more details on this.
 
 ### Errors for creating subscriptions
 
 Error code     | Error message                       | Description
 -------------- | ----------------------------------- | --------------
-400            | Datasets or datasetsQuery required  | You didn't provide one of the required fields.
-400            | Language required                   | You didn't provide one of the required fields.
-400            | Resource required                   | You didn't provide one of the required fields.
-400            | Params required                     | You didn't provide one of the required fields.
+400            | `<field>` required                  | You didn't provide one of the required fields.
 401            | Unauthorized                        | No valid token was provided in the request headers.
 
 ### Customizing the geographic area for the subscription
@@ -224,7 +217,7 @@ When it comes to geo-referenced data, subscriptions are intrinsically tied to a 
 > Creating a subscription providing the id of an area of interest in the params field:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -242,19 +235,19 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
   }'
 ```
 
-A subscription can refer to a specific area of interest that has been created using the [RW API Areas service](#areas). If this is the case, you should first create your area of interest using the `/v1/areas` endpoints, grab the id of the area of interest you wish to subscribe to and provide it in the `params.area` field of the request body when creating the subscription.
+A subscription can refer to a specific area of interest that has been created using the [RW API Areas service](#areas). If this is the case, you should first [create your area of interest](#create-area), grab its id and provide it in the `params.area` field of the request body when creating the subscription.
 
 Field         | Description                                                    | Type
 ------------- | :------------------------------------------------------------: | ----------------:
 `params`      | Geographic area of the subscription                            | Object
 `params.area` | Id of area of interest from the [RW API Areas service](#areas) | String
 
-#### Subscribing to a country
+#### Subscribing to a country, country region or subregion
 
-> Creating a subscription providing an ISO code in the params field:
+> Creating a subscription to a whole country:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -274,20 +267,10 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
   }'
 ```
 
-A subscription can refer to a specific country by the country's 3-letter ISO code. If this is the case, you should provide the country code in the `params.iso.country` field of the request body when creating the subscription.
-
-Field                 | Description                                                    | Type
---------------------- | :------------------------------------------------------------: | ----------------:
-`params`              | Geographic area of the subscription                            | Object
-`params.iso`          | Country, region or subregion information for the subscription  | Object
-`params.iso.country`  | ISO 3-letter code of the country to subscribe                  | String
-
-#### Subscribing to a country region (or subregion)
-
-> Creating a subscription providing an ISO code, a region code and (optionally) a subregion code in the params field:
+> Creating a subscription to a country subregion:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -309,12 +292,10 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
   }'
 ```
 
-A subscription can refer to a specific country region (or subregion) by the country's 3-letter ISO code and the region (and subregion) id. If this is the case, you should provide the country code in the `params.iso.country` field, the region id in the `params.iso.region` field, and optionally the subregion id in the `params.iso.subregion` field, when creating the subscription.
+A subscription can refer to a country, one of its regions, or a subregion within a region. Countries are identified by their 3-letter ISO code, and regions and subregions by their respective id. When creating a subscription for a region, the country ISO must be specified. For subscribing to a subregion, both region and country ISO must be provided. 
 
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
-`params`              | Geographic area of the subscription                            | Object
-`params.iso`          | Country, region or subregion information for the subscription  | Object
 `params.iso.country`  | ISO 3-letter code of the country to subscribe                  | String
 `params.iso.region`   | Region id to subscribe                                         | String
 `params.iso.subregion`| Subregion id to subscribe (optional)                           | String
@@ -324,7 +305,7 @@ Field                 | Description                                             
 > Creating a subscription providing a WDPA id in the params field:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -346,7 +327,6 @@ A subscription can refer to a specific protected area by the id of that area in 
 
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
-`params`              | Geographic area of the subscription                            | Object
 `params.wdpaid`       | Id of the protected area in the WDPA                           | String
 
 #### Subscribing to a geostore
@@ -354,7 +334,7 @@ Field                 | Description                                             
 > Creating a subscription providing the id of a geostore in the params field:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -372,11 +352,10 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
   }'
 ```
 
-A subscription can refer to a specific geostore that has been created using the [RW API Geostore service](#geostore). If this is the case, you should first create your geostore using the `/v2/geostore` endpoints, grab the id of the geostore you wish to subscribe to and provide it in the `params.geostore` field of the request body when creating the subscription.
+A subscription can refer to a specific geostore that has been created using the [RW API Geostore service](#geostore). If this is the case, you should [create your geostore](#create-geostore) and use its id in the `params.geostore` field of the request body when creating the subscription.
 
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
-`params`              | Geographic area of the subscription                            | Object
 `params.geostore`     | Id of the geostore to subscribe to.                            | String
 
 #### Subscribing to land use areas
@@ -384,7 +363,7 @@ Field                 | Description                                             
 > Creating a subscription providing the id of a land use area in the params field:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/subscriptions \
+curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -403,24 +382,20 @@ curl -X POST https://api.resourcewatch.org/v1/subscriptions \
   }'
 ```
 
-A subscription can refer to a land use area provided by different datasets. At this point, the following land use datasets are supported: `"mining"` for mining areas, `"logging"` for Congo Basin logging roads, `"oilpalm"` for palm oil plantations or `"fiber"` for wood fiber plantations. If this is the case, you should provide the name of the land use dataset you wish to use in the `params.use` field, and the id of the area in the `params.useid` field of the request body when creating the subscription.
+A subscription can refer to a land use area provided by different datasets. At this point, the following land use datasets are supported: `mining` for mining areas, `logging` for Congo Basin logging roads, `oilpalm` for palm oil plantations or `fiber` for wood fiber plantations. If this is the case, you should provide the name of the land use dataset you wish to use in the `params.use` field, and the id of the area in the `params.useid` field of the request body when creating the subscription.
 
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
-`params`              | Geographic area of the subscription                            | Object
-`params.use`          | The type of land use you want to subscribe to. Can be one of `"mining"`, `"logging"`, `"oilpalm"` or `"fiber"`. | String
+`params.use`          | The type of land use you want to subscribe to. Can be one of `mining`, `logging`, `oilpalm` or `fiber`. | String
 `params.useid`        | The id of the land use area you want to subscribe to.          | String
 
-### Creating subscriptions for other users
-
-As a rule of thumb, you can only create and manage subscriptions for your user. However, in some specific cases, it may make sense to create subscriptions while impersonating other users. If you are interested in fetching or managing subscriptions that are owned by other users, take a look at [this section in the developer docs](/developer.html#subscriptions).
 
 ## Updating a subscription
 
 > Example PATCH request for updating a subscription by id:
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
+curl -X PATCH "https://api.resourcewatch.org/v1/subscriptions/<subscription_id>" \
 -H "Authorization: Bearer <your-token>"
 -H "Content-Type: application/json"  -d \
  '{
@@ -465,12 +440,10 @@ curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id \
 }
 ```
 
-**As with most of subscription endpoints, this endpoint requires authentication. Additionally, you must be the owner of the subscription in order to update it, otherwise the request will fail with `404 Not Found`.**
-
-To update a subscription, you should use the PATCH `v1/subscriptions/:id` endpoint. Updating a subscription follows the same validations as when creating a new one - i.e. partial updates are not supported. You must provide all the required fields of the subscription for the update to be successful. The minimum fields list you must specify to update a subscription is:
+You can update subscriptions associated with you user account by using the PATCH `v1/subscriptions/:id` endpoint. Updating a subscription follows the same validations as when creating a new one - i.e. all required field values must be provided, even if they remain the same. Values for fields other than the following are optional. The minimum fields list you must specify to update a subscription is:
 
 * `datasets` or `datasetsQuery`
-* `resource` (which includes `resource.type` and `resource.content`)
+* `resource` (which much include `resource.type` and `resource.content`)
 * `params`
 * `application`
 * `language`
@@ -483,10 +456,7 @@ If the update of the subscription is successful, the HTTP response code will be 
 
 Error code     | Error message                       | Description
 -------------- | ----------------------------------- | --------------
-400            | Datasets or datasetsQuery required  | You didn't provide one of the required fields.
-400            | Language required                   | You didn't provide one of the required fields.
-400            | Resource required                   | You didn't provide one of the required fields.
-400            | Params required                     | You didn't provide one of the required fields.
+400            | `<field>` required                  | You didn't provide one of the required fields.
 400            | Id is not valid                     | The id provided is not valid.
 401            | Unauthorized                        | No valid token was provided in the request headers.
 404            | Subscription not found              | Either a subscription with the id provided does not exist or it is not owned by the user who performed the request.
@@ -496,7 +466,7 @@ Error code     | Error message                       | Description
 > Example DELETE request for deleting a subscription by its id:
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id \
+curl -X DELETE "https://api.resourcewatch.org/v1/subscriptions/<subscription_id>" \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -527,9 +497,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id \
 }
 ```
 
-**As with most of subscription endpoints, this endpoint requires authentication. Additionally, you must be the owner of the subscription in order to delete it, otherwise the request will fail with `404 Not Found`.**
-
-To delete a subscription, you should use the DELETE `v1/subscriptions/:id` endpoint. If the deletion of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the deleted subscription object.
+To delete a subscription associated with your user account, you should use the DELETE `v1/subscriptions/:id` endpoint. If the deletion of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the deleted subscription object.
 
 ### Errors for deleting subscriptions
 
@@ -554,7 +522,7 @@ If, at any point, you want to stop receiving email or webhook notifications, you
 > Example GET request to confirm a subscription:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
+curl -X GET "https://api.resourcewatch.org/v1/subscriptions/<subscription_id>/confirm"
 ```
 
 Upon creation of the subscription, a confirmation email is sent to the email of the user who created the subscription. This email will contain a link, which you will need to click in order to confirm the subscription. You can also confirm the subscription by performing a GET request to the `v1/subscriptions/:id/confirm` endpoint, as exemplified on the side.
@@ -566,7 +534,7 @@ Upon creation of the subscription, a confirmation email is sent to the email of 
 > Example GET request to resend the confirmation email for a subscription:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmation \
+curl -X GET "https://api.resourcewatch.org/v1/subscriptions/<subscription_id>/send_confirmation" \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -579,7 +547,7 @@ For convenience, the RW API offers an additional endpoint to resend the confirma
 > Example GET request to unsubscribe:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe \
+curl -X GET "https://api.resourcewatch.org/v1/subscriptions/<subscription_id>/unsubscribe" \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -591,14 +559,14 @@ You can use the endpoint `v1/subscriptions/:id/unsubscribe` (exemplified on the 
 
 The following section details the endpoints that can be used to access statistics on the usage of subscriptions.
 
-**The usage of the following endpoints is restricted to AMIN users.**
+**The usage of the following endpoints is restricted to ADMIN users.**
 
 ### General subscription statistics
 
 > Example GET request to obtain general subscription statistics:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start=:start&end=:end \
+curl -X GET "https://api.resourcewatch.org/v1/subscriptions/statistics?start=:start&end=:end" \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -688,7 +656,7 @@ application | The application for which the statistics will be fetched.         
 > Example GET request to obtain grouped subscription statistics:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=:start&end=:end \
+curl -X GET "https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=:start&end=:end" \
 -H "Authorization: Bearer <your-token>"
 ```
 
@@ -767,8 +735,8 @@ id               | String  | Yes                 | (auto-generated)    | Unique 
 name             | String  | No                  |                     | The name of the subscription.
 confirmed        | Boolean | No                  | false               | If the subscription is confirmed or not. Cannot be modified by users, only through the usage of the confirm and unsubscribe endpoints. (TODO: missing refs!)
 resource         | Object  | Yes                 |                     | An object containing the data for who (or what) should be notified on dataset data changes.
-resource.type    | Enum    | Yes                 |                     | The type of resource to be notified. Can take the values of `"EMAIL"` (for an email notification) or `"URL"` for a webhook notification.
-resource.content | String  | Yes                 |                     | The object to be notified: should be a valid email case `resource.type` is `"EMAIL"`, and a valid URL case `resource.type` is `"URL"`.
+resource.type    | Enum    | Yes                 |                     | The type of resource to be notified. Can take the values of `EMAIL` (for an email notification) or `URL` for a webhook notification.
+resource.content | String  | Yes                 |                     | The object to be notified: should be a valid email case `resource.type` is `EMAIL`, and a valid URL case `resource.type` is `URL`.
 datasets         | Array   | No                  | `[]`                | An array of dataset ids that this subscription is tracking.
 datasetsQuery    | Array   | No                  | `[]`                | An alternative way of stating the datasets that this subscription is tracking.
 params           | Object  | No                  | `{}`                | Determines the area of interest that this subscription should track. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).
