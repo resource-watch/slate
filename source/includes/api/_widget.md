@@ -210,8 +210,7 @@ Besides the required `ids` array, your request body may optionally include a `ap
 
 - Use a single value, like `rw`, if you want to show only widgets that have `rw` as one of their applications. 
 - Use a comma separated list, like `rw,prep`, if you want to show only widgets that have `rw` or `prep` as one of their applications.
-- Use a @ separated list, like `rw@prep`, if you want to show only widgets that have both `rw` and `prep` as their applications.
-- None of the filters require exact matching - a widget that simultaneously contain the applications `rw`, `prep` and `gfw` would match all 3 filters above.
+- Note that the the filters do not need to match on the full application list. For example, the filters `rw,prep` and `rw@prep` will both match a widget with the application list `["rw", "prep", "gfw"]`.
 
 Please note that, unlike [getting all widgets](#getting-all-widgets) or [getting all widgets for a dataset](#getting-all-widgets-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination134), [filtering](#filters135) or [sorting](#sorting136) or [including related entities](#include-related-entities137) described in their respective sections.
 
@@ -1122,7 +1121,7 @@ authors                 | String         | No                   |               
 queryUrl                | String         | No                   |                            | URL of the RW API query or external URL containing the data displayed on the widget
 thumbnailUrl            | String         | No                   |                            | URL of a example thumbnail of the rendered widget.
 env                     | String         | Yes                  | production                 | Environment to which the widget belongs.
-widgetConfig            | Object         | No                   |                            | Open schema object meant to host widget behavior configuration.
+widgetConfig            | Object         | No                   |                            | Schema-less object meant to host widget behavior configuration.
 application             | Array          | Yes                  |                            | Applications associated with this widget.
 layerId                 | String         | No                   |                            | Id of the layer to which the widget corresponds.  
 verified                | Boolean        | Yes                  | false                      | 
