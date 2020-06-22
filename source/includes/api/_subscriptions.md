@@ -39,6 +39,63 @@ For more details on how you can modify the `subscribable` property of a dataset,
 
 *Please note that, for readability purposes, the special characters in example on the side are not properly escaped. Don't forget all special characters must be properly escaped for the queries to be correctly executed.*
 
+## How are subscription notifications sent?
+
+> Example of POST body data for a webhook notification:
+
+```json
+{
+  "value": 5,
+  "downloadUrls": {
+    "csv": "https://production-api.globalforestwatch.org/glad-alerts/download/?period=2020-02-22,2020-03-04&gladConfirmOnly=False&aggregate_values=False&aggregate_by=False&geostore=423e5dfb0448e692f97b590c61f45f22&format=csv",
+    "json": "https://production-api.globalforestwatch.org/glad-alerts/download/?period=2020-02-22,2020-03-04&gladConfirmOnly=False&aggregate_values=False&aggregate_by=False&geostore=423e5dfb0448e692f97b590c61f45f22&format=json"
+  },
+  "alerts": [
+    {
+      "alert_type": "GLAD",
+      "date": "10/10/2019 00:10 UTC"
+    },
+    {
+      "alert_type": "GLAD",
+      "date": "11/10/2019 00:10 UTC"
+    },
+    {
+      "alert_type": "GLAD",
+      "date": "12/10/2019 00:10 UTC"
+    },
+    {
+      "alert_type": "GLAD",
+      "date": "13/10/2019 00:10 UTC"
+    },
+    {
+      "alert_type": "GLAD",
+      "date": "14/10/2019 00:10 UTC"
+    },
+    {
+      "alert_type": "GLAD",
+      "date": "15/10/2019 00:10 UTC"
+    }
+  ],
+  "layerSlug": "glad-alerts",
+  "alert_name": "Subscription for Amazônia, Brazil",
+  "selected_area": "Amazônia, Brazil",
+  "unsubscribe_url": "https://production-api.globalforestwatch.org/subscriptions/5ea996383efbd0119327b372/unsubscribe?redirect=true&lang=en",
+  "subscriptions_url": "https://www.globalforestwatch.org/my-gfw?lang=en",
+  "dashboard_link": "https://www.globalforestwatch.org/dashboards/aoi/5ea996383efbd0119327b372?lang=en",
+  "alert_link": "https://www.globalforestwatch.org/map/aoi/5ea996383efbd0119327b372?lang=en&map%5BcanBound%5D=true&map%5Bdatasets%5D%5B0%5D%5Bdataset%5D=bfd1d211-8106-4393-86c3-9e1ab2ee1b9b&map%5Bdatasets%5D%5B0%5D%5Blayers%5D%5B0%5D=8e4a527d-1bcd-4a12-82b0-5a108ffec452&map%5Bdatasets%5D%5B0%5D%5BtimelineParams%5D%5BstartDate%5D=2020-04-15&map%5Bdatasets%5D%5B0%5D%5BtimelineParams%5D%5BendDate%5D=2020-04-22&map%5Bdatasets%5D%5B0%5D%5BtimelineParams%5D%5BtrimEndDate%5D=2020-04-22&map%5Bdatasets%5D%5B1%5D%5Bdataset%5D=0b0208b6-b424-4b57-984f-caddfa25ba22&map%5Bdatasets%5D%5B1%5D%5Blayers%5D%5B0%5D=b45350e3-5a76-44cd-b0a9-5038a0d8bfae&map%5Bdatasets%5D%5B1%5D%5Blayers%5D%5B1%5D=cc35432d-38d7-4a03-872e-3a71a2f555fc&mainMap%5BshowAnalysis%5D=true",
+  "alert_date_begin": "2020-04-15",
+  "alert_date_end": "2020-04-22"
+}
+```
+
+Subscriptions support two types of notifications: emails or webhook requests is performed. Both notifications are checked and sent every day, assuming that the dataset data has changed since the last notification sent.
+
+Webhook notifications are sent as POST requests to the URL saved in the subscription. You can check on the side an example of the data that is sent in the body of the POST call. Please note that the webhook POST body data can change, based on the dataset chosen to receive notifications.
+
+You can see in the image below an example of an email notification for GLAD deforestation alerts:
+
+![Subscription email example](images/subscription-email-example.png)
+
 ## Getting subscriptions owned by the request user
 
 > Getting the subscriptions for the request user:
