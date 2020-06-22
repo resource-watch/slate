@@ -273,7 +273,7 @@ The widget list endpoints provide a wide range of filters that you can use to ta
 Additionally, you can use the following filters:
 
 - `collection`: filters by a [collection](#collections) id. Requires being authenticated.
-- `favourite`: if defined, only the widgets set by the user as [favorites](#favorites) will be returned. Requires being authenticated.
+- `favourite`: if any value is defined for this query param, only the widgets set by the user as [favorites](#favorites) will be returned. Requires being authenticated.
 
 Multiple parameters can be combined into a complex `and` logic filter. Depending on the type of the field you're filtering by, the following behavior is available:
 
@@ -322,7 +322,7 @@ When loading widget data, you can optionally pass an `includes` query argument t
 
 #### Vocabulary
 
-Loads related vocabularies. If none are found, an empty array is returned.
+Loads related [vocabularies](#vocabulary-and-tags). If none are found, an empty array is returned.
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?includes=vocabulary"
