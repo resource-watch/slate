@@ -27,7 +27,7 @@ However, we will start by understanding how we can prepare datasets to support s
 }
 ```
 
-Before we go into the details of managing subscriptions, it's important to understand that, while you can create a subscription for *any* dataset, some conditions must be met by the dataset for its corresponding subscriptions to be functional and actually work as described here. 
+Before we go into the details of managing subscriptions, it's important to understand that, while you can create a subscription for *any* dataset, some conditions must be met by the dataset for its corresponding subscriptions to be functional and actually work as described here.
 
 In order to support a functional subscription, a dataset must have some queries defined in its `subscribable` property. In this property, of type object, one (or many) sub-objects need to be declared. In the example on the side, an object is provided in the key `test`, including both a `dataQuery` and a `subscriptionQuery`.
 
@@ -292,7 +292,7 @@ curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
   }'
 ```
 
-A subscription can refer to a country, one of its regions, or a subregion within a region. Countries are identified by their 3-letter ISO code, and regions and subregions by their respective id. When creating a subscription for a region, the country ISO must be specified. For subscribing to a subregion, both region and country ISO must be provided. 
+A subscription can refer to a country, one of its regions, or a subregion within a region. Countries are identified by their ISO 3166-1 alpha-3 code - check [here](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) for a list of all the available country codes. Regions and subregions are identified by their respective GADM id, which can be obtained from GADM's dataset [here](https://gadm.org/data.html). When creating a subscription for a region, the country ISO must be specified. For subscribing to a subregion, both region and country ISO must be provided.
 
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
@@ -323,7 +323,7 @@ curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
   }'
 ```
 
-A subscription can refer to a specific protected area by the id of that area in the World Database on Protected Areas. If this is the case, you should provide the WDPA id in the `params.wdpaid` field when creating the subscription.
+A subscription can refer to a specific protected area by the id of that area in the World Database on Protected Areas. If this is the case, you should provide the WDPA id in the `params.wdpaid` field when creating the subscription. IDs of protected areas worldwide can be obtained from the [Protected Planet website](https://www.protectedplanet.net/).
 
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
@@ -384,11 +384,17 @@ curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 
 A subscription can refer to a land use area provided by different datasets. At this point, the following land use datasets are supported: `mining` for mining areas, `logging` for Congo Basin logging roads, `oilpalm` for palm oil plantations or `fiber` for wood fiber plantations. If this is the case, you should provide the name of the land use dataset you wish to use in the `params.use` field, and the id of the area in the `params.useid` field of the request body when creating the subscription.
 
+The ids to be used for land use areas can be obtained from the following CartoDB datasets:
+
+* Mining area IDs can be obtained by querying [this dataset](http://api.resourcewatch.org/v1/dataset/c2142922-84d9-4564-8216-a4867b9e48c5).
+* Palm oil plantation IDs can be obtained from [this CartoDB table](https://wri-01.carto.com/tables/gfw_oil_palm/public/map).
+* Wood fiber plantation IDs can be obtained from [this CartoDB table](https://wri-01.carto.com/tables/gfw_woodfiber/public/map).
+* Congo Basin logging road IDs can be obtained from [this CartoDB table](https://wri-01.carto.com/tables/osm_logging_roads/public/map).
+
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
 `params.use`          | The type of land use you want to subscribe to. Can be one of `mining`, `logging`, `oilpalm` or `fiber`. | String
 `params.useid`        | The id of the land use area you want to subscribe to.          | String
-
 
 ## Updating a subscription
 
