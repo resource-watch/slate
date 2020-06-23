@@ -1,46 +1,54 @@
 # Authentication
 
-The RW API uses JWT [(JSON Web Tokens)](https://tools.ietf.org/html/rfc7519) to identify and authenticate its users. This token must be provided inside an `Authorization` header, with the form `Bearer: <token>`.
+The RW API provides most of its data through endpoints that are available to all users, without requiring any form of registration. However, for some action, like uploading data or flagging a resource as a favourite, require having a user account and using an access token when issuing requests to the API.
 
-However, in order to perform GET requests for content that is not private, there's no need for any sort of authentication or token.
+## Logging in or registering a new user account
 
-## Registering a new user account
+The easiest way to access your account is through the [login page](https://api.resourcewatch.org/auth/sign-up) of the RW API. Here you can authenticate using your existing Facebook, Google or Twitter account, or you can register or login using your email address and password. 
 
-*Note: Creating an user requires sending a confirmation email, so, so please ensure that you create a new user using an email account that you have access to. Otherwise you won't be able to login.*
+*Note: if you create a new user account using email and password, a confirmation link will be sent to the email address you provided. Your account will only be active once you've clicked the link in that email, so ensure that you use a valid email address. If you don't receive this email message within a few minutes, check your spam.*
 
-1. On the browser, visit the API's sign up page: [https://api.resourcewatch.org/auth/sign-up](https://api.resourcewatch.org/auth/sign-up).
-2. Create a new user providing an email and a password.
-3. Wait for the confirmation email and click on the link on the email.
-
-After completing these steps, you will be able to login and get your private tokens.
-
-## How to generate your private token
-
-1. On the browser, visit the API's login page at [https://api.resourcewatch.org/auth/login](https://api.resourcewatch.org/auth/login).
-2. Login using your account.
-3. Once you are at `auth/success`, go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
+Once you've successfully logged in using your browser, you'll see a "Welcome to the RW API message" on your browser. You can now generate user tokens.
 
 ![Auth success](images/authentication/auth-success.png)
 
-Once generated, a token is valid until any of the associated user information (name, email, or associated applications) changes. If your token becomes invalid, you will need to log in and go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
+## How to generate your private token
 
-## How to create a new user
+The RW API uses JWT [(JSON Web Tokens)](https://tools.ietf.org/html/rfc7519) token to identify and authenticate its users. If your are not familiar with the details of JWT, just think of them as a very long strings of characters that you need to attach to your requests to the RW API, to prove that you are you.
 
-To create a new user make a request like the one in the sidebar:
+To get you token, you first need to login using your browser and the steps above. No matter which login strategy you prefer, once you've logged in, you can visit [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to get your token.
+
+**Warning**: treat a token in the same way you would treat a password - don't share it and always store it in a safe place (like a password manager, for example). A token is sufficient to authenticate you on the RW API, meaning that, if someone else gains access to your token, they'll be able to do anything that you would be able to do on the RW API, even without access to your Facebook/Google/Twitter login or your email and password.
+
+## How to use your private token to authenticate a request
+
+> Example of how a request with a token is structured
 
 ```shell
-curl -X POST https://api.resourcewatch.org/auth/user \
--H "Authorization: Bearer <your-token>" \
+curl -X POST https://api.resourcewatch.org/v1/dataset \
+-H "Authorization: Bearer <your token>" \
 -H "Content-Type: application/json"  -d \
- '{
-    "email":"<email>",
-    "role":"<role>",
-    "extraUserData": {
-      "apps": [
-        "<apps>"
-      ]
-    }
+'{
+  "dataset": {
+    "name":"World Database on Protected Areas -- Global",
+    "connectorType":"rest",
+    "provider":"cartodb",
+    "connectorUrl":"https://wri-01.carto.com/tables/wdpa_protected_areas/table",
+    "application":[
+      "gfw", 
+      "forest-atlas"
+    ]
+  }
 }'
 ```
 
-There are three allowed roles: `USER`, `MANAGER` and `ADMIN`. The 'apps' field only permits applications that are powered by the API: `rw`, `gfw`, `prep`, etc.
+Once you have your token, you can use it to authenticate your requests to the RW API. Depending on which endpoints you are trying to use, certain actions may become available by simply authenticating your request. Other will require your account to have a special role or applications, which we'll cover in more detail in the [User Management](#user-management) documentation.
+
+Tokens must be provided in HTTP request header, named as `Authorization`, with the structure `Bearer: <your token>`.
+
+Once generated, a token is valid until any of the associated user information (name, email, or associated applications) changes. If your token becomes invalid, you will need to log in and go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
+
+
+## More information on authentication and user management
+
+This section's goal is to help you learn the very basics of how you can quickly create a user account and use your token to authenticate requests. For more in-depth details on authentication, token and user management, refer to the [User Management](#user-management) section of the documentation.
