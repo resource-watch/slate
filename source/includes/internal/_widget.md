@@ -1,5 +1,5 @@
 # Widget
-
+This section describes some aspects of widget functionality that are only available to other microservices and cannot be invoked by actual API users.
 ## Updating the env for all widgets for a dataset
 
 > Example PATCH request that sets all widget for the given dataset to the defined env:
