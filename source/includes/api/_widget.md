@@ -180,7 +180,7 @@ curl -X POST "https://api.resourcewatch.org/widget/find-by-ids" \
 }
 ```
 
-This endpoint allows authenticated users to load all widgets belonging to multiple datasets in a single request. 
+This endpoint allows users to load all widgets belonging to multiple datasets in a single request. 
 
 > Return all widgets associated with two datasets, that are associated with either `rw` or `prep` applications 
 
