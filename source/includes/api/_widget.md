@@ -190,7 +190,7 @@ curl -X POST "https://api.resourcewatch.org/widget/find-by-ids" \
 -H 'Content-Type: application/json' \
 -d '{
 	"ids": ["<dataset 1 id>", "<dataset 2 id>"],
-    "app" "rw,prep"
+    "app": "rw,prep"
 }'
 ```
 
