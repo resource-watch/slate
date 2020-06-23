@@ -10,7 +10,7 @@ curl -X PATCH "https://api.resourcewatch.org/v1/widget/change-environment/<datas
 -H "Content-Type: application/json"
 ```
 
-This endpoints updates the `env` value of all widgets associated with the given dataset id. It's only available to other microservices, and cannot be called directly by an API user. Its currently used when a dataset's `env` value is updated.
+This endpoint updates the `env` value of all widgets associated with the given dataset id. It's only available to other microservices, and cannot be called directly by an API user. It's currently used when a dataset's `env` value is updated.
 
 The update process is not atomic. A successful request will return a 204 `No content` response.
 
