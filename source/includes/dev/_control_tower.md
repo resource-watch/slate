@@ -202,7 +202,7 @@ The microservice registration endpoint is one of 4 endpoints that exist around m
 
 This endpoint shows a list of registered microservice and their corresponding endpoints.
 
-```bash
+```shell
 curl -X GET \
   http://<CT URL>/api/v1/microservice \
   -H 'Authorization: Bearer <your user token>' \
@@ -249,7 +249,7 @@ curl -X GET \
 
 Lists information about operational status of each microservice - like errors detected by Control Tower trying to contact the microservice or number of retries attempted.
 
-```bash
+```shell
 curl -X GET \
   http://<CT URL>/api/v1/microservice/status \
   -H 'Authorization: Bearer <your user token>' \
@@ -279,7 +279,7 @@ This is the endpoint used by microservices to register on Control Tower. You can
 This endpoint is used to unregister a microservice's endpoints from Control Tower. Control Tower does not actually delete the microservice information, nor does it immediately remove the endpoints associated to it. This endpoint iterates over all endpoint associated with the microservice to be unregistered, and flags them for deletion - which is actually done by a cron task that in the background. Until that moment, the microservice and associated endpoints will continue to be available, and external requests to those endpoints will be handled as matched as they were before. However, you will notice that endpoints scheduled for deletion will have a `toDelete` value of true - more on this in the next section.
 
 
-```bash
+```shell
 curl -X DELETE \
   http://<CT URL>/api/v1/microservice/<microservice id> \
   -H 'Authorization: Bearer <your user token>' \
@@ -326,7 +326,7 @@ curl -X DELETE \
 
 This endpoint lists all microservice endpoint known by Control Tower. Note that it does not contain endpoints offered by Control Tower itself or any of its plugins.
 
-```bash
+```shell
 curl -X GET \
   http://<CT URL>/api/v1/endpoint \
   -H 'Authorization: Bearer <your user token>' \
@@ -365,7 +365,7 @@ curl -X GET \
 
 This endpoint purges the complete HTTP cache for all microservices. It does not support any kind of parametrization, so it's not possible to use this endpoint to clear only parts of the cache. As such, we recommend not using this endpoint unless you are certain of its consequences, as it will have noticeable impact in end-user perceived performance.
 
-```bash
+```shell
 curl -X DELETE \
   http://<CT URL>/api/v1/endpoint/purge-all \
   -H 'Authorization: Bearer <your user token>' \
@@ -383,7 +383,7 @@ This
 </aside>
 
 
-```bash
+```shell
 curl -X GET \
   http://<CT URL>/api/v1/endpoint \
   -H 'Authorization: Bearer <your user token>' \
@@ -511,7 +511,7 @@ Control Tower as a plugin system of its own, which we'll cover in detail in the 
 
 Lists all currently enabled plugins, along with their configuration.
 
-```bash
+```shell
 curl -X GET \
   http://<CT URL>/api/v1/plugin \
   -H 'Authorization: Bearer <your user token>' \
@@ -537,7 +537,7 @@ curl -X GET \
 
 Updates the settings of a given plugin.
 
-```bash
+```shell
 curl -X PATCH \
   http://<CT URL>/api/v1/plugin/:pluginId \
   -H 'Authorization: Bearer <your user token>' \
