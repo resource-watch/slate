@@ -1089,7 +1089,7 @@ curl -X DELETE "https://api.resourcewatch.org/v1/widget/<widget_id>" \
 
 Use this endpoint if you'd like to delete a widget from the RW API. As a widget object may not store the actual data being displayed, this may only delete the widget settings, but the actual data may continue to be available at its source.
 
-Besides deleting the widget itself, this endpoint also deletes graph vocabularies and metadata related to the widget itself. These delete operations are issued after the widget itself is deleted. The process is not atomic, and the output of the API request is based solely on the result of the deletion of the widget itself. For example, is the metadata service is temporarily unavailable when you issue your delete widget request, the widget itself will be deleted, but the associated metadata will continue to exist. The response will not reflect the failure to delete metadata in any way.
+Besides deleting the widget itself, this endpoint also deletes graph vocabularies and metadata related to the widget itself. These delete operations are issued after the widget itself is deleted. The process is not atomic, and the response is based solely on the result of the deletion of the widget itself, not related resources. For example, is the metadata service is temporarily unavailable when you issue your delete widget request, the widget itself will be deleted, but the associated metadata will continue to exist. The response will not reflect the failure to delete metadata in any way.
 
 In order to delete a widget, the following conditions must be met:
 
