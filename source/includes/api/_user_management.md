@@ -39,12 +39,12 @@ Login endpoints support both HTML and JSON output formats, depending on the `Con
 
 ### GET `<BASE API URL>/auth/`
 
-Convenience URL that redirects to `<BASE API URL>/auth/login`
+Convenience URL that redirects to `<BASE API URL>/auth/login` - the HTML login page.
 
 
 ### GET `<BASE API URL>/auth/login`
 
-Basic API auth login page. Only supported for HTML requests.
+HTML page that displays the login, registration and password reset links. This is the most common entry point when using the HTML UI provided by the RW API for user management.
 
 
 ### POST `<BASE API URL>/auth/login`
@@ -80,10 +80,15 @@ curl -X POST "https://api.resourcewatch.org/auth/login" \
 
 Endpoint for email + password based login.
 
-For HTML requests, it will redirect to either `<BASE API URL>/auth/success` or `<BASE API URL>/auth/fail` depending on whether the login was successful or not. An optional `callbackUrl` query parameter can be provided, in which case the user will be redirected to that URL in case of login success.
+For HTML requests, it will redirect to either `<BASE API URL>/auth/success` or `<BASE API URL>/auth/fail` depending on whether the login was successful or not. If successful, the HTTP reply will have a session cookie that may be used in subsequent requests. An optional `callbackUrl` query parameter can be provided, in which case the user will be redirected to that URL in case of login success. 
 
-For JSON requests, it will return 200 or 401 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object.
+For JSON requests, in case of successful logins, the user details will be returned as a JSON object.
 
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Invalid email or password. | Login credentials are missing or incorrect.
 
 ### GET `<BASE API URL>/auth/fail`
 
@@ -91,7 +96,36 @@ Displays login errors for HTML requests. Not supported on JSON requests.
 
 ### GET `<BASE API URL>/auth/check-logged`
 
-Check login status
+> Check if the user is logged
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/check-logged" \
+    -H 'Cookie: <your cookie values>'
+```
+
+> Response
+
+```json
+{
+  "data": {
+    "id": "5bfd237767b3176dd63f2eb7",
+    "email": "your-email@provider.com",
+    "createdAt": "2018-11-27T10:59:03.531Z",
+    "role": "USER",
+    "extraUserData": {
+      "apps": ["rw"]
+    }
+  }
+}
+```
+
+Checks if you are logged in. This is typically used to determine if a session has been established between the the user's browser and the RW API. 
+
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Not authenticated. | You are not logged in.
 
 ### GET `<BASE API URL>/auth/success`
 
@@ -99,19 +133,48 @@ Successful login page for HTML requests. Not supported on JSON requests.
 
 ### GET `<BASE API URL>/auth/logout`
 
-Login invalidation endpoint
+Login invalidation endpoint. Only invalidates the session cookie set on login. If using JWT token based authentication, this endpoint will NOT invalidate the token.
 
 ### GET `<BASE API URL>/auth/generate-token`
 
-Generates a JWT token for the current user session.
+> Generate the user's JWT token
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/generate-token" \
+    -H 'Cookie: <your cookie values>'
+```
+
+> Response:
+
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViZWNmYTJiNjdkYTBkM2VjMDdhMjdmNiIsInJvbGUiOiJVU0VSIiwicHJvdmlkZXIiOiJsb2NhbCIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImV4dHJhVXNlckRhdGEiOnsiYXBwcyI6WyJydyJdfSwiY3JlYXRlZEF0IjoxNTQzMzE1NzMxNzcwLCJpYXQiOjE1NDMzMTU3MzF9.kIdkSOb7mCMOxE2ipqVOBrK7IefAjLDhaPG9DT1qvCw"
+}
+```
+
+Generates a JWT token for the current user session. This is useful when using the HTML UI through a browser, where a session is established using a cookie returned on login. This cookie authenticates the user, and allows retrieving the token.
+
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Not authenticated. | You are not logged in.
 
 ## Login (3rd party oauth)
 
+Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Twitter or Google. These 3 authentication mechanisms use [OAuth](https://en.wikipedia.org/wiki/OAuth) access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.
+
+For each provider, there's a corresponding endpoint that starts the authentication flow. These endpoints simply redirect the user to the respective provider page, along with some data that allows the provider to contact the RW API when the login process is finished. You can forward users to these endpoints if, for example, you want to have your own login links on your UI.
+
+Keep in mind that, depending on the `origin` application you specify, different Twitter, Facebook or Google applications will be used. Also, not all `origin` applications support all 3 providers.
+
 - GET '<BASE API URL>/auth/twitter' - Starts authentication using the configured Twitter settings
 - GET '<BASE API URL>/auth/twitter/callback' - Callback used once Twitter auth is done
+
 - GET '<BASE API URL>/auth/google' - Starts authentication using the configured Google settings
 - GET '<BASE API URL>/auth/google/callback' - Callback used once Google auth is done
 - GET '<BASE API URL>/auth/google/token' - Endpoint that expects the Google token used by the API to validate the user session.
+
 - GET '<BASE API URL>/auth/facebook' - Starts authentication using the configured Google settings
 - GET '<BASE API URL>/auth/facebook/callback' - Callback used once Facebook auth is done
 - GET '<BASE API URL>/auth/facebook/token' - Endpoint that expects the Facebook token used by the API to validate the user session.
