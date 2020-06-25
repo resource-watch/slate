@@ -605,6 +605,8 @@ curl -X GET "https://api.resourcewatch.org/v1/subscriptions/<subscription_id>/se
 
 For convenience, the RW API offers an additional endpoint to resend the confirmation email. In order to do this, you should perform a GET request to the `v1/subscriptions/:id/send_confirmation`. As with most of the other subscription endpoints, please keep in mind that you must be authenticated in order to use this endpoint.
 
+This endpoint does not change the subscription - i.e. if the subscription was already confirmed, it stays that way. The confirmation email will always be sent, regardless if the subscription is confirmed or not.
+
 *Manually calling this endpoint will redirect you to the GFW application.*
 
 ### Unsubscribing
