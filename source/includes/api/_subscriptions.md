@@ -38,7 +38,7 @@ In order to support a functional subscription, a dataset must have some queries 
 * `dataQuery`, which will be evaluated as the subscription's content - i.e. this is what has been updated since the last check on the updates of this dataset.
 * `subscriptionQuery`, which will be evaluated to check if a subscription has changed since the last update. This query should return a single row with the count of updated items since the last update check. If the value returned by this query is greater than 0, then all the subscriptions that reference this dataset will receive a notification.
 
-The example on the side defines the `subscribable` object for an example dataset, and this object contains a the key `test`, including both a `dataQuery` and a `subscriptionQuery`. For more details on how you can modify the `subscribable` property of a dataset, check out the documentation on [updating a dataset](#updating-a-dataset).
+The example on the side defines the `subscribable` object for an example dataset, and this object contains a the key `test`, including both a `dataQuery` and a `subscriptionQuery`. For more details on how you can modify the `subscribable` property of a dataset, check out the documentation on [updating a dataset](#updating-a-dataset). The keys in the subscribable object (e.g. `test`) are just for organizational purposes, and they won't be used in any way from the subscription's perspective.
 
 Both queries can contain two special keywords: `{begin}` and `{end}`. These will be replaced with ISO-formatted dates on runtime, with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.
 
@@ -53,6 +53,8 @@ After creating the subscription, an email is sent with a confirmation link. You 
 If, for some reason, you have lost the confirmation email, you can check the [resending confirmation emails](#resending-the-subscription-confirmation-email) section for more information on how to resend the confirmation email.
 
 At any point, you might want to stop receiving email or webhook notifications - if that is the case, you can check the [unsubscribing](#unsubscribing) section for details on how to stop receiving notifications for your subscriptions.
+
+The same subscription can subscribe to multiple datasets - for that, you just need to provide all the dataset ids you intend to subscribe in either the `datasets` or `datasetsQuery` fields of the subscription on creation. However, a subscription can only notify a single email at a time - if you intend to receive subscription notifications on multiple emails, you'll need to create multiple subscriptions.
 
 ### How are subscription notifications sent?
 
@@ -288,6 +290,13 @@ Error code     | Error message                       | Description
 -------------- | ----------------------------------- | --------------
 400            | `<field>` required                  | You didn't provide one of the required fields.
 401            | Unauthorized                        | No valid token was provided in the request headers.
+
+### Defining the datasets
+
+You will need to provide the dataset ids to which your subscription will watch for updates. In order to do so, you'll need to provide one of two fields when creating a subscription:
+
+* `datasets` - this field is a simple array of dataset ids. Each dataset will be individually evaluated for updates, and it will trigger an email if the `subscriptionsQuery` returns greater than 0.
+* `datasetsQuery` is an alternative way of defining the datasets to subscribe: using this field, you have the advantage of being able to define a different threshold for sending the email (i.e. the email is sent if the `subscriptionQuery` returns a count greater than the threshold defined in the `datasetsQuery` object). For more details on the structure of the objects inside `datasetsQuery`, please check the [subscription model reference](/index-rw.html#subscription-reference).
 
 ### Customizing the geographic area for the subscription
 
@@ -817,7 +826,12 @@ resource         | Object  | Yes                 |                     | An obje
 resource.type    | Enum    | Yes                 |                     | The type of resource to be notified. Can take the values of `EMAIL` (for an email notification) or `URL` for a webhook notification.
 resource.content | String  | Yes                 |                     | The object to be notified: should be a valid email case `resource.type` is `EMAIL`, and a valid URL case `resource.type` is `URL`.
 datasets         | Array   | No                  | `[]`                | An array of dataset ids that this subscription is tracking.
-datasetsQuery    | Array   | No                  | `[]`                | An alternative way of stating the datasets that this subscription is tracking.
+datasetsQuery    | Array   | No                  | `[]`                | An alternative way of stating the datasets that this subscription is tracking. This field is an array of objects, check the rows below to see which properties each object should have.
+datasetsQuery[0].id | String   | No              |                     | An identifier for the dataset being subscribed.
+datasetsQuery[0].type | String   | No            |                     | A type for the dataset being subscribed.
+datasetsQuery[0].threshold | Number  | No | 0    | The threshold to be considered when checking for updates in the dataset's data. By default, it takes the value the value 0, but you can customize it to only get notified if there are at least (for instance) 5 updates to the dataset's data.
+datasetsQuery[0].lastSentDate | Date     | No    | (auto-generated)    | Value automatically updated to have set the last date when updates were detected in this dataset.
+datasetsQuery[0].lastSentDate | Date     | No    | (auto-generated)    | This value is automatically updated with the historical data of all the updates detected in the dataset's data.
 params           | Object  | No                  | `{}`                | Determines the area of interest that this subscription should track. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).
 userId           | String  | Yes                 | (auto-populated)    | Id of the user who owns the subscription. Set automatically on creation. Cannot be modified by users.
 language         | String  | No                  | `'en'`              | The language for this subscription. Useful for customizing email notifications according to the language of the subscription. Possible values include `'en'`, `'es'`, `'fr'`, `'pt'` or `'zh'`.
