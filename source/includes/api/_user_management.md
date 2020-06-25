@@ -10,7 +10,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
 
 Keep in mind that not all endpoints support both formats, and will output either HTML or JSON, no matter which `Content-Type` value you provide.
 
-#### A note on UI elements
+## A note on UI elements
 
 This section covers endpoints that generate human-facing elements, like login pages or reset passwords emails. Some elements of these interfaces can be configured to match specific projects identities (RW, GFW, etc). To specify which project your requests come from, you can add an optional `origin` query parameter to your requests, with the name of the application. If matching visual elements exist, they will be used in the resulting interfaces displayed to the user.
 
@@ -86,18 +86,23 @@ For JSON requests, it will return 200 or 401 HTTP response code depending on whe
 
 
 ### GET `<BASE API URL>/auth/fail`
+
 Displays login errors for HTML requests. Not supported on JSON requests.
 
 ### GET `<BASE API URL>/auth/check-logged`
+
 Check login status
 
 ### GET `<BASE API URL>/auth/success`
+
 Successful login page for HTML requests. Not supported on JSON requests.
 
 ### GET `<BASE API URL>/auth/logout`
+
 Login invalidation endpoint
 
 ### GET `<BASE API URL>/auth/generate-token`
+
 Generates a JWT token for the current user session.
 
 ## Login (3rd party oauth)
@@ -110,8 +115,6 @@ Generates a JWT token for the current user session.
 - GET '<BASE API URL>/auth/facebook' - Starts authentication using the configured Google settings
 - GET '<BASE API URL>/auth/facebook/callback' - Callback used once Facebook auth is done
 - GET '<BASE API URL>/auth/facebook/token' - Endpoint that expects the Facebook token used by the API to validate the user session.
-
-
 
 ## Registration
 
@@ -233,15 +236,13 @@ Should no `callbackUrl` be provided, the user is redirected to an URL based on t
 
 Should that application have no configured redirect URL, or the user have no configured app, they are redirect to a platform-wide default URL - see `ct-oauth-plugin` configuration for more info.
 
-
-
 ## Password recovery
 
-Password recovery endpoints support both HTML and JSON output formats, depending on the `Content-type` provided in the request.
+Password recovery endpoints support both HTML and JSON output formats, depending on the `Content-type` provided in the request. These can be used either as part of your application (for example, if you want your UI to have these features built in) or as a standalone, end user facing interface (for applications that prefer to rely on the existing UI elements provided by the RW API).
 
 ### GET `<BASE API URL>/auth/reset-password`
 
-Displays the password reset form page.
+Displays the password reset form HTML page.
 
 
 ### POST `<BASE API URL>/auth/reset-password`
@@ -256,11 +257,33 @@ curl -X POST "https://api.resourcewatch.org/auth/reset-password" \
 }'
 ```
 
-Endpoint where the password reset request is sent.
+> Response (JSON)
+
+```json
+{
+    "message": "Email sent"
+}
+```
+
+Endpoint where the password reset request is sent. If an account associated with the provided email address exists, a message will be sent to it with a link that will allow the user to reset their account's password. That link will be valid for 24 hours.
+
+Note that, for security reasons, if no account associated with the provided email address exists, the output will be the same.  
+
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+422            | Mail required. | You need to specify the email address in the request body.
 
 ### GET `<BASE API URL>/auth/reset-password/:token`
 
-Endpoint used to validate email address upon password reset request.
+Endpoint used when the user clicks the link sent in the reset password email. This endpoint is meant to be used only by the end user.
+
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+422            | Token expired. | The reset password link is more than 24 hours old and is no longer valid.
 
 
 ### POST `<BASE API URL>/auth/reset-password/:token`
@@ -276,13 +299,43 @@ curl -X POST "https://api.resourcewatch.org/auth/reset-password/<email token>" \
 }'
 ```
 
+> Response
+
+```json
+{
+    "provider": "local",
+    "role": "ADMIN",
+    "_id": "5dbadb0adf24534d1ad05dfb",
+    "email": "test.user@example.com",
+    "extraUserData": {
+        "apps": [
+            "rw",
+            "gfw"
+        ]
+    },
+    "createdAt": "2019-10-31T13:00:58.191Z",
+    "updatedAt": "2019-10-31T13:00:58.191Z"
+}
+```
+
 Endpoint used to submit the new password.
 
 For HTML requests, it will redirect the user to the configured redirect URL on success, or return to the "Reset your password" form on error.
 
 For JSON requests, it will return the user object on success, or a JSON object containing details in case of error.
 
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+422            | Token expired. | The reset password link is more than 24 hours old and is no longer valid.
+422            | Password and Repeat password are required. | You need to specify both the `password` and the `repeatPassword` values.
+422            | Password and Repeat password not equal. | You need to specify equal `password` and `repeatPassword` values.
+                                                           
+
 ## User details management
+
+This section covers endpoints that focus on retrieving, modifying or deleting user accounts. Unlike previous endpoints, these are meant to be consumed by applications, and will always produce a JSON response.
 
 ### Getting all users
 
@@ -418,6 +471,43 @@ By default, only users belonging to the same apps as the requesting user will be
 
 Additionally, you can pass the special `all` value to this filter, to load users from all applications.
 
+### Get the current user
+
+> Shows info for user currently logged in
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/user/me"
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+> Response
+
+```json
+{
+    "provider": "local",
+    "role": "ADMIN",
+    "_id": "5dbadb0adf24534d1ad05dfb",
+    "email": "test.user@example.com",
+    "extraUserData": {
+        "apps": [
+            "rw",
+            "gfw"
+        ]
+    },
+    "createdAt": "2019-10-31T13:00:58.191Z",
+    "updatedAt": "2019-10-31T13:00:58.191Z"
+}
+```
+
+This endpoint allows you to get the details of the user account associated with the current token. It's available to all authenticated users.
+
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Not authenticated. | You need to be logged in to use this endpoint.
+
 ### Get a user by id
 
 > Shows info for user with the given id
@@ -427,6 +517,34 @@ curl -X GET "https://api.resourcewatch.org/auth/user/<user_id>"
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
+
+> Response
+
+```json
+{
+    "provider": "local",
+    "role": "ADMIN",
+    "_id": "5dbadb0adf24534d1ad05dfb",
+    "email": "test.user@example.com",
+    "extraUserData": {
+        "apps": [
+            "rw",
+            "gfw"
+        ]
+    },
+    "createdAt": "2019-10-31T13:00:58.191Z",
+    "updatedAt": "2019-10-31T13:00:58.191Z"
+}
+```
+
+This endpoint allows you to get the details of the user account associated with the current token. It's available to users with role `ADMIN`.
+
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Not authenticated. | You need to be logged in to use this endpoint.
+403            | Not authorized. | You need to have the `ADMIN` role to use this endpoint.
 
 ### Update your user account details
 
@@ -463,18 +581,26 @@ curl -X PATCH "https://api.resourcewatch.org/auth/user/me"
         }
     }
 }
-
 ```
-- Updates current user details.
-- Can be used by any user.
-- Supported fields: `name` and `photo`. If the user has the `ADMIN` role, it additionally supports updating `extraUserData.apps` and `role`.
-- Returns the new state of the updated user object.
 
+This endpoints allows updating your user account details. It's available to any logged in user, allowing them to modify the following fields:
+
+- `name`
+- `photo`
+- `extraUserData.apps` (only allowed for users with `ADMIN` role)
+- `role` (only allowed for users with `ADMIN` role)
+
+The response will contain the user details, reflecting the applied changes.
 
 <aside class="notice">
 Updating your account details may invalidate your token and cause your apps to stop working.
 </aside>
 
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Not authenticated. | You need to be logged in to use this endpoint.
 
 ### Update another user's account details
 
@@ -512,15 +638,25 @@ curl -X PATCH "https://api.resourcewatch.org/auth/user/57bc2611f098ce9800798688"
 }
 ```
 
-- Updates specified user details.
-- Can only be used by admins.
-- Supported fields: `name`, `photo`, `extraUserData.apps` and `role`
-- Returns the new state of the updated user object.
+This endpoints allows updating the user account details of another user. It's available to users with the `ADMIN` role, allowing them to modify the following fields:
+
+- `name`
+- `photo`
+- `extraUserData.apps`
+- `role`
+
+The response will contain the user details, reflecting the applied changes.
 
 <aside class="notice">
 Updating a user's account details may invalidate their token and cause their apps to stop working.
 </aside>
 
+**Errors**
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Not authenticated. | You need to be logged in to use this endpoint.
+403            | Not authorized. | You need to have the `ADMIN` role to use this endpoint.
 
 ### Deleting a user
 
@@ -529,20 +665,30 @@ Updating a user's account details may invalidate their token and cause their app
 ```shell
 curl -X DELETE "https://api.resourcewatch.org/auth/user/<user_id>"
 -H "Content-Type: application/json"  -d \
--H "Authorization: Bearer <your-token>" \
- '{
-    "name":"user name",
-    "email":"user@email.com",
-    "photo": "https://s3.amazonaws.com/wri-api-backups/resourcewatch/test/profiles/avatars/000/000/022/original/data?1544443314",
-    ...
-}'
+-H "Authorization: Bearer <your-token>"
 ```
 
+> Response
 
-- Deletes the specified user account.
-- Can only be used by admins.
-- Returns the deleted user object.
+```json
+{
+    "data": {
+        "id": "57bc2611f098ce9800798688",
+        "email": "test@example.com",
+        "name": "new-name",
+        "photo": "https://photo-url.com",
+        "createdAt": "2017-01-13T10:45:46.368Z",
+        "updatedAt": "2017-01-13T10:45:46.368Z",
+        "role": "MANAGER",
+        "extraUserData": {
+           "apps": ["rw", "gfw"]
+        }
+    }
+}
+```
+
+This endpoints deletes the user account with the given id. It's available to users with the `ADMIN` role. The response will contain the details of the user account that was deleted.
 
 <aside class="notice">
-This action only deletes the user account. Any resources that may be associated with this given user account are not modified or deleted.
+This action only deletes the user account. Any resources (datasets, subscriptions, etc) that may be associated with this given user account are not modified or deleted.
 </aside>
