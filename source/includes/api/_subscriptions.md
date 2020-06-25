@@ -2,7 +2,9 @@
 
 ## What is a subscription?
 
-A subscription allows you to get notified of updates on a datasets' data. We strongly recommend that you read the [dataset concept](#dataset) and [dataset endpoints](#dataset6) sections before proceeding.
+*Note: We strongly recommend that you read the [dataset concept](#dataset) and [dataset endpoints](#dataset6) sections before proceeding.*
+
+A subscription allows you to get notified of updates on a datasets' data, either for every update, or for updates restricted to geographical areas of your interest. For example, you can use subscriptions to subscribe to deforestation alerts ([GLAD alerts dataset](http://api.resourcewatch.org/v1/dataset/61170ad0-9d6a-4347-8e58-9b551eeb341e)) in the Amazon forest, or track fire alerts ([VIIRS fire alerts dataset](http://api.resourcewatch.org/v1/dataset/64c948a6-5e34-4ef2-bb69-6a6535967bd5)) in your area of residence.
 
 In the following sections, we will cover how you can interact and manage subscriptions in the RW API. We will see how you can customize subscriptions so that we only get notified for changes in a dataset's data for specific geographic regions. You will learn how to use them to get notified via email or calls to a URL you provide. We will also dive into subscription lifecycle, and understand how we can confirm subscriptions, resend confirmation emails and how to unsubscribe and stop receiving notifications.
 
