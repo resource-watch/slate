@@ -4,13 +4,15 @@
 
 *Note: We strongly recommend that you read the [dataset concept](#dataset) and [dataset endpoints](#dataset6) sections before proceeding.*
 
-A subscription allows you to get notified of updates on a datasets' data, either for every update, or for updates restricted to geographical areas of your interest. For example, you can use subscriptions to subscribe to deforestation alerts ([GLAD alerts dataset](http://api.resourcewatch.org/v1/dataset/61170ad0-9d6a-4347-8e58-9b551eeb341e)) in the Amazon forest, or track fire alerts ([VIIRS fire alerts dataset](http://api.resourcewatch.org/v1/dataset/64c948a6-5e34-4ef2-bb69-6a6535967bd5)) in your area of residence.
+A subscription allows you to get notified of updates on a datasets' data - either for every update, or for updates restricted to geographical areas of your interest. For example, you can use subscriptions to subscribe to deforestation alerts ([GLAD alerts dataset](http://api.resourcewatch.org/v1/dataset/61170ad0-9d6a-4347-8e58-9b551eeb341e)) in the Amazon forest, or track fire alerts ([VIIRS fire alerts dataset](http://api.resourcewatch.org/v1/dataset/64c948a6-5e34-4ef2-bb69-6a6535967bd5)) in your area of residence.
 
 In the following sections, we will cover how you can interact and manage subscriptions in the RW API. We will see how you can customize subscriptions so that we only get notified for changes in a dataset's data for specific geographic regions. You will learn how to use them to get notified via email or calls to a URL you provide. We will also dive into subscription lifecycle, and understand how we can confirm subscriptions, resend confirmation emails and how to unsubscribe and stop receiving notifications.
 
-However, we will start by understanding how we can prepare datasets to support subscriptions.
+## Subscription lifecycle
 
-## Subscribable datasets
+In this section, you will learn about the lifecycle of a subscription. This will help you understand how you can best use subscriptions to meet your goals. The first step for using subscriptions is understanding which data you want to subscribe - for this, we recommend [searching the existing datasets](/index-rw.html#getting-all-datasets) in the WRI API (or maybe even [creating a new one](/index-rw.html#creating-a-dataset)). Once you are certain of the dataset you wish to subscribe, the next step is ensuring that this dataset is subscribable.
+
+### Subscribable datasets
 
 > Example of a subscribable dataset
 
@@ -29,19 +31,30 @@ However, we will start by understanding how we can prepare datasets to support s
 }
 ```
 
-Before we go into the details of managing subscriptions, it's important to understand that, while you can create a subscription for *any* dataset, some conditions must be met by the dataset for its corresponding subscriptions to be functional and actually work as described here.
+While you can create a subscription for *any* dataset, some conditions must be met by the dataset for its corresponding subscriptions to be functional and actually work as described here.
 
-In order to support a functional subscription, a dataset must have some queries defined in its `subscribable` property. In this property, of type object, one (or many) sub-objects need to be declared. In the example on the side, an object is provided in the key `test`, including both a `dataQuery` and a `subscriptionQuery`.
+In order to support a functional subscription, a dataset must have some queries defined in its `subscribable` property. In this property, of type object, one (or many) sub-objects should be declared. Please note that you can define multiple keys in the `subscribable` object, and each key will be evaluated separately and trigger its own updates. Each object inside the `subscribable` property must define two queries:
 
-`dataQuery` and `subscriptionQuery` should always be present inside each sub-object of the `subscribable` dataset's field. The first will be evaluated as the subscription's content, while the latter will be evaluated to check if a subscription has changed since the last update.
+* `dataQuery`, which will be evaluated as the subscription's content - i.e. this is what has been updated since the last check on the updates of this dataset.
+* `subscriptionQuery`, which will be evaluated to check if a subscription has changed since the last update. This query should return a single row with the count of updated items since the last update check. If the value returned by this query is greater than 0, then all the subscriptions that reference this dataset will receive a notification.
 
-Both queries can contain two special keywords: `{begin}` and `{end}`. These will be replaced with ISO-formatted dates on runtime (with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively).
+The example on the side defines the `subscribable` object for an example dataset, and this object contains a the key `test`, including both a `dataQuery` and a `subscriptionQuery`. For more details on how you can modify the `subscribable` property of a dataset, check out the documentation on [updating a dataset](#updating-a-dataset).
 
-For more details on how you can modify the `subscribable` property of a dataset, check out the documentation on [updating a dataset](#updating-a-dataset).
+Both queries can contain two special keywords: `{begin}` and `{end}`. These will be replaced with ISO-formatted dates on runtime, with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.
 
 *Please note that, for readability purposes, the special characters in example on the side are not properly escaped. Don't forget all special characters must be properly escaped for the queries to be correctly executed.*
 
-## How are subscription notifications sent?
+### Creating and confirming the subscription
+
+You have your dataset ready to be subscribed. The next steps would be to actually create the subscription - check the [docs for creating subscriptions](#creating-a-subscription) for detailed information on how to do that.
+
+After creating the subscription, an email is sent with a confirmation link. You need to click this link in order to confirm the notification and start receiving notifications. You can check if the subscription is confirmed or not by looking at the `confirmed` field of the subscription object. Check more information about confirming subscriptions in the [confirming a subscription](#confirming-a-subscription) section.
+
+If, for some reason, you have lost the confirmation email, you can check the [resending confirmation emails](#resending-the-subscription-confirmation-email) section for more information on how to resend the confirmation email.
+
+At any point, you might want to stop receiving email or webhook notifications - if that is the case, you can check the [unsubscribing](#unsubscribing) section for details on how to stop receiving notifications for your subscriptions.
+
+### How are subscription notifications sent?
 
 > Example of POST body data for a webhook notification:
 
@@ -97,6 +110,15 @@ Webhook notifications are sent as POST requests to the URL saved in the subscrip
 You can see in the image below an example of an email notification for GLAD deforestation alerts:
 
 ![Subscription email example](images/subscription-email-example.png)
+
+### Summary of the subscription lifecycle
+
+* First, you should know which dataset to use and when its data gets updated.
+* You ensure that the dataset is subscribable - if not, you should write the subscription queries and update the dataset.
+* You create a subscription.
+* You get a confirmation email and click on the link to confirm the subscription.
+* Done! You will now get an email every day with the updates to the dataset data *(note that if there are no updates, no email is sent)*.
+* Later, you can unsubscribe or delete the subscription.
 
 ## Getting subscriptions owned by the request user
 
@@ -572,17 +594,7 @@ Error code     | Error message                       | Description
 401            | Unauthorized                        | No valid token was provided in the request headers.
 404            | Subscription not found              | Either a subscription with the id provided does not exist or it is not owned by the user who performed the request.
 
-## Subscription lifecycle
-
-You have created your subscription using [the endpoint for creating subscriptions](#creating-a-subscription). But, if you notice the subscription object returned after creation, you will be able to see that the subscription `confirmed` field is set to `false`. This means that this subscription is not confirmed yet.
-
-For the subscription to be usable (i.e. in order to be notified via email or webhook), you will first need to confirm it. Check more information about confirming subscriptions in the [confirming a subscription](#confirming-a-subscription) section.
-
-If confirming subscriptions using a HTTP request is not an option, and for some reason you have lost the confirmation email, you can check the [resending confirmation emails](#resending-the-subscription-confirmation-email) section for more information on how to resend the confirmation email.
-
-If, at any point, you want to stop receiving email or webhook notifications, you can check the [unsubscribing](#unsubscribing) section for details on how to stop receiving notifications for your subscriptions.
-
-### Confirming a subscription
+## Confirming a subscription
 
 > Example GET request to confirm a subscription:
 
@@ -594,7 +606,7 @@ Upon creation of the subscription, a confirmation email is sent to the email of 
 
 *Manually calling this endpoint will redirect you to the GFW application.*
 
-### Resending the subscription confirmation email
+## Resending the subscription confirmation email
 
 > Example GET request to resend the confirmation email for a subscription:
 
@@ -609,7 +621,7 @@ This endpoint does not change the subscription - i.e. if the subscription was al
 
 *Manually calling this endpoint will redirect you to the GFW application.*
 
-### Unsubscribing
+## Unsubscribing
 
 > Example GET request to unsubscribe:
 
