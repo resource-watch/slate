@@ -1,4 +1,4 @@
-# User Management
+# User management
 
 The following endpoints expose the RW API's functionality regarding user management. These endpoints will allow you to login, recover a forgotten password, create, edit or delete a user account. We've already covered the basics of getting a user account in the [authentication](#authentication) section, and here we'll dive deeper into all the functionality exposed by these endpoints.
 
@@ -10,10 +10,28 @@ If you are accessing these endpoints from a browser, it will typically generate 
 
 Keep in mind that not all endpoints support both formats, and will output either HTML or JSON, no matter which `Content-Type` value you provide.
 
-## A note on UI elements
+#### A note on UI elements
 
 This section covers endpoints that generate human-facing elements, like login pages or reset passwords emails. Some elements of these interfaces can be configured to match specific projects identities (RW, GFW, etc). To specify which project your requests come from, you can add an optional `origin` query parameter to your requests, with the name of the application. If matching visual elements exist, they will be used in the resulting interfaces displayed to the user.
 
+
+## General notes on RW API users
+
+User accounts in the RW API work pretty much like you would expect: you create a user account, login with it, and use it on your day-to-day interactions to access certain actions and associate certain RW API resources with it.
+
+Besides authentication, user accounts are also used for authorization. Authorization is implemented on a per-service basis, but is commonly built on top of 3 elements associated with your a user account:
+
+- `id`
+- `role`
+- `application`
+
+`id` is a unique identifier of your account. Certain actions may be limited to specific users, typically in the context of a given resource being associated directly with a specific user `id`.
+
+`role` can be one of 3 values: `USER`, `MANAGER` and `ADMIN`. While not required nor enforced, typically they are used hierarchically in that order, from least to most permissive. A common pattern you'll find on some services is: `USER` accounts can only create new resources, `MANAGER` accounts can create new resources, and edit or delete resources created by them, while `ADMIN` accounts can do all of the above even for resources created by other users.
+
+`application` is a list of keys meant to identify the different client applications that are built using the RW API. It's present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping `application` value.
+
+Keep in mind that it's up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.    
 
 ## Login (email + password)
 
