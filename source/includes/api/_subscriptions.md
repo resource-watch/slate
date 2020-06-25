@@ -639,7 +639,7 @@ curl -X GET "https://api.resourcewatch.org/v1/subscriptions/<subscription_id>/un
 -H "Authorization: Bearer <your-token>"
 ```
 
-**Note: unsubscribing is equivalent to deleting the subscription**.
+**Note: When you unsubscribe, the underlying subscription resource is deleted.**.
 
 You can use the endpoint `v1/subscriptions/:id/unsubscribe` (exemplified on the side) for unsubscribing from a subscription. As with most of the other subscription endpoints, please keep in mind that you must be authenticated in order to use this endpoint.
 
