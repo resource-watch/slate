@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>WRI API Map</title>
+
+  <!-- Mapbox GL JS includes -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
+
+  <!-- Mapbox GL Draw plugin includes -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css" rel="stylesheet" />
+
+  <!-- CSS embedded in head tag since this is a small app -->
+  <style>
+    /* basic reset of styling */
+    body { margin: 0; padding: 0; }
+
+    #metadata-container {
+      overflow-y: auto;
+    }
+
+    /* Container holding the grid */
+    #grid-top-level {
+      display: grid;
+      grid-template-columns: 45% 45%;  /* column widths */
+      grid-auto-rows: minmax(400px, 750px);  /* row heights */
+      justify-content: space-evenly;
+    }
+
+    #map-container {
+      width: 100%;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1>WRI-API and Mapbox GL JS Quickstart Tutorial</h1>
+
+  <!-- Container holding the grid -->
+  <div id="grid-top-level">
+
+    <!-- Container (grid cell) for metadata panel -->
+    <div id="metadata-container">
+      <!-- Element actually holding the metadata text-->
+      <pre id="metadata">
+Hello (part of the) World
+      </pre>
+    </div>
+
+    <!-- Container (grid cell) for interactive map -->
+    <div id="map"></div>
+
+  </div>
+
+  <!-- JS embedded in body tag  -->
+  <script>
+    // TO MAKE THE MAP APPEAR YOU MUST
+    // ADD YOUR ACCESS TOKEN FROM
+    // https://account.mapbox.com
+    mapboxgl.accessToken = 'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****';
+
+
+    // declare the Dataset ID
+    const datasetId = 'b584954c-0d8d-40c6-859c-f3fdf3c2c5df';
+
+    // declare an async function that calls an API endpoint for dataset metadata
+    // the JSON response loaded into the metadata panel and stored globally as well
+    // takes one parameter
+    //   (0) the Dataset ID
+    callApiDatasetMetadata = async function(uuid) {
+      // fetch the API endpoint (GET request)
+      return fetch('https://api.resourcewatch.org/v1/dataset/' + uuid + '?includes=layer,metadata')
+        .then(function(response) {  // convert the JSON text into a JS object
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        }).then(function(j) { // set global variable, update HTML content
+          console.log(j);
+          // set a global variable to store this response object - self-rolled state management
+          window.globalVarDatasetMetadataResponse = j;
+          // update HTML content with dataset metadata
+          document.getElementById('metadata').textContent = JSON.stringify(j, null, 2);
+        })
+    }
+
+    // initiate a new map by passing an object describing a config
+    // for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/
+    var map = new mapboxgl.Map({
+        // id of div that will hold map
+        container: 'map',
+
+        // one of the existing mapbox map styles
+        style: 'mapbox://styles/mapbox/light-v10',
+
+        // zoom in (greater = smaller area displayed)
+        zoom: 4,
+
+        // longitude, latitude of the map center
+        center: [20, 0]
+    });
+
+    // run the API call once the map is loaded (API call is asnyc)
+    map.on('load', function () {
+      // fetch remote dataset metadata and update HTML
+      callApiDatasetMetadata(datasetId);
+    });
+
+
+    // initiate a new handler for drawing
+    var draw = new MapboxDraw({
+
+      // override the control buttons
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,  // no points or lines
+        trash: true  // let the geometries be deleted
+      }
+    });
+    // attach the handler to the map
+    map.addControl(draw, 'top-left');
+
+  </script>
+
+</body>
+</html>
