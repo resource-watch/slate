@@ -10,11 +10,6 @@ If you are accessing these endpoints from a browser, it will typically generate 
 
 Keep in mind that not all endpoints support both formats, and will output either HTML or JSON, no matter which `Content-Type` value you provide.
 
-## A note on UI elements
-
-This section covers endpoints that generate human-facing elements, like login pages or reset passwords emails. Some elements of these interfaces can be configured to match specific projects identities (RW, GFW, etc). To specify which project your requests come from, you can add an optional `origin` query parameter to your requests, with the name of the application. If matching visual elements exist, they will be used in the resulting interfaces displayed to the user.
-
-
 ## General notes on RW API users
 
 User accounts in the RW API work pretty much like you would expect: you create a user account, login with it, and use it on your day-to-day interactions to access certain actions and associate certain RW API resources with it.
@@ -32,6 +27,18 @@ Besides authentication, user accounts are also used for authorization. Authoriza
 `application` is a list of keys meant to identify the different client applications that are built using the RW API. It's present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping `application` value.
 
 Keep in mind that it's up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.    
+
+## User management and applications 
+
+As we've covered in previous sections, several RW API resources, like users, datasets or widgets, are associated with one or more applications. Applications are a way to identify the different tools that rely on the RW API, and are used to make resource management easier.
+
+The user management service can also models its behavior based on the application that's making use of it - this can be controlled by the `origin` query parameter. This parameter can be passed on every request, or on the first request only, if you are relying on cookie-based sessions. In it, you can identify the application using the RW API. If it's a known application, certain elements will be adjusted:
+
+- Logo and color scheme on HTML pages and emails.
+- Fallback redirects on login.
+- Available 3rd party authentication mechanisms and associated accounts on those platforms.
+
+If you use an `origin` application that's not known to the RW API, you will see a fallback configuration of these elements, and 3rd party login will be disabled. If you'd like your application to be supported, please send us an email - we'd love to hear about how the RW API can help your projects.
 
 ## Login (email + password)
 
