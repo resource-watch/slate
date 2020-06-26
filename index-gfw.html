@@ -8716,617 +8716,174 @@ If the original topic contains functioning widgets, they will be duplicated and 
 
           <h1 id="subscriptions">Subscriptions</h1>
 
-<p>Subscription represents to which datasets and analysis a user can have access to.</p>
+<h2 id="what-is-a-subscription">What is a subscription?</h2>
 
-<aside class="notice">
-Remember — All subscription endpoints need to be authenticated.
-</aside>
+<p><em>Note: We strongly recommend that you read the <a href="#dataset">dataset concept</a> and <a href="#dataset6">dataset endpoints</a> sections before proceeding.</em></p>
 
-<h2 id="subscribable-datasets">Subscribable datasets</h2>
+<p>A subscription allows you to get notified of updates on a datasets&rsquo; data - either for every update, or for updates restricted to geographical areas of your interest. For example, you can use subscriptions to subscribe to deforestation alerts (<a href="http://api.resourcewatch.org/v1/dataset/61170ad0-9d6a-4347-8e58-9b551eeb341e">GLAD alerts dataset</a>) in the Amazon forest, or track fire alerts (<a href="http://api.resourcewatch.org/v1/dataset/64c948a6-5e34-4ef2-bb69-6a6535967bd5">VIIRS fire alerts dataset</a>) in your area of residence.</p>
 
-<p>In order to create a subscription, a dataset must be prepared to accept them. This is achieved by declaring some queries in the dataset json object sent to the <code class="prettyprint">/v1/dataset</code> endpoint under the <code class="prettyprint">subscribable</code>property.</p>
+<p>In the following sections, we will cover how you can interact and manage subscriptions in the RW API. We will see how you can customize subscriptions so that we only get notified for changes in a dataset&rsquo;s data for specific geographic regions. You will learn how to use them to get notified via email or calls to a URL you provide. We will also dive into subscription lifecycle, and understand how we can confirm subscriptions, resend confirmation emails and how to unsubscribe and stop receiving notifications.</p>
+
+<h2 id="subscription-lifecycle">Subscription lifecycle</h2>
+
+<p>In this section, you will learn about the lifecycle of a subscription. This will help you understand how you can best use subscriptions to meet your goals. The first step for using subscriptions is understanding which data you want to subscribe - for this, we recommend <a href="index-rw.html#getting-all-datasets">searching the existing datasets</a> in the WRI API (or maybe even <a href="index-rw.html#creating-a-dataset">creating a new one</a>). Once you are certain of the dataset you wish to subscribe, the next step is ensuring that this dataset is subscribable.</p>
+
+<h3 id="subscribable-datasets">Subscribable datasets</h3>
+
+<blockquote>
+<p>Example of a subscribable dataset</p>
+</blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset name"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"app"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset provider"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"other"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset_fields"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"subscribable"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"test_subscription"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"dataQuery"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT * FROM dataset-name  WHERE </span><span class="se">\"</span><span class="s2">reported_date</span><span class="se">\"</span><span class="s2"> &gt;= '{{begin}}' AND </span><span class="se">\"</span><span class="s2">reported_date</span><span class="se">\"</span><span class="s2"> &lt;= '{{end}}' AND </span><span class="se">\"</span><span class="s2">number_dead</span><span class="se">\"</span><span class="s2"> &gt; 0 ORDER BY reported_date DESC LIMIT 10"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"subscriptionQuery"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM dataset-name WHERE </span><span class="se">\"</span><span class="s2">reported_date</span><span class="se">\"</span><span class="s2"> &gt;= '{begin}' AND </span><span class="se">\"</span><span class="s2">reported_date</span><span class="se">\"</span><span class="s2"> &lt;= '{end}' AND </span><span class="se">\"</span><span class="s2">number</span><span class="se">\"</span><span class="s2"> &gt; 0"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example dataset"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"app"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"carto"</span><span class="p">,</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+  </span><span class="s2">"subscribable"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"test"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataQuery"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT * FROM dataset-name  WHERE 'reported_date' &gt;= '{{begin}}' AND 'reported_date' &lt;= '{{end}}' AND 'number_dead' &gt; 0 ORDER BY reported_date DESC LIMIT 10"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"subscriptionQuery"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT COUNT(*) FROM dataset-name WHERE 'reported_date' &gt;= '{begin}' AND 'reported_date' &lt;= '{end}' AND 'number' &gt; 0"</span><span class="w">
     </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>Inside the <code class="prettyprint">subscribable</code> object, one (or several) sub-objects can be declared. In the provided example, the <code class="prettyprint">test_subscription</code> is provided, with both a <code class="prettyprint">dataQuery</code> and a <code class="prettyprint">subscriptionQuery</code>. The former will be evaluated as the subscription&rsquo;s content, while the latter will be evaluated to check if a subscription has changed since the last update. Both queries can contain two special keywords: {begin} and {end}. These will be substituted with  ansi-formatted datetimes &ndash;with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.</p>
+<p>While you can create a subscription for <em>any</em> dataset, some conditions must be met by the dataset for its corresponding subscriptions to be functional and actually work as described here.</p>
 
-<aside class="notice">
-Mind the string format: double quotes and curly braces need to be properly escaped.
-</aside>
+<p>In order to support a functional subscription, a dataset must have some queries defined in its <code class="prettyprint">subscribable</code> property. In this property, of type object, one (or many) sub-objects should be declared. Please note that you can define multiple keys in the <code class="prettyprint">subscribable</code> object, and each key will be evaluated separately and trigger its own updates. Each object inside the <code class="prettyprint">subscribable</code> property must define two queries:</p>
 
-<h2 id="creating-a-subscription">Creating a Subscription</h2>
+<ul>
+<li><code class="prettyprint">dataQuery</code>, which will be evaluated as the subscription&rsquo;s content - i.e. this is what has been updated since the last check on the updates of this dataset.</li>
+<li><code class="prettyprint">subscriptionQuery</code>, which will be evaluated to check if a subscription has changed since the last update. This query should return a single row with the count of updated items since the last update check. If the value returned by this query is greater than 0, then all the subscriptions that reference this dataset will receive a notification.</li>
+</ul>
 
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Required</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>name</td>
-<td style="text-align: center">Name</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>application</td>
-<td style="text-align: center">Application of the subscription. Set to <code class="prettyprint">gfw</code> by default</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>language</td>
-<td style="text-align: center">Language of the subscriptions (used to select the email template)</td>
-<td style="text-align: right">en, es, fr, pt, zh</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>resource</td>
-<td style="text-align: center">Details on the resource that will be notified for the subscription.</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>&ndash; type</td>
-<td style="text-align: center">The type of resource to notify. If <code class="prettyprint">EMAIL</code>, an email is sent to the email saved in the resource content. If <code class="prettyprint">URL</code>, a POST is requested to the web-hook URL in the resource content.</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>&ndash; content</td>
-<td style="text-align: center">The email or URL that will be notified (according to the type).</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>datasets</td>
-<td style="text-align: center">Array of datasets of the subscription</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasetsQuery</code> is specified)</td>
-</tr>
-<tr>
-<td>datasetsQuery</td>
-<td style="text-align: center">Subscriptions to subscribable datasets</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
-</tr>
-<tr>
-<td>&ndash; id</td>
-<td style="text-align: center">Id of dataset</td>
-<td style="text-align: right">ObjectId</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
-</tr>
-<tr>
-<td>&ndash; type</td>
-<td style="text-align: center">Type of subscription defined in the dataset</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
-</tr>
-<tr>
-<td>&ndash; params</td>
-<td style="text-align: center">Geographic area of the subscription</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
-</tr>
-<tr>
-<td>env</td>
-<td style="text-align: center">Environment of the subscription. Set to <code class="prettyprint">production</code> by default</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>userId</td>
-<td style="text-align: center"><a href="developer.html#creating-a-subscription-for-another-user">Check here for more info</a></td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">No</td>
-</tr>
-</tbody></table>
+<p>The example on the side defines the <code class="prettyprint">subscribable</code> object for an example dataset, and this object contains a the key <code class="prettyprint">test</code>, including both a <code class="prettyprint">dataQuery</code> and a <code class="prettyprint">subscriptionQuery</code>. For more details on how you can modify the <code class="prettyprint">subscribable</code> property of a dataset, check out the documentation on <a href="#updating-a-dataset">updating a dataset</a>. The keys in the subscribable object (e.g. <code class="prettyprint">test</code>) are just for organizational purposes, and they won&rsquo;t be used in any way from the subscription&rsquo;s perspective.</p>
 
-<aside class="warning">The <code>application</code> field will soon be made required when creating a subscription.</aside>
+<p>Both queries can contain two special keywords: <code class="prettyprint">{begin}</code> and <code class="prettyprint">{end}</code>. These will be replaced with ISO-formatted dates on runtime, with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.</p>
 
-<aside class="notice">
-Remember — Subscriptions are created unconfirmed. A link for confirmation will be sent to the subscription email.
-</aside>
+<p><em>Please note that, for readability purposes, the special characters in example on the side are not properly escaped. Don&rsquo;t forget all special characters must be properly escaped for the queries to be correctly executed.</em></p>
 
-<p>A way to determine the area of interest for the subscriptions needs to be provided. A subscription can be created in six different ways:</p>
+<h3 id="creating-and-confirming-the-subscription">Creating and confirming the subscription</h3>
 
-<h3 id="with-an-area">With an area</h3>
+<p>You have your dataset ready to be subscribed. The next steps would be to actually create the subscription - check the <a href="#creating-a-subscription">docs for creating subscriptions</a> for detailed information on how to do that.</p>
 
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>params</td>
-<td style="text-align: center">Geographic area of the subscription</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&ndash; area</td>
-<td style="text-align: center">Id of area object</td>
-<td style="text-align: right">Text (ObjectId)</td>
-</tr>
-</tbody></table>
+<p>After creating the subscription, an email is sent with a confirmation link. You need to click this link in order to confirm the notification and start receiving notifications. You can check if the subscription is confirmed or not by looking at the <code class="prettyprint">confirmed</code> field of the subscription object. Check more information about confirming subscriptions in the <a href="#confirming-a-subscription">confirming a subscription</a> section.</p>
+
+<p>If, for some reason, you have lost the confirmation email, you can check the <a href="#resending-the-subscription-confirmation-email">resending confirmation emails</a> section for more information on how to resend the confirmation email.</p>
+
+<p>At any point, you might want to stop receiving email or webhook notifications - if that is the case, you can check the <a href="#unsubscribing">unsubscribing</a> section for details on how to stop receiving notifications for your subscriptions.</p>
+
+<p>The same subscription can subscribe to multiple datasets - for that, you just need to provide all the dataset ids you intend to subscribe in either the <code class="prettyprint">datasets</code> or <code class="prettyprint">datasetsQuery</code> fields of the subscription on creation. However, a subscription can only notify a single email at a time - if you intend to receive subscription notifications on multiple emails, you&rsquo;ll need to create multiple subscriptions.</p>
+
+<h3 id="how-are-subscription-notifications-sent">How are subscription notifications sent?</h3>
 
 <blockquote>
-<p>To create a Subscription, you have to do a POST request with the following body:</p>
+<p>Example of POST body data for a webhook notification:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "name": "&lt;name&gt;",
-    "datasets": [
-        "&lt;dataset&gt;"
-    ],
-    "params": {
-        "geostore": "35a6d982388ee5c4e141c2bceac3fb72"
-    },
-    "datasetsQuery": [
-        {
-            "id": ":subscription_dataset_id",
-            "type": "test_subscription",
-            "threshold": 1
-        }
-    ],
-    "application": "rw",
-    "language": "en",
-    "env": &lt;environment&gt;,
-    "resource": {
-        "type": "EMAIL",
-        "content": "email@address.com"
-    }
-}'</span>
-</code></pre>
-<p>In this case, a subscription is being created in reference to the <code class="prettyprint">subscribable</code> field present in the previously defined dataset. After confirming the subscription the <code class="prettyprint">subscriptionQuery</code> will be ran and its result will be compared against the <code class="prettyprint">threshold</code>. If the query result is at least equal to the threshold, a new alert will be sent to the subscription&rsquo;s email.</p>
-
-<h3 id="from-country">From country</h3>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>params</td>
-<td style="text-align: center">Geographic area of the subscription</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&ndash; iso</td>
-<td style="text-align: center">Country or region information</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&mdash;- country</td>
-<td style="text-align: center">Iso code</td>
-<td style="text-align: right">Text</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>To create a Subscription, you have to do a POST with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "env": &lt;environment&gt;,
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "params": {
-       "iso": {
-           "country": "&lt;iso&gt;"
-       }
-   },
-   "datasetsQuery": [{}]
-  }'</span>
-</code></pre>
-<h3 id="from-country-and-region">From country and region</h3>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>params</td>
-<td style="text-align: center">Geographic area of the subscription</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&ndash; iso</td>
-<td style="text-align: center">Country or region information</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&mdash;- country</td>
-<td style="text-align: center">Iso code</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>&mdash;- region</td>
-<td style="text-align: center">Region code</td>
-<td style="text-align: right">Number</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>To create a Subscription, you have to do a POST request with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "env": &lt;environment&gt;,
-   "params": {
-       "iso": {
-           "country": "&lt;iso&gt;",
-           "region": "&lt;region&gt;"
-       }
-    }
-  }'</span>
-</code></pre>
-<h3 id="from-world-database-on-protected-areas-wdpa">From World Database on Protected Areas (wdpa)</h3>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>params</td>
-<td style="text-align: center">Geographic area of the subscription</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&ndash; wdpaid</td>
-<td style="text-align: center">id of protected area</td>
-<td style="text-align: right">Number</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>To create a Subscription, you have to do a POST request with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "env": &lt;environment&gt;,
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "params": {
-       "wdpaid": &lt;idWdpa&gt;
-    },
-   "datasetsQuery": [{}]
-  }'</span>
-</code></pre>
-<h3 id="from-land-use-areas">From land use areas</h3>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>params</td>
-<td style="text-align: center">Geographic area of the subscription</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&ndash; use</td>
-<td style="text-align: center">Use name</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>&ndash; useid</td>
-<td style="text-align: center">Id use</td>
-<td style="text-align: right">Number</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>To create a Subscription, you have to do a POST request with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "env": &lt;environment&gt;,
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "params": {
-       "use": "&lt;useName&gt;",
-       "useid": &lt;id&gt;
-    },
-   "datasetsQuery": [{}]
-  }'</span>
-</code></pre>
-<p>Subscription has 4 different lands uses:</p>
-
-<h4 id="oil-palm">Oil palm</h4>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "env": &lt;environment&gt;,
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "params": {
-       "use": "oilpalm",
-       "useid": &lt;id&gt;
-    },
-    "datasetsQuery": [{}]
-  }'</span>
-</code></pre>
-<h4 id="mining">Mining</h4>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "env": &lt;environment&gt;,
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "params": {
-       "use": "mining",
-       "useid": &lt;id&gt;
-    }
-  }'</span>
-</code></pre>
-<h4 id="wood-fiber">Wood fiber</h4>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "env": &lt;environment&gt;,
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "params": {
-       "use": "fiber",
-       "useid": &lt;id&gt;
-    },
-    "datasetsQuery": [{}]
-  }'</span>
-</code></pre>
-<h4 id="congo-basin-logging-roads">Congo Basin logging roads</h4>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "env": &lt;environment&gt;,
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "params": {
-       "use": "logging",
-       "useid": &lt;id&gt;
-    },
-    "datasetsQuery": [{}]
-  }'</span>
-</code></pre>
-<h3 id="from-geostore">From geostore</h3>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>params</td>
-<td style="text-align: center">Geographic area of the subscription</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&ndash; geostore</td>
-<td style="text-align: center">Id of geostore</td>
-<td style="text-align: right">Text</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>To create a Subscription, you have to do a POST request with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "name": "&lt;name&gt;",
-   "application": "&lt;application&gt;",
-   "env": &lt;environment&gt;,
-   "language": "&lt;language&gt;",
-   "resource": {
-       "type": "&lt;type&gt;",
-       "content": "&lt;content&gt;"
-   },
-   "datasets" : ["&lt;dataset&gt;"],
-   "params": {
-       "geostore": "&lt;idGeostore&gt;"
-    },
-   "datasetsQuery": [{}]
-  }'</span>
-</code></pre>
-<h2 id="confirm-subscription">Confirm subscription</h2>
-
-<p>All subscriptions are created unconfirmed. The user needs confirm his subscription with this endpoint.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/confirm
-</code></pre>
-<h2 id="get-a-subscription-by-its-id">Get a subscription by its ID</h2>
-
-<p>You can get the data from a specific subscription using the following <code class="prettyprint">GET</code> request:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/&lt;subscription-id&gt; <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<aside class="notice">
-Remember — this endpoint is authenticated.
-</aside>
-
-<blockquote>
-<p>Example</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/5d9c933c04c106001056d2a1 <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer xxxxxx"</span>
-</code></pre>
-<blockquote>
-<p>Response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="w">
-</span><span class="p">{</span><span class="w">
-    </span><span class="s2">"data"</span><span class="p">:</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"downloadUrls"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"csv"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://production-api.globalforestwatch.org/glad-alerts/download/?period=2020-02-22,2020-03-04&amp;gladConfirmOnly=False&amp;aggregate_values=False&amp;aggregate_by=False&amp;geostore=423e5dfb0448e692f97b590c61f45f22&amp;format=csv"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"json"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://production-api.globalforestwatch.org/glad-alerts/download/?period=2020-02-22,2020-03-04&amp;gladConfirmOnly=False&amp;aggregate_values=False&amp;aggregate_by=False&amp;geostore=423e5dfb0448e692f97b590c61f45f22&amp;format=json"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d9c933c04c106001056d2a1"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-08T13:46:36.894Z"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58e22f662071c01c02f76a0f"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"resource"</span><span class="p">:</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa@aaa.com"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w">
-            </span><span class="p">[</span><span class="w">
-                </span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w">
-            </span><span class="p">[</span><span class="w">
-                </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"threshold"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"lastSentDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-08T13:46:36.895Z"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"historical"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COUNT"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
+      </span><span class="s2">"alert_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GLAD"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10/10/2019 00:10 UTC"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"alert_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GLAD"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"11/10/2019 00:10 UTC"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"alert_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GLAD"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12/10/2019 00:10 UTC"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"alert_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GLAD"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"13/10/2019 00:10 UTC"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"alert_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GLAD"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"14/10/2019 00:10 UTC"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"alert_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GLAD"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"15/10/2019 00:10 UTC"</span><span class="w">
     </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"layerSlug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glad-alerts"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"alert_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Subscription for Amazônia, Brazil"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"selected_area"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Amazônia, Brazil"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"unsubscribe_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://production-api.globalforestwatch.org/subscriptions/5ea996383efbd0119327b372/unsubscribe?redirect=true&amp;lang=en"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"subscriptions_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.globalforestwatch.org/my-gfw?lang=en"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"dashboard_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.globalforestwatch.org/dashboards/aoi/5ea996383efbd0119327b372?lang=en"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"alert_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.globalforestwatch.org/map/aoi/5ea996383efbd0119327b372?lang=en&amp;map%5BcanBound%5D=true&amp;map%5Bdatasets%5D%5B0%5D%5Bdataset%5D=bfd1d211-8106-4393-86c3-9e1ab2ee1b9b&amp;map%5Bdatasets%5D%5B0%5D%5Blayers%5D%5B0%5D=8e4a527d-1bcd-4a12-82b0-5a108ffec452&amp;map%5Bdatasets%5D%5B0%5D%5BtimelineParams%5D%5BstartDate%5D=2020-04-15&amp;map%5Bdatasets%5D%5B0%5D%5BtimelineParams%5D%5BendDate%5D=2020-04-22&amp;map%5Bdatasets%5D%5B0%5D%5BtimelineParams%5D%5BtrimEndDate%5D=2020-04-22&amp;map%5Bdatasets%5D%5B1%5D%5Bdataset%5D=0b0208b6-b424-4b57-984f-caddfa25ba22&amp;map%5Bdatasets%5D%5B1%5D%5Blayers%5D%5B0%5D=b45350e3-5a76-44cd-b0a9-5038a0d8bfae&amp;map%5Bdatasets%5D%5B1%5D%5Blayers%5D%5B1%5D=cc35432d-38d7-4a03-872e-3a71a2f555fc&amp;mainMap%5BshowAnalysis%5D=true"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"alert_date_begin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-04-15"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"alert_date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-04-22"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="get-subscriptions-for-a-user">Get subscriptions for a user</h2>
+<p>Subscriptions support two types of notifications: emails or webhook requests is performed. Both notifications are checked and sent every day, assuming that the dataset data has changed since the last notification sent.</p>
 
-<p>You can get a list of the current user&rsquo;s subscriptions using the following endpoint. In order to use this endpoint, you need to be logged in.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions <span class="se">\</span>
+<p>Webhook notifications are sent as POST requests to the URL saved in the subscription. You can check on the side an example of the data that is sent in the body of the POST call. Please note that the webhook POST body data can change, based on the dataset chosen to receive notifications.</p>
+
+<p>You can see in the image below an example of an email notification for GLAD deforestation alerts:</p>
+
+<p><img src="images/subscription-email-example.png" alt="Subscription email example" /></p>
+
+<h3 id="summary-of-the-subscription-lifecycle">Summary of the subscription lifecycle</h3>
+
+<ul>
+<li>First, you should know which dataset to use and when its data gets updated.</li>
+<li>You ensure that the dataset is subscribable - if not, you should write the subscription queries and update the dataset.</li>
+<li>You create a subscription.</li>
+<li>You get a confirmation email and click on the link to confirm the subscription.</li>
+<li>Done! You will now get an email every day with the updates to the dataset data <em>(note that if there are no updates, no email is sent)</em>.</li>
+<li>Later, you can unsubscribe or delete the subscription.</li>
+</ul>
+
+<h2 id="getting-subscriptions-owned-by-the-request-user">Getting subscriptions owned by the request user</h2>
+
+<blockquote>
+<p>Getting the subscriptions for the request user:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
 <blockquote>
-<p>Response:</p>
+<p>Example response:</p>
 </blockquote>
-<pre class="highlight json"><code><span class="w">
-</span><span class="p">{</span><span class="w">
-   </span><span class="s2">"data"</span><span class="p">:[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-         </span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
-         </span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"587cc014f3b3f6280058e478"</span><span class="p">,</span><span class="w">
-         </span><span class="s2">"attributes"</span><span class="p">:{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"test"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="s2">"2017-01-16T12:45:08.434Z"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"userId"</span><span class="p">:</span><span class="s2">"57a063da096c4eda523e99ae"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"resource"</span><span class="p">:{</span><span class="w">
-               </span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
-               </span><span class="s2">"content"</span><span class="p">:</span><span class="s2">"pepe@gmail.com"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"datasets"</span><span class="p">:[</span><span class="w">
-               </span><span class="s2">"viirs-active-fires"</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"params"</span><span class="p">:{</span><span class="w">
-               </span><span class="s2">"iso"</span><span class="p">:{</span><span class="w">
-                  </span><span class="s2">"region"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"country"</span><span class="p">:</span><span class="kc">null</span><span class="w">
-               </span><span class="p">},</span><span class="w">
-               </span><span class="s2">"wdpaid"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
-               </span><span class="s2">"use"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
-               </span><span class="s2">"useid"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
-               </span><span class="s2">"geostore"</span><span class="p">:</span><span class="s2">"50601ff9257df221e808af427cb47701"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"language"</span><span class="p">:</span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-            </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
-         </span><span class="p">}</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"587cc014f3b3f6280058e478"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test subscription"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-01-16T12:45:08.434Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57a063da096c4eda523e99ae"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example@wri.org"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"viirs-active-fires"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"50601ff9257df221e808af427cb47701"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
       </span><span class="p">}</span><span class="w">
-   </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint supports the following optional query parameters as filters:</p>
+<p>This endpoint will allow you to get all the subscriptions owned by the user who performed the request (identified by the access token). To use this endpoint, you must be logged in (i.e. a token must be provided). In the sections below, we’ll explore how you can customize this endpoint call to match your needs.</p>
+
+<p>For a detailed description of each field, check out the <a href="#subscription-reference">Subscription reference</a> section.</p>
+
+<h3 id="filters">Filters</h3>
+
+<p>The <code class="prettyprint">v1/subscriptions</code> endpoint supports the following optional query parameters as filters:</p>
 
 <table><thead>
 <tr>
@@ -9344,316 +8901,689 @@ Remember — this endpoint is authenticated.
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">Id of geostore</td>
+<td style="text-align: center">The environment to which the subscription is associated.</td>
 <td style="text-align: right">String</td>
 <td style="text-align: right">&#39;production&rsquo;</td>
 </tr>
 </tbody></table>
 
-<aside class="warning">The <code>application</code> filter, which defaults to <code>gfw</code>, will soon be modified. We recommend reviewing your application to ensure you set and load the correct <code>application</code> explicitly</aside>
+<p><strong>Deprecation notice:</strong> the default value for the <code class="prettyprint">application</code> filter (currently, <code class="prettyprint">gfw</code>) will be removed and the <code class="prettyprint">application</code> filter will then have no default value. We recommend reviewing your application to ensure you set and load the correct <code class="prettyprint">application</code> explicitly.</p>
 
-<h2 id="resend-confirmation">Resend confirmation</h2>
+<h3 id="errors-for-getting-subscriptions">Errors for getting subscriptions</h3>
 
-<p>To resend the confirmation:</p>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id/send_confirmation <span class="se">\</span>
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No valid token was provided in the request headers.</td>
+</tr>
+</tbody></table>
+
+<h2 id="getting-a-subscription-by-id">Getting a subscription by id</h2>
+
+<blockquote>
+<p>Example call for getting a subscription by its id:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/subscriptions/&lt;subscription_id&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<h2 id="modify-a-subscription">Modify a subscription</h2>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/subscriptions/:id <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<p>To modify a subscription, use the following PATCH endpoint. This endpoint requires authentication, and also you must be the owner of the subscription in order to edit it, otherwise the request will fail with <code class="prettyprint">404 Not Found</code>.</p>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"587cc014f3b3f6280058e478"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test subscription"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-01-16T12:45:08.434Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57a063da096c4eda523e99ae"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example@wri.org"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"viirs-active-fires"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"50601ff9257df221e808af427cb47701"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>If you know the id of a subscription, then you can access it directly by performing a GET request to the <code class="prettyprint">v1/subscriptions/:id</code> endpoint. Keep in mind that this will only match subscriptions that are owned by the user who performed the request.</p>
 
-<p>The following fields are available to be provided when modifying a subscription:</p>
+<h3 id="errors-for-getting-subscriptions-by-id">Errors for getting subscriptions by id</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>ID is not valid</td>
+<td>The id provided is not a valid subscription id.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No valid token was provided in the request headers.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Subscription not found</td>
+<td>Either no subscription exists with the provided id, or the subscription with the id provided is not owned by the user who performed the request.</td>
+</tr>
+</tbody></table>
+
+<h2 id="creating-a-subscription">Creating a subscription</h2>
+
+<blockquote>
+<p>Example POST request to create a subscription providing the bare minimum body fields:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
+    "resource": {
+      "type": "EMAIL",
+      "content": "example@wri.org"
+    },
+    "params": {},
+    "application": "gfw",
+    "language": "en"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5eea1e6cfd754e001b28cb2b"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-17T13:45:16.222Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5ed75dd2a82a420010ed066b"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example@wri.org"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This section will guide you through the process of creating a basic subscription in the RW API. Creating a subscription can be done by any logged user using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the <a href="#subscription-reference">subscription reference</a> section, but the minimum field list you must specify for all subscriptions are:</p>
+
+<ul>
+<li><code class="prettyprint">datasets</code> or <code class="prettyprint">datasetsQuery</code></li>
+<li><code class="prettyprint">resource</code> (which must include both <code class="prettyprint">resource.type</code> and <code class="prettyprint">resource.content</code>)</li>
+<li><code class="prettyprint">params</code></li>
+<li><code class="prettyprint">application</code></li>
+<li><code class="prettyprint">language</code></li>
+</ul>
+
+<p>If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. Please note that <strong>subscriptions must be confirmed</strong> before they become active - refer to the <a href="#subscription-lifecycle">subscription lifecycle</a> for more details on this.</p>
+
+<h3 id="errors-for-creating-subscriptions">Errors for creating subscriptions</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">&lt;field&gt;</code> required</td>
+<td>You didn&rsquo;t provide one of the required fields.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No valid token was provided in the request headers.</td>
+</tr>
+</tbody></table>
+
+<h3 id="defining-the-datasets">Defining the datasets</h3>
+
+<p>You will need to provide the dataset ids to which your subscription will watch for updates. In order to do so, you&rsquo;ll need to provide one of two fields when creating a subscription:</p>
+
+<ul>
+<li><code class="prettyprint">datasets</code> - this field is a simple array of dataset ids. Each dataset will be individually evaluated for updates, and it will trigger an email if the <code class="prettyprint">subscriptionsQuery</code> returns greater than 0.</li>
+<li><code class="prettyprint">datasetsQuery</code> is an alternative way of defining the datasets to subscribe: using this field, you have the advantage of being able to define a different threshold for sending the email (i.e. the email is sent if the <code class="prettyprint">subscriptionQuery</code> returns a count greater than the threshold defined in the <code class="prettyprint">datasetsQuery</code> object). For more details on the structure of the objects inside <code class="prettyprint">datasetsQuery</code>, please check the <a href="index-rw.html#subscription-reference">subscription model reference</a>.</li>
+</ul>
+
+<h3 id="customizing-the-geographic-area-for-the-subscription">Customizing the geographic area for the subscription</h3>
+
+<p>When it comes to geo-referenced data, subscriptions are intrinsically tied to a geographic area of interest. This association enables users to create subscriptions to be notified of changes in the data of a dataset, but only if there are changes in the data of the dataset relative to the concrete geographic area of the world they are interested in. The specification of the geographic information for the subscription should be done in the <code class="prettyprint">params</code> field of the subscription.</p>
+
+<h4 id="subscribing-to-an-area-of-interest">Subscribing to an area of interest</h4>
+
+<blockquote>
+<p>Creating a subscription providing the id of an area of interest in the params field:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": ["&lt;dataset-id&gt;"],
+    "params": {
+      "area": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'</span>
+</code></pre>
+<p>A subscription can refer to a specific area of interest that has been created using the <a href="#areas">RW API Areas service</a>. If this is the case, you should first <a href="#create-area">create your area of interest</a>, grab its id and provide it in the <code class="prettyprint">params.area</code> field of the request body when creating the subscription.</p>
 
 <table><thead>
 <tr>
 <th>Field</th>
 <th style="text-align: center">Description</th>
 <th style="text-align: right">Type</th>
-<th style="text-align: right">Required</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>name</td>
-<td style="text-align: center">Name</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>application</td>
-<td style="text-align: center">Application of the subscription. Set to <code class="prettyprint">gfw</code> by default</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>language</td>
-<td style="text-align: center">Language of the subscriptions (used to select the email template)</td>
-<td style="text-align: right">en, es, fr, pt, zh</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>resource</td>
-<td style="text-align: center">Details on the resource that will be notified for the subscription.</td>
-<td style="text-align: right">Object</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>&ndash; type</td>
-<td style="text-align: center">The type of resource to notify. If <code class="prettyprint">EMAIL</code>, an email is sent to the email saved in the resource content. If <code class="prettyprint">URL</code>, a POST is requested to the web-hook URL in the resource content.</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>&ndash; content</td>
-<td style="text-align: center">The email or URL that will be notified (according to the type).</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>datasets</td>
-<td style="text-align: center">Array of datasets of the subscription</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasetsQuery</code> is specified)</td>
-</tr>
-<tr>
-<td>datasetsQuery</td>
-<td style="text-align: center">Subscriptions to subscribable datasets</td>
-<td style="text-align: right">Array</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
-</tr>
-<tr>
-<td>&ndash; id</td>
-<td style="text-align: center">Id of dataset</td>
-<td style="text-align: right">ObjectId</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
-</tr>
-<tr>
-<td>&ndash; type</td>
-<td style="text-align: center">Type of subscription defined in the dataset</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
-</tr>
-<tr>
-<td>&ndash; params</td>
+<td><code class="prettyprint">params</code></td>
 <td style="text-align: center">Geographic area of the subscription</td>
 <td style="text-align: right">Object</td>
-<td style="text-align: right">Yes (unless <code class="prettyprint">datasets</code> is specified)</td>
 </tr>
 <tr>
-<td>env</td>
-<td style="text-align: center">Environment of the subscription. Set to <code class="prettyprint">production</code> by default</td>
+<td><code class="prettyprint">params.area</code></td>
+<td style="text-align: center">Id of area of interest from the <a href="#areas">RW API Areas service</a></td>
 <td style="text-align: right">String</td>
-<td style="text-align: right">No</td>
 </tr>
 </tbody></table>
 
-<h2 id="unsubscribe">Unsubscribe</h2>
+<h4 id="subscribing-to-a-country-country-region-or-subregion">Subscribing to a country, country region or subregion</h4>
 
-<p>To unsubscribe from a subscription:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
+<blockquote>
+<p>Creating a subscription to a whole country:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": ["&lt;dataset-id&gt;"],
+    "params": {
+      "iso": {
+        "country": "BRA"
+      }
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Creating a subscription to a country subregion:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": ["&lt;dataset-id&gt;"],
+    "params": {
+      "iso": {
+        "country": "BRA",
+        "region": "1",
+        "subregion": "2"
+      }
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'</span>
+</code></pre>
+<p>A subscription can refer to a country, one of its regions, or a subregion within a region. Countries are identified by their ISO 3166-1 alpha-3 code - check <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">here</a> for a list of all the available country codes. Regions and subregions are identified by their respective GADM id, which can be obtained from GADM&rsquo;s dataset <a href="https://gadm.org/data.html">here</a>. When creating a subscription for a region, the country ISO must be specified. For subscribing to a subregion, both region and country ISO must be provided.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">params.iso.country</code></td>
+<td style="text-align: center">ISO 3-letter code of the country to subscribe</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td><code class="prettyprint">params.iso.region</code></td>
+<td style="text-align: center">Region id to subscribe</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td><code class="prettyprint">params.iso.subregion</code></td>
+<td style="text-align: center">Subregion id to subscribe (optional)</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
+<h4 id="subscribing-to-a-protected-area-from-world-database-on-protected-areas">Subscribing to a protected area from World Database on Protected Areas</h4>
+
+<blockquote>
+<p>Creating a subscription providing a WDPA id in the params field:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": ["&lt;dataset-id&gt;"],
+    "params": {
+      "wdpaid": "32054"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'</span>
+</code></pre>
+<p>A subscription can refer to a specific protected area by the id of that area in the World Database on Protected Areas. If this is the case, you should provide the WDPA id in the <code class="prettyprint">params.wdpaid</code> field when creating the subscription. IDs of protected areas worldwide can be obtained from the <a href="https://www.protectedplanet.net/">Protected Planet website</a>.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">params.wdpaid</code></td>
+<td style="text-align: center">Id of the protected area in the WDPA</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
+<h4 id="subscribing-to-a-geostore">Subscribing to a geostore</h4>
+
+<blockquote>
+<p>Creating a subscription providing the id of a geostore in the params field:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": ["&lt;dataset-id&gt;"],
+    "params": {
+      "geostore": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'</span>
+</code></pre>
+<p>A subscription can refer to a specific geostore that has been created using the <a href="#geostore">RW API Geostore service</a>. If this is the case, you should <a href="#create-geostore">create your geostore</a> and use its id in the <code class="prettyprint">params.geostore</code> field of the request body when creating the subscription.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">params.geostore</code></td>
+<td style="text-align: center">Id of the geostore to subscribe to.</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
+<h4 id="subscribing-to-land-use-areas">Subscribing to land use areas</h4>
+
+<blockquote>
+<p>Creating a subscription providing the id of a land use area in the params field:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": ["&lt;dataset-id&gt;"],
+    "params": {
+      "use": "mining",
+      "useid": "234"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'</span>
+</code></pre>
+<p>A subscription can refer to a land use area provided by different datasets. At this point, the following land use datasets are supported: <code class="prettyprint">mining</code> for mining areas, <code class="prettyprint">logging</code> for Congo Basin logging roads, <code class="prettyprint">oilpalm</code> for palm oil plantations or <code class="prettyprint">fiber</code> for wood fiber plantations. If this is the case, you should provide the name of the land use dataset you wish to use in the <code class="prettyprint">params.use</code> field, and the id of the area in the <code class="prettyprint">params.useid</code> field of the request body when creating the subscription.</p>
+
+<p>The ids to be used for land use areas can be obtained from the following CartoDB datasets:</p>
+
+<ul>
+<li>Mining area IDs can be obtained by querying <a href="http://api.resourcewatch.org/v1/dataset/c2142922-84d9-4564-8216-a4867b9e48c5">this dataset</a>.</li>
+<li>Palm oil plantation IDs can be obtained from <a href="https://wri-01.carto.com/tables/gfw_oil_palm/public/map">this CartoDB table</a>.</li>
+<li>Wood fiber plantation IDs can be obtained from <a href="https://wri-01.carto.com/tables/gfw_woodfiber/public/map">this CartoDB table</a>.</li>
+<li>Congo Basin logging road IDs can be obtained from <a href="https://wri-01.carto.com/tables/osm_logging_roads/public/map">this CartoDB table</a>.</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">params.use</code></td>
+<td style="text-align: center">The type of land use you want to subscribe to. Can be one of <code class="prettyprint">mining</code>, <code class="prettyprint">logging</code>, <code class="prettyprint">oilpalm</code> or <code class="prettyprint">fiber</code>.</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td><code class="prettyprint">params.useid</code></td>
+<td style="text-align: center">The id of the land use area you want to subscribe to.</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
+<h2 id="updating-a-subscription">Updating a subscription</h2>
+
+<blockquote>
+<p>Example PATCH request for updating a subscription by id:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/subscriptions/&lt;subscription_id&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": ["20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"],
+    "params": {
+      "geostore": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "application": "rw",
+    "language": "fr",
+    "env": "staging",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5ee79291a67d9a001b11043a"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-15T15:24:01.806Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5ed75dd2a82a420010ed066b"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@address.com"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"35a6d982388ee5c4e141c2bceac3fb72"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fr"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"staging"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can update subscriptions associated with you user account by using the PATCH <code class="prettyprint">v1/subscriptions/:id</code> endpoint. Updating a subscription follows the same validations as when creating a new one - i.e. all required field values must be provided, even if they remain the same. Values for fields other than the following are optional. The minimum fields list you must specify to update a subscription is:</p>
+
+<ul>
+<li><code class="prettyprint">datasets</code> or <code class="prettyprint">datasetsQuery</code></li>
+<li><code class="prettyprint">resource</code> (which much include <code class="prettyprint">resource.type</code> and <code class="prettyprint">resource.content</code>)</li>
+<li><code class="prettyprint">params</code></li>
+<li><code class="prettyprint">application</code></li>
+<li><code class="prettyprint">language</code></li>
+</ul>
+
+<p>If the update of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the updated subscription object.</p>
+
+<p><em>Note: Updating a subscription does not require confirming it. A confirmed subscription will stay confirmed after an update.</em></p>
+
+<h3 id="errors-for-updating-subscriptions">Errors for updating subscriptions</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">&lt;field&gt;</code> required</td>
+<td>You didn&rsquo;t provide one of the required fields.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Id is not valid</td>
+<td>The id provided is not valid.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No valid token was provided in the request headers.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Subscription not found</td>
+<td>Either a subscription with the id provided does not exist or it is not owned by the user who performed the request.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-subscriptions">Deleting subscriptions</h2>
+
+<blockquote>
+<p>Example DELETE request for deleting a subscription by its id:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/subscriptions/&lt;subscription_id&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<h2 id="delete-subscription">Delete subscription</h2>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/subscriptions/:id/unsubscribe <span class="se">\</span>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subscription"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5ee79291a67d9a001b11043a"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-15T15:24:01.806Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5ed75dd2a82a420010ed066b"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EMAIL"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email@address.com"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"35a6d982388ee5c4e141c2bceac3fb72"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fr"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"datasetsQuery"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"staging"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>To delete a subscription associated with your user account, you should use the DELETE <code class="prettyprint">v1/subscriptions/:id</code> endpoint. If the deletion of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the deleted subscription object.</p>
+
+<h3 id="errors-for-deleting-subscriptions">Errors for deleting subscriptions</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Id is not valid</td>
+<td>The id provided is not valid.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No valid token was provided in the request headers.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Subscription not found</td>
+<td>Either a subscription with the id provided does not exist or it is not owned by the user who performed the request.</td>
+</tr>
+</tbody></table>
+
+<h2 id="confirming-a-subscription">Confirming a subscription</h2>
+
+<blockquote>
+<p>Example GET request to confirm a subscription:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/subscriptions/&lt;subscription_id&gt;/confirm"</span>
+</code></pre>
+<p>Upon creation of the subscription, a confirmation email is sent to the email of the user who created the subscription. This email will contain a link, which you will need to click in order to confirm the subscription. You can also confirm the subscription by performing a GET request to the <code class="prettyprint">v1/subscriptions/:id/confirm</code> endpoint, as exemplified on the side.</p>
+
+<p><em>Manually calling this endpoint will redirect you to the GFW application.</em></p>
+
+<h2 id="resending-the-subscription-confirmation-email">Resending the subscription confirmation email</h2>
+
+<blockquote>
+<p>Example GET request to resend the confirmation email for a subscription:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/subscriptions/&lt;subscription_id&gt;/send_confirmation"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<p>To delete a subscription, use the following DELETE endpoint.</p>
+<p>For convenience, the RW API offers an additional endpoint to resend the confirmation email. In order to do this, you should perform a GET request to the <code class="prettyprint">v1/subscriptions/:id/send_confirmation</code>. As with most of the other subscription endpoints, please keep in mind that you must be authenticated in order to use this endpoint.</p>
 
-<p>If the request comes from another microservice, then it is possible to delete subscriptions belonging to other users. Otherwise, you can only delete subscriptions if you are the owner of the subscription.</p>
+<p>This endpoint does not change the subscription - i.e. if the subscription was already confirmed, it stays that way. The confirmation email will always be sent, regardless if the subscription is confirmed or not.</p>
+
+<p><em>Manually calling this endpoint will redirect you to the GFW application.</em></p>
+
+<h2 id="unsubscribing">Unsubscribing</h2>
+
+<blockquote>
+<p>Example GET request to unsubscribe:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/subscriptions/&lt;subscription_id&gt;/unsubscribe"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<p><strong>Note: When you unsubscribe, the underlying subscription resource is deleted.</strong>.</p>
+
+<p>You can use the endpoint <code class="prettyprint">v1/subscriptions/:id/unsubscribe</code> (exemplified on the side) for unsubscribing from a subscription. As with most of the other subscription endpoints, please keep in mind that you must be authenticated in order to use this endpoint.</p>
 
 <h2 id="subscription-statistics">Subscription statistics</h2>
 
-<p>Statistics endpoints require authentication by an ADMIN user.</p>
+<p>The following section details the endpoints that can be used to access statistics on the usage of subscriptions.</p>
+
+<p><strong>The usage of the following endpoints is restricted to ADMIN users.</strong></p>
 
 <h3 id="general-subscription-statistics">General subscription statistics</h3>
 
-<p>The <code class="prettyprint">subscription/statistics</code> endpoint can be used to access all data regarding the subscription notifications that have been sent.</p>
-
-<p>This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):</p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-<th style="text-align: right">Example</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>start</td>
-<td style="text-align: center">The start of the date range to fetch the statistics. This parameter is required.</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">None</td>
-<td style="text-align: right">01-01-2020</td>
-</tr>
-<tr>
-<td>end</td>
-<td style="text-align: center">The end of the date range to fetch the statistics. This parameter is required.</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">None</td>
-<td style="text-align: right">02-20-2020</td>
-</tr>
-<tr>
-<td>application</td>
-<td style="text-align: center">The application for which the statistics will be fetched.</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">&#39;gfw&rsquo;</td>
-<td style="text-align: right">&#39;rw&rsquo;</td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics?start<span class="o">=</span>:start&amp;end<span class="o">=</span>:end <span class="se">\</span>
+<blockquote>
+<p>Example GET request to obtain general subscription statistics:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/subscriptions/statistics?start=:start&amp;end=:end"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
 <blockquote>
-<p>Response:</p>
+<p>Example response:</p>
 </blockquote>
-<pre class="highlight json"><code><span class="w">
-</span><span class="p">{</span><span class="w">
-    </span><span class="s2">"topSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"numSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"totalSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"usersWithSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"totalEmailsSentInThisQ"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"totalEmailsSended"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"usersWithSubscription"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"newUsers"</span><span class="p">:</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"groupStatistics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"glad-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1305</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"countries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"CHL"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"IDN"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-                </span><span class="err">...</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"regions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-                </span><span class="err">...</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"wdpas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"130"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"34043"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-                </span><span class="err">...</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"countryTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"regionTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"nameRegion"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"nameCountry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"wdpaTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34043</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"prodes-loss"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
-        </span><span class="s2">"umd-loss-gain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
-        </span><span class="s2">"terrai-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
-        </span><span class="s2">"viirs-active-fires"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
-        </span><span class="s2">"imazon-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
-        </span><span class="s2">"forma250GFW"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
-        </span><span class="s2">"forma-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
-        </span><span class="s2">"story"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
-        </span><span class="s2">"63f34231-7369-4622-81f1-28a144d17835"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h3 id="grouped-subscription-statistics">Grouped subscription statistics</h3>
-
-<p>The <code class="prettyprint">subscription/statistics-group</code> endpoint can be used to access data regarding the subscription notifications that have been sent, grouped by the the dataset of the subscription.</p>
-
-<p>This endpoint supports the following query parameters as filters (please note that the dates must be formatted as MM-DD-YYYY):</p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-<th style="text-align: right">Example</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>start</td>
-<td style="text-align: center">The start of the date range to fetch the statistics. This parameter is required.</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">None</td>
-<td style="text-align: right">01-01-2020</td>
-</tr>
-<tr>
-<td>end</td>
-<td style="text-align: center">The end of the date range to fetch the statistics. This parameter is required.</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">None</td>
-<td style="text-align: right">02-20-2020</td>
-</tr>
-<tr>
-<td>application</td>
-<td style="text-align: center">The application for which the statistics will be fetched.</td>
-<td style="text-align: right">String</td>
-<td style="text-align: right">&#39;gfw&rsquo;</td>
-<td style="text-align: right">&#39;rw&rsquo;</td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/subscriptions/statistics-group?start<span class="o">=</span>:start&amp;end<span class="o">=</span>:end <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="w">
-</span><span class="p">{</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"numSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"totalSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"usersWithSubscriptions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"totalEmailsSentInThisQ"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"totalEmailsSended"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"usersWithSubscription"</span><span class="p">:</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"newUsers"</span><span class="p">:</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"groupStatistics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"glad-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1305</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"countries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"CHL"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"IDN"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-            </span><span class="err">...</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"regions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-            </span><span class="err">...</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"wdpas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"130"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"34043"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-            </span><span class="err">...</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"countryTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"regionTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"nameRegion"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"nameCountry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"wdpaTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34043</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
-        </span><span class="p">}</span><span class="w">
+      </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1305</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"countries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"CHL"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"IDN"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"regions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"wdpas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"130"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"34043"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"countryTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"regionTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"nameRegion"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"nameCountry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"wdpaTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34043</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+      </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"prodes-loss"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
     </span><span class="s2">"umd-loss-gain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
@@ -9664,8 +9594,300 @@ Remember — this endpoint is authenticated.
     </span><span class="s2">"forma-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
     </span><span class="s2">"story"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
     </span><span class="s2">"63f34231-7369-4622-81f1-28a144d17835"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>The <code class="prettyprint">v1/subscriptions/statistics</code> endpoint can be used to access all the data regarding the subscription notifications that have been sent.</p>
+
+<h4 id="filters">Filters</h4>
+
+<p>This endpoint supports the following query parameters as filters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+<th style="text-align: right">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start</td>
+<td style="text-align: center">The start of the date range to fetch the statistics. <strong>This parameter is required.</strong></td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">None</td>
+<td style="text-align: right">01-01-2020</td>
+</tr>
+<tr>
+<td>end</td>
+<td style="text-align: center">The end of the date range to fetch the statistics. <strong>This parameter is required.</strong></td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">None</td>
+<td style="text-align: right">02-20-2020</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application for which the statistics will be fetched.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;gfw&rsquo;</td>
+<td style="text-align: right">&#39;rw&rsquo;</td>
+</tr>
+</tbody></table>
+
+<h3 id="grouped-subscription-statistics">Grouped subscription statistics</h3>
+
+<blockquote>
+<p>Example GET request to obtain grouped subscription statistics:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/subscriptions/statistics-group?start=:start&amp;end=:end"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"glad-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"wdpa"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="mi">1305</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"countries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"CHL"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"IDN"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="err">...</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"regions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"2"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="err">...</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"wdpas"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"130"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"34043"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+      </span><span class="err">...</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"countryTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"regionTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"nameRegion"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"nameCountry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IDN"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"wdpaTop"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">34043</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"prodes-loss"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+  </span><span class="s2">"umd-loss-gain"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+  </span><span class="s2">"terrai-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+  </span><span class="s2">"viirs-active-fires"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+  </span><span class="s2">"imazon-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+  </span><span class="s2">"forma250GFW"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+  </span><span class="s2">"forma-alerts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+  </span><span class="s2">"story"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+  </span><span class="s2">"63f34231-7369-4622-81f1-28a144d17835"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>The <code class="prettyprint">v1/subscriptions/statistics-group</code> endpoint can be used to access data regarding the subscription notifications that have been sent, grouped by the the dataset of the subscription. The output of this endpoint is a subset of the output of the <code class="prettyprint">v1/subscriptions/statistics</code> endpoint.</p>
+
+<h4 id="filters">Filters</h4>
+
+<p>This endpoint supports the following query parameters as filters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+<th style="text-align: right">Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start</td>
+<td style="text-align: center">The start of the date range to fetch the statistics. <strong>This parameter is required.</strong></td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">None</td>
+<td style="text-align: right">01-01-2020</td>
+</tr>
+<tr>
+<td>end</td>
+<td style="text-align: center">The end of the date range to fetch the statistics. <strong>This parameter is required.</strong></td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">None</td>
+<td style="text-align: right">02-20-2020</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application for which the statistics will be fetched.</td>
+<td style="text-align: right">String</td>
+<td style="text-align: right">&#39;gfw&rsquo;</td>
+<td style="text-align: right">&#39;rw&rsquo;</td>
+</tr>
+</tbody></table>
+
+<h2 id="subscription-reference">Subscription reference</h2>
+
+<p>This section gives you a complete view at the properties that are maintained as part of a subscription. When interacting with a subscription (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the <code class="prettyprint">id</code> is nested inside an <code class="prettyprint">attributes</code> object).</p>
+
+<p>You can find more details in the <a href="https://github.com/gfw-api/gfw-subscription-api/blob/develop/app/src/models/subscription.js">source code</a>.</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>Yes</td>
+<td>(auto-generated)</td>
+<td>Unique Id of the subscription. Auto generated on creation. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>The name of the subscription.</td>
+</tr>
+<tr>
+<td>confirmed</td>
+<td>Boolean</td>
+<td>No</td>
+<td>false</td>
+<td>If the subscription is confirmed or not. Cannot be modified by users, only through the usage of the confirm and unsubscribe endpoints. (TODO: missing refs!)</td>
+</tr>
+<tr>
+<td>resource</td>
+<td>Object</td>
+<td>Yes</td>
+<td></td>
+<td>An object containing the data for who (or what) should be notified on dataset data changes.</td>
+</tr>
+<tr>
+<td>resource.type</td>
+<td>Enum</td>
+<td>Yes</td>
+<td></td>
+<td>The type of resource to be notified. Can take the values of <code class="prettyprint">EMAIL</code> (for an email notification) or <code class="prettyprint">URL</code> for a webhook notification.</td>
+</tr>
+<tr>
+<td>resource.content</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>The object to be notified: should be a valid email case <code class="prettyprint">resource.type</code> is <code class="prettyprint">EMAIL</code>, and a valid URL case <code class="prettyprint">resource.type</code> is <code class="prettyprint">URL</code>.</td>
+</tr>
+<tr>
+<td>datasets</td>
+<td>Array</td>
+<td>No</td>
+<td><code class="prettyprint">[]</code></td>
+<td>An array of dataset ids that this subscription is tracking.</td>
+</tr>
+<tr>
+<td>datasetsQuery</td>
+<td>Array</td>
+<td>No</td>
+<td><code class="prettyprint">[]</code></td>
+<td>An alternative way of stating the datasets that this subscription is tracking. This field is an array of objects, check the rows below to see which properties each object should have.</td>
+</tr>
+<tr>
+<td>datasetsQuery[0].id</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>An identifier for the dataset being subscribed.</td>
+</tr>
+<tr>
+<td>datasetsQuery[0].type</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>A type for the dataset being subscribed.</td>
+</tr>
+<tr>
+<td>datasetsQuery[0].threshold</td>
+<td>Number</td>
+<td>No</td>
+<td>0</td>
+<td>The threshold to be considered when checking for updates in the dataset&rsquo;s data. By default, it takes the value the value 0, but you can customize it to only get notified if there are at least (for instance) 5 updates to the dataset&rsquo;s data.</td>
+</tr>
+<tr>
+<td>datasetsQuery[0].lastSentDate</td>
+<td>Date</td>
+<td>No</td>
+<td>(auto-generated)</td>
+<td>Value automatically updated to have set the last date when updates were detected in this dataset.</td>
+</tr>
+<tr>
+<td>datasetsQuery[0].lastSentDate</td>
+<td>Date</td>
+<td>No</td>
+<td>(auto-generated)</td>
+<td>This value is automatically updated with the historical data of all the updates detected in the dataset&rsquo;s data.</td>
+</tr>
+<tr>
+<td>params</td>
+<td>Object</td>
+<td>No</td>
+<td><code class="prettyprint">{}</code></td>
+<td>Determines the area of interest that this subscription should track. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).</td>
+</tr>
+<tr>
+<td>userId</td>
+<td>String</td>
+<td>Yes</td>
+<td>(auto-populated)</td>
+<td>Id of the user who owns the subscription. Set automatically on creation. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>language</td>
+<td>String</td>
+<td>No</td>
+<td><code class="prettyprint">&#39;en&#39;</code></td>
+<td>The language for this subscription. Useful for customizing email notifications according to the language of the subscription. Possible values include <code class="prettyprint">&#39;en&#39;</code>, <code class="prettyprint">&#39;es&#39;</code>, <code class="prettyprint">&#39;fr&#39;</code>, <code class="prettyprint">&#39;pt&#39;</code> or <code class="prettyprint">&#39;zh&#39;</code>.</td>
+</tr>
+<tr>
+<td>application</td>
+<td>String</td>
+<td>Yes</td>
+<td><code class="prettyprint">&#39;gfw&#39;</code></td>
+<td>Applications associated with this subscription.</td>
+</tr>
+<tr>
+<td>env</td>
+<td>String</td>
+<td>Yes</td>
+<td><code class="prettyprint">&#39;production&#39;</code></td>
+<td>Environment to which the subscription belongs.</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td>Date</td>
+<td>No</td>
+<td>(auto-populated)</td>
+<td>Automatically maintained date of when the subscription was created. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>updatedAt</td>
+<td>Date</td>
+<td>No</td>
+<td>(auto-populated)</td>
+<td>Automatically maintained date of when the subscription was last updated. Cannot be modified by users.</td>
+</tr>
+</tbody></table>
+
           <h1 id="tasks">Tasks</h1>
 
 <h2 id="what-is-a-task">What is a task?</h2>
