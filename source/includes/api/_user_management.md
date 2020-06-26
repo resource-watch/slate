@@ -175,16 +175,22 @@ For each provider, there's a corresponding endpoint that starts the authenticati
 
 Keep in mind that, depending on the `origin` application you specify, different Twitter, Facebook or Google applications will be used. Also, not all `origin` applications support all 3 providers.
 
-- GET '<BASE API URL>/auth/twitter' - Starts authentication using the configured Twitter settings
-- GET '<BASE API URL>/auth/twitter/callback' - Callback used once Twitter auth is done
+### 3rd party authentication using Twitter
 
-- GET '<BASE API URL>/auth/google' - Starts authentication using the configured Google settings
-- GET '<BASE API URL>/auth/google/callback' - Callback used once Google auth is done
-- GET '<BASE API URL>/auth/google/token' - Endpoint that expects the Google token used by the API to validate the user session.
+- GET `<BASE API URL>/auth/twitter` - Starts authentication using the configured Twitter settings
+- GET `<BASE API URL>/auth/twitter/callback` - Callback used once Twitter auth is done
 
-- GET '<BASE API URL>/auth/facebook' - Starts authentication using the configured Google settings
-- GET '<BASE API URL>/auth/facebook/callback' - Callback used once Facebook auth is done
-- GET '<BASE API URL>/auth/facebook/token' - Endpoint that expects the Facebook token used by the API to validate the user session.
+### 3rd party authentication using Google
+
+- GET `<BASE API URL>/auth/google` - Starts authentication using the configured Google settings
+- GET `<BASE API URL>/auth/google/callback` - Callback used once Google auth is done
+- GET `<BASE API URL>/auth/google/token` - Endpoint that expects the Google token used by the API to validate the user session.
+
+### 3rd party authentication using Facebook
+
+- GET `<BASE API URL>/auth/facebook` - Starts authentication using the configured Google settings
+- GET `<BASE API URL>/auth/facebook/callback` - Callback used once Facebook auth is done
+- GET `<BASE API URL>/auth/facebook/token` - Endpoint that expects the Facebook token used by the API to validate the user session.
 
 ## Registration
 

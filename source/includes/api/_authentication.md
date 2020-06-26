@@ -1,6 +1,6 @@
 # Authentication
 
-The RW API provides most of its data through endpoints that are available to all users, without requiring any form of registration. However, for some action, like uploading data or flagging a resource as a favourite, require having a user account and using an access token when issuing requests to the API.
+The RW API provides most of its data through endpoints that are available to all users, without requiring any form of registration. However, some actions, like uploading data or flagging a resource as a favourite, require having a user account and using an access token when issuing requests to the API.
 
 ## Logging in or registering a new user account
 
@@ -14,7 +14,7 @@ Once you've successfully logged in using your browser, you'll see a "Welcome to 
 
 ## How to generate your private token
 
-The RW API uses JWT [(JSON Web Tokens)](https://tools.ietf.org/html/rfc7519) token to identify and authenticate its users. If your are not familiar with the details of JWT, just think of them as a very long strings of characters that you need to attach to your requests to the RW API, to prove that you are you.
+The RW API uses JWT [(JSON Web Tokens)](https://tools.ietf.org/html/rfc7519) tokens to identify and authenticate its users. If your are not familiar with the details of JWT, just think of them as a very long strings of characters that you need to attach to your requests to the RW API, to prove that you are you.
 
 To get you token, you first need to login using your browser and the steps above. No matter which login strategy you prefer, once you've logged in, you can visit [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to get your token.
 
@@ -44,7 +44,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 
 Once you have your token, you can use it to authenticate your requests to the RW API. Depending on which endpoints you are trying to use, certain actions may become available by simply authenticating your request. Other will require your account to have a special role or applications, which we'll cover in more detail in the [User Management](#user-management) documentation.
 
-Tokens must be provided in HTTP request header, named as `Authorization`, with the structure `Bearer: <your token>`.
+Tokens must be provided in HTTP request header, named as `Authorization`, with the structure `Bearer <your token>`.
 
 Once generated, a token is valid until any of the associated user information (name, email, or associated applications) changes. If your token becomes invalid, you will need to log in and go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
 
