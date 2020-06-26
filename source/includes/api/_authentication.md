@@ -2,6 +2,8 @@
 
 The RW API provides most of its data through endpoints that are available to all users, without requiring any form of registration. However, some actions, like uploading data or flagging a resource as a favourite, require having a user account and using an access token when issuing requests to the API.
 
+In this section you will learn the very basics of how you can quickly create a user account and use your token to authenticate requests. For more in-depth details on authentication, token and user management, refer to the [User Management](#user-management) section of the documentation.
+
 ## Logging in or registering a new user account
 
 The easiest way to access your account is through the [login page](https://api.resourcewatch.org/auth/sign-up) of the RW API. Here you can authenticate using your existing Facebook, Google or Twitter account, or you can register or login using your email address and password. 
@@ -47,8 +49,3 @@ Once you have your token, you can use it to authenticate your requests to the RW
 Tokens must be provided in HTTP request header, named as `Authorization`, with the structure `Bearer <your token>`.
 
 Once generated, a token is valid until any of the associated user information (name, email, or associated applications) changes. If your token becomes invalid, you will need to log in and go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
-
-
-## More information on authentication and user management
-
-This section's goal is to help you learn the very basics of how you can quickly create a user account and use your token to authenticate requests. For more in-depth details on authentication, token and user management, refer to the [User Management](#user-management) section of the documentation.
