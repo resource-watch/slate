@@ -38,7 +38,7 @@ The user management service can also models its behavior based on the applicatio
 - Fallback redirects on login.
 - Available 3rd party authentication mechanisms and associated accounts on those platforms.
 
-If you use an `origin` application that's not known to the RW API, you will see a fallback configuration of these elements, and 3rd party login will be disabled. If you'd like your application to be supported, please send us an email - we'd love to hear about how the RW API can help your projects.
+If you use an `origin` application that's not known to the RW API, you will see a fallback configuration of these elements, and 3rd party login will be disabled. If you'd like your application to be supported, please [contact us](https://resourcewatch.org/about/contact-us) - we'd love to hear about how the RW API can help your projects.
 
 ## Login (email + password)
 
@@ -255,21 +255,20 @@ The combination of both `user email` and `provider` must be unique - a given ema
 
 For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.
 
-For JSON requests, it will return 200 or 422 HTTP response code depending on whether the login was successful or not. In case of successful logins, the basic user details will be returned as a JSON object. In case of failure, an array of errors is returned.
+For JSON requests, successful logins will return a JSON object containing the details of the user.
 
-In both types of requests, on success, an email will be sent to the user, with a link to confirm the account. The email will have the identity of the `origin` app provided on the request, with a system-wide fallback (GFW) being used in case none is provided.
+Keep in mind that this endpoint creates a **deactivated** user account. A successful call to this endpoint send an email to the user, with a link that the user must click in order to confirm their account. Once confirmed using this process, the user account becomes activated and fully functional, and the user will be able to log in.
 
-While optional, it's highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user's apps match datasets, widgets, etc.
+The email sent to the user will have the identity of the `origin` app provided on the request, with a system-wide fallback (GFW) being used in case none is provided.
 
+While optional, it's highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user's apps match datasets, widgets, etc. All accounts created this way will have the `USER` role.
 
+**Errors**
 
-#### Permissions
-
-Based on roles, different types of users can create new users with different roles:
-
-- ADMIN: Can create any type of user
-- MANAGER: Can create a user of type `MANAGER` or `USER`.
-- Public users: Can register themselves in the API, being assigned the `USER` role.
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+422            | Email exists.  | An account already exists for the provided email address.
+422            | Email, Password and Repeat password are required.  | You are missing one of the required fields.
 
 
 ### Confirm user account
