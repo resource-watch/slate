@@ -426,16 +426,19 @@ curl -X GET "https://api.resourcewatch.org/auth/user"
 
 ```json
 {
-    "data": {
-         "id": "5d2fadb3adf1dc74d2ad05dfb",
-        "email": "john.doe@vizzuality.com",
-        "createdAt": "2019-10-31T13:00:58.191Z",
-        "updatedAt": "2019-10-31T13:00:58.191Z",
-        "role": "USER",
-        "extraUserData": {
-            "apps": []
-        }
-    },
+    "data": [
+        {
+             "id": "5d2fadb3adf1dc74d2ad05dfb",
+            "email": "john.doe@vizzuality.com",
+            "createdAt": "2019-10-31T13:00:58.191Z",
+            "updatedAt": "2019-10-31T13:00:58.191Z",
+            "role": "USER",
+            "extraUserData": {
+                "apps": []
+            }
+        },
+        {...}
+    ],
      "links": {
          "self": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
          "first": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
@@ -451,68 +454,35 @@ curl -X GET "https://api.resourcewatch.org/auth/user"
 }
 ```
 
-Lists user accounts:
+This endpoint allows users with `ADMIN` role to list and filter existing user accounts. Through this endpoint, only 3rd party-based and confirmed email-based user accounts are listed. It's also important to keep in mind that, by default, only users belonging to the same apps as the requesting user will be shown - you can use [filters](#filters337) to modify this behavior.
 
-- Only users with role ADMIN have permissions to use this endpoint.
-- Email+password based accounts that have not had their email address confirmed will not be listed by this endpoint.
-- By default, only users belonging to the same apps as the requesting user will be shown. See [Filter by app](#filter-by-app) for more options.
+**Errors**
 
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Not authenticated. | You need to be logged in to use this endpoint.
 
-#### Filter by name
+#### Pagination
 
-> Filter users by those whose name contains 'John'
+> Custom pagination: load page 2 using 25 results per page
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/auth/user?name=John"
+curl -X GET "https://api.resourcewatch.org/auth/user?page[number]=2&page[size]=25"
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
 
-You can filter by name by using the `name` query parameter and a regex value. 
+By default, users are listed in pages of 10 results each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
 
-If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.
-
-#### Filter by email
-
-> Filter users by email address
-
-```shell
-curl -X GET "https://api.resourcewatch.org/auth/user?email=my.address@email.com"
--H "Content-Type: application/json"  -d \
--H "Authorization: Bearer <your-token>" \
-```
-
-> Filter users by the "email+with+plus+sign@email.com" email address, that requires escaping
-
-```shell
-curl -X GET "https://api.resourcewatch.org/auth/user?app=all&email=email%5C%2Bwith%5C%2Bplus%5C%2Bsign@email.com"
--H "Content-Type: application/json"  -d \
--H "Authorization: Bearer <your-token>" \
-```
-
-You can filter by name by using the `email` query parameter and a regex value.
-
-If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.
+Field        |         Description          |   Type |   Default
+------------ | :--------------------------: | -----: | ----------:
+page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 10
+page[number] |       The page number        | Number | 1
 
 
-#### Filter by provider
+#### Filters
 
-> List users whose account is associated with Facebook
-
-```shell
-curl -X GET "https://api.resourcewatch.org/auth/user?provider=facebook"
--H "Content-Type: application/json"  -d \
--H "Authorization: Bearer <your-token>" \
-```
-
-You can filter by name by using the `provider` query parameter and a regex value.
-
-If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.
-
-#### Filter by role
-
-
-> List users with the ADMIN role
+> List users with the ADMIN role (and associated with the current user's app)
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/auth/user?role=ADMIN"
@@ -520,31 +490,61 @@ curl -X GET "https://api.resourcewatch.org/auth/user?role=ADMIN"
 -H "Authorization: Bearer <your-token>" \
 ```
 
-You can filter by name by using the `role` query parameter and a regex value. 
-
-If your search criteria includes characters that would need to be escaped in a regex context, you need to explicitly escape them when using this filter.
-
-#### Filter by app
-
-> List users that belong to the gfw app
+> List users with the ADMIN role and associated with either `gfw` or `rw` apps
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/auth/user?app=gfw"
+curl -X GET "https://api.resourcewatch.org/auth/user?role=ADMIN&app=gfw,rw"
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
 
-> List users that belong to any app
+> Response:
 
-```shell
-curl -X GET "https://api.resourcewatch.org/auth/user?app=all"
--H "Content-Type: application/json"  -d \
--H "Authorization: Bearer <your-token>" \
+```json
+{
+    "data": [
+        {
+             "id": "5d2fadb3adf1dc74d2ad05dfb",
+            "email": "john.doe@vizzuality.com",
+            "createdAt": "2019-10-31T13:00:58.191Z",
+            "updatedAt": "2019-10-31T13:00:58.191Z",
+            "role": "ADMIN",
+            "extraUserData": {
+                "apps": ["rw"]
+            }
+        },
+        {...}
+    ],
+     "links": {
+         "self": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
+         "first": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
+         "last": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
+         "prev": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
+         "next": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10"
+     },
+     "meta": {
+         "total-pages": 1,
+         "total-items": 3,
+         "size": 10
+     }
+}
 ```
 
-By default, only users belonging to the same apps as the requesting user will be shown when listing users. You can change this behavior by explicitly identifying the apps you'd like to filter by, even if they are not in the list of apps the requesting user belongs to. You can pass multiple apps this way by separating them with commas.
+The users list provides a set of parameters that you can use to tailor your users listing. These parameters can be combined into a complex `and` logic query.
 
-Additionally, you can pass the special `all` value to this filter, to load users from all applications.
+Here's the comprehensive list of filters supported by the users list endpoint:
+ 
+
+Filter         | Description                                                                  | Type        | Expected values
+-------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------
+name           | Filter returned users by their name.                                         | String      | any valid text
+email          | Filter returned users by their email address. Keep in mind that user accounts that rely on 3rd party authentication mechanisms may not have an email address. | String      | any valid text
+provider       | Filter returned users by their provider.                                     | String      | `local`, `google`, `twitter` or `facebook`
+role           | Filter returned users by their role.                                         | String      | `USER`, `MANAGER` or `ADMIN`
+app            | Filter returned users by their app. Multiple values can be passed, separated by commas, in which case any user associated with at least one of the applications will be returned. Pass `all` to show users for all apps. | String      | any valid text
+
+
+Please keep in mind that all filter values except `app` support and expect a regex value. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).
 
 ### Get the current user
 
