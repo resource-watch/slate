@@ -10,7 +10,7 @@ Over the course of this tutorial you will develop a simple web application that 
 - displaying raster tiles in a webmap run by [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)
 - defining spatial geometries such as a region of interest with the [Mapbox GL Draw Plugin](https://github.com/mapbox/mapbox-gl-draw).
 - showing metadata about the raster dataset being displayed
-- interacting with the HTTP-based API to retrieve this information using the `/dataset` endpoint.
+- interacting with the HTTP-based API to retrieve this information using the [`/dataset` endpoint](https://resource-watch.github.io/doc-api/index-rw.html#what-is-a-dataset).
 
 
 ## Pre-requirements
@@ -47,7 +47,6 @@ A basic "Hello World" HTML document for getting Mapbox GL JS online is given bel
 This will ensure your Mapbox token is working and there is a basic foundation for the webpage.
 
 Each section in this tutorial has a corresponding "finished" HTML document [available on GitHub](https://github.com/resource-watch/doc-api/tree/master/source/includes/tutorial/webdev_mapbox_quickstart/html_evolution), which may be helpful if errors are encountered along the way.
-
 
 
 Copy this into a file called `index.html` inside a directory for this tutorial.
@@ -151,6 +150,9 @@ This file establishes the following properties to the document:
 
 Upon replacing `mapboxgl.accessToken` with your access token, this file should be saved and opened in a web browser.
 
+You should see a webpage that looks something like this:
+
+![Image of basic webpage, with a title, some text on the left, and a large map zoomed to central Africa on the right](tutorials/webdev_mapbox_quickstart/webmap-hello-world.png)
 
 If you are not seeing a map check the web developer console.
 
@@ -169,7 +171,7 @@ Though requirement `(D)` listed above does not specify there is any analysis to 
 For the scope of this tutorial only the most basic drawing and visualization are going to be demonstrated.
 
 
-To include this plugin, ensure your `<head>` element has all the folowing external assets declared:
+To include this plugin, ensure your `<head>` element has all the following external assets declared:
 
 <div class="center-column"></div>
 ```html
@@ -221,6 +223,9 @@ The changes in this section did the following:
 - in `<head>`, import the Mapbox Draw plugin JS and CSS documents
 - in `<body><script>`, define how the drawing controls are configutred, then attach this config to the map object
 
+An image of the webpage at this point:
+
+![Same image as before, but there are two new buttons on the webmap for drawing and deleting geometries.](images/tutorials/webdev_mapbox_quickstart/webmap-draw-plugin.png)
 
 Reload the page in the web browser and explore the map capabilities.
 You should see two new buttons in the corner of the map which are the entry points to the drawing interactions.
@@ -246,10 +251,10 @@ The remaining work in this tutorial will use the following Dataset ID, which des
 datasetId = 'b584954c-0d8d-40c6-859c-f3fdf3c2c5df';
 ```
 
-You can find more information about a Dataset in the [concepts documentation](/index-rw.html#concepts).
+You can find more information about a Dataset in the [concepts documentation](https://resource-watch.github.io/doc-api/index-rw.html#concepts).
 
 
-Modify `index.html` with the following javascript:
+Modify the `<script>` section within the `<body>` of `index.html` with the following javascript:
 
 <div class="center-column"></div>
 ```html
@@ -302,7 +307,9 @@ The changes above did the following:
 - add `callApiDatasetMetadata` function to fetch a dataset and update the metadata panel
 - declare `callApiDatasetMetadata(datasetId)` as a callback to be executed when after the map loads
 
-Reload in the browser to see the updated metadata panel.
+Reload in the browser to see the updated metadata panel, which should look like:
+
+![Image of the webpage, with the same large map on the right, but now with the left panel full of text.](images/tutorials/webdev_mapbox_quickstart/webmap-api-response.png)
 
 At this point in the tutorial, progress on the requirements is as follows:
 
@@ -369,7 +376,7 @@ That parameterization array looks like:
 
 By using this parameterization data, the URL can be transformed into compliance with Mapbox GL.
 
-Update `index.html` with the following javascript, a description is located after this code block.
+Update the `<body>` section of `index.html` with the following javascript, a description is located after this code block.
 
 <div class="center-column"></div>
 ```html
@@ -467,6 +474,8 @@ The changes above did the following:
 
 Once again reload the browser and see the tile layer now on the map.
 
+![Image of the webpage, with the same left panel full of text, but now with a new layer on the map - the tree cover loss dataset.](images/tutorials/webdev_mapbox_quickstart/webmap-raster-tile-layer.png)
+
 At this point in the tutorial, progress on the requirements is remarkably complete:
 
 - item `(A)` is met with a large interactive map
@@ -476,7 +485,7 @@ At this point in the tutorial, progress on the requirements is remarkably comple
 - **almost all dynamic information in the webapp is declared in cooperation with the API in support of item `(E)`**
 
 ## Next Steps
-At this point the tutorial can be considered complete - the software specification is being met and hopefully the enough concepts have been introduced to develop a general image of integrating API-retrieved information into a simple webapp.
+At this point the tutorial can be considered complete - the software specification is being met and hopefully enough of the concepts have been introduced to develop a general image of integrating API-retrieved information into a simple webapp.
 
 While this tutorial utilized hand-written HTML, JS, CSS in a single file, transforming the logic into other frameworks such as React should be relatively simple if there is already familiarity in that space.
 Some wrappers and React components for working with Mapbox GL JS already exist, including [react-map-gl](https://github.com/visgl/react-map-gl) and [Vizzuality/layer-manager](https://github.com/Vizzuality/layer-manager).
