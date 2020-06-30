@@ -454,7 +454,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user"
 }
 ```
 
-This endpoint allows users with `ADMIN` role to list and filter existing user accounts. Through this endpoint, only 3rd party-based and confirmed email-based user accounts are listed. It's also important to keep in mind that, by default, only users belonging to the same apps as the requesting user will be shown - you can use [filters](#filters337) to modify this behavior.
+This endpoint allows users with `ADMIN` role to list and filter existing user accounts. Through this endpoint, only 3rd party-based and confirmed email-based user accounts are listed - user accounts that have not been confirmed will not be listed. It's also important to keep in mind that, by default, only users belonging to the same apps as the requesting user will be shown - you can use [filters](#filters337) to modify this behavior.
 
 **Errors**
 
