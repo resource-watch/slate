@@ -3,18 +3,28 @@
 ## Purpose
 This is a quickstart tutorial for the API.
 It is intended for web developers who are evaluating or using the API.
-This tutorial does not provide best practices, but it does represent a quick demonstration that should be widely accessible.
+This tutorial does not provide best practices in respect to web development, but it does represent a quick demonstration that should be widely accessible.
+
+
+One goal of this tutorial is to introduce some key concepts regarding how information is structured in API responses.
+While information in the API responses may be useful on its own, a key benefit is how well it integrates with other technologies including visualization libraries such as [Vega](http://vega.github.io/) and webmaps like [Leaflet](https://leafletjs.com/) or those from [Mapbox](https://docs.mapbox.com/help/how-mapbox-works/web-apps/).
+
+**Mapbox GL JS is being used in this tutorial as the visualization outlet for the information returned by the API.**
+
 
 Over the course of this tutorial you will develop a simple web application that is capable of:
 
-- displaying raster tiles in a webmap run by [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)
-- defining spatial geometries such as a region of interest with the [Mapbox GL Draw Plugin](https://github.com/mapbox/mapbox-gl-draw).
-- showing metadata about the raster dataset being displayed
 - interacting with the HTTP-based API to retrieve this information using the [`/dataset` endpoint](https://resource-watch.github.io/doc-api/index-rw.html#what-is-a-dataset).
+- displaying raster tiles in a webmap run by [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)
+- showing metadata about the raster dataset being displayed
+- defining spatial geometries such as a region of interest with the [Mapbox GL Draw Plugin](https://github.com/mapbox/mapbox-gl-draw).
 
 
 ## Pre-requirements
-This tutorial requires a [Mapbox Access Token](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/) with a [token scope](https://docs.mapbox.com/accounts/overview/tokens/#scopes) of `styles:read`.
+This tutorial will interact with the API, but will not require any authentication since the interactions will be read-only from publicly visible datasets.
+You should be informed about the Resource Watch [Terms of Service](https://resourcewatch.org/terms-of-service) and [API Attribution Requirements](https://resourcewatch.org/api-attribution-requirements) before using the API.
+
+This tutorial requires a [Mapbox Access Token](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/) with a [token scope](https://docs.mapbox.com/accounts/overview/tokens/#scopes) of `styles:read` to render the basemap.
 If you are WRI staff it may be possible to obtain a token by contacting Ethan Roday.
 Commercial vendors and outside organizations may need to provide their own accounts.
 Individuals should consider signing up for a Mapbox account and learning what options they have.
@@ -24,6 +34,58 @@ This tutorial will also require the following applications:
 
 - a text editor suitable for writing HTML/JS/CSS
 - a modern web browser with Javascript enabled and developer tools familiarity
+
+
+### Background on Datasets, Queries, Layers
+There are a variety of types of data that are integrated into the RW API, covering many topics, domains, and containing all the peculiar characteristics and conventions of the communities that produced these digital artifacts.
+The API is also fairly flexible towards accommodating the different needs between _small data_ that may be the result of a limited case study and the _big data_ of spatiotemporal data cubes or the unbounded potential of external API providers.
+
+
+Let's quickly review some of the concepts used in the API before jumping into the tutorial.
+You can find deeper and more tailored information in the [concepts documentation](https://resource-watch.github.io/doc-api/index-rw.html#concepts).
+
+A **Dataset** essentially describes where information is being held.
+Datasets are exposed through the `/dataset/<id>` endpoint as a JSON response.
+This JSON has a flexible schema which can be inferred based on two required properties:
+
+- the first, `connectorType`, which describes the access pattern to the information
+    - `connectorType: document` if taking from the "internal" database of uploaded files
+    - `connectorType: rest` if performing external API calls to HTTP endpoints
+    - `connectorType: wms` if performing external Web Mapping Service calls
+- the second, `provider`, for which there are constrained possibilities based on the `connectorType`
+    - e.g. `csv`, `json` are uploaded `document`s in the "internal" database
+    - e.g. `cartodb` and `gee` are external `rest`ful APIs
+
+The full table mapping `provider`s to `connectorType`s is located in the [main API documentation](https://resource-watch.github.io/doc-api/index-rw.html#dataset-connector-type).
+
+Based on these two properties, the Dataset JSON object will contain many other top-level properties that collectively provide all that is needed to declare where the _real data_ is being held and how to access it.
+
+The `/query` API endpoint utilizes all this information about the Dataset behind the scenes to expose the _real data_ without the developer needing to perform the speciality interfacing with all the providers that might be supplying data for a particular project or webpage.
+Queries are supportive of some analytical functionality including filtering and aggregating.
+Thoughtfully-prepared datasets, carefully crafted queries, and the routing of logic through the API can get you quite far towards capable applications.
+
+Somewhat orthogonal to the concepts of Datasets and Queries is the concept of a Layer.
+A **Layer** is specialized information about how a Dataset/Query can be represented for a particular application, notably how it can be visualized and represented geospatially.
+Layer information is highly free-form and purpose-defined for a specific application or integration.
+
+As a very concrete example, consider:
+
+-  There is a Dataset describing the latitude, longitude, depth, and magnitude of earthquakes events globally over the past month.
+- A particular query is performed and filters the earthquake events to only those occurring within some distance of South America in the past week.
+    - This query is still returning information in the same structural form as the original global & monthly scope - let's say a table of comma-delimited text.
+- A Layer may be created that:
+    - references how to perform the query above (full URL of query call)
+    - has a title called "Weekly View of South American Earthquakes"
+    - includes a configuration description for how a webmap could:
+        - visualize the earthquake events as circles located at the _latitude_ and _longitude_ fields
+        - scale the circles in size based on their _magnitude_ field
+        - tint the circles in color from dark-blue to light-blue based on the _depth_ field
+- To display this webmap, a webpage needs to:
+    - call the `/layer` endpoint
+    - call the referenced `/query` endpoint to get the data
+    - pass the query response data and the webmap configuration from the Layer into the webmap library
+
+With the flexible Layer definitions, all configuration can be saved server-side, so the front-end work only requires linking the API responses to the technologies that implement the complex features.
 
 
 ## Software specification
@@ -156,12 +218,6 @@ You should see a webpage that looks something like this:
 
 If you are not seeing a map check the web developer console.
 
-With this structure in place:
-
-- item `(A)` in the software specification is basically complete with a large map being displayed
-- content for items `(B)` and `(C)` have somewhere to live once made available
-- items `(D)` and `(E)` are not affected in any way
-
 
 ## Using the Draw plugin
 This section will quickly introduce the [Mapbox GL Draw Plugin](https://github.com/mapbox/mapbox-gl-draw), which is a separate javascript library for enabling user-drawn geometries.
@@ -232,17 +288,11 @@ You should see two new buttons in the corner of the map which are the entry poin
 When drawing a polygon, double click at the last node to finalize it.
 
 
-At the end of this section the requirements are at the following state:
-
-- item `(A)` in the software specification is basically complete with a large map being displayed.
-- content for items `(B)` and `(C)` have somewhere to live once made available
-- **item `(D)` is complete**
-- item `(E)` remains untouched
-
-
 ## Getting dataset metadata
 In this section the API will be used to obtain some structured information about a dataset.
-This information will be displayed on the left side of the webpage in the metadata pane.
+In the immediate, this information will be displayed on the left side of the webpage in the metadata pane.
+Later some of the information will be extracted and used in combination with the webmap.
+
 
 The remaining work in this tutorial will use the following Dataset ID, which describes a dataset of tree cover loss (TCL).
 
@@ -251,7 +301,55 @@ The remaining work in this tutorial will use the following Dataset ID, which des
 datasetId = 'b584954c-0d8d-40c6-859c-f3fdf3c2c5df';
 ```
 
-You can find more information about a Dataset in the [concepts documentation](https://resource-watch.github.io/doc-api/index-rw.html#concepts).
+Datasets are accessed through the `/dataset/<id>` endpoint.
+As described earlier in the [background information](#background-on-datasets-queries-layers) a Dataset holds information about where "real data" is being held.
+To obtain how to _style_ the information and put it on a webmap requires accessing a Layer.
+Here we will be taking advantage of the ability to expand the API response by using the `?includes=` URL parameter, which will simultaneously return associatiated Layers, Metadata, or Widgets as specified.
+In this web application we are making a call to the following URL:
+
+<div class="center-column"></div>
+```
+https://api.resourcewatch.org/v1/dataset/b584954c-0d8d-40c6-859c-f3fdf3c2c5df/?includes=layer,metadata
+```
+
+You may want to copy that URL into your own browser window or use curl, wget, or similar to evaluate the response before proceeding to implementing this for the webpage.
+
+The response looks something like this:
+
+<div class="center-column"></div>
+```
+{
+  "data": {
+    "id": "b584954c-0d8d-40c6-859c-f3fdf3c2c5df",
+    "type": "dataset",
+    "attributes": {
+      "name": "Tree cover loss 2019 (LM v3)",
+      // ...
+      "connectorType": "rest",
+      "provider": "gee",
+      // ...
+      "layer": [
+        {
+          "id": "49a80e70-ec52-4ef8-bcc6-fb2771d95b2c",
+          "type": "layer",
+          "attributes": {
+            "name": "Tree cover loss - 2001-2019",
+            "slug": "Tree-cover-loss-2001-2019",
+            "dataset": "b584954c-0d8d-40c6-859c-f3fdf3c2c5df",
+            "description": "Tree Cover Loss",
+            // ...
+            "provider": "tilelayer",
+            // ...
+
+```
+
+There is much to investigate in this response, but you can see that there is both Dataset- and Layer-relevant content.
+Not appending the `?includes=layer,metadata` parameter will result in a comparatively smaller response, take a look!
+
+
+Now let's implement this for the webpage and get the response on screen.
+In a real development scenario smaller pieces of the response would probably be extracted and rendered into individual HTML elements.
+For now we are going to just dump the response into a `<pre>` element to view it all.
 
 
 Modify the `<script>` section within the `<body>` of `index.html` with the following javascript:
@@ -311,16 +409,11 @@ Reload in the browser to see the updated metadata panel, which should look like:
 
 ![Image of the webpage, with the same large map on the right, but now with the left panel full of text.](images/tutorials/webdev_mapbox_quickstart/webmap-api-response.png)
 
-At this point in the tutorial, progress on the requirements is as follows:
-
-- item `(A)` in the software specification is basically complete with a large map being displayed.
-- **content for item `(B)` is being fetched and displayed on screen**
-- content for `(C)` has a places to live, but is not yet added
-- item `(D)` is complete
-- **item `(E)` is in progress, with the API being used to acquire the dataset information for item `(B)`**
 
 For the next step, some of the dataset information will be extracted and utilized.
-Before proceeding to the next step it will be valuable to look over the metadata pane and investigate the structure of the API response.
+You already know the part of the response with the Layer content describes how this data can be used or rendered by applications.
+See if you can gain any intuition into what type of information is held in the Layer specifications for this particular Dataset.
+
 
 
 ## Adding raster tiles to the map
@@ -328,8 +421,8 @@ In this section raster tiles will be added to the map.
 The API response that was previously retrieved will serve as the source of the tile layer URL.
 
 Mapbox expects a raster tile layer to be supplied as a URL in the form `https://example.com/path/to/pngdir/{x}/{y}/{z}`.
-This URL is expressed with templating semantics which are fairly ubiquitous across web map and tile-serving applications.
 The URL representation describes a set of square images located at cartesian positions (`x`, `y`) on a grid determined by a set of zoom levels (`z`).
+This URL is expressed with templating semantics which are fairly ubiquitous across web map and tile-serving applications, but Mapbox specifically requires the TileJSON specification when working with [tile sources](https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/).
 
 The API response obtained earlier contains a reference to a tile layer and a URL, which for your own benefit should be found within the metadata by skimming the contents.
 If you are unable to find it, look within the following hierarchy address:
@@ -475,14 +568,6 @@ The changes above did the following:
 Once again reload the browser and see the tile layer now on the map.
 
 ![Image of the webpage, with the same left panel full of text, but now with a new layer on the map - the tree cover loss dataset.](images/tutorials/webdev_mapbox_quickstart/webmap-raster-tile-layer.png)
-
-At this point in the tutorial, progress on the requirements is remarkably complete:
-
-- item `(A)` is met with a large interactive map
-- metadata content for item `(B)` is being fetched and displayed on screen
-- raster tiles for `(C)` are being "extracted" from the metadata and displayed on the map
-- the drawing for item `(D)` is enabled and functioning
-- **almost all dynamic information in the webapp is declared in cooperation with the API in support of item `(E)`**
 
 ## Next Steps
 At this point the tutorial can be considered complete - the software specification is being met and hopefully enough of the concepts have been introduced to develop a general image of integrating API-retrieved information into a simple webapp.
