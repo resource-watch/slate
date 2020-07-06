@@ -698,7 +698,7 @@ curl -X GET 'http://api.resourcewatch.org/v1/query/aaadd6c3-93ea-44bc-ba8b-7af3f
 }
 ```
 
-Like with the other supported providers, you can use a SQL-like syntax to query datasets stored both in NASA NEX-GDDP or in Loca. However, these datasets always contain geo-referenced data, and so they expect that you always provide either a `lat` + `lon` pair, or a `geostore` id.
+Like with the other supported providers, you can use a SQL-like syntax to query datasets stored both in NASA NEX-GDDP or in Loca. However, these datasets always contain geo-referenced data, and so they expect that you always provide either a `lat` + `lon` pair, or a `geostore` id, in order to filter the returned data. If you don't provide either a geostore id or a lat+lon pair, the request will fail with status code `400 Bad Request`, with the following message: `No coordinates provided. Include geostore or lat & lon`.
 
 The examples on the side allow you to understand how you can provide either the `geostore` id or the `lat` + `lon` combination.
 
