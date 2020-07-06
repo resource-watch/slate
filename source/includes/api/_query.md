@@ -417,7 +417,20 @@ This section describes the SQL support for querying datasets with provider `cart
 | **NO** | **OFFSET: Offset the returned results** | **[SELECT region FROM edi LIMIT 5 OFFSET 10](https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%20OFFSET%2010)** |
 | **NO** | **OFFSET: Offset the returned results using short syntax** | **[SELECT region FROM edi LIMIT 5, 10](https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%2C%2010)** |
 
-*Note: This table was generated automatically with the help of [this repository](https://github.com/resource-watch/sql-compatibility-test). If you are maintaining the docs, please do not edit manually these tables.*
+#### CartoDB geo-spatial query support
+
+CartoDB datasets can be queried using [PostGIS functions](https://postgis.net/docs/reference.html). This means if your dataset contains geo-referenced data, you can execute PostGIS functions on the data to extract the information you need. The table below displays some examples of supported PostGIS functions:
+
+| Supported | Feature | Example URL |
+|-----------|---------|-------------|
+| YES | [PostGIS: ST\_MetaData](https://postgis.net/docs/RT\_ST\_MetaData.html) | [SELECT ST\_METADATA(the\_raster\_webmercator) FROM sp\_richness LIMIT 5](http://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST\_METADATA(the\_raster\_webmercator)%20FROM%20sp\_richness%20LIMIT%205) |
+| YES | [PostGIS: ST\_BandMetaData](https://postgis.net/docs/RT\_ST\_BandMetaData.html) | [SELECT ST\_BANDMETADATA(the\_raster\_webmercator) FROM sp\_richness LIMIT 5](http://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST\_BANDMETADATA(the\_raster\_webmercator)%20FROM%20sp\_richness%20LIMIT%205) |
+| YES | [PostGIS: ST\_SummaryStats](https://postgis.net/docs/RT\_ST\_SummaryStats.html) | [SELECT ST\_SUMMARYSTATS(the\_raster\_webmercator, true) FROM sp\_richness LIMIT 5](http://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST\_SUMMARYSTATS(the\_raster\_webmercator%2C%20true)%20FROM%20sp\_richness%20LIMIT%205) |
+| YES | [PostGIS: ST\_Histogram](https://postgis.net/docs/RT\_ST\_Histogram.html) | [SELECT ST\_HISTOGRAM(the\_raster\_webmercator) FROM sp\_richness LIMIT 5](http://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST\_HISTOGRAM(the\_raster\_webmercator)%20FROM%20sp\_richness%20LIMIT%205) |
+| YES | [PostGIS: ST\_ValueCount](https://postgis.net/docs/RT\_ST\_ValueCount.html) | [SELECT ST\_VALUECOUNT(the\_raster\_webmercator) FROM sp\_richness LIMIT 5](http://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST\_VALUECOUNT(the\_raster\_webmercator)%20FROM%20sp\_richness%20LIMIT%205) |
+| YES | Using PostGIS functions in WHERE clause | [SELECT \* FROM sp\_richness WHERE ST\_METADATA(the\_raster\_webmercator) IS NOT NULL LIMIT 5](http://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20\*%20FROM%20sp\_richness%20WHERE%20ST\_METADATA(the\_raster\_webmercator)%20IS%20NOT%20NULL%20LIMIT%205) |
+| **NO** | **Using PostGIS functions in GROUP BY clause** | **[SELECT \* FROM sp\_richness GROUP BY ST\_SUMMARYSTATS(the\_raster\_webmercator, true) IS NOT NULL LIMIT 5](http://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20\*%20FROM%20sp\_richness%20GROUP%20BY%20ST\_SUMMARYSTATS(the\_raster\_webmercator%2C%20true)%20IS%20NOT%20NULL%20LIMIT%205)** |
+| YES | Using PostGIS functions in ORDER BY clause | [SELECT \* FROM sp\_richness ORDER BY ST\_METADATA(the\_raster\_webmercator) IS NOT NULL LIMIT 5](http://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20\*%20FROM%20sp\_richness%20ORDER%20BY%20ST\_METADATA(the\_raster\_webmercator)%20IS%20NOT%20NULL%20LIMIT%205) |
 
 ### Arc-GIS Feature Service datasets
 
