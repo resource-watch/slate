@@ -128,6 +128,25 @@ Query parameter        | Description                                            
 sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String | Yes |
 format                 | The format of the returned response. By default, JSON format is assumed (`json`), but you can also request the response as CSV (`csv`), in which case the returned response will contain the CSV contents of the response. **This parameter will only be considered for document-based datasets.** | String | No |
 freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | Boolean | No |
+geostore               | Read more about the geostore query parameter [here](/index-rw.html#filter-query-results-by-geostore). | String | No |
+
+#### Filter query results by geostore
+
+> Example query providing a geostore id as query parameter to filter the results:
+
+```shell
+curl -i -X GET 'http://api.resourcewatch.org/v1/query/1d7085f7-11c7-4eaf-a29a-5a4de57d010e?sql=SELECT * FROM dis_001_significant_earthquakes LIMIT 5&geostore=972c24e1da2c2baacc7572ee9501abdc'
+```
+
+Some dataset providers support receiving a `geostore` query parameter, which will filter the returned data by a given geostore id, when the data is geo-referenced.
+
+The following providers support this parameter:
+
+- CartoDB (`carto`)
+- ArcGIS (`featureservice`)
+- Google Earth Engine (`gee`)
+- BigQuery (`bigquery`)
+- Rasdaman (`rasdaman`)
 
 ### Alternative ways for querying datasets
 
@@ -312,6 +331,25 @@ Query parameter        | Description                                            
 sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String | Yes |
 format                 | The format of the returned response. By default, CSV format is assumed (`csv`), but you can also request the response as JSON (`json`). Check the section on the [download endpoint response body](index-rw.html#download-response-body) for some examples of how the `format` query parameter can be used. | String | No |
 freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | Boolean | No |
+geostore               | Read more about the geostore query parameter [here](/index-rw.html#filter-query-results-by-geostore). | String | No |
+
+#### Filter download results by geostore
+
+> Example download request providing a geostore id as query parameter to filter the results:
+
+```shell
+curl -i -X GET 'http://api.resourcewatch.org/v1/query/1d7085f7-11c7-4eaf-a29a-5a4de57d010e?sql=SELECT * FROM dis_001_significant_earthquakes LIMIT 5&geostore=972c24e1da2c2baacc7572ee9501abdc'
+```
+
+Some dataset providers support receiving a `geostore` query parameter, which will filter the returned data by a given geostore id, when the data is geo-referenced.
+
+The following providers support this parameter:
+
+- CartoDB (`carto`)
+- ArcGIS (`featureservice`)
+- Google Earth Engine (`gee`)
+- BigQuery (`bigquery`)
+- Rasdaman (`rasdaman`)
 
 ### Alternative ways for downloading query execution results
 
