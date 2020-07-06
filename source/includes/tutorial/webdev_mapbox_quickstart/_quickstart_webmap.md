@@ -17,11 +17,10 @@ Over the course of this tutorial you will develop a simple web application that 
 - interacting with the HTTP-based API to retrieve this information using the [`/dataset` endpoint](https://resource-watch.github.io/doc-api/index-rw.html#what-is-a-dataset).
 - displaying raster tiles in a webmap run by [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)
 - showing metadata about the raster dataset being displayed
-- defining spatial geometries such as a region of interest with the [Mapbox GL Draw Plugin](https://github.com/mapbox/mapbox-gl-draw).
 
 
 ## Pre-requirements
-This tutorial will interact with the API, but will not require any authentication since the interactions will be read-only from publicly visible datasets.
+This tutorial will interact with the RW-API, but will not require any authentication since the interactions will be read-only from publicly visible datasets.
 You should be informed about the Resource Watch [Terms of Service](https://resourcewatch.org/terms-of-service) and [API Attribution Requirements](https://resourcewatch.org/api-attribution-requirements) before using the API.
 
 This tutorial requires a [Mapbox Access Token](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/) with a [token scope](https://docs.mapbox.com/accounts/overview/tokens/#scopes) of `styles:read` to render the basemap.
@@ -87,6 +86,8 @@ As a very concrete example, consider:
 
 With the flexible Layer definitions, all configuration can be saved server-side, so the front-end work only requires linking the API responses to the technologies that implement the complex features.
 
+The scope of the current tutorial will not cover the `/query` endpoint, but such content will be made available in the future.
+
 
 ## Software specification
 The specification for the webapp is:
@@ -99,19 +100,18 @@ The specification for the webapp is:
 
 (C)  Show the raster tile layer for this data on the map
 
-(D)  Enable a user to draw a polygon on the map
-
-(E)  Utilize the RW API to obtain the information needed for (B), (C)
+(D)  Utilize the RW API to obtain the information needed for (B), (C)
 ```
 
 ## Initial document structure
-A basic "Hello World" HTML document for getting Mapbox GL JS online is given below.
+A basic "Hello World" setup for getting Mapbox GL JS online is given below.
 This will ensure your Mapbox token is working and there is a basic foundation for the webpage.
 
-Each section in this tutorial has a corresponding "finished" HTML document [available on GitHub](https://github.com/resource-watch/doc-api/tree/master/source/includes/tutorial/webdev_mapbox_quickstart/html_evolution), which may be helpful if errors are encountered along the way.
+Each section in this tutorial has a corresponding "finished" version [available on GitHub](https://github.com/resource-watch/doc-api/tree/master/source/includes/tutorial/webdev_mapbox_quickstart/html_evolution), which may be helpful if errors are encountered along the way.
+This tutorial will have a single HTML file across all steps, but the associated javascript file (`tutorial-index.js`) will be changing at each step.
 
 
-Copy this into a file called `index.html` inside a directory for this tutorial.
+Copy the below text into a file called `index.html` inside a directory for this tutorial.
 It will be assumed this file is called `index.html` throughout the tutorial, but there is no strict requirement for this.
 
 
@@ -131,7 +131,10 @@ It will be assumed this file is called `index.html` throughout the tutorial, but
   <!-- CSS embedded in head tag since this is a small app -->
   <style>
     /* basic reset of styling */
-    body { margin: 0; padding: 0; }
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
     #metadata-container {
       overflow-y: auto;
@@ -171,32 +174,7 @@ Hello (part of the) World
 
   </div>
 
-  <!-- JS embedded in body tag  -->
-  <script>
-    // TO MAKE THE MAP APPEAR YOU MUST
-    // ADD YOUR ACCESS TOKEN FROM
-    // https://account.mapbox.com
-    mapboxgl.accessToken = 'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****';
-
-
-    // initiate a new map by passing an object describing a config
-    // for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/
-    var map = new mapboxgl.Map({
-        // id of div that will hold map
-        container: 'map',
-
-        // one of the existing mapbox map styles
-        style: 'mapbox://styles/mapbox/light-v10',
-
-        // zoom in (greater = smaller area displayed)
-        zoom: 4,
-
-	      // longitude, latitude of the map center
-        center: [20, 0]
-    });
-
-  </script>
-
+  <script src="tutorial-index.js"></script>
 </body>
 </html>
 ```
@@ -208,84 +186,45 @@ This file establishes the following properties to the document:
 - in `<head><style>`, set a [CSS grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout) on the top-level container, making the children align to a grid that is two columns wide
 - in `<head><style>`, establish grid row dimensions, including a minimum and maximum height, letting metadata content overflow via a vertical scroll bar
 - in `<head>`, fetch the Mapbox JS and CSS assets
-- in `<body><script>`, initialize a Mapbox map for one of the children in the grid
 
-Upon replacing `mapboxgl.accessToken` with your access token, this file should be saved and opened in a web browser.
+
+You should also see that a local script is imported in `<body>`.
+Copy the following into a file called `tutorial-index.js` next to the HTML file you established above.
+
+<div class="center-column"></div>
+```javascript
+// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM
+// https://account.mapbox.com
+mapboxgl.accessToken = 'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****';
+
+
+// initiate a new map by passing an object describing a config
+// for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/
+var map = new mapboxgl.Map({
+    // id of div that will hold map
+    container: 'map',
+
+    // one of the existing mapbox map styles
+    style: 'mapbox://styles/mapbox/light-v10',
+
+    // zoom in (greater = smaller area displayed)
+    zoom: 4,
+
+    // longitude, latitude of the map center
+    center: [20, 0]
+});
+
+```
+
+This script initializes an interactive web map on the `<div id="map">` element.
+
+Upon replacing `mapboxgl.accessToken` with your access token, this file should be saved and the HTML opened in a web browser.
 
 You should see a webpage that looks something like this:
 
 ![Image of basic webpage, with a title, some text on the left, and a large map zoomed to central Africa on the right](tutorials/webdev_mapbox_quickstart/webmap-hello-world.png)
 
 If you are not seeing a map check the web developer console.
-
-
-## Using the Draw plugin
-This section will quickly introduce the [Mapbox GL Draw Plugin](https://github.com/mapbox/mapbox-gl-draw), which is a separate javascript library for enabling user-drawn geometries.
-The draw plugin generally works with GeoJSON objects as the primary interoperability mechanism with other geospatial data sources or libraries.
-
-Though requirement `(D)` listed above does not specify there is any analysis to be performed with the drawn polygons, there are many ways to import or export geometries and interface with such functionality when needed.
-For the scope of this tutorial only the most basic drawing and visualization are going to be demonstrated.
-
-
-To include this plugin, ensure your `<head>` element has all the following external assets declared:
-
-<div class="center-column"></div>
-```html
-<head>
-  <!-- ... other things ... -->
-
-  <!-- Mapbox GL JS includes -->
-  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
-
-  <!-- Mapbox GL Draw plugin includes -->
-  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css" rel="stylesheet" />
-
-  <!-- ... CSS declaration ... -->
-
-</head>
-```
-
-To enable drawing on a map requires a small addition to `<body><script>`.
-Update that javascript with the following:
-
-<div class="center-column"></div>
-```html
-  <!-- JS embedded in body tag  -->
-  <script>
-    // ...
-    // ... var map = new mapboxgl.Map({ ...
-    //     ... center: [20, 0] });
-
-    // initiate a new handler for drawing
-    var draw = new MapboxDraw({
-
-      // override the control buttons
-      displayControlsDefault: false,
-      controls: {
-        polygon: true,  // no points or lines
-        trash: true  // let the geometries be deleted
-      }
-    });
-    // attach the handler to the map
-    map.addControl(draw, 'top-left');
-
-  </script>
-```
-
-The changes in this section did the following:
-
-- in `<head>`, import the Mapbox Draw plugin JS and CSS documents
-- in `<body><script>`, define how the drawing controls are configutred, then attach this config to the map object
-
-An image of the webpage at this point:
-
-![Same image as before, but there are two new buttons on the webmap for drawing and deleting geometries.](images/tutorials/webdev_mapbox_quickstart/webmap-draw-plugin.png)
-
-Reload the page in the web browser and explore the map capabilities.
-You should see two new buttons in the corner of the map which are the entry points to the drawing interactions.
-When drawing a polygon, double click at the last node to finalize it.
 
 
 ## Getting dataset metadata
@@ -352,58 +291,62 @@ In a real development scenario smaller pieces of the response would probably be 
 For now we are going to just dump the response into a `<pre>` element to view it all.
 
 
-Modify the `<script>` section within the `<body>` of `index.html` with the following javascript:
+Modify `tutorial-index.js` to get a :
 
 <div class="center-column"></div>
-```html
-  <!-- JS embedded in body tag  -->
-  <script>
-    // ... mapboxgl.accessToken = ''; ...
+```javascript
+// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM
+// https://account.mapbox.com
+mapboxgl.accessToken = 'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****';
 
+// declare an async function that calls an API endpoint for dataset metadata
+// takes one parameter
+//   (uuid) the Dataset ID
+// returns an object interpreted from the JSON response
+const callApiDatasetMetadata = async (uuid) => {
+    // fetch the API endpoint (GET request)
+    const response = await fetch('https://api.resourcewatch.org/v1/dataset/' + uuid + '?includes=layer,metadata')
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+}
+
+
+// initiate a new map by passing an object describing a config
+// for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/
+var map = new mapboxgl.Map({
+    // id of div that will hold map
+    container: 'map',
+
+    // one of the existing mapbox map styles
+    style: 'mapbox://styles/mapbox/light-v10',
+
+    // zoom in (greater = smaller area displayed)
+    zoom: 4,
+
+    // longitude, latitude of the map center
+    center: [20, 0]
+});
+
+
+// run the API call once the map is loaded (API call is asnyc)
+map.on('load', async () => {
     // declare the Dataset ID
     const datasetId = 'b584954c-0d8d-40c6-859c-f3fdf3c2c5df';
-
-    // declare an async function that calls an API endpoint for dataset metadata
-    // the JSON response loaded into the metadata panel and stored globally as well
-    // takes one parameter
-    //   (0) the Dataset ID
-    callApiDatasetMetadata = async function(uuid) {
-      // fetch the API endpoint (GET request)
-      return fetch('https://api.resourcewatch.org/v1/dataset/' + uuid + '?includes=layer,metadata')
-        .then(function(response) {  // convert the JSON text into a JS object
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        }).then(function(j) { // set global variable, update HTML content
-          console.log(j);
-          // set a global variable to store this response object - self-rolled state management
-          window.globalVarDatasetMetadataResponse = j;
-          // update HTML content with dataset metadata
-          document.getElementById('metadata').textContent = JSON.stringify(j, null, 2);
-        })
-    }
-
-    // var map = new mapboxgl.Map({ ...
-    // ... center: [20, 0] });
-
-    // run the API call once the map is loaded (API call is asnyc)
-    map.on('load', function () {
-      // fetch remote dataset metadata and update HTML
-      callApiDatasetMetadata(datasetId);
-    });
-
-    // ... var draw = new MapboxDraw({
-    // ... map.addControl(draw, 'top-left');
-
-  </script>
+    // fetch remote dataset metadata
+    const metadata = await callApiDatasetMetadata(datasetId);
+    // display the response metadata
+    document.getElementById('metadata').textContent = JSON.stringify(metadata, null, 2);
+});
 ```
 
 The changes above did the following:
 
-- supply a hard-coded `datasetId`, a string reference to a known Dataset
-- add `callApiDatasetMetadata` function to fetch a dataset and update the metadata panel
-- declare `callApiDatasetMetadata(datasetId)` as a callback to be executed when after the map loads
+- register a callback function that will be executed once the map is intially loaded
+- supply a hard-coded `datasetId`, a string reference to a known Dataset, in this callback
+- declare `callApiDatasetMetadata(datasetId)` as a function to get an API response
+- call `callApiDatasetMetadata` on map load, and set the metadata panel content based on this response
 
 Reload in the browser to see the updated metadata panel, which should look like:
 
@@ -469,92 +412,91 @@ That parameterization array looks like:
 
 By using this parameterization data, the URL can be transformed into compliance with Mapbox GL.
 
-Update the `<body>` section of `index.html` with the following javascript, a description is located after this code block.
+Update the javascript file with the following three functions and am update, a description is located after this code block.
 
 <div class="center-column"></div>
-```html
-  <!-- JS embedded in body tag  -->
-  <script>
-    // ...
-    // callApiDatasetMetadata = async function ....
-    // ...
+```javascript
+// ...
+// const callApiDatasetMetadata = async (uuid) => {
+// ...
 
-    // get the Mapbox-ready raster tile URL template (example.com/{x}/{y}/{z})
-    // takes as a single parameter the API response data
-    getTileLayerUrlForTreeCoverLoss = function(obj) {
-      // drill down to get a useful object
-      var layerConfig = obj['data']['attributes']['layer'][0]['attributes']['layerConfig'];
-      // get the full templated URL
-      var urlTemplate = layerConfig['source']['tiles'][0];
-      // get the URL template parameters
-      var defaultParams = layerConfig['params_config'];
 
-      // define reducing function that iteratively substitutes parameters
-      // takes as two parameters:
-      //   (0) the accumulated string of the URL with template components substituted
-      //   (1) the current object in the parameters array
-      urlTemplateReducer = function(accumulated, value) {
-        // String.replace('{param}', defaultValue)
-        return accumulated.replace('{' + value['key'] + '}', value['default'].toString());
-      }
-      // do the reducing, which iteratively replaces all configured parameters
-      return defaultParams.reduce(urlTemplateReducer, urlTemplate);
+// declare a function that returns the Mapbox-ready raster tile URL template
+// (example.com/{x}/{y}/{z}) from the response object returned by `callApiDatasetMetadata`
+// takes one parameter
+//   (obj) the API response data
+// returns a string representing a templated URL, ready to be used by webmaps
+const getTileLayerUrlForTreeCoverLoss = (obj) => {
+    // drill down to get a useful object
+    const layerConfig = obj['data']['attributes']['layer'][0]['attributes']['layerConfig'];
+    // get the URL template parameters
+    const defaultParams = layerConfig['params_config'];
+
+    // get the full templated URL
+    let url = layerConfig['source']['tiles'][0];
+    // substitute default parameters iteratively
+    for (const param of defaultParams) {
+        url = url.replace('{' + param['key'] + '}', param['default'].toString());
     }
+    return url;
+}
 
-    // get a simple identifier
-    // takes as one parameter the API response data
-    getLayerSlug = function(obj) {
-      return obj['data']['attributes']['layer'][0]['attributes']['slug'];
-    }
 
-    // add a raster tile layer to a Mapbox map
-    // takes as three parameters:
-    //   (0) the Mapbox map object
-    //   (1) an identifier
-    //   (2) the raster tile URL
-    addTileLayerToMap = function(mapVar, title, url) {
-      // need to first add a source
-      mapVar.addSource( title, {
-        type: 'raster',
-        tiles: [
-          url
+// declare a funciton that can get a simple identifier for a layer
+// takes one parameter
+//   (obj) the API response data from `callApiDatasetMetadata`
+// returns a string
+const getLayerSlug = (obj) => {
+    return obj['data']['attributes']['layer'][0]['attributes']['slug'];
+}
+
+// declare a function that can add a raster tile layer to a Mapbox map
+// takes three parameters:
+//   (mapVar) the Mapbox map object
+//   (title) a string identifier for the source and layer
+//   (url) the raster tile URL to add to the map
+const addTileLayerToMap = (mapVar, title, url) => {
+    // need to first add a source
+    mapVar.addSource(title, {
+        'type': 'raster',
+        'tiles': [
+            url
         ],
-        tilesize: 256
-      });
-      // then add the layer, referencing the source
-      mapVar.addLayer({
-          'id': title,
-          'type': 'raster',
-          'source': title,
-          'paint': {
-            'raster-opacity': 0.8  // let mapbox baselayer peak through
-          }
-      });
-    }
+        'tilesize': 256
+    });
+    // then add the layer, referencing the source
+    mapVar.addLayer({
+        'id': title,
+        'type': 'raster',
+        'source': title,
+        'paint': {
+            'raster-opacity': 1  // let mapbox baselayer peak through
+        }
+    });
+}
 
-    // ...
-    // var map = new mapboxgl.Map({ ...
-    //     ... center: [20, 0] });
 
-    map.on('load', function() {
-        // fetch remote dataset metadata and update HTML
-        callApiDatasetMetadata(datasetId)
-          // add a callback function to the original async API call
-          .then(function() { // update the map once the API call finishes
-            // get an identifier
-            var slug = getLayerSlug(window.globalVarDatasetMetadataResponse);
-            // get the tile layer URL from full API response data
-            var tileLayerUrl = getTileLayerUrlForTreeCoverLoss(window.globalVarDatasetMetadataResponse);
-            // add a layer to the map
-            addTileLayerToMap(map, slug, tileLayerUrl);
-        });
-      });
+// ...
+// var map = new mapboxgl.Map({
+// ...
 
-    // ...
-    // var draw = new MapboxDraw({ ...
-    // ... 
 
-  </script>
+// run the API call once the map is loaded (API call is asnyc)
+map.on('load', async () => {
+    // declare the Dataset ID
+    const datasetId = 'b584954c-0d8d-40c6-859c-f3fdf3c2c5df';
+    // fetch remote dataset metadata
+    const metadata = await callApiDatasetMetadata(datasetId);
+    // display the response metadata
+    document.getElementById('metadata').textContent = JSON.stringify(metadata, null, 2);
+    // get an identifier
+    const slug = getLayerSlug(metadata);
+    // get the tile layer URL from full API response data
+    const tileLayerUrl = getTileLayerUrlForTreeCoverLoss(metadata);
+    // add a layer to the map
+    addTileLayerToMap(map, slug, tileLayerUrl);
+});
+
 ```
 
 The changes above did the following:
@@ -562,7 +504,7 @@ The changes above did the following:
 - add a function `getTileLayerUrlForTreeCoverLoss` to obtain a well-formed tile URL
 - add a function `getLayerSlug` to obtain a short identifier the tile layer of interest
 - add a function `addTileLayerToMap` to handle the two-part source and layer definition process
-- update the `map.on('load')` callback with more steps executed after the initial API call; load the raster tile layer to the map
+- update the `map.on('load')` callback with more steps executed after the initial API call
 
 
 Once again reload the browser and see the tile layer now on the map.
@@ -572,6 +514,6 @@ Once again reload the browser and see the tile layer now on the map.
 ## Next Steps
 At this point the tutorial can be considered complete - the software specification is being met and hopefully enough of the concepts have been introduced to develop a general image of integrating API-retrieved information into a simple webapp.
 
-While this tutorial utilized hand-written HTML, JS, CSS in a single file, transforming the logic into other frameworks such as React should be relatively simple if there is already familiarity in that space.
+While this tutorial utilized hand-written HTML, JS, CSS, transforming the logic into other frameworks such as React should be relatively simple if there is already familiarity in that space.
 Some wrappers and React components for working with Mapbox GL JS already exist, including [react-map-gl](https://github.com/visgl/react-map-gl) and [Vizzuality/layer-manager](https://github.com/Vizzuality/layer-manager).
 
