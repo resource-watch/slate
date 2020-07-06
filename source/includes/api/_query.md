@@ -147,6 +147,8 @@ The following providers support this parameter:
 - Google Earth Engine (`gee`)
 - BigQuery (`bigquery`)
 - Rasdaman (`rasdaman`)
+- NEX-GDDP (`nexgddp`)
+- Loca (`loca`)
 
 ### Alternative ways for querying datasets
 
@@ -350,6 +352,8 @@ The following providers support this parameter:
 - Google Earth Engine (`gee`)
 - BigQuery (`bigquery`)
 - Rasdaman (`rasdaman`)
+- NEX-GDDP (`nexgddp`)
+- Loca (`loca`)
 
 ### Alternative ways for downloading query execution results
 
@@ -636,37 +640,68 @@ You can read more about the limitations of using SQL with document-based dataset
 SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.
 
 ```shell
-curl -XGET https://api.resourcewatch.org/v1/query?sql=SELECT avg(Green) from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat > 0 and  Lat < 45 \
+curl -XGET 'https://api.resourcewatch.org/v1/query?sql=SELECT avg(Green) from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat > 0 and  Lat < 45' \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer <token>'
 ```
 
-### NEX-GDDP datasets
+### NEX-GDDP and Loca datasets
 
-A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data are available. These can be accessed in the following ways:
-
-#### Spatial aggregates over a layer
-
-> Access spatial aggregates over the data by listing all dataset data for a particular year:
+> Example of a query for a NEX-GDDP/Loca dataset, providing lat and lon as query parameters:
 
 ```shell
-curl -i -XGET 'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year = 1960'
+curl -X GET 'http://api.resourcewatch.org/v1/query/aaadd6c3-93ea-44bc-ba8b-7af3f40d39e1?sql=SELECT * FROM data&lat=30&lon=9'
 ```
 
-> Access particular aggregates:
+> Example of a query for a NEX-GDDP/Loca dataset, providing a geostore id:
 
 ```shell
-curl -i -XGET 'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT avg, min from nexgddp-historical-ACCESS1_0-prmaxday where year = 1960'
+curl -X GET 'http://api.resourcewatch.org/v1/query/aaadd6c3-93ea-44bc-ba8b-7af3f40d39e1?sql=SELECT * FROM data&geostore=972c24e1da2c2baacc7572ee9501abdc'
 ```
 
-> Calculate statistics for a range of years:
+> Example response:
 
-```shell
-curl -i -XGET 'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962'
+```json
+{
+  "data": [
+    {
+      "tasmin": 243.6352,
+      "tasmin_q25": 243.4849,
+      "tasmin_q75": 243.8861,
+      "year": "1971-01-01T00:00:00-01:00"
+    },
+    {
+      "tasmin": 244.0795,
+      "tasmin_q25": 243.7174,
+      "tasmin_q75": 244.3168,
+      "year": "1981-01-01T00:00:00-01:00"
+    },
+    {
+      "tasmin": 244.4218,
+      "tasmin_q25": 243.9681,
+      "tasmin_q75": 244.5883,
+      "year": "1991-01-01T00:00:00-01:00"
+    },
+    {
+      "tasmin": 244.697,
+      "tasmin_q25": 244.2883,
+      "tasmin_q75": 244.8852,
+      "year": "2001-01-01T00:00:00-01:00"
+    },
+    {
+      "tasmin": 244.7719,
+      "tasmin_q25": 244.3449,
+      "tasmin_q75": 245.0115,
+      "year": "2011-01-01T00:00:00-01:00"
+    }
+  ]
+}
 ```
 
-> You can delimit an area of interest by providing a geostore id as a parameter:
+Like with the other supported providers, you can use a SQL-like syntax to query datasets stored both in NASA NEX-GDDP or in Loca. However, these datasets always contain geo-referenced data, and so they expect that you always provide either a `lat` + `lon` pair, or a `geostore` id.
 
-```shell
-curl -i -XGET 'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962&geostore=0279093c278a64f4c3348ff63e4cfce0'
-```
+The examples on the side allow you to understand how you can provide either the `geostore` id or the `lat` + `lon` combination.
+
+### WMS datasets
+
+Queries to WMS datasets are no longer supported.
