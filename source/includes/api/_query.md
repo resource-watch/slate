@@ -413,6 +413,29 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b91
 
 When downloading the query results for a document based dataset using either GET or POST `/download/<dataset id or slug>` request, the `FROM` clause is required but ignored, meaning you don't have to provide the dataset's `tableName` as you normally would. The example on the side illustrates this.
 
+## Deleting data from a dataset
+
+> Example requests to delete data from a dataset:
+
+```shell
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/:dataset_id?sql=DELETE FROM index_bf86b945c4ec41d2b5b7af00f3f61423'
+curl -i -X GET 'https://api.resourcewatch.org/v1/query/:dataset_id?sql=DELETE FROM index_bf86b945c4ec41d2b5b7af00f3f61423 WHERE x = "y"'
+```
+
+Write queries such as `INSERT` or `UPDATE` are not supported in the RW API. You can use dataset endpoints to [append](/index-rw.html#concatenate-and-append-data-to-a-document-based-dataset) or [overwrite](/index-rw.html#overwrite-data-for-a-document-based-dataset) a given dataset's data, but you cannot use SQL to write data into the datasets.
+
+Most providers do not support `DELETE` queries as well. However, in the case of **document-based datasets**, you can delete the dataset's data via SQL `DELETE` query. Executing a `DELETE` query requires authentication, and additionally, one of the following conditions must be met:
+
+- have role `MANAGER` and own the dataset;
+- have role `ADMIN` and belong to all the apps to which the dataset is associated.
+
+### Delete query execution errors
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+403            | Forbidden      | Not authorized to execute DELETE query - the logged user provided does not meet at least one of the conditions required to be able to delete the dataset data.
+400            | Unsupported query element detected | The SQL query provided is not valid, or the syntax provided is not supported.
+
 ## Supported SQL syntax reference
 
 ### CartoDB datasets
