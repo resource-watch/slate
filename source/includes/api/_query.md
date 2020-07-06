@@ -331,7 +331,7 @@ Query parameter        | Description                                            
 sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String | Yes |
 format                 | The format of the returned response. By default, CSV format is assumed (`csv`), but you can also request the response as JSON (`json`). Check the section on the [download endpoint response body](index-rw.html#download-response-body) for some examples of how the `format` query parameter can be used. | String | No |
 freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | Boolean | No |
-geostore               | Read more about the geostore query parameter [here](/index-rw.html#filter-query-results-by-geostore). | String | No |
+geostore               | Read more about the geostore query parameter [here](/index-rw.html#filter-download-results-by-geostore). | String | No |
 
 #### Filter download results by geostore
 
