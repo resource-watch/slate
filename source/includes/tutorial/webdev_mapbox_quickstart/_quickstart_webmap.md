@@ -291,7 +291,7 @@ In a real development scenario smaller pieces of the response would probably be 
 For now we are going to just dump the response into a `<pre>` element to view it all.
 
 
-Modify `tutorial-index.js` to get a :
+Modify `tutorial-index.js` to the following complete script:
 
 <div class="center-column"></div>
 ```javascript
@@ -412,7 +412,8 @@ That parameterization array looks like:
 
 By using this parameterization data, the URL can be transformed into compliance with Mapbox GL.
 
-Update the javascript file with the following three functions and am update, a description is located after this code block.
+Update the javascript file with the following three functions and a new version of the `map.on('load')` callback.
+A description is located after this code block.
 
 <div class="center-column"></div>
 ```javascript
