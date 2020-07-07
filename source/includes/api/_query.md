@@ -428,7 +428,7 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/query/:dataset_id?sql=DELETE FR
 
 Write queries such as `INSERT` or `UPDATE` are not supported in the RW API. You can use dataset endpoints to [append](/index-rw.html#concatenate-and-append-data-to-a-document-based-dataset) or [overwrite](/index-rw.html#overwrite-data-for-a-document-based-dataset) a given dataset's data, but you cannot use SQL to write data into the datasets.
 
-Most providers do not support `DELETE` queries as well. However, in the case of **document-based datasets**, you can delete the dataset's data via SQL `DELETE` query. Executing a `DELETE` query requires authentication, and additionally, one of the following conditions must be met:
+Most providers do not support `DELETE` queries either. However, in the case of **document-based datasets** (i.e. where the `connectorType` is `document`), you can delete the dataset's data via SQL `DELETE` query. Executing a `DELETE` query requires authentication, and additionally, one of the following conditions must be met:
 
 - have role `MANAGER` and own the dataset;
 - have role `ADMIN` and belong to all the apps to which the dataset is associated.
