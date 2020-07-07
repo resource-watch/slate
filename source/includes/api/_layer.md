@@ -7,7 +7,10 @@ By now, you are probably already familiar with [datasets](#dataset) and [queryin
 As we've seen in the [layer concept docs](#layer), a RW API layer may store data in different formats, depending on the needs of its author. This is done using the several open format fields a layer has. To keep this documentation easy to understand, we'll spit our approach to layers into two sections:
 
 - We'll first discuss the details of the endpoints that allow you to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) layers, without focusing on the actual data contained in it.
-- In an future version of these docs, we'll dive deeper into some of the most common structures used to store data in the layer's open format fields, and help you use that data to render an actual layer on a web application.
+- In an future version of these docs, we'll dive deeper into some of the most common structures used to store data in the layer's open format fields.
+
+After viewing the documentation below, consider looking at the [webmap tutorial](https://resource-watch.github.io/doc-api/tutorials.html#mapbox-webmap-quickstart) for a step-by-step guide to rendering an actual layer on a web application.
+
 
 ## Getting all layers
 
@@ -681,7 +684,7 @@ There's also a dependency on a dataset id, as it is required to build the POST U
 
 When a layer is created, a [vocabulary tag](#vocabulary-and-tags) for it is automatically created, associated with the dataset tag.
 
-The layer service was built to be very flexible, and not be restricted to specific layer rendering libraries or tools. This gives you the freedom to use virtually any rendering technology you want, but it also means you'll have to make additional decisions on how to structure your data into the different open format fields provided by a RW API layer. In an future release of these docs, we'll show you some examples of how existing applications use different rendering tools with the layer endpoints, to give you an idea on how you can structure your own data, and also as a way to help you get started creating your first layers for your own custom applications.
+The layer service was built to be very flexible, and not be restricted to specific layer rendering libraries or tools. This gives you the freedom to use virtually any rendering technology you want, but it also means you'll have to make additional decisions on how to structure your data into the different open format fields provided by a RW API layer. In a future release of these docs, we'll show you some examples of how existing applications use different rendering tools with the layer endpoints, to give you an idea on how you can structure your own data, and also as a way to help you get started creating your first layers for your own custom applications. Until then, the [tutorials section of the documentation](https://resource-watch.github.io/doc-api/tutorials.html) shows an example of how existing raster tile layers may be structured and how the information in the layer response can be utilized by a third-party visualization library.
 
 #### Errors for creating a layer
 
