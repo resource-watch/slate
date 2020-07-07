@@ -340,7 +340,7 @@ geostore               | Read more about the geostore query parameter [here](/in
 > Example download request providing a geostore id as query parameter to filter the results:
 
 ```shell
-curl -i -X GET 'http://api.resourcewatch.org/v1/query/1d7085f7-11c7-4eaf-a29a-5a4de57d010e?sql=SELECT * FROM dis_001_significant_earthquakes LIMIT 5&geostore=972c24e1da2c2baacc7572ee9501abdc'
+curl -i -X GET 'http://api.resourcewatch.org/v1/download/1d7085f7-11c7-4eaf-a29a-5a4de57d010e?sql=SELECT * FROM dis_001_significant_earthquakes LIMIT 5&geostore=972c24e1da2c2baacc7572ee9501abdc'
 ```
 
 Some dataset providers support receiving a `geostore` query parameter. When providing this parameter, you can request geo-referenced data that fits within the bounding box of the geostore with id provided. You can obtain the id of the geostore using the [RW API Geostore API](/index-rw.html#geostore). If the data is not geo-referenced, or if the dataset provider does not support the `geostore` query parameter, it will be ignored.
