@@ -1,0 +1,644 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>RW API Tutorials</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #272822;
+  background-color: #f92672;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #f8f8f2;
+}
+.highlight .p, .highlight .pi {
+  color: #f8f8f2;
+}
+.highlight .gi {
+  color: #a6e22e;
+}
+.highlight .gd {
+  color: #f92672;
+}
+.highlight .gh {
+  color: #66d9ef;
+  background-color: #272822;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #ae81ff;
+}
+.highlight .kc {
+  color: #fd971f;
+}
+.highlight .kt {
+  color: #fd971f;
+}
+.highlight .kd {
+  color: #fd971f;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #a6e22e;
+}
+.highlight .sr {
+  color: #a1efe4;
+}
+.highlight .si {
+  color: #cc6633;
+}
+.highlight .se {
+  color: #cc6633;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #66d9ef;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #a6e22e;
+}
+.highlight .ss {
+  color: #a6e22e;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="tutorials rw" data-languages="[]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" alt="Navbar" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo-rw.png" alt="Logo rw" />
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='https://ui.resourcewatch.org'>Sign Up for a Developer Key</a></li>
+            <li><a href='https://github.com/resource-watch/doc-api'>Contribute to these docs</a></li>
+            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="introduction">Introduction</h1>
+
+<p>This documentation hosts guided tutorials and how-to&rsquo;s for building products and analyes with the Resource Watch API and other technology.</p>
+
+          <h1 id="mapbox-webmap-quickstart">Mapbox Webmap Quickstart</h1>
+
+<h2 id="purpose">Purpose</h2>
+
+<p>This is a quickstart tutorial for the API.
+It is intended for web developers who are evaluating or using the API.
+This tutorial does not provide best practices in respect to web development, but it does represent a quick demonstration that should be widely accessible.</p>
+
+<p>One goal of this tutorial is to introduce some key concepts regarding how information is structured in API responses.
+While information in the API responses may be useful on its own, a key benefit is how well it integrates with other technologies including visualization libraries such as <a href="http://vega.github.io/">Vega</a> and webmaps like <a href="https://leafletjs.com/">Leaflet</a> or those from <a href="https://docs.mapbox.com/help/how-mapbox-works/web-apps/">Mapbox</a>.</p>
+
+<p><strong>Mapbox GL JS is being used in this tutorial as the visualization outlet for the information returned by the API.</strong></p>
+
+<p>Over the course of this tutorial you will develop a simple web application that is capable of:</p>
+
+<ul>
+<li>interacting with the HTTP-based API to retrieve this information using the <a href="https://resource-watch.github.io/doc-api/index-rw.html#what-is-a-dataset"><code class="prettyprint">/dataset</code> endpoint</a>.</li>
+<li>displaying raster tiles in a webmap run by <a href="https://docs.mapbox.com/mapbox-gl-js/api/">Mapbox GL JS</a></li>
+<li>showing metadata about the raster dataset being displayed</li>
+</ul>
+
+<h2 id="pre-requirements">Pre-requirements</h2>
+
+<p>This tutorial will interact with the RW-API, but will not require any authentication since the interactions will be read-only from publicly visible datasets.
+You should be informed about the Resource Watch <a href="https://resourcewatch.org/terms-of-service">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements">API Attribution Requirements</a> before using the API.</p>
+
+<p>This tutorial requires a <a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/">Mapbox Access Token</a> with a <a href="https://docs.mapbox.com/accounts/overview/tokens/#scopes">token scope</a> of <code class="prettyprint">styles:read</code> to render the basemap.
+If you are WRI staff it may be possible to obtain a token by contacting Ethan Roday.
+Commercial vendors and outside organizations may need to provide their own accounts.
+Individuals should consider signing up for a Mapbox account and learning what options they have.</p>
+
+<p>This tutorial will also require the following applications:</p>
+
+<ul>
+<li>a text editor suitable for writing HTML/JS/CSS</li>
+<li>a modern web browser with Javascript enabled and developer tools familiarity</li>
+</ul>
+
+<h3 id="background-on-datasets-queries-layers">Background on Datasets, Queries, Layers</h3>
+
+<p>There are a variety of types of data that are integrated into the RW API, covering many topics, domains, and containing all the peculiar characteristics and conventions of the communities that produced these digital artifacts.
+The API is also fairly flexible towards accommodating the different needs between <em>small data</em> that may be the result of a limited case study and the <em>big data</em> of spatiotemporal data cubes or the unbounded potential of external API providers.</p>
+
+<p>Let&rsquo;s quickly review some of the concepts used in the API before jumping into the tutorial.
+You can find deeper and more tailored information in the <a href="https://resource-watch.github.io/doc-api/index-rw.html#concepts">concepts documentation</a>.</p>
+
+<p>A <strong>Dataset</strong> essentially describes where information is being held.
+Datasets are exposed through the <code class="prettyprint">/dataset/&lt;id&gt;</code> endpoint as a JSON response.
+This JSON has a flexible schema which can be inferred based on two required properties:</p>
+
+<ul>
+<li>the first, <code class="prettyprint">connectorType</code>, which describes the access pattern to the information
+
+<ul>
+<li><code class="prettyprint">connectorType: document</code> if taking from the &ldquo;internal&rdquo; database of uploaded files</li>
+<li><code class="prettyprint">connectorType: rest</code> if performing external API calls to HTTP endpoints</li>
+<li><code class="prettyprint">connectorType: wms</code> if performing external Web Mapping Service calls</li>
+</ul></li>
+<li>the second, <code class="prettyprint">provider</code>, for which there are constrained possibilities based on the <code class="prettyprint">connectorType</code>
+
+<ul>
+<li>e.g. <code class="prettyprint">csv</code>, <code class="prettyprint">json</code> are uploaded <code class="prettyprint">document</code>s in the &ldquo;internal&rdquo; database</li>
+<li>e.g. <code class="prettyprint">cartodb</code> and <code class="prettyprint">gee</code> are external <code class="prettyprint">rest</code>ful APIs</li>
+</ul></li>
+</ul>
+
+<p>The full table mapping <code class="prettyprint">provider</code>s to <code class="prettyprint">connectorType</code>s is located in the <a href="https://resource-watch.github.io/doc-api/index-rw.html#dataset-connector-type">main API documentation</a>.</p>
+
+<p>Based on these two properties, the Dataset JSON object will contain many other top-level properties that collectively provide all that is needed to declare where the <em>real data</em> is being held and how to access it.</p>
+
+<p>The <code class="prettyprint">/query</code> API endpoint utilizes all this information about the Dataset behind the scenes to expose the <em>real data</em> without the developer needing to perform the speciality interfacing with all the providers that might be supplying data for a particular project or webpage.
+Queries are supportive of some analytical functionality including filtering and aggregating.
+Thoughtfully-prepared datasets, carefully crafted queries, and the routing of logic through the API can get you quite far towards capable applications.</p>
+
+<p>Somewhat orthogonal to the concepts of Datasets and Queries is the concept of a Layer.
+A <strong>Layer</strong> is specialized information about how a Dataset/Query can be represented for a particular application, notably how it can be visualized and represented geospatially.
+Layer information is highly free-form and purpose-defined for a specific application or integration.</p>
+
+<p>As a very concrete example, consider:</p>
+
+<ul>
+<li> There is a Dataset describing the latitude, longitude, depth, and magnitude of earthquakes events globally over the past month.</li>
+<li>A particular query is performed and filters the earthquake events to only those occurring within some distance of South America in the past week.
+
+<ul>
+<li>This query is still returning information in the same structural form as the original global &amp; monthly scope - let&rsquo;s say a table of comma-delimited text.</li>
+</ul></li>
+<li>A Layer may be created that:
+
+<ul>
+<li>references how to perform the query above (full URL of query call)</li>
+<li>has a title called &ldquo;Weekly View of South American Earthquakes&rdquo;</li>
+<li>includes a configuration description for how a webmap could:
+
+<ul>
+<li>visualize the earthquake events as circles located at the <em>latitude</em> and <em>longitude</em> fields</li>
+<li>scale the circles in size based on their <em>magnitude</em> field</li>
+<li>tint the circles in color from dark-blue to light-blue based on the <em>depth</em> field</li>
+</ul></li>
+</ul></li>
+<li>To display this webmap, a webpage needs to:
+
+<ul>
+<li>call the <code class="prettyprint">/layer</code> endpoint</li>
+<li>call the referenced <code class="prettyprint">/query</code> endpoint to get the data</li>
+<li>pass the query response data and the webmap configuration from the Layer into the webmap library</li>
+</ul></li>
+</ul>
+
+<p>With the flexible Layer definitions, all configuration can be saved server-side, so the front-end work only requires linking the API responses to the technologies that implement the complex features.</p>
+
+<p>The scope of the current tutorial will not cover the <code class="prettyprint">/query</code> endpoint, but such content will be made available in the future.</p>
+
+<h2 id="software-specification">Software specification</h2>
+
+<p>The specification for the webapp is:</p>
+
+<div class="center-column"></div>
+<pre class="highlight plaintext"><code>(A)  Display a large, interactive, Mapbox GL JS map
+
+(B)  Display some metadata/description for some data next to the map
+
+(C)  Show the raster tile layer for this data on the map
+
+(D)  Utilize the RW API to obtain the information needed for (B), (C)
+</code></pre>
+<h2 id="initial-document-structure">Initial document structure</h2>
+
+<p>A basic &ldquo;Hello World&rdquo; setup for getting Mapbox GL JS online is given below.
+This will ensure your Mapbox token is working and there is a basic foundation for the webpage.</p>
+
+<p>Each section in this tutorial has a corresponding &ldquo;finished&rdquo; version <a href="https://github.com/resource-watch/doc-api/tree/master/extra/tutorial_content/webdev_mapbox_quickstart">available on GitHub</a>, which may be helpful if errors are encountered along the way.
+This tutorial will have a single HTML file across all steps, but the associated javascript file (<code class="prettyprint">tutorial-index.js</code>) will be changing at each step.</p>
+
+<p>Copy the below text into a file called <code class="prettyprint">index.html</code> inside a directory for this tutorial.
+It will be assumed this file is called <code class="prettyprint">index.html</code> throughout the tutorial, but there is no strict requirement for this.</p>
+
+<div class="center-column"></div>
+<pre class="highlight html"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"initial-scale=1,maximum-scale=1,user-scalable=no"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;title&gt;</span>WRI API Map<span class="nt">&lt;/title&gt;</span>
+
+  <span class="c">&lt;!-- Mapbox GL JS includes --&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="nt">/&gt;</span>
+
+  <span class="c">&lt;!-- CSS embedded in head tag since this is a small app --&gt;</span>
+  <span class="nt">&lt;style&gt;</span>
+    <span class="c">/* basic reset of styling */</span>
+    <span class="nt">body</span> <span class="p">{</span>
+      <span class="nl">margin</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+      <span class="nl">padding</span><span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nf">#metadata-container</span> <span class="p">{</span>
+      <span class="nl">overflow-y</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c">/* Container holding the grid */</span>
+    <span class="nf">#grid-top-level</span> <span class="p">{</span>
+      <span class="nl">display</span><span class="p">:</span> <span class="n">grid</span><span class="p">;</span>
+      <span class="py">grid-template-columns</span><span class="p">:</span> <span class="m">45%</span> <span class="m">45%</span><span class="p">;</span>  <span class="c">/* column widths */</span>
+      <span class="py">grid-auto-rows</span><span class="p">:</span> <span class="n">minmax</span><span class="p">(</span><span class="m">400px</span><span class="p">,</span> <span class="m">750px</span><span class="p">);</span>  <span class="c">/* row heights */</span>
+      <span class="nl">justify-content</span><span class="p">:</span> <span class="n">space-evenly</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nf">#map-container</span> <span class="p">{</span>
+      <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="nt">&lt;/style&gt;</span>
+
+<span class="nt">&lt;/head&gt;</span>
+
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>WRI-API and Mapbox GL JS Quickstart Tutorial<span class="nt">&lt;/h1&gt;</span>
+
+  <span class="c">&lt;!-- Container holding the grid --&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"grid-top-level"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- Container (grid cell) for metadata panel --&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"metadata-container"</span><span class="nt">&gt;</span>
+      <span class="c">&lt;!-- Element actually holding the metadata text--&gt;</span>
+      <span class="nt">&lt;pre</span> <span class="na">id=</span><span class="s">"metadata"</span><span class="nt">&gt;</span>
+Hello (part of the) World
+      <span class="nt">&lt;/pre&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+
+    <span class="c">&lt;!-- Container (grid cell) for interactive map --&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"map"</span><span class="nt">&gt;&lt;/div&gt;</span>
+
+  <span class="nt">&lt;/div&gt;</span>
+
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"tutorial-index.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre>
+<p>This file establishes the following properties to the document:</p>
+
+<ul>
+<li>in <code class="prettyprint">&lt;body&gt;</code>, establish a top-level container, and two children containers <code class="prettyprint">metadata-container</code> and <code class="prettyprint">map</code></li>
+<li>in <code class="prettyprint">&lt;head&gt;&lt;style&gt;</code>, set a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout">CSS grid layout</a> on the top-level container, making the children align to a grid that is two columns wide</li>
+<li>in <code class="prettyprint">&lt;head&gt;&lt;style&gt;</code>, establish grid row dimensions, including a minimum and maximum height, letting metadata content overflow via a vertical scroll bar</li>
+<li>in <code class="prettyprint">&lt;head&gt;</code>, fetch the Mapbox JS and CSS assets</li>
+</ul>
+
+<p>You should also see that a local script is imported in <code class="prettyprint">&lt;body&gt;</code>.
+Copy the following into a file called <code class="prettyprint">tutorial-index.js</code> next to the HTML file you established above.</p>
+
+<div class="center-column"></div>
+<pre class="highlight javascript"><code><span class="c1">// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM</span>
+<span class="c1">// https://account.mapbox.com</span>
+<span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="s1">'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****'</span><span class="p">;</span>
+
+
+<span class="c1">// initiate a new map by passing an object describing a config</span>
+<span class="c1">// for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/</span>
+<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">Map</span><span class="p">({</span>
+    <span class="c1">// id of div that will hold map</span>
+    <span class="na">container</span><span class="p">:</span> <span class="s1">'map'</span><span class="p">,</span>
+
+    <span class="c1">// one of the existing mapbox map styles</span>
+    <span class="na">style</span><span class="p">:</span> <span class="s1">'mapbox://styles/mapbox/light-v10'</span><span class="p">,</span>
+
+    <span class="c1">// zoom in (greater = smaller area displayed)</span>
+    <span class="na">zoom</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+
+    <span class="c1">// longitude, latitude of the map center</span>
+    <span class="na">center</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">});</span>
+
+</code></pre>
+<p>This script initializes an interactive web map on the <code class="prettyprint">&lt;div id=&quot;map&quot;&gt;</code> element.</p>
+
+<p>Upon replacing <code class="prettyprint">mapboxgl.accessToken</code> with your access token, this file should be saved and the HTML opened in a web browser.</p>
+
+<p>You should see a webpage that looks something like this:</p>
+
+<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-hello-world.png" alt="Image of basic webpage, with a title, some text on the left, and a large map zoomed to central Africa on the right" /></p>
+
+<p>If you are not seeing a map check the web developer console.</p>
+
+<h2 id="getting-dataset-metadata">Getting dataset metadata</h2>
+
+<p>In this section the API will be used to obtain some structured information about a dataset.
+In the immediate, this information will be displayed on the left side of the webpage in the metadata pane.
+Later some of the information will be extracted and used in combination with the webmap.</p>
+
+<p>The remaining work in this tutorial will use the following Dataset ID, which describes a dataset of tree cover loss (TCL).</p>
+
+<div class="center-column"></div>
+<pre class="highlight javascript"><code><span class="nx">datasetId</span> <span class="o">=</span> <span class="s1">'b584954c-0d8d-40c6-859c-f3fdf3c2c5df'</span><span class="p">;</span>
+</code></pre>
+<p>Datasets are accessed through the <code class="prettyprint">/dataset/&lt;id&gt;</code> endpoint.
+As described earlier in the <a href="#background-on-datasets-queries-layers">background information</a> a Dataset holds information about where &ldquo;real data&rdquo; is being held.
+To obtain how to <em>style</em> the information and put it on a webmap requires accessing a Layer.
+Here we will be taking advantage of the ability to expand the API response by using the <code class="prettyprint">?includes=</code> URL parameter, which will simultaneously return associatiated Layers, Metadata, or Widgets as specified.
+In this web application we are making a call to the following URL:</p>
+
+<div class="center-column"></div>
+<pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/dataset/b584954c-0d8d-40c6-859c-f3fdf3c2c5df/?includes=layer,metadata
+</code></pre>
+<p>You may want to copy that URL into your own browser window or use curl, wget, or similar to evaluate the response before proceeding to implementing this for the webpage.</p>
+
+<p>The response looks something like this:</p>
+
+<div class="center-column"></div>
+<pre class="highlight plaintext"><code>{
+  "data": {
+    "id": "b584954c-0d8d-40c6-859c-f3fdf3c2c5df",
+    "type": "dataset",
+    "attributes": {
+      "name": "Tree cover loss 2019 (LM v3)",
+      // ...
+      "connectorType": "rest",
+      "provider": "gee",
+      // ...
+      "layer": [
+        {
+          "id": "49a80e70-ec52-4ef8-bcc6-fb2771d95b2c",
+          "type": "layer",
+          "attributes": {
+            "name": "Tree cover loss - 2001-2019",
+            "slug": "Tree-cover-loss-2001-2019",
+            "dataset": "b584954c-0d8d-40c6-859c-f3fdf3c2c5df",
+            "description": "Tree Cover Loss",
+            // ...
+            "provider": "tilelayer",
+            // ...
+
+</code></pre>
+<p>There is much to investigate in this response, but you can see that there is both Dataset- and Layer-relevant content.
+Not appending the <code class="prettyprint">?includes=layer,metadata</code> parameter will result in a comparatively smaller response, take a look!</p>
+
+<p>Now let&rsquo;s implement this for the webpage and get the response on screen.
+In a real development scenario smaller pieces of the response would probably be extracted and rendered into individual HTML elements.
+For now we are going to just dump the response into a <code class="prettyprint">&lt;pre&gt;</code> element to view it all.</p>
+
+<p>Modify <code class="prettyprint">tutorial-index.js</code> to the following complete script:</p>
+
+<div class="center-column"></div>
+<pre class="highlight javascript"><code><span class="c1">// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM</span>
+<span class="c1">// https://account.mapbox.com</span>
+<span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="s1">'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****'</span><span class="p">;</span>
+
+<span class="c1">// declare an async function that calls an API endpoint for dataset metadata</span>
+<span class="c1">// takes one parameter</span>
+<span class="c1">//   (uuid) the Dataset ID</span>
+<span class="c1">// returns an object interpreted from the JSON response</span>
+<span class="kr">const</span> <span class="nx">callApiDatasetMetadata</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">uuid</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// fetch the API endpoint (GET request)</span>
+    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">'https://api.resourcewatch.org/v1/dataset/'</span> <span class="o">+</span> <span class="nx">uuid</span> <span class="o">+</span> <span class="s1">'?includes=layer,metadata'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`HTTP error! status: </span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<span class="p">}</span>
+
+
+<span class="c1">// initiate a new map by passing an object describing a config</span>
+<span class="c1">// for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/</span>
+<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">Map</span><span class="p">({</span>
+    <span class="c1">// id of div that will hold map</span>
+    <span class="na">container</span><span class="p">:</span> <span class="s1">'map'</span><span class="p">,</span>
+
+    <span class="c1">// one of the existing mapbox map styles</span>
+    <span class="na">style</span><span class="p">:</span> <span class="s1">'mapbox://styles/mapbox/light-v10'</span><span class="p">,</span>
+
+    <span class="c1">// zoom in (greater = smaller area displayed)</span>
+    <span class="na">zoom</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+
+    <span class="c1">// longitude, latitude of the map center</span>
+    <span class="na">center</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">});</span>
+
+
+<span class="c1">// run the API call once the map is loaded (API call is asnyc)</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'load'</span><span class="p">,</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// declare the Dataset ID</span>
+    <span class="kr">const</span> <span class="nx">datasetId</span> <span class="o">=</span> <span class="s1">'b584954c-0d8d-40c6-859c-f3fdf3c2c5df'</span><span class="p">;</span>
+    <span class="c1">// fetch remote dataset metadata</span>
+    <span class="kr">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetId</span><span class="p">);</span>
+    <span class="c1">// display the response metadata</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'metadata'</span><span class="p">).</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">metadata</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre>
+<p>The changes above did the following:</p>
+
+<ul>
+<li>register a callback function that will be executed once the map is intially loaded</li>
+<li>supply a hard-coded <code class="prettyprint">datasetId</code>, a string reference to a known Dataset, in this callback</li>
+<li>declare <code class="prettyprint">callApiDatasetMetadata(datasetId)</code> as a function to get an API response</li>
+<li>call <code class="prettyprint">callApiDatasetMetadata</code> on map load, and set the metadata panel content based on this response</li>
+</ul>
+
+<p>Reload in the browser to see the updated metadata panel, which should look like:</p>
+
+<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-api-response.png" alt="Image of the webpage, with the same large map on the right, but now with the left panel full of text." /></p>
+
+<p>For the next step, some of the dataset information will be extracted and utilized.
+You already know the part of the response with the Layer content describes how this data can be used or rendered by applications.
+See if you can gain any intuition into what type of information is held in the Layer specifications for this particular Dataset.</p>
+
+<h2 id="adding-raster-tiles-to-the-map">Adding raster tiles to the map</h2>
+
+<p>In this section raster tiles will be added to the map.
+The API response that was previously retrieved will serve as the source of the tile layer URL.</p>
+
+<p>Mapbox expects a raster tile layer to be supplied as a URL in the form <code class="prettyprint">https://example.com/path/to/pngdir/{x}/{y}/{z}</code>.
+The URL representation describes a set of square images located at cartesian positions (<code class="prettyprint">x</code>, <code class="prettyprint">y</code>) on a grid determined by a set of zoom levels (<code class="prettyprint">z</code>).
+This URL is expressed with templating semantics which are fairly ubiquitous across web map and tile-serving applications, but Mapbox specifically requires the TileJSON specification when working with <a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/">tile sources</a>.</p>
+
+<p>The API response obtained earlier contains a reference to a tile layer and a URL, which for your own benefit should be found within the metadata by skimming the contents.
+If you are unable to find it, look within the following hierarchy address:</p>
+
+<div class="center-column"></div>
+<pre class="highlight plaintext"><code>.data.attributes.layer[0].attributes.layerConfig.source.tiles[0]
+</code></pre>
+<p>Datasets and Layers accessed through the API are not guaranteed to have the same structuring of their <code class="prettyprint">layerConfig</code> object, which means there may be a need to investigate each dataset in a more comprehensive way than is being demonstrated here.
+Since this is a tutorial, some of this logic is going to be hardcoded for now.</p>
+
+<p>For the given dataset, you will see a tile layer URL that looks like:</p>
+
+<div class="center-column"></div>
+<pre class="highlight plaintext"><code>https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.7/tcd_{thresh}/{z}/{x}/{y}.png
+</code></pre>
+<p>This URL is close to what is needed by Mapbox, but there is a templated component <code class="prettyprint">{thresh}</code> which will not be suitable for Mapbox to consume.
+In this case, URL is templated beyond what is expected by the application and may be troublesome.
+By browsing the <code class="prettyprint">layer</code> object in the API response it is possible to find some additional attributes for how the layer parameters are configured.
+For this specific case, there is a parameterization array at the address</p>
+
+<div class="center-column"></div>
+<pre class="highlight plaintext"><code>.data.attributes.layer[0].attributes.layerConfig.params_config
+</code></pre>
+<p>That parameterization array looks like:</p>
+
+<div class="center-column"></div>
+<pre class="highlight plaintext"><code>...
+"params_config": [
+  {
+    "default": 30,
+    "key": "thresh",
+    "required": true
+  }
+],
+...
+</code></pre>
+<p>By using this parameterization data, the URL can be transformed into compliance with Mapbox GL.</p>
+
+<p>Update the javascript file with the following three functions and a new version of the <code class="prettyprint">map.on(&#39;load&#39;)</code> callback.
+A description is located after this code block.</p>
+
+<div class="center-column"></div>
+<pre class="highlight javascript"><code><span class="c1">// ...</span>
+<span class="c1">// const callApiDatasetMetadata = async (uuid) =&gt; {</span>
+<span class="c1">// ...</span>
+
+
+<span class="c1">// declare a function that returns the Mapbox-ready raster tile URL template</span>
+<span class="c1">// (example.com/{x}/{y}/{z}) from the response object returned by `callApiDatasetMetadata`</span>
+<span class="c1">// takes one parameter</span>
+<span class="c1">//   (obj) the API response data</span>
+<span class="c1">// returns a string representing a templated URL, ready to be used by webmaps</span>
+<span class="kr">const</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// drill down to get a useful object</span>
+    <span class="kr">const</span> <span class="nx">layerConfig</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layer'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layerConfig'</span><span class="p">];</span>
+    <span class="c1">// get the URL template parameters</span>
+    <span class="kr">const</span> <span class="nx">defaultParams</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="s1">'params_config'</span><span class="p">];</span>
+
+    <span class="c1">// get the full templated URL</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="s1">'source'</span><span class="p">][</span><span class="s1">'tiles'</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="c1">// substitute default parameters iteratively</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">param</span> <span class="nx">of</span> <span class="nx">defaultParams</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'{'</span> <span class="o">+</span> <span class="nx">param</span><span class="p">[</span><span class="s1">'key'</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'}'</span><span class="p">,</span> <span class="nx">param</span><span class="p">[</span><span class="s1">'default'</span><span class="p">].</span><span class="nx">toString</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">url</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="c1">// declare a funciton that can get a simple identifier for a layer</span>
+<span class="c1">// takes one parameter</span>
+<span class="c1">//   (obj) the API response data from `callApiDatasetMetadata`</span>
+<span class="c1">// returns a string</span>
+<span class="kr">const</span> <span class="nx">getLayerSlug</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layer'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'slug'</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">// declare a function that can add a raster tile layer to a Mapbox map</span>
+<span class="c1">// takes three parameters:</span>
+<span class="c1">//   (mapVar) the Mapbox map object</span>
+<span class="c1">//   (title) a string identifier for the source and layer</span>
+<span class="c1">//   (url) the raster tile URL to add to the map</span>
+<span class="kr">const</span> <span class="nx">addTileLayerToMap</span> <span class="o">=</span> <span class="p">(</span><span class="nx">mapVar</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// need to first add a source</span>
+    <span class="nx">mapVar</span><span class="p">.</span><span class="nx">addSource</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'raster'</span><span class="p">,</span>
+        <span class="s1">'tiles'</span><span class="p">:</span> <span class="p">[</span>
+            <span class="nx">url</span>
+        <span class="p">],</span>
+        <span class="s1">'tilesize'</span><span class="p">:</span> <span class="mi">256</span>
+    <span class="p">});</span>
+    <span class="c1">// then add the layer, referencing the source</span>
+    <span class="nx">mapVar</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">({</span>
+        <span class="s1">'id'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+        <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'raster'</span><span class="p">,</span>
+        <span class="s1">'source'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+        <span class="s1">'paint'</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">'raster-opacity'</span><span class="p">:</span> <span class="mi">1</span>  <span class="c1">// let mapbox baselayer peak through</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+
+<span class="c1">// ...</span>
+<span class="c1">// var map = new mapboxgl.Map({</span>
+<span class="c1">// ...</span>
+
+
+<span class="c1">// run the API call once the map is loaded (API call is asnyc)</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'load'</span><span class="p">,</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// declare the Dataset ID</span>
+    <span class="kr">const</span> <span class="nx">datasetId</span> <span class="o">=</span> <span class="s1">'b584954c-0d8d-40c6-859c-f3fdf3c2c5df'</span><span class="p">;</span>
+    <span class="c1">// fetch remote dataset metadata</span>
+    <span class="kr">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetId</span><span class="p">);</span>
+    <span class="c1">// display the response metadata</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'metadata'</span><span class="p">).</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">metadata</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="c1">// get an identifier</span>
+    <span class="kr">const</span> <span class="nx">slug</span> <span class="o">=</span> <span class="nx">getLayerSlug</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
+    <span class="c1">// get the tile layer URL from full API response data</span>
+    <span class="kr">const</span> <span class="nx">tileLayerUrl</span> <span class="o">=</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
+    <span class="c1">// add a layer to the map</span>
+    <span class="nx">addTileLayerToMap</span><span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="nx">slug</span><span class="p">,</span> <span class="nx">tileLayerUrl</span><span class="p">);</span>
+<span class="p">});</span>
+
+</code></pre>
+<p>The changes above did the following:</p>
+
+<ul>
+<li>add a function <code class="prettyprint">getTileLayerUrlForTreeCoverLoss</code> to obtain a well-formed tile URL</li>
+<li>add a function <code class="prettyprint">getLayerSlug</code> to obtain a short identifier the tile layer of interest</li>
+<li>add a function <code class="prettyprint">addTileLayerToMap</code> to handle the two-part source and layer definition process</li>
+<li>update the <code class="prettyprint">map.on(&#39;load&#39;)</code> callback with more steps executed after the initial API call</li>
+</ul>
+
+<p>Once again reload the browser and see the tile layer now on the map.</p>
+
+<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-raster-tile-layer.png" alt="Image of the webpage, with the same left panel full of text, but now with a new layer on the map - the tree cover loss dataset." /></p>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<p>At this point the tutorial can be considered complete - the software specification is being met and hopefully enough of the concepts have been introduced to develop a general image of integrating API-retrieved information into a simple webapp.</p>
+
+<p>While this tutorial utilized hand-written HTML, JS, CSS, transforming the logic into other frameworks such as React should be relatively simple if there is already familiarity in that space.
+Some wrappers and React components for working with Mapbox GL JS already exist, including <a href="https://github.com/visgl/react-map-gl">react-map-gl</a> and <a href="https://github.com/Vizzuality/layer-manager">Vizzuality/layer-manager</a>.</p>
+
+      </div>
+      <div class="dark-box">
+      </div>
+    </div>
+  </body>
+</html>
