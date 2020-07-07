@@ -107,7 +107,7 @@ The specification for the webapp is:
 A basic "Hello World" setup for getting Mapbox GL JS online is given below.
 This will ensure your Mapbox token is working and there is a basic foundation for the webpage.
 
-Each section in this tutorial has a corresponding "finished" version [available on GitHub](https://github.com/resource-watch/doc-api/tree/master/source/includes/tutorial/webdev_mapbox_quickstart/html_evolution), which may be helpful if errors are encountered along the way.
+Each section in this tutorial has a corresponding "finished" version [available on GitHub](https://github.com/resource-watch/doc-api/tree/master/extra/tutorial_content/webdev_mapbox_quickstart), which may be helpful if errors are encountered along the way.
 This tutorial will have a single HTML file across all steps, but the associated javascript file (`tutorial-index.js`) will be changing at each step.
 
 
