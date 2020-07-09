@@ -10,22 +10,19 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
+  - dev/introduction
   - dev/architecture
   - dev/control_tower
   - dev/control_tower_plugin_development
   - dev/microservice
   - dev/endpoints
-  - api/microservices
   - dev/subscriptions
   - dev/microservice_reference
   - dev/smoke_tests
   - dev/query_transformations
+  - api/microservices
 
 logo: logo-rw.png
 
 search: true
 ---
-
-# Introduction
-
-Welcome to the Resource Watch API Developer Documentation
