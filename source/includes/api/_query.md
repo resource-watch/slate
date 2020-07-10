@@ -4,8 +4,6 @@ In order to retrieve data from datasets, you can send queries to the API using a
 
 *Please note that some SQL features might not be supported. Check [here](/index-rw.html#supported-sql-syntax-reference) for a reference of the SQL features' support for each dataset provider.*
 
-Note: This section is currently a work in progress and, for the moment it only covers querying CartoDB and document-based datasets. The remaining providers should follow in the next versions.
-
 ## Querying datasets
 
 > Structure of the endpoint for executing a query:
