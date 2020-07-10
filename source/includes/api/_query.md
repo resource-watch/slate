@@ -433,6 +433,8 @@ Most providers do not support `DELETE` queries either. However, in the case of *
 - have role `MANAGER` and own the dataset;
 - have role `ADMIN` and belong to all the apps to which the dataset is associated.
 
+If the query is successfully executed, the request will return an HTTP response with status code `204 No Content`. Please note that executing a delete query is an **asynchronous process** - as in the case of appending or overwriting a dataset's data, the dataset will have its status updated to `pending`, and updated once again to `saved` once the deletion process is completed.
+
 ### Delete query execution errors
 
 Error code     | Error message  | Description
