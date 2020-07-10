@@ -247,7 +247,7 @@
 
 <p>In the previous section, we covered the concept of a RW API dataset which, in simple terms, is a way to tell the RW API that your data exists, and where. While cataloging datasets in a public repository is useful, making that data easily accessible is one of the main goals of the RW API. This is where <strong>queries</strong> come in.</p>
 
-<p>In the context of the RW API, a dataset query is very similar an <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> query would be to a database - it&rsquo;s a specially crafted statement that allows you to express what data you want, from which dataset, and with which structure. The RW API will use that query to get you the data you need, in the format you asked for, so that it&rsquo;s easy to use in the context of your applications. While it doesn&rsquo;t comply (nor does it attempt to) with any of the formal <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> specifications, RW API queries use a SQL-like syntax that will be very familiar to anyone who has worked with a relational database in the past. If that&rsquo;s not your case, there are many tutorials out there that will help you learn the basics in no time. </p>
+<p>In the context of the RW API, a dataset query is very similar an <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> query would be to a database - it&rsquo;s a specially crafted statement that allows you to express what data you want, from which dataset, and with which structure. The RW API will use that query to get you the data you need, in the format you asked for, so that it&rsquo;s easy to use in the context of your applications. While it doesn&rsquo;t comply (nor does it attempt to) with any of the formal <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> specifications, RW API queries use a SQL-like syntax that will be very familiar to anyone who has worked with a relational database in the past. If that&rsquo;s not your case, there are many tutorials out there that will help you learn the basics in no time.</p>
 
 <p>Using this common, SQL-based syntax, RW API queries allow you to query its datasets using a common API and syntax, no matter where the actual underlying data is hosted. Querying a carto dataset is the same as querying a JSON document or a BigQuery table. This is one of the main goals of the RW API, and one of most valuable features we offer you, the end user - using a single tool and language, you can quickly query data from a wide range of sources, on a broad set of topics.</p>
 
@@ -255,7 +255,7 @@
 
 <h3 id="all-queries-should-be-select-queries">All queries should be <code class="prettyprint">SELECT</code> queries</h3>
 
-<p>Querying in the RW API is meant to be used only to read data, not to manipulate it. If you have used SQL before, you know it can be used to modify data, but that&rsquo;s not the approach used in the RW API. If you&rsquo;d like to modify the data of a dataset, you should use the <a href="#updating-a-dataset">dataset update</a> endpoints instead.</p>
+<p>Querying in the RW API is meant to be used only to read data, not to manipulate it. If you have used SQL before, you know it can be used to modify data, but, as a rule of thumb, that&rsquo;s not the approach used in the RW API. If you&rsquo;d like to modify the data of a dataset, you should use the <a href="#updating-a-dataset">dataset update</a> endpoints instead. The only exception to this is for deleting data from document-based datasets - check <a href="index-rw.html#deleting-data-from-a-dataset">here</a> for more details.</p>
 
 <h3 id="not-all-sql-constructs-are-supported">Not all SQL constructs are supported</h3>
 
@@ -263,7 +263,7 @@
 
 <h3 id="some-operation-will-depend-on-the-provider-of-the-dataset-you-39-re-querying">Some operation will depend on the provider of the dataset you&rsquo;re querying</h3>
 
-<p>Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we&rsquo;ve achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provider, but not for another. The <a href="#supported-sql-syntax-reference">supported SQL syntax reference</a> below has more details on these limitations, per provider.  </p>
+<p>Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we&rsquo;ve achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provider, but not for another. The <a href="#supported-sql-syntax-reference">supported SQL syntax reference</a> below has more details on these limitations, per provider.</p>
 
           <h2 id="layer">Layer</h2>
 
@@ -2861,8 +2861,6 @@ If you have the <code class="prettyprint">ADMIN</code> role, you can use the <co
 
 <p><em>Please note that some SQL features might not be supported. Check <a href="index-rw.html#supported-sql-syntax-reference">here</a> for a reference of the SQL features&rsquo; support for each dataset provider.</em></p>
 
-<p>Note: This section is currently a work in progress and, for the moment it only covers querying CartoDB and document-based datasets. The remaining providers should follow in the next versions.</p>
-
 <h2 id="querying-datasets">Querying datasets</h2>
 
 <blockquote>
@@ -3031,7 +3029,34 @@ If you have the <code class="prettyprint">ADMIN</code> role, you can use the <co
 <td>Boolean</td>
 <td>No</td>
 </tr>
+<tr>
+<td>geostore</td>
+<td>Read more about the geostore query parameter <a href="index-rw.html#filter-query-results-by-geostore">here</a>.</td>
+<td>String</td>
+<td>No</td>
+</tr>
 </tbody></table>
+
+<h4 id="filter-query-results-by-geostore">Filter query results by geostore</h4>
+
+<blockquote>
+<p>Example query providing a geostore id as query parameter to filter the results:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/1d7085f7-11c7-4eaf-a29a-5a4de57d010e?sql=SELECT * FROM dis_001_significant_earthquakes LIMIT 5&amp;geostore=972c24e1da2c2baacc7572ee9501abdc'</span>
+</code></pre>
+<p>Some dataset providers support receiving a <code class="prettyprint">geostore</code> query parameter. When providing this parameter, you can request geo-referenced data that fits within the bounding box of the geostore with id provided. You can obtain the id of the geostore using the <a href="#geostore">RW API Geostore API</a>. If the data is not geo-referenced, or if the dataset provider does not support the <code class="prettyprint">geostore</code> query parameter, it will be ignored.</p>
+
+<p>The following providers support this parameter:</p>
+
+<ul>
+<li>CartoDB (<code class="prettyprint">carto</code>)</li>
+<li>ArcGIS (<code class="prettyprint">featureservice</code>)</li>
+<li>Google Earth Engine (<code class="prettyprint">gee</code>)</li>
+<li>BigQuery (<code class="prettyprint">bigquery</code>)</li>
+<li>Rasdaman (<code class="prettyprint">rasdaman</code>)</li>
+<li>NEX-GDDP (<code class="prettyprint">nexgddp</code>)</li>
+<li>Loca (<code class="prettyprint">loca</code>)</li>
+</ul>
 
 <h3 id="alternative-ways-for-querying-datasets">Alternative ways for querying datasets</h3>
 
@@ -3247,7 +3272,34 @@ curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/9be3bf63
 <td>Boolean</td>
 <td>No</td>
 </tr>
+<tr>
+<td>geostore</td>
+<td>Read more about the geostore query parameter <a href="index-rw.html#filter-download-results-by-geostore">here</a>.</td>
+<td>String</td>
+<td>No</td>
+</tr>
 </tbody></table>
+
+<h4 id="filter-download-results-by-geostore">Filter download results by geostore</h4>
+
+<blockquote>
+<p>Example download request providing a geostore id as query parameter to filter the results:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/1d7085f7-11c7-4eaf-a29a-5a4de57d010e?sql=SELECT * FROM dis_001_significant_earthquakes LIMIT 5&amp;geostore=972c24e1da2c2baacc7572ee9501abdc'</span>
+</code></pre>
+<p>Some dataset providers support receiving a <code class="prettyprint">geostore</code> query parameter. When providing this parameter, you can request geo-referenced data that fits within the bounding box of the geostore with id provided. You can obtain the id of the geostore using the <a href="index-rw.html#geostore">RW API Geostore API</a>. If the data is not geo-referenced, or if the dataset provider does not support the <code class="prettyprint">geostore</code> query parameter, it will be ignored.</p>
+
+<p>The following providers support this parameter:</p>
+
+<ul>
+<li>CartoDB (<code class="prettyprint">carto</code>)</li>
+<li>ArcGIS (<code class="prettyprint">featureservice</code>)</li>
+<li>Google Earth Engine (<code class="prettyprint">gee</code>)</li>
+<li>BigQuery (<code class="prettyprint">bigquery</code>)</li>
+<li>Rasdaman (<code class="prettyprint">rasdaman</code>)</li>
+<li>NEX-GDDP (<code class="prettyprint">nexgddp</code>)</li>
+<li>Loca (<code class="prettyprint">loca</code>)</li>
+</ul>
 
 <h3 id="alternative-ways-for-downloading-query-execution-results">Alternative ways for downloading query execution results</h3>
 
@@ -3306,6 +3358,46 @@ curl -i -X POST <span class="s1">'https://api.resourcewatch.org/v1/download'</sp
 curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT alert__date FROM data limit 10'</span>
 </code></pre>
 <p>When downloading the query results for a document based dataset using either GET or POST <code class="prettyprint">/download/&lt;dataset id or slug&gt;</code> request, the <code class="prettyprint">FROM</code> clause is required but ignored, meaning you don&rsquo;t have to provide the dataset&rsquo;s <code class="prettyprint">tableName</code> as you normally would. The example on the side illustrates this.</p>
+
+<h2 id="deleting-data-from-a-dataset">Deleting data from a dataset</h2>
+
+<blockquote>
+<p>Example requests to delete data from a dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/:dataset_id?sql=DELETE FROM index_bf86b945c4ec41d2b5b7af00f3f61423'</span>
+curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/:dataset_id?sql=DELETE FROM index_bf86b945c4ec41d2b5b7af00f3f61423 WHERE x = "y"'</span>
+</code></pre>
+<p>Write queries such as <code class="prettyprint">INSERT</code> or <code class="prettyprint">UPDATE</code> are not supported in the RW API. You can use dataset endpoints to <a href="index-rw.html#concatenate-and-append-data-to-a-document-based-dataset">append</a> or <a href="index-rw.html#overwrite-data-for-a-document-based-dataset">overwrite</a> a given dataset&rsquo;s data, but you cannot use SQL to write data into the datasets.</p>
+
+<p>Most providers do not support <code class="prettyprint">DELETE</code> queries either. However, in the case of <strong>document-based datasets</strong> (i.e. where the <code class="prettyprint">connectorType</code> is <code class="prettyprint">document</code>), you can delete the dataset&rsquo;s data via SQL <code class="prettyprint">DELETE</code> query. Executing a <code class="prettyprint">DELETE</code> query requires authentication, and additionally, one of the following conditions must be met:</p>
+
+<ul>
+<li>have role <code class="prettyprint">MANAGER</code> and own the dataset;</li>
+<li>have role <code class="prettyprint">ADMIN</code> and belong to all the apps to which the dataset is associated.</li>
+</ul>
+
+<p>If the query is successfully executed, the request will return an HTTP response with status code <code class="prettyprint">204 No Content</code>. Please note that executing a delete query is an <strong>asynchronous process</strong> - as in the case of appending or overwriting a dataset&rsquo;s data, the dataset will have its status updated to <code class="prettyprint">pending</code>, and updated once again to <code class="prettyprint">saved</code> once the deletion process is completed.</p>
+
+<h3 id="delete-query-execution-errors">Delete query execution errors</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>Not authorized to execute DELETE query - the logged user provided does not meet at least one of the conditions required to be able to delete the dataset data.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Unsupported query element detected</td>
+<td>The SQL query provided is not valid, or the syntax provided is not supported.</td>
+</tr>
+</tbody></table>
 
 <h2 id="supported-sql-syntax-reference">Supported SQL syntax reference</h2>
 
@@ -3484,6 +3576,417 @@ curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3b
 <td><strong>NO</strong></td>
 <td><strong>OFFSET: Offset the returned results using short syntax</strong></td>
 <td><strong><a href="https://api.resourcewatch.org/v1/query/0b9f0100-ce5b-430f-ad8f-3363efa05481?sql=SELECT%20region%20FROM%20edi%20LIMIT%205%2C%2010">SELECT region FROM edi LIMIT 5, 10</a></strong></td>
+</tr>
+</tbody></table>
+
+<h4 id="cartodb-geo-spatial-query-support">CartoDB geo-spatial query support</h4>
+
+<p>CartoDB datasets can be queried using <a href="https://postgis.net/docs/reference.html">PostGIS functions</a>. This means if your dataset contains geo-referenced data, you can execute PostGIS functions on the data to extract the information you need. The table below displays some examples of supported PostGIS functions:</p>
+
+<table><thead>
+<tr>
+<th>Supported</th>
+<th>Feature</th>
+<th>Example URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>YES</td>
+<td><a href="https://postgis.net/docs/RT_ST_MetaData.html">PostGIS: ST_MetaData</a></td>
+<td><a href="https://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST_METADATA(the_raster_webmercator)%20FROM%20sp_richness%20LIMIT%205">SELECT ST_METADATA(the_raster_webmercator) FROM sp_richness LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td><a href="https://postgis.net/docs/RT_ST_BandMetaData.html">PostGIS: ST_BandMetaData</a></td>
+<td><a href="https://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST_BANDMETADATA(the_raster_webmercator)%20FROM%20sp_richness%20LIMIT%205">SELECT ST_BANDMETADATA(the_raster_webmercator) FROM sp_richness LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td><a href="https://postgis.net/docs/RT_ST_SummaryStats.html">PostGIS: ST_SummaryStats</a></td>
+<td><a href="https://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST_SUMMARYSTATS(the_raster_webmercator%2C%20true)%20FROM%20sp_richness%20LIMIT%205">SELECT ST_SUMMARYSTATS(the_raster_webmercator, true) FROM sp_richness LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td><a href="https://postgis.net/docs/RT_ST_Histogram.html">PostGIS: ST_Histogram</a></td>
+<td><a href="https://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST_HISTOGRAM(the_raster_webmercator)%20FROM%20sp_richness%20LIMIT%205">SELECT ST_HISTOGRAM(the_raster_webmercator) FROM sp_richness LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td><a href="https://postgis.net/docs/RT_ST_ValueCount.html">PostGIS: ST_ValueCount</a></td>
+<td><a href="https://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20ST_VALUECOUNT(the_raster_webmercator)%20FROM%20sp_richness%20LIMIT%205">SELECT ST_VALUECOUNT(the_raster_webmercator) FROM sp_richness LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>Using PostGIS functions in WHERE clause</td>
+<td><a href="https://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20*%20FROM%20sp_richness%20WHERE%20ST_METADATA(the_raster_webmercator)%20IS%20NOT%20NULL%20LIMIT%205">SELECT * FROM sp_richness WHERE ST_METADATA(the_raster_webmercator) IS NOT NULL LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>Using PostGIS functions in GROUP BY clause</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20*%20FROM%20sp_richness%20GROUP%20BY%20ST_SUMMARYSTATS(the_raster_webmercator%2C%20true)%20IS%20NOT%20NULL%20LIMIT%205">SELECT * FROM sp_richness GROUP BY ST_SUMMARYSTATS(the_raster_webmercator, true) IS NOT NULL LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>Using PostGIS functions in ORDER BY clause</td>
+<td><a href="https://api.resourcewatch.org/v1/query/16df8ada-87cc-4907-adce-a98bc4e91856?sql=SELECT%20*%20FROM%20sp_richness%20ORDER%20BY%20ST_METADATA(the_raster_webmercator)%20IS%20NOT%20NULL%20LIMIT%205">SELECT * FROM sp_richness ORDER BY ST_METADATA(the_raster_webmercator) IS NOT NULL LIMIT 5</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="arcgis-feature-service-datasets">ArcGIS Feature Service datasets</h3>
+
+<p>This section describes the SQL support for querying datasets with connector type <code class="prettyprint">rest</code> and provider <code class="prettyprint">featureservice</code>.</p>
+
+<table><thead>
+<tr>
+<th>Supported</th>
+<th>Feature</th>
+<th>Example URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting all columns using wildcard</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT * FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Count all rows</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20count(*)%20FROM%20cdonexradMapServer0">SELECT count(*) FROM cdonexradMapServer0</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting specific columns</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%2C%20ELEVATION%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT STATION_NAME, ELEVATION FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>SELECT: Selecting DISTINCT values for specific columns</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20DISTINCT(STATION_NAME)%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT DISTINCT(STATION_NAME) FROM cdonexradMapServer0 LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>SELECT: Selecting columns AND counting all rows</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%2C%20count(*)%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT STATION_NAME, count(*) FROM cdonexradMapServer0 LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Aliasing aggregate function results such as AVG in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20AVG(ELEVATION)%20as%20alias%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT AVG(ELEVATION) as alias FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (AVG) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20AVG(ELEVATION)%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT AVG(ELEVATION) FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (MAX) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20MAX(ELEVATION)%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT MAX(ELEVATION) FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (MIN) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20MIN(ELEVATION)%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT MIN(ELEVATION) FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (SUM) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20SUM(ELEVATION)%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT SUM(ELEVATION) FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset id in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query?sql=SELECT%20*%20FROM%200b9e546c-f42a-4b26-bad3-7d606f58961c%20LIMIT%205">SELECT * FROM 0b9e546c-f42a-4b26-bad3-7d606f58961c LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset slug in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query?sql=SELECT%20*%20FROM%20NOAA-NEXt-Generation-RADar-NEXRAD-Products-Locations-1490086842546%20LIMIT%205">SELECT * FROM NOAA-NEXt-Generation-RADar-NEXRAD-Products-Locations-1490086842546 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset tableName in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT * FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Greater than filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20ELEVATION%20%3E%203587%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE ELEVATION &gt; 3587 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Greater than or equal filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20ELEVATION%20%3E%3D%203587%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE ELEVATION &gt;= 3587 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Equality filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20ELEVATION%20%3D%205870%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE ELEVATION = 5870 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Lower than filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20ELEVATION%20%3C%205000%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE ELEVATION &lt; 5000 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Lower than or equal filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20ELEVATION%20%3C%3D%205000%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE ELEVATION &lt;= 5000 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Conjunction (AND) filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20ELEVATION%20%3C%3D%205000%20AND%20LATITUDE%20%3E%2035.23333%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE ELEVATION &lt;= 5000 AND LATITUDE &gt; 35.23333 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Disjunction (OR) filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20ELEVATION%20%3C%3D%205000%20OR%20LATITUDE%20%3E%2035.23333%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE ELEVATION &lt;= 5000 OR LATITUDE &gt; 35.23333 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: BETWEEN filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20ELEVATION%20BETWEEN%203587%20AND%205000%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE ELEVATION BETWEEN 3587 AND 5000 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: LIKE filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20*%20FROM%20cdonexradMapServer0%20WHERE%20STATION_NAME%20LIKE%20'AMARI%25'%20LIMIT%205">SELECT * FROM cdonexradMapServer0 WHERE STATION_NAME LIKE &#39;AMARI%&rsquo; LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Group results by a single column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%20FROM%20cdonexradMapServer0%20GROUP%20BY%20STATION_NAME%20LIMIT%205">SELECT STATION_NAME FROM cdonexradMapServer0 GROUP BY STATION_NAME LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Group results by multiple columns</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%2C%20ELEVATION%20FROM%20cdonexradMapServer0%20GROUP%20BY%20STATION_NAME%2C%20ELEVATION%20LIMIT%205">SELECT STATION_NAME, ELEVATION FROM cdonexradMapServer0 GROUP BY STATION_NAME, ELEVATION LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>GROUP BY: Aggregate functions used with GROUP BY statements</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%2C%20COUNT(*)%20as%20count%20FROM%20cdonexradMapServer0%20GROUP%20BY%20STATION_NAME%20LIMIT%205">SELECT STATION_NAME, COUNT(*) as count FROM cdonexradMapServer0 GROUP BY STATION_NAME LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>GROUP BY: Special grouping by range function</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20count(*)%20FROM%20cdonexradMapServer0%20GROUP%20BY%20range(ELEVATION%2C%200%2C1%2C2%2C3%2C4)%20LIMIT%205">SELECT count(*) FROM cdonexradMapServer0 GROUP BY range(ELEVATION, 0,1,2,3,4) LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by one column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%20FROM%20cdonexradMapServer0%20ORDER%20BY%20STATION_NAME%20LIMIT%205">SELECT STATION_NAME FROM cdonexradMapServer0 ORDER BY STATION_NAME LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by one column descending</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%20FROM%20cdonexradMapServer0%20ORDER%20BY%20STATION_NAME%20DESC%20LIMIT%205">SELECT STATION_NAME FROM cdonexradMapServer0 ORDER BY STATION_NAME DESC LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by multiple column</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%2C%20ELEVATION%20FROM%20cdonexradMapServer0%20ORDER%20BY%20STATION_NAME%2C%20ELEVATION%20LIMIT%205">SELECT STATION_NAME, ELEVATION FROM cdonexradMapServer0 ORDER BY STATION_NAME, ELEVATION LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>ORDER BY: Ordering results by multiple column descending</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%2C%20ELEVATION%20FROM%20cdonexradMapServer0%20ORDER%20BY%20STATION_NAME%2C%20ELEVATION%20DESC%20LIMIT%205">SELECT STATION_NAME, ELEVATION FROM cdonexradMapServer0 ORDER BY STATION_NAME, ELEVATION DESC LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>LIMIT: Limit the number of returned results</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%20FROM%20cdonexradMapServer0%20LIMIT%205">SELECT STATION_NAME FROM cdonexradMapServer0 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>OFFSET: Offset the returned results</td>
+<td><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%20FROM%20cdonexradMapServer0%20LIMIT%205%20OFFSET%2010">SELECT STATION_NAME FROM cdonexradMapServer0 LIMIT 5 OFFSET 10</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>OFFSET: Offset the returned results using short syntax</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/0b9e546c-f42a-4b26-bad3-7d606f58961c?sql=SELECT%20STATION_NAME%20FROM%20cdonexradMapServer0%20LIMIT%205%2C%2010">SELECT STATION_NAME FROM cdonexradMapServer0 LIMIT 5, 10</a></strong></td>
+</tr>
+</tbody></table>
+
+<p><em>Note: This table was generated automatically with the help of <a href="https://github.com/resource-watch/sql-compatibility-test">this repository</a>. If you are maintaining the docs, please do not edit manually these tables.</em></p>
+
+<h3 id="gee-datasets">GEE datasets</h3>
+
+<p>This section describes the SQL support for querying datasets with connector type <code class="prettyprint">rest</code> and providers <code class="prettyprint">gee</code>.</p>
+
+<table><thead>
+<tr>
+<th>Supported</th>
+<th>Feature</th>
+<th>Example URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting all columns using wildcard</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Count all rows</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20count(*)%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index">SELECT count(*) FROM users/resourcewatch_wri/foo_024_vegetation_health_index</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting specific columns</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%2C%20system%3Aasset_size%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT system:index, system:asset_size FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>SELECT: Selecting DISTINCT values for specific columns</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20DISTINCT(system%3Aindex)%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT DISTINCT(system:index) FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Selecting columns AND counting all rows</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%2C%20count(*)%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT system:index, count(*) FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>SELECT: Aliasing aggregate function results such as AVG in SELECT</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20AVG(system%3Aasset_size)%20as%20alias%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT AVG(system:asset_size) as alias FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (AVG) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20AVG(system%3Aasset_size)%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT AVG(system:asset_size) FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (MAX) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20MAX(system%3Aasset_size)%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT MAX(system:asset_size) FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (MIN) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20MIN(system%3Aasset_size)%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT MIN(system:asset_size) FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>SELECT: Usage of aggregate functions (SUM) in SELECT</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20SUM(system%3Aasset_size)%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT SUM(system:asset_size) FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>FROM: Using dataset id in FROM statement</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query?sql=SELECT%20*%20FROM%20c12446ce-174f-4ffb-b2f7-77ecb0116aba%20LIMIT%205">SELECT * FROM c12446ce-174f-4ffb-b2f7-77ecb0116aba LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>FROM: Using dataset slug in FROM statement</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query?sql=SELECT%20*%20FROM%20foo024nrt-Vegetation-Health-Index_replacement_4%20LIMIT%205">SELECT * FROM foo024nrt-Vegetation-Health-Index_replacement_4 LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>FROM: Using dataset tableName in FROM statement</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Greater than filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aasset_size%20%3E%2036975655%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:asset_size &gt; 36975655 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Greater than or equal filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aasset_size%20%3E%3D%2036975655%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:asset_size &gt;= 36975655 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Equality filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aasset_size%20%3D%2037153685%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:asset_size = 37153685 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Lower than filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aasset_size%20%3C%2037180450%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:asset_size &lt; 37180450 LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>WHERE: Lower than or equal filtering</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aasset_size%20%3C%3D%2037180450%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:asset_size &lt;= 37180450 LIMIT 5</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>WHERE: Conjunction (AND) filtering</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aasset_size%20%3C%3D%2037180450%20AND%20system%3Atime_start%20%3E%201572739200000%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:asset_size &lt;= 37180450 AND system:time_start &gt; 1572739200000 LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>WHERE: Disjunction (OR) filtering</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aasset_size%20%3C%3D%2037180450%20OR%20system%3Atime_start%20%3E%201572739200000%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:asset_size &lt;= 37180450 OR system:time_start &gt; 1572739200000 LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>WHERE: BETWEEN filtering</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aasset_size%20BETWEEN%2036975655%20AND%2037180450%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:asset_size BETWEEN 36975655 AND 37180450 LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>WHERE: LIKE filtering</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20*%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20WHERE%20system%3Aindex%20LIKE%20'foo_024_vegetation_health_index%25'%20LIMIT%205">SELECT * FROM users/resourcewatch_wri/foo_024_vegetation_health_index WHERE system:index LIKE &#39;foo_024_vegetation_health_index%&rsquo; LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>GROUP BY: Group results by a single column</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20GROUP%20BY%20system%3Aindex%20LIMIT%205">SELECT system:index FROM users/resourcewatch_wri/foo_024_vegetation_health_index GROUP BY system:index LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>GROUP BY: Group results by multiple columns</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%2C%20system%3Aasset_size%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20GROUP%20BY%20system%3Aindex%2C%20system%3Aasset_size%20LIMIT%205">SELECT system:index, system:asset_size FROM users/resourcewatch_wri/foo_024_vegetation_health_index GROUP BY system:index, system:asset_size LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>GROUP BY: Aggregate functions used with GROUP BY statements</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%2C%20COUNT(*)%20as%20count%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20GROUP%20BY%20system%3Aindex%20LIMIT%205">SELECT system:index, COUNT(*) as count FROM users/resourcewatch_wri/foo_024_vegetation_health_index GROUP BY system:index LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>GROUP BY: Special grouping by range function</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20count(*)%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20GROUP%20BY%20range(system%3Aasset_size%2C%200%2C1%2C2%2C3%2C4)%20LIMIT%205">SELECT count(*) FROM users/resourcewatch_wri/foo_024_vegetation_health_index GROUP BY range(system:asset_size, 0,1,2,3,4) LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>ORDER BY: Ordering results by one column</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20ORDER%20BY%20system%3Aindex%20LIMIT%205">SELECT system:index FROM users/resourcewatch_wri/foo_024_vegetation_health_index ORDER BY system:index LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>ORDER BY: Ordering results by one column descending</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20ORDER%20BY%20system%3Aindex%20DESC%20LIMIT%205">SELECT system:index FROM users/resourcewatch_wri/foo_024_vegetation_health_index ORDER BY system:index DESC LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>ORDER BY: Ordering results by multiple column</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%2C%20system%3Aasset_size%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20ORDER%20BY%20system%3Aindex%2C%20system%3Aasset_size%20LIMIT%205">SELECT system:index, system:asset_size FROM users/resourcewatch_wri/foo_024_vegetation_health_index ORDER BY system:index, system:asset_size LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>ORDER BY: Ordering results by multiple column descending</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%2C%20system%3Aasset_size%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20ORDER%20BY%20system%3Aindex%2C%20system%3Aasset_size%20DESC%20LIMIT%205">SELECT system:index, system:asset_size FROM users/resourcewatch_wri/foo_024_vegetation_health_index ORDER BY system:index, system:asset_size DESC LIMIT 5</a></strong></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>LIMIT: Limit the number of returned results</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205">SELECT system:index FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5</a></td>
+</tr>
+<tr>
+<td>YES</td>
+<td>OFFSET: Offset the returned results</td>
+<td><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205%20OFFSET%2010">SELECT system:index FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5 OFFSET 10</a></td>
+</tr>
+<tr>
+<td><strong>NO</strong></td>
+<td><strong>OFFSET: Offset the returned results using short syntax</strong></td>
+<td><strong><a href="https://api.resourcewatch.org/v1/query/c12446ce-174f-4ffb-b2f7-77ecb0116aba?sql=SELECT%20system%3Aindex%20FROM%20users%2Fresourcewatch_wri%2Ffoo_024_vegetation_health_index%20LIMIT%205%2C%2010">SELECT system:index FROM users/resourcewatch_wri/foo_024_vegetation_health_index LIMIT 5, 10</a></strong></td>
 </tr>
 </tbody></table>
 
@@ -3686,36 +4189,68 @@ curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/download/9be3b
 <h3 id="rasdaman-datasets">Rasdaman datasets</h3>
 
 <p>SQL-like queries can be employed for accessing data stored in Rasdaman datasets. Subsets on the original axes of the data may be provided in the WHERE statement. So far, only operations that result in a single scalar can be obtained from Rasdaman - averages, minimums, maximums.</p>
-<pre class="highlight shell"><code>curl -XGET https://api.resourcewatch.org/v1/query?sql<span class="o">=</span>SELECT avg<span class="o">(</span>Green<span class="o">)</span> from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat &gt; 0 and  Lat &lt; 45 <span class="se">\</span>
+<pre class="highlight shell"><code>curl -XGET <span class="s1">'https://api.resourcewatch.org/v1/query?sql=SELECT avg(Green) from 18c0b71d-2f55-4a45-9e5b-c35db3ebfe94 where Lat &gt; 0 and  Lat &lt; 45'</span> <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   -H <span class="s1">'Authorization: Bearer &lt;token&gt;'</span>
 </code></pre>
-<h3 id="nex-gddp-datasets">NEX-GDDP datasets</h3>
-
-<p>A SQL wrapper is offered for accessing the NASA NEX-GDDP dataset with sql-like statements. The API stores calculated indexes over the original data, and several views over the data are available. These can be accessed in the following ways:</p>
-
-<h4 id="spatial-aggregates-over-a-layer">Spatial aggregates over a layer</h4>
+<h3 id="nex-gddp-and-loca-datasets">NEX-GDDP and Loca datasets</h3>
 
 <blockquote>
-<p>Access spatial aggregates over the data by listing all dataset data for a particular year:</p>
+<p>Example of a query for a NEX-GDDP/Loca dataset, providing lat and lon as query parameters:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -i -XGET <span class="s1">'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year = 1960'</span>
+<pre class="highlight shell"><code>curl -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/aaadd6c3-93ea-44bc-ba8b-7af3f40d39e1?sql=SELECT * FROM data&amp;lat=30&amp;lon=9'</span>
 </code></pre>
 <blockquote>
-<p>Access particular aggregates:</p>
+<p>Example of a query for a NEX-GDDP/Loca dataset, providing a geostore id:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -i -XGET <span class="s1">'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT avg, min from nexgddp-historical-ACCESS1_0-prmaxday where year = 1960'</span>
+<pre class="highlight shell"><code>curl -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/aaadd6c3-93ea-44bc-ba8b-7af3f40d39e1?sql=SELECT * FROM data&amp;geostore=972c24e1da2c2baacc7572ee9501abdc'</span>
 </code></pre>
 <blockquote>
-<p>Calculate statistics for a range of years:</p>
+<p>Example response:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -i -XGET <span class="s1">'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962'</span>
-</code></pre>
-<blockquote>
-<p>You can delimit an area of interest by providing a geostore id as a parameter:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -i -XGET <span class="s1">'https://api.resourcewatch.org/v1/query/b99c5f5e-00c6-452e-877c-ced2b9f0b393?sql=SELECT * from nexgddp-historical-ACCESS1_0-prmaxday where year between 1960 and 1962&amp;geostore=0279093c278a64f4c3348ff63e4cfce0'</span>
-</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"tasmin"</span><span class="p">:</span><span class="w"> </span><span class="mf">243.6352</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q25"</span><span class="p">:</span><span class="w"> </span><span class="mf">243.4849</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q75"</span><span class="p">:</span><span class="w"> </span><span class="mf">243.8861</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1971-01-01T00:00:00-01:00"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"tasmin"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.0795</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q25"</span><span class="p">:</span><span class="w"> </span><span class="mf">243.7174</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q75"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.3168</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1981-01-01T00:00:00-01:00"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"tasmin"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.4218</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q25"</span><span class="p">:</span><span class="w"> </span><span class="mf">243.9681</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q75"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.5883</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1991-01-01T00:00:00-01:00"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"tasmin"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.697</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q25"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.2883</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q75"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.8852</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2001-01-01T00:00:00-01:00"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"tasmin"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.7719</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q25"</span><span class="p">:</span><span class="w"> </span><span class="mf">244.3449</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"tasmin_q75"</span><span class="p">:</span><span class="w"> </span><span class="mf">245.0115</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2011-01-01T00:00:00-01:00"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Like with the other supported providers, you can use a SQL-like syntax to query datasets stored both in NASA NEX-GDDP or in Loca. However, these datasets always contain geo-referenced data, and so they expect that you always provide either a <code class="prettyprint">lat</code> + <code class="prettyprint">lon</code> pair, or a <code class="prettyprint">geostore</code> id, in order to filter the returned data. If you don&rsquo;t provide either a geostore id or a lat+lon pair, the request will fail with status code <code class="prettyprint">400 Bad Request</code>, with the following message: <code class="prettyprint">No coordinates provided. Include geostore or lat &amp; lon</code>.</p>
+
+<p>The examples on the side allow you to understand how you can provide either the <code class="prettyprint">geostore</code> id or the <code class="prettyprint">lat</code> + <code class="prettyprint">lon</code> combination.</p>
+
+<h3 id="wms-datasets">WMS datasets</h3>
+
+<p>Queries to WMS datasets are no longer supported.</p>
+
           <h1 id="layer">Layer</h1>
 
 <h2 id="what-is-a-layer">What is a layer?</h2>
