@@ -118,9 +118,27 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="introduction">Introduction</h1>
+        
+          <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Resource Watch API Developer Documentation</p>
+<p>Welcome to the Resource Watch API Developer Documentation. </p>
+
+<h2 id="who-is-this-for">Who is this for?</h2>
+
+<p>This section covers the behind-the-scenes details of the RW API, that are relevant for developers trying to build their own RW API microservice. If you are looking for instructions on how to use the RW API to power your applications, the <a href="/">RW API Documentation</a> is probably what you are looking for.</p>
+
+<p>The developer documentation is aimed at software developers that are familiar with the RW API from a user perspective, and want to extend or modify the functionality of the API. From a technical point of view, this section assumes you are familiar with some technologies, protocols and patterns that are used on the RW API, such as:</p>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP and HTTPS</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Microservices">Microservices architecture</a></li>
+<li><a href="https://www.docker.com/">Docker</a></li>
+<li><a href="https://kubernetes.io/">Kubernetes</a></li>
+</ul>
+
+<p>This guide also assumes you are comfortable with programming in general. To keep these docs simple, and as most of the RW API source code is written in <a href="https://nodejs.org/en/">nodejs</a>, that is the language we&rsquo;ll use for examples or when presenting specific tools and libraries. However, while we recommend using Nodejs, you may use different tools and/or languages when developing your microservices.  </p>
+
+<p>If any of these concepts are new or unfamiliar, we suggest using your favourite search engine to learn more about them before proceeding.</p>
 
           <h1 id="api-architecture">API Architecture</h1>
 
@@ -846,19 +864,116 @@ This plugin is disabled and is no longer supported.
 
 <p>An important part of this file and of the corresponding database entries is plugin configuration. This data is stored within the <code class="prettyprint">plugins</code> MongoDB collection managed by Control Tower but it&rsquo;s made available to plugins as they are initialized and ran.</p>
 
-          <h1 id="microservice">Microservice</h1>
+          <h1 id="microservice-development-guide">Microservice development guide</h1>
 
-<p>This section of the docs covers the details of a microservice.</p>
+<p>In this chapter, we&rsquo;ll cover additional details that you, as a RW API developer, should keep in mind when developing your microservice. We&rsquo;ll focus not only on the technical requirements you need to meet for your microservice to communicate with the remaining RW API internal components, but also discuss the policy surrounding development for the RW API, as a way to achieve a certain degree of consistency across a naturally heterogeneous microservice-based system. </p>
+
+<aside class="notice">
+Control Tower, which is mentioned throughout these docs, will be replaced soon with an equivalent but alternative solution. While we will aim to have this transition be as seamless as possible, you may need to adapt your code once this is done.
+</aside>
 
 <h2 id="microservice-overview">Microservice overview</h2>
 
 <p>As described in the <a href="#api-architecture">API Architecture</a> section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API&rsquo;s core microservices are built using <a href="https://nodejs.org">nodejs</a>, with <a href="https://www.python.org/">python</a> and <a href="https://rubyonrails.org/">Rails</a> being distant 2nd and 3rd respectively. This is due to personal preference of the team behind the API, as there really isn&rsquo;t a technical reason or limitation preventing the creation of microservices in PHP, Go, Elixir, etc.</p>
 
+<p>In this whole section, we will use code examples from the <a href="https://github.com/resource-watch/dataset/">Dataset microservice</a>, which is built using nodejs. We will discuss the general principles, which should apply to all implementations, as well as implementation details, which may apply to your scenario if you are also using nodejs, or that may not apply if you are using something else.</p>
+
+<h2 id="microservice-internal-architecture-nodejs">Microservice internal architecture - nodejs</h2>
+
 <aside class="notice">
-In this whole section, we will use code examples from the dataset microservice, which is built using nodejs. We will discuss the general principles, which should apply to all implementations, as well as implementation details, which may apply to your scenario if you are also using nodejs, or that may not apply if you are using something else.
+This section is completely implementation specific and opinionated, and does not reflect any technical requirement of the API. However, as all nodejs microservices use this architecture, we will cover it here as it&rsquo;s useful for new developers. Other microservice implementations in other languages will have different architectures, and you can also implement your own microservice using nodejs using a totally different architecture. Take this whole section as information/suggestion rather than as a ruleset.
 </aside>
 
-<h3 id="control-tower-integration">Control Tower integration</h3>
+<p>Nodejs microservices are based on the <a href="https://koajs.com/">Koa</a> framework for nodejs. To understand the following code snippets, we assume you are familiar with the basics of the framework, like how routes are declared and handled, what middleware is, and how it works. You should also be somewhat familiar with tools like <a href="https://www.npmjs.com/">npm</a>, <a href="https://www.mongodb.com/">mongo</a> and <a href="https://mongoosejs.com/">mongoose</a>, <a href="https://jenkins.io/">Jenkins CI</a>, <a href="https://www.docker.com/">docker</a> and <a href="https://docs.docker.com/compose/">docker-compose</a></p>
+
+<h3 id="anatomy-of-a-nodejs-microservice">Anatomy of a (nodejs) microservice</h3>
+
+<p>In this section, we&rsquo;ll use <a href="https://github.com/resource-watch/dataset">the dataset microservice</a> as an example, but these concepts should apply to most if not all nodejs microservices:</p>
+
+<ul>
+<li>app: source code for the microservice functionality.</li>
+<li>config: configuration for different environments in which the microservice will be executed.</li>
+<li>k8s: <a href="https://kubernetes.io/">kubernetes</a> configuration.</li>
+<li>Jenkinsfile: deployment configuration for <a href="https://jenkins.io/">Jenkins CI</a>.</li>
+<li>dataset.sh: convenience executable file (the name will always match the microservice).</li>
+<li>docker-compose-develop.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for develop environment.</li>
+<li>docker-compose-test.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for test environment.</li>
+<li>docker-compose.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for production environment.</li>
+<li>entrypoint.sh: <a href="https://www.docker.com/">docker</a> entry point.</li>
+</ul>
+
+<p>Since we are interested in the microservice&rsquo;s functional bits, we&rsquo;ll analyse the <code class="prettyprint">app</code> folder content in more detail. It&rsquo;s worth mentioning that, depending on how you run the microservice, the respective <code class="prettyprint">docker compose</code> files may contain relevant information and configuration, as do the files inside the <code class="prettyprint">config</code> folder.</p>
+
+<p>The <code class="prettyprint">app</code> folder contains the following structure:</p>
+
+<ul>
+<li>microservice: JSON files used during the Control Tower registration process.</li>
+<li>src: source code for the microservice.</li>
+<li>test: test source code.</li>
+<li>Gruntfile.js: <a href="https://gruntjs.com/">grunt</a> task definition file.</li>
+<li>index.js: nodejs entry point.</li>
+</ul>
+
+<p>The grunt file includes several task definition that may be useful during day-to-day development. However, grunt is semi-deprecated (it&rsquo;s still needed, don&rsquo;t remove it) in the sense that it&rsquo;s recommended to define useful tasks in the <code class="prettyprint">package.json</code> file instead - those tasks will, in turn, call grunt tasks.</p>
+
+<p>Inside the <code class="prettyprint">app/src</code> folder you&rsquo;ll find the following structure. The folders below will be commonly found on all microservice, unless stated otherwise:</p>
+
+<ul>
+<li>data: data files. This folder is specific to the dataset microservice.</li>
+<li>errors: error classes for specific scenarios, which then in turn translate into specific HTTP codes and responses.</li>
+<li>models: <code class="prettyprint">mongose</code> models to ease integration with <code class="prettyprint">mongo</code>.</li>
+<li>routes: <code class="prettyprint">koa</code> route and request handling definition, as well as middleware.</li>
+<li>serializers: <code class="prettyprint">mongoogse</code> model to JSON response serializers.</li>
+<li>services: application business logic.</li>
+<li>validators: input validators.</li>
+<li>app.constants.js: microservice application constants.</li>
+<li>app.js: <code class="prettyprint">koa</code> bootstrap, as well as basic error handling and Control Tower registration.</li>
+<li>loader.js: convenience file that iterates over the nested content of the <code class="prettyprint">routes</code> folder and loads files.</li>
+<li>logger.js: convenience file that configures the logger for ease of use.</li>
+</ul>
+
+<h3 id="adding-a-new-endpoint">Adding a new endpoint</h3>
+
+<p>In this section we&rsquo;ll cover how you can add a new endpoint with new functionality to an existing microservice. The aim is not to be a comprehensive guide to cover all cases, but more of a quick entry point into day-to-day actions you may want to perform, which should be complemented by your own learning of how a microservice works - remember that all microservices, despite being structurally similar, have their own custom code and functionality.</p>
+
+<p>To add a new endpoint, here&rsquo;s the short tasklist you have to tackle:</p>
+
+<ul>
+<li>Register your route in koa.</li>
+<li>Add a handler for that route.</li>
+<li>Add middleware for validation, if applicable.</li>
+<li>Implement new services, models or serializers to handle your application logic, if applicable.</li>
+<li>Add tests for your functionality (you may want to start with this, if TDD is your thing).</li>
+<li>Update the Control Tower registration file.</li>
+</ul>
+
+<h3 id="register-your-route-in-koa">Register your route in koa</h3>
+
+<p>Route registration is done using the <a href="https://github.com/ZijianHe/koa-router">koa-router</a> library, and can be done in the <code class="prettyprint">app/src/routes/api/v1/dataset.router.js</code> file, usually at the bottom of if:</p>
+<pre class="highlight javascript"><code>
+<span class="c1">// router object declaration, usually at the top of the file</span>
+<span class="kr">const</span> <span class="nx">router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Router</span><span class="p">({</span>
+    <span class="na">prefix</span><span class="p">:</span> <span class="s1">'/dataset'</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// routes declaration, usually at the bottom of the file</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">getAll</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/find-by-ids'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">findByIds</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">authorizationBigQuery</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">create</span><span class="p">);</span>
+<span class="c1">// router.post('/', validationMiddleware, authorizationMiddleware, authorizationBigQuery, authorizationSubscribable, DatasetRouter.create);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/upload'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">upload</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/flush'</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">flushDataset</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/recover'</span><span class="p">,</span> <span class="nx">authorizationRecover</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">recover</span><span class="p">);</span>
+
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">get</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/:dataset/verification'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">verification</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">update</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="k">delete</span><span class="p">);</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/clone'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">clone</span><span class="p">);</span>
+</code></pre>
+<p>In here you&rsquo;ll find the already existing routes. As you can see from the rather explicit syntax, you need to call the method that matches the desired HTTP verb on the <code class="prettyprint">router</code> object, and pass it a variable number of arguments - more on this in the next section. One thing to keep in mind is that all the routes in a file are typically prefixed, as defined in the <code class="prettyprint">router</code> object declaration.</p>
+
+<h2 id="control-tower-integration">Control Tower integration</h2>
 
 <p>While they could technically work as standalone applications, microservices are built from the ground up to work through Control Tower. As such, not only do they lack built-in functionality provided by Control Tower itself (for example, user management), they also need to handle their own integration with Control Tower. Control Tower provides integration libraries for certain languages and frameworks, which you can use to ease development:
 - <a href="https://github.com/control-tower/ct-register-microservice-node">nodejs package for Koa</a>
@@ -869,7 +984,7 @@ In this whole section, we will use code examples from the dataset microservice, 
 
 <p>We&rsquo;ll use the nodejs library as reference and example in the following sections, as it&rsquo;s the most commonly used language in this API. Other libraries will provided the same underlying functionality, but may have different ways to operate. Refer to each library&rsquo;s specific documentation for more details.</p>
 
-<h4 id="registering-on-control-tower">Registering on Control Tower</h4>
+<h3 id="registering-on-control-tower">Registering on Control Tower</h3>
 
 <p>The first feature provided by these libraries, and that a microservice must perform, is registering on Control Tower. Most of the details of this process can be found on <a href="#microservice-registration-process">Control Tower&rsquo;s documentation</a>, which you should read at this point if you haven&rsquo;t already.</p>
 <pre class="highlight javascript"><code><span class="c1">// dataset microservice registration example</span>
@@ -918,7 +1033,7 @@ In this whole section, we will use code examples from the dataset microservice, 
 
 <p>This registration call usually takes place right after the microservice&rsquo;s start process has ended, and the corresponding web server is available. Keep in mind that the call above will trigger an HTTP request to Control Tower, which in turn will call the microservice&rsquo;s web server - so make sure the microservice&rsquo;s web server is up and running when you attempt to register it.</p>
 
-<h4 id="requests-to-other-microservices">Requests to other microservices</h4>
+<h3 id="requests-to-other-microservices">Requests to other microservices</h3>
 
 <p>Besides contacting Control Tower to register themselves, microservices also need to contact Control Tower to make requests to other microservices. </p>
 <pre class="highlight javascript"><code><span class="c1">// Microservice call to another microservice's endpoint</span>
@@ -964,115 +1079,337 @@ In this whole section, we will use code examples from the dataset microservice, 
 
 <p>Another thing you&rsquo;ll notice is that this call depends on preexisting configuration stored in the <code class="prettyprint">this.options</code> property. These configuration options are stored within the object during the Control Tower registration process, meaning you should not attempt to make a call to another microservice unless you have previously registered your microservice on Control Tower. Keep in mind that this is a restriction of this particular integration library, and not of Control Tower itself - a different implementation could do internal requests to microservices through Control Tower without being registered as a microservice.</p>
 
-<h3 id="logging">Logging</h3>
+<p>In some scenarios, while developing, it&rsquo;s not practical to run all the microservices your logic depend on on your development computer. The <a href="#writing-end-to-end-tests">Writing end-to-end tests</a> section has some details about writing tests for your code, including how you can mock such calls, so you don&rsquo;t have to run the actual dependencies.</p>
+
+<h2 id="docker">Docker</h2>
+
+<p>When deployed in a production environment, microservices will run in a <a href="https://www.docker.com/">Docker</a> container. As a microservice developer, you should include in your microservice the necessary configuration to run your application inside a container. This is done using a Dockerfile, and you can use the <a href="https://github.com/resource-watch/dataset/blob/develop/Dockerfile">Dataset microservice&rsquo;s Dockerfile</a> as an example of how one of these files looks like for a nodejs based microservice.</p>
+
+<p>Its worth noting that these container are set up in a way that allows using them to both run the microservice itself, or their tests. This will be useful further ahead when we review the testing approach you should use when writing microservices.</p>
+
+<h2 id="data-layer">Data layer</h2>
+
+<p>Many microservices require the ability to store data to perform their function. The RW API has several data storage tools available to you, in case you need to store information to run your service.</p>
+
+<p><strong>Warning</strong>: microservices run on ephemeral containers managed by Kubernetes, and often in multiple parallel instances, so do not rely on storing data on the filesystem, unless you know there&rsquo;s something like a <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Kubernetes&rsquo; persistent volume</a> to back it up.</p>
+
+<p>When accessing these tools, there are a few things you should keep in mind:</p>
+
+<ul>
+<li>Isolation is not guaranteed, meaning your microservice will have theoretical access to other microservice&rsquo;s data, and other microservices may access your data.</li>
+<li>Despite having access to it, you should not manipulate other microservice&rsquo;s data directly at the data layer, unless there&rsquo;s a clear agreement between the involved microservices.</li>
+<li>It&rsquo;s up to you to ensure logic level isolation of your data - for example, if you rely on an relational database, be sure to use a unique database name.</li>
+<li>Access to the data layer is only available within the RW API cluster, which is why not all data storage tools have authentication enabled.</li>
+</ul>
+
+<p>Currently, the following data storage tools are available on the RW API cluster:</p>
+
+<h3 id="mongodb-v3-6">MongoDB v3.6</h3>
+
+<p><a href="https://www.mongodb.com/">MongoDB</a> is the most frequently used data storage tool, as it supports schema-less document storage, thus making it easy to setup and run. When using MongoDB, be sure to give your collection an unique name, to avoid conflicts</p>
+
+<p>To see an example of how to use MongoDB on a real-world microservice, check out the <a href="https://github.com/resource-watch/dataset/">Dataset microservice</a>.</p>
+
+<h3 id="postgres-v9-6">Postgres v9.6</h3>
+
+<p>Use <a href="https://www.postgresql.org/">Postgres</a> if your application needs a relational database. Unlike other data storage tools, Postgres access to individual microservices is granted on a per-database basis.</p>
+
+<p>To see an example of how to use Postgres on a real-world microservice, check out the <a href="https://github.com/resource-watch/resource-watch-manager/">Resource watch manager microservice</a> (written in Ruby on Rails).</p>
+
+<h3 id="elasticsearch-v5-5">Elasticsearch v5.5</h3>
+
+<p>Use <a href="https://www.elastic.co/">Elasticsearch</a> for search optimization or heterogeneous data storage with quick access. The current setup also includes <a href="https://github.com/NLPchina/elasticsearch-sql">a 3rd party plugin for SQL support on ES 5</a>.</p>
+
+<p>To see an example of how to use Elasticsearch on a real-world microservice, check out the <a href="https://github.com/resource-watch/document-adapter/">Document dataset adapter microservice</a>.</p>
+
+<h3 id="redis-v5-0">Redis v5.0</h3>
+
+<p><a href="https://redis.io/">Redis</a> is an in-memory data storage tool, and can also be used as a <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub-sub</a> messaging tool.</p>
+
+<p>You can learn how to use Redis in your applications by looking at the code of the <a href="https://github.com/gfw-api/gfw-subscription-api">Subscriptions microservice</a>.</p>
+
+<h3 id="neo4j-v2-0">Neo4J v2.0</h3>
+
+<p><a href="https://neo4j.com/">Neo4J</a> is a graph database used by <a href="https://github.com/resource-watch/graph-client/">Graph microservice</a> to build complex associations between different RW API resources.</p>
+
+<h3 id="rabbitmq-v3-7">RabbitMQ v3.7</h3>
+
+<p><a href="https://www.rabbitmq.com/">RabbitMQ</a> is a message broker service, which is particularly useful when handling long, asynchronous operations. You can see an example of its usage on the <a href="https://github.com/resource-watch/doc-executor">Document microservice - Executor submodule</a> code base.</p>
+
+<h3 id="cloud-services">Cloud services</h3>
+
+<p>Some microservices have data storage needs that are not covered by the applications described here (for example, file storage). In those scenarios, it&rsquo;s common to use cloud services (like AWS S3, for example), but do reach out to the broader RW API development team before implementing your solution.</p>
+
+<h2 id="http-caching">HTTP caching</h2>
+
+<p>The RW API has a system-wide HTTP cache that you may use to cache your requests, improving scalability and response times. This cache is based on <a href="https://www.fastly.com/">Fastly</a>, and you can browse its documentation if you are looking for a specific detail on its behavior. For most common use cases, you just need to keep in mind the following:</p>
+
+<ul>
+<li>Only responses with codes 200, 203, 300 and 410 are cached, and the default cache TTL is 3 days.</li>
+<li>GET responses for <code class="prettyprint">/auth</code> endpoints are never cached.</li>
+<li>GET responses for <code class="prettyprint">/query</code> or <code class="prettyprint">/fields</code> endpoints are cached for 2 days.</li>
+<li>Your microservice can use the <code class="prettyprint">cache</code> response header to tag a cache entry. This, in itself, has no functional impact. Example <a href="https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L396">here</a>.</li>
+<li>Your microservice can use the <code class="prettyprint">uncache</code> header to purge cache entries matching a given tag, as set in the previous point. Example <a href="https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L462">here</a>.</li>
+</ul>
+
+<h2 id="logging">Logging</h2>
 
 <p>An important part of microservice operation is logging events as it processes requests. Many errors are only triggered during staging and production server execution, and without proper logging, there isn&rsquo;t a way to identify how it can be reproduced, so it can then be fixed.</p>
 
 <p>Common development languages often come with either built-in or 3rd party logging libraries than make logging easier to handle. Current nodejs microservices use <a href="https://github.com/trentm/node-bunyan">Bunyan</a> to manage logs, which eases managing log destinations (stdout, file, etc) and log levels. Other libraries, for nodejs and other languages, offer similar functionality.</p>
 
-<p>For microservice logs, the main output channel should be <code class="prettyprint">stdout</code>, so it can seamlessly integrate with the infrastructure to which microservices will be deployed when going live - more on this later. If you prefer, you can also log to file or other output channels for development purposes - it&rsquo;s in this sort of scenarios that logging libraries become useful, as they decouple the logging action from the destination channels.</p>
+<p>For microservice staging and production logs, the output channels should be <code class="prettyprint">stdout</code> and <code class="prettyprint">stderr</code>, the standard output streams you&rsquo;ll find on most OSs. When live, these, will seamlessly integrate with the infrastructure to which microservices will be deployed, and will allow for cluster-wide logging. </p>
 <pre class="highlight javascript"><code><span class="kr">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'logger'</span><span class="p">);</span>
 
 <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">'Validating Dataset Update'</span><span class="p">);</span>
 </code></pre>
-<p>The example above logs that the validation process for input data associated with a dataset updated has been started. You&rsquo;ll notice that the <code class="prettyprint">info()</code> function is called - this sets the logging level for this message. While different logging tools implement different strategies to differentiate logs, this approach is rather common and widespread. It&rsquo;s up to you to define your log levels, how they translate into entries on the logging output, or how different logging levels are forwarded to different channels - just remember to keep the day-to-day logs on <code class="prettyprint">stdout</code>. </p>
-
-<p>If you want to access your logging output for a microservice that&rsquo;s already deployed on either staging or production, you&rsquo;ll need access to <code class="prettyprint">kubernetes</code> logging UI or CLI. The details of this are discussed on a separate section.</p>
-
-<h3 id="microservice-internal-architecture-nodejs">Microservice internal architecture - nodejs</h3>
-
-<aside class="notice">
-This section is completely implementation specific and opinionated, and does not reflect any technical requirement of the API. However, as all nodejs microservices use this architecture, we will cover it here as it&rsquo;s useful for new developers. Other microservice implementations in other languages will have different architectures, and you can also implement your own microservice using nodejs using a totally different architecture. Take this whole section as information/suggestion rather than as a ruleset.
-</aside>
-
-<p>Nodejs microservices are based on the <a href="https://koajs.com/">Koa</a> framework for nodejs. To understand the following code snippets, we assume you are familiar with the basics of the framework, like how routes are declared and handled, and what middleware are and how they work. You should also be somewhat familiar with tools like <a href="https://www.npmjs.com/">npm</a>, <a href="https://www.mongodb.com/">mongo</a> and <a href="https://mongoosejs.com/">mongoose</a>, <a href="https://jenkins.io/">Jenkins CI</a>, <a href="https://www.docker.com/">docker</a> and <a href="https://docs.docker.com/compose/">docker-compose</a></p>
-
-<h4 id="anatomy-of-a-nodejs-microservice">Anatomy of a (nodejs) microservice</h4>
-
-<p>In this section, we&rsquo;ll use <a href="https://github.com/resource-watch/dataset">the dataset microservice</a> as an example, but these concepts should apply to most if not all nodejs microservices:</p>
+<p>The example above logs that the validation process for input data associated with a dataset updated has been started. You&rsquo;ll notice that the <code class="prettyprint">info()</code> function is called - this sets the logging level for this message. While different logging tools implement different strategies to differentiate logs, most microservices uses these 4 levels:</p>
 
 <ul>
-<li>app: source code for the microservice functionality.</li>
-<li>config: configuration for different environments in which the microservice will be executed.</li>
-<li>k8s: <a href="https://kubernetes.io/">kubernetes</a> configuration.</li>
-<li>Jenkinsfile: deployment configuration for <a href="https://jenkins.io/">Jenkins CI</a>.</li>
-<li>dataset.sh: convenience executable file (the name will always match the microservice).</li>
-<li>docker-compose-develop.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for develop environment.</li>
-<li>docker-compose-test.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for test environment.</li>
-<li>docker-compose.yml: <a href="https://docs.docker.com/compose/">docker-compose</a> configuration for production environment.</li>
-<li>entrypoint.sh: <a href="https://www.docker.com/">docker</a> entry point.</li>
+<li><code class="prettyprint">debug</code>: use this whenever anything happens, that may or may not be relevant to have logged on a daily basis, but rather as a opt-in development and debug tool.</li>
+<li><code class="prettyprint">info</code>: use this for high-level expected actions and output that you&rsquo;d need to have available to you in case you need to investigate a production issue.</li>
+<li><code class="prettyprint">warn</code>: use this for situations where something unexpected happened, but that may not necessarily be irregular flows - for example, user originated errors.</li>
+<li><code class="prettyprint">error</code>: use this when the application failed and is no longer able to recover, or when an server-side error occurs.</li>
 </ul>
 
-<p>Since we are interested in the microservice&rsquo;s functional bits, we&rsquo;ll analyse the <code class="prettyprint">app</code> folder content in more detail. It&rsquo;s worth mentioning that, depending on how you run the microservice, the respective <code class="prettyprint">docker compose</code> files may contain relevant information and configuration, as do the files inside the <code class="prettyprint">config</code> folder.</p>
-
-<p>The <code class="prettyprint">app</code> folder contains the following structure:</p>
+<p>A common issue some developers have concerns logging errors. It&rsquo;s not uncommon to find microservices where all types of errors generate a <code class="prettyprint">error</code> log entry. However, this actually produces a lot of noise, and make it hard to debug. Consider the following two scenarios when attempting to load a dataset by id:</p>
 
 <ul>
-<li>microservice: JSON files used during the Control Tower registration process.</li>
-<li>src: source code for the microservice.</li>
-<li>test: test source code.</li>
-<li>Gruntfile.js: <a href="https://gruntjs.com/">grunt</a> task definition file.</li>
-<li>index.js: nodejs entry point.</li>
+<li>The dataset microservice queries the database, and the database cannot find a dataset matching that id, and the microservice returns a 404 HTTP response.</li>
+<li>The dataset microservice queries the database, but the database is offline for whatever reason, and the microservice returns a 500 HTTP response.</li>
 </ul>
 
-<p>The grunt file includes several task definition that may be useful during day-to-day development. However, grunt is semi-deprecated (it&rsquo;s still needed, don&rsquo;t remove it) in the sense that it&rsquo;s recommended to define useful tasks in the <code class="prettyprint">package.json</code> file instead - those tasks will, in turn, call grunt tasks.</p>
+<p>Both cases are, indeed, errors. However, the first one is not an application error - the microservice behaved as it should. In this scenario, logging this event should not involve an <code class="prettyprint">error</code> level event, as nothing unexpected, from the application&rsquo;s point of view, happened: a user asked for something that does not exist, and the microservice handled that as it should.</p>
 
-<p>Inside the <code class="prettyprint">app/src</code> folder you&rsquo;ll find the following structure. The folders below will be commonly found on all microservice, unless stated otherwise:</p>
+<p>On the second case, however, something really unexpected did happen - the microservice could not contact the database. This is an application level error, as we assume that our databases are always available for to microservices. This is an example scenario where a <code class="prettyprint">error</code> logging line should be generated. Or, putting it in another way, only use <code class="prettyprint">errors</code> logging for situations where a RW API developer should look into it.</p>
 
-<ul>
-<li>data: data files. This folder is specific to the dataset microservice.</li>
-<li>errors: error classes for specific scenarios, which then in turn translate into specific HTTP codes and responses.</li>
-<li>models: <code class="prettyprint">mongose</code> models to ease integration with <code class="prettyprint">mongo</code>.</li>
-<li>routes: <code class="prettyprint">koa</code> route and request handling definition, as well as middleware.</li>
-<li>serializers: <code class="prettyprint">mongoogse</code> model to JSON response serializers.</li>
-<li>services: application business logic.</li>
-<li>validators: input validators.</li>
-<li>app.constants.js: microservice application constants.</li>
-<li>app.js: <code class="prettyprint">koa</code> bootstrap, as well as basic error handling and Control Tower registration.</li>
-<li>loader.js: convenience file that iterates over the nested content of the <code class="prettyprint">routes</code> folder and loads files.</li>
-<li>logger.js: convenience file that configures the logger for ease of use.</li>
-</ul>
+<p>Another best practice we recommend for log management is using an application-wide configuration value to define the logging level. This is prove extremely useful when you switch from your local development environment (where you may prefer the <code class="prettyprint">debug</code> logging level for maximum detail) to production (where <code class="prettyprint">warn</code> or <code class="prettyprint">error</code> may be more reasonable). </p>
 
-<h4 id="adding-a-new-endpoint">Adding a new endpoint</h4>
+<p>When using Bunyan, logging levels are set <a href="https://github.com/resource-watch/dataset/blob/5d4b6d1a3b243f5ba985b444633c0f6acf78b35d/app/src/logger.js#L7">per stream</a>. Many microservices integrate the <a href="https://www.npmjs.com/package/config">Config</a> library at this stage, allowing you to have different values for <a href="https://github.com/resource-watch/dataset/blob/25ab6b6ac7b1c4618b3d4ae1690957b256bafca8/config/prod.json#L4">production</a>, <a href="https://github.com/resource-watch/dataset/blob/685a799f79f2441a129e4cf5cfaf3ed06ace5546/config/staging.json#L4">staging</a> or other environments. Config also allows you to <a href="https://github.com/resource-watch/dataset/blob/34d4b00fe06bd6d7c9b1dd25e043da4e820db653/config/custom-environment-variables.json#L12">override selected values with a environment variable</a>, typically <code class="prettyprint">LOGGER_LEVEL</code>, which you may use, for example, to temporarily override the logging level on a particular environment without changing the predefined default values. </p>
 
-<p>In this section we&rsquo;ll cover how you can add a new endpoint with new functionality to an existing microservice. The aim is not to be a comprehensive guide to cover all cases, but more of a quick entry point into day-to-day actions you may want to perform, which should be complemented by your own learning of how a microservice works - remember that all microservices, despite being structurally similar, have their own custom code and functionality.</p>
+<p>If you want to access your logging output for a microservice that&rsquo;s already deployed on either staging or production, you&rsquo;ll need access to <code class="prettyprint">kubernetes</code> logging UI or CLI.</p>
 
-<p>To add a new endpoint, here&rsquo;s the short tasklist you have to tackle:</p>
+<h2 id="testing">Testing</h2>
 
-<ul>
-<li>Register your route in koa.</li>
-<li>Add a handler for that route.</li>
-<li>Add middleware for validation, if applicable.</li>
-<li>Implement new services, models or serializers to handle your application logic, if applicable.</li>
-<li>Add tests for your functionality (you may want to start with this, if TDD is your thing).</li>
-<li>Update the Control Tower registration file.</li>
-</ul>
+<p>Testing code is important. And, as the developer of a RW API microservice, it&rsquo;s your responsibility to ensure that your code is bug free and easily extendable in the future. That means it should ship with a set of tests that can ensure, now and in the future, that it does what it&rsquo;s supposed to do. And the best way to do that is through testing.</p>
 
-<h5 id="register-your-route-in-koa">Register your route in koa</h5>
+<p>If you are developing a new microservice or endpoint, it&rsquo;s expected that you provide a complete test suit for your code. In many cases, existing microservices will be a valuable source of examples you can copy and adapt to your needs. On occasion, you&rsquo;ll need to changes to endpoints that are not yet covered by tests. In those scenarios, we ask that add at least the tests to cover your modification. If you are feeling generous, and want to add tests that cover the endpoint&rsquo;s full functionality, you&rsquo;ll have our gratitude - test coverage for the RW API&rsquo;s endpoints is a work in progress, and not all endpoints have been reached just yet.</p>
 
-<p>This can be done in the <code class="prettyprint">app/src/routes/api/v1/dataset.router.js</code> file, usually at the bottom of if:</p>
-<pre class="highlight javascript"><code>
-<span class="c1">// router object declaration, usually at the top of the file</span>
-<span class="kr">const</span> <span class="nx">router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Router</span><span class="p">({</span>
-    <span class="na">prefix</span><span class="p">:</span> <span class="s1">'/dataset'</span><span class="p">,</span>
+<h3 id="writing-end-to-end-tests">Writing end-to-end tests</h3>
+
+<p>Most microservices rely, to varying degrees, on end-to-end tests. In the context of an HTTP based microservice, this means that tests are responsible for issuing an HTTP request to a running instance of your microservice, getting the response and validating its content. Tests should also handle things like mocking resources and isolation from outside world - we&rsquo;ll get to these in a moment.</p>
+
+<blockquote>
+<p>Example of a test from the dataset microservice</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="nx">it</span><span class="p">(</span><span class="s1">'Create a JSON dataset with data in the body should be successful'</span><span class="p">,</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">timestamp</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+    <span class="kr">const</span> <span class="nx">dataset</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">name</span><span class="p">:</span> <span class="s2">`JSON Dataset - </span><span class="p">${</span><span class="nx">timestamp</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()}</span><span class="s2">`</span><span class="p">,</span>
+        <span class="na">application</span><span class="p">:</span> <span class="p">[</span><span class="s1">'forest-atlas'</span><span class="p">,</span> <span class="s1">'rw'</span><span class="p">],</span>
+        <span class="na">applicationConfig</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">'forest-atlas'</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">foo</span><span class="p">:</span> <span class="s1">'bar'</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="na">rw</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">foo</span><span class="p">:</span> <span class="s1">'bar'</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="na">connectorType</span><span class="p">:</span> <span class="s1">'document'</span><span class="p">,</span>
+        <span class="na">env</span><span class="p">:</span> <span class="s1">'production'</span><span class="p">,</span>
+        <span class="na">provider</span><span class="p">:</span> <span class="s1">'json'</span><span class="p">,</span>
+        <span class="na">dataPath</span><span class="p">:</span> <span class="s1">'data'</span><span class="p">,</span>
+        <span class="na">dataLastUpdated</span><span class="p">:</span> <span class="nx">timestamp</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">(),</span>
+        <span class="na">data</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">data</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="na">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="na">b</span><span class="p">:</span> <span class="mi">2</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="na">a</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                    <span class="na">b</span><span class="p">:</span> <span class="mi">1</span>
+                <span class="p">},</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="nx">nock</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CT_URL</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/v1/doc-datasets/json'</span><span class="p">,</span> <span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">request</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'connector'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">an</span><span class="p">(</span><span class="s1">'object'</span><span class="p">);</span>
+            <span class="kr">const</span> <span class="nx">requestDataset</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">connector</span><span class="p">;</span>
+
+            <span class="nx">requestDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'name'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+            <span class="nx">requestDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'connectorType'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">connectorType</span><span class="p">);</span>
+            <span class="nx">requestDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'application'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">eql</span><span class="p">(</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">application</span><span class="p">);</span>
+            <span class="nx">requestDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'data'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">deep</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+            <span class="nx">requestDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'sources'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">eql</span><span class="p">([]);</span>
+            <span class="nx">requestDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">not</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'connectorUrl'</span><span class="p">);</span>
+
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">reply</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">status</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+            <span class="na">detail</span><span class="p">:</span> <span class="s1">'Ok'</span>
+        <span class="p">});</span>
+
+    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">requester</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`/api/v1/dataset`</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span>
+        <span class="nx">dataset</span><span class="p">,</span>
+        <span class="na">loggedUser</span><span class="p">:</span> <span class="nx">USERS</span><span class="p">.</span><span class="nx">ADMIN</span>
+    <span class="p">});</span>
+    <span class="kr">const</span> <span class="nx">createdDataset</span> <span class="o">=</span> <span class="nx">deserializeDataset</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+
+    <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+    <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'data'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">an</span><span class="p">(</span><span class="s1">'object'</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'name'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s2">`JSON Dataset - </span><span class="p">${</span><span class="nx">timestamp</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'connectorType'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">'document'</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'provider'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">'json'</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'connectorUrl'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'tableName'</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'userId'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">USERS</span><span class="p">.</span><span class="nx">ADMIN</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'status'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="s1">'pending'</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'overwrite'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'applicationConfig'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">deep</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">dataset</span><span class="p">.</span><span class="nx">applicationConfig</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">have</span><span class="p">.</span><span class="nx">property</span><span class="p">(</span><span class="s1">'dataLastUpdated'</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">timestamp</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">());</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">legend</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">an</span><span class="p">.</span><span class="nx">instanceOf</span><span class="p">(</span><span class="nb">Object</span><span class="p">);</span>
+    <span class="nx">createdDataset</span><span class="p">.</span><span class="nx">clonedHost</span><span class="p">.</span><span class="nx">should</span><span class="p">.</span><span class="nx">be</span><span class="p">.</span><span class="nx">an</span><span class="p">.</span><span class="nx">instanceOf</span><span class="p">(</span><span class="nb">Object</span><span class="p">);</span>
 <span class="p">});</span>
-
-<span class="c1">// routes declaration, usually at the bottom of the file</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">getAll</span><span class="p">);</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/find-by-ids'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">findByIds</span><span class="p">);</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">authorizationBigQuery</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">create</span><span class="p">);</span>
-<span class="c1">// router.post('/', validationMiddleware, authorizationMiddleware, authorizationBigQuery, authorizationSubscribable, DatasetRouter.create);</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/upload'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">upload</span><span class="p">);</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/flush'</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">flushDataset</span><span class="p">);</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/recover'</span><span class="p">,</span> <span class="nx">authorizationRecover</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">recover</span><span class="p">);</span>
-
-<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">get</span><span class="p">);</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/:dataset/verification'</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">verification</span><span class="p">);</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">update</span><span class="p">);</span>
-<span class="nx">router</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="s1">'/:dataset'</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="k">delete</span><span class="p">);</span>
-<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'/:dataset/clone'</span><span class="p">,</span> <span class="nx">validationMiddleware</span><span class="p">,</span> <span class="nx">authorizationMiddleware</span><span class="p">,</span> <span class="nx">DatasetRouter</span><span class="p">.</span><span class="nx">clone</span><span class="p">);</span>
 </code></pre>
-<p>In here you&rsquo;ll find the already existing routes. As you can see from the rather explicit syntax, you need to call the method that matches the desired HTTP verb on the <code class="prettyprint">router</code> object, and pass it a variable number of arguments - more on this in the next section. One thing to keep in mind is that all the routes in a file are typically prefixed, as defined in the <code class="prettyprint">router</code> object declaration.</p>
+<p>Current nodejs based microservices rely on <a href="https://www.chaijs.com/">Chai</a> and <a href="https://mochajs.org/">Mocha</a> as testing libraries, and this code example shows one of the tests that validate the dataset creation process. The code block is relatively large, but the logic is simple:</p>
+
+<ul>
+<li>We craft a JSON object with the content of the HTTP POST body</li>
+<li>As this endpoint needs to make a call to another microservice (through Control Tower), we use <a href="https://github.com/nock/nock">Nock</a> to mock that POST request to the <code class="prettyprint">/v1/doc-datasets/json</code> endpoint. This way, your tests won&rsquo;t require actual running instances of Control Tower or other microservices to run.</li>
+<li>We send the our previously crafted POST request to a running instance of our dataset microservice, along with a <code class="prettyprint">loggedUser</code> spoof data.</li>
+<li>We get the HTTP response, process it for easier handling, and proceed to validate that it&rsquo;s content is as expected.</li>
+</ul>
+
+<p>Different microservices and endpoint will have different requirements when it comes to testing, but the great majority of endpoints can be tested using simple variations of these steps. There are some additional considerations you should take into account when testing:</p>
+
+<ul>
+<li>The example above creates an actual dataset, meaning a MongoDB (or equivalent mocks) need to exist. For MongoDB specifically, our approach so far has been to use a real MongoDB instance, and running the tests on a separate database (´dataset-tests´ for example), aiming for isolation. Other microservices (for example, those relying on Elasticsearch) use mocks instead. Mocking usually leads to faster execution times, but can be troublesome to properly code. Use whichever alternative is best for you, and refer to the <a href="#data-layer">Data layer</a> section for examples of microservices that use (and test with) different tools.</li>
+<li>Nock has a <a href="https://github.com/nock/nock#enabledisable-real-http-requests">feature that blocks all HTTP requests</a>, which is useful to ensure your code or tests are not relying on an external service without you being aware - just be sure to whitelist your own IP, otherwise the HTTP call your test makes to your microservice will fail too.</li>
+<li>Tests must be idempotent, and execute without assuming order. For example, running a test that first tests an insert, and then using the inserted element to test a delete would be a bad practice. Instead, your insert test should clean up its data once it&rsquo;s done, and the delete test should prepopulate the database before actually trying to delete it. A corollary of this is that you should be able to run your tests multiple times, back-to-back, without that affecting the results.</li>
+</ul>
+
+<h3 id="test-coverage-metrics">Test coverage metrics</h3>
+
+<p>While not required, most microservices use <a href="https://en.wikipedia.org/wiki/Code_coverage">code coverage</a> tools to evaluate how much of your code base is actually being checked when the test suite is executed. Nodejs based microservices frequently use <a href="https://www.npmjs.com/package/nyc">NYC</a> and <a href="https://istanbul.js.org/">Istanbul</a> for this purpose, in case you are looking for a recommendation.</p>
+
+<h3 id="running-your-tests-using-docker-compose">Running your tests using docker compose</h3>
+
+<p>The previous section covers an example of how a test looks like. Depending on your microservice technology stack, you have different ways of running your tests - in the case of the Dataset microservice, tests are executed using <a href="https://yarnpkg.com/">yarn</a>. </p>
+
+<p>However, to standardise test execution, you should also create a <a href="https://docs.docker.com/compose/">docker compose</a> file that runs your tests (and their dependencies). This docker compose configuration should use the <a href="#docker">existing docker file</a> set up previously, unless that&rsquo;s not possible.</p>
+
+<p>Here&rsquo;s an example of <a href="https://github.com/resource-watch/dataset/blob/ab23e379362680e9899ac8f191589988f0b7c1cd/docker-compose-test.yml">one of these files</a>. These will be particularly useful down the line, but also convenient for running tests locally.</p>
+
+<p>For convenience, microservices commonly have a <a href="https://github.com/resource-watch/dataset/blob/ab23e37936/dataset.sh#L8">one line CLI command</a> that allows running tests using the docker compose configuration you provide. These are particularly useful for other developers to run your tests without having to manually set up the associated dependencies.</p>
+
+<h3 id="ci-cd-travis-and-code-climate">CI/CD, Travis and Code Climate</h3>
+
+<p>Assuming you are hosting your microservice code on a service like Github, then you may benefit from its integration with <a href="https://en.wikipedia.org/wiki/CI/CD">CI/CD</a> tools. There are multiple options in this space, and they mostly offer the same core functionality, but our preference so far has been to use <a href="https://travis-ci.org/">Travis</a>. In a nutshell, you can configure Travis to run your tests every time you push a new commit to a Github pull request. Tests will run on Travis&rsquo; servers, and if they fail, you will get a message on your pull request warning you about this.</p>
+
+<p>For full details on Travis and its features, how to configure it, what alternatives are there, and their pros and cons, please refer to your favourite search engine. If you are just want the basic, &ldquo;it just works&rdquo; configuration, <a href="https://github.com/resource-watch/dataset/blob/cd55ff83695266ffae58471569fc3c16b2f1adf2/.travis.yml#L10">this file from the Dataset microservice</a> will have most of what you&rsquo;ll need.</p>
+
+<p>Apart from running your tests, Travis also integrates with a service called <a href="https://codeclimate.com/">Code Climate</a> which analyses your code and looks for potentially problematic bits and suggests you fix them. More often than not, we just rely on another functionality offered by Code Climate - <a href="https://en.wikipedia.org/wiki/Code_coverage">code coverage</a>. This allows you to easily monitor how your pull request influences code coverage - for example, you can set up an alarm that warns you in case your pull request decreases your code coverage, which may indicate that you added more code than you tested.</p>
+
+<p>Most microservices will display a test status and code coverage badges on their README, as a way to display if the tests are passing, and a rough estimation of how broad the test coverage is.</p>
+
+<h3 id="smoke-testing">Smoke testing</h3>
+
+<p>Besides the test tools covered above, which are used to validate that your code changes work as designed, there is also a smoke test tool in place, that periodically issues a request to selected RW API endpoints and validates that the response match an expected preconfigured value. These tests are not used to validate functionality, but rather availability - if something goes wrong, a human is notified that the RW API is not working as it should, and that this is potentially affecting users. </p>
+
+<p>If you believe your microservice implements a mission-critical endpoint that would merit one of these tests, please reach out to the RW API team.</p>
+
+<h2 id="deploying-your-microservice">Deploying your microservice</h2>
+
+<h3 id="jenkins">Jenkins</h3>
+
+<p>Microservice deployment to the Kubernetes clusters is done using <a href="https://www.jenkins.io/">Jenkins</a>. The actual deployment process is configurable using a <a href="https://github.com/resource-watch/dataset/blob/develop/Jenkinsfile">Jenkinsfile</a> script written in <a href="https://groovy-lang.org/">Groovy</a>. Most microservices use the same file, as the logic in it is flexible enough to accommodate most scenarios.</p>
+
+<p>In a nutshell, this Jenkinsfile will:</p>
+
+<ul>
+<li>Build a docker image using the Docker file contained in your microservice.</li>
+<li>Uses the included docker compose configuration to run your tests. If the tests fail, the process is aborted at this stage</li>
+<li>Push the generated docker image to <a href="https://hub.docker.com/">dockerhub</a></li>
+<li>Depending on the git branch, the following actions will take place:
+
+<ul>
+<li>If deploying from the <code class="prettyprint">develop</code> branch, it will push the docker image to the staging kubernetes cluster </li>
+<li>If deploying from the <code class="prettyprint">master</code> branch, you will get a confirmation input. If you confirm, it will push the docker image to the production kubernetes cluster </li>
+<li>Any other branches are ignored.</li>
+</ul></li>
+</ul>
+
+<p>At the beginning of each deploy process, you will also see an confirmation input that, if accepted, will redeploy the kubernetes configuration contained in the microservice code repository to the respective kubernetes cluster: <code class="prettyprint">develop</code> branch to the staging cluster, <code class="prettyprint">master</code> branch to the production cluster.</p>
+
+<p>One thing worth noting is that the docker images generated using this method are publicly available on dockerhub. Be careful not to store any sensitive data in them, as it will be available to anyone.</p>
+
+<h3 id="kubernetes-configuration">Kubernetes configuration</h3>
+
+<p>Most microservice have a <a href="https://github.com/resource-watch/dataset/tree/develop/k8s">Kubernetes configuration folder</a>, typically containing 3 folders:</p>
+
+<ul>
+<li><code class="prettyprint">production</code> contains files that will be applied when deploying the <code class="prettyprint">master</code> branch to the production cluster</li>
+<li><code class="prettyprint">staging</code> contains files that will be applied when deploying the <code class="prettyprint">develop</code> branch to the production cluster</li>
+<li><code class="prettyprint">services</code> contains files that will be applied when deploying either branches to their respective cluster.</li>
+</ul>
+
+<p>Note that these settings are only applied if you opt in to it, by interacting with the input request that is displayed on Jenkins at the very beginning of the deployment process.</p>
+
+<h2 id="documentation">Documentation</h2>
+
+<h3 id="readme">README</h3>
+
+<p>Here are some &lsquo;do&rsquo; and &#39;do not&rsquo; you should take into account when writing the README.md for your microservice.</p>
+
+<p>Do:</p>
+
+<ul>
+<li>Add the name of your microservice, along with a high level, short description of what it does.</li>
+<li>Identify the technical dependencies. This should include:
+
+<ul>
+<li>Programming language</li>
+<li>Main framework or language-specific tools used</li>
+<li>Data layer dependencies or other applications, including version numbers</li>
+<li>Dependencies on other microservices</li>
+</ul></li>
+<li>Describe how to get your microservice up and running for development purposes (at least for the operating system you are currently using, but you get extra &ldquo;thank you&quot;s if you add details for other OSs)</li>
+<li>Describe how to run your tests</li>
+<li>Describe if and which configuration variables exist, and their behavior.</li>
+<li>Document implementation details, software development architectural decisions, etc</li>
+<li>Use English.</li>
+</ul>
+
+<p>Do not:</p>
+
+<ul>
+<li>Document in detail how to set up dependencies on 3rd party applications (for example, don&rsquo;t provide installation instruction for a database server, just mention it&rsquo;s a dependency, and assume your fellow developer will figure out how to set it up on their system).</li>
+<li>Include a license text - you may mention it, but add the actual text on a separate file, to keep the README file concise.</li>
+<li>Assume the reader has vast experience in developing for the RW API, in the language your microservice is coded on, or using its dependencies or libraries</li>
+<li>Document endpoint behavior - that goes elsewhere.</li>
+</ul>
+
+<p>Overall, the README should be targeted at developers that may need to run, test and debug your code.</p>
+
+<h3 id="functional-documentation">Functional documentation</h3>
+
+<p>Documentation describing the business logic implemented by your microservice should go in the <a href="/">RW API Documentation</a> page. The documentation is available <a href="https://github.com/resource-watch/doc-api/">on this Github repository</a> and its README includes instructions on how to use it and contribute.</p>
+
+<p>Documentation is a key component of a successful API, so when altering public-facing behavior on the RW API, you must update the documentation accordingly, so that RW API users out there can be aware of the changes you made.</p>
+
+<h2 id="code-styling">Code styling</h2>
+
+<p>As a way to help RW API developers collaborate, most microservices include a <a href="https://en.wikipedia.org/wiki/Lint_(software)">linter</a> tool and ruleset to promote, as much as possible, a common set of rules for the way code is structured.</p>
+
+<p>For microservices written in nodejs, this is achieved using <a href="https://eslint.org/">Eslint</a> with <a href="https://github.com/resource-watch/dataset/blob/develop/.eslintrc.yml">this configuration file</a>.</p>
+
+<p>For ruby-based microservices, you can use <a href="https://github.com/rubocop-hq/rubocop">Rubocop</a> along with <a href="https://github.com/resource-watch/resource-watch-manager/blob/develop/.rubocop.yml">this configuration file</a>.</p>
+
+<p>Most microservices will also include a <a href="https://github.com/resource-watch/dataset/blob/develop/.editorconfig">.editorconfig</a> file - you can learn more about there <a href="https://editorconfig.org/">here</a>.</p>
 
           <h1 id="endpoints">Endpoints</h1>
 
@@ -1137,219 +1474,6 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
         <span class="o">]</span>
     <span class="o">}</span>
 </code></pre>
-          <h1 id="microservices">Microservices</h1>
-
-<p>A list of information related to the microservices</p>
-
-<aside class="notice">
-    These services are only available to ADMIN users.
-</aside>
-
-<h2 id="list-all-registered-microservices">List all registered microservices</h2>
-
-<p>To obtain a list of all the registered microservices:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.748Z"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-        </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="s2">"dataset"</span><span class="w">
-
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dataset"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://dataset.default.svc.cluster.local:3000"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/find-by-ids"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/find-by-ids"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-01-24T13:04:46.728Z"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.778Z"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="s2">"layer"</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"dataset"</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="s2">"layer"</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aa667d1aee7ae16fb419c23"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Layer"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://layer.default.svc.cluster.local:6000"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/layer"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/layer"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-08T12:07:38.014Z"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
-<h3 id="filters">Filters</h3>
-
-<p>The microservice list provided by the endpoint can be filtered with the following attributes:</p>
-
-<table><thead>
-<tr>
-<th>Filter</th>
-<th>Description</th>
-<th>Accepted values</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>status</td>
-<td>Status of the microservice</td>
-<td><code class="prettyprint">pending</code>, <code class="prettyprint">active</code> or <code class="prettyprint">error</code></td>
-</tr>
-<tr>
-<td>url</td>
-<td>Internal URL of the microservice within the cluster</td>
-<td>String</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>Filtering by status</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice?status<span class="o">=</span>active <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<h2 id="get-a-microservice-by-id">Get a microservice by id</h2>
-
-<p>To obtain the details of a single microservice, use:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice/5aa667d1aee7ae16fb419c23 <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aa667d1aee7ae16fb419c23"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.778Z"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"layer"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"dataset"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"layer"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Layer"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://layer.default.svc.cluster.local:6000"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/layer"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/layer"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-08T12:07:38.014Z"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
-   </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h2 id="delete-microservice">Delete microservice</h2>
-
-<p>To remove a microservice:</p>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/api/v1/microservice/:id <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<p>This will delete the microservice and its associated endpoints from the gateway&rsquo;s database. It does not remove the actual running microservice application instance, which may re-register and become available once again.</p>
-
           <h1 id="subscriptions">Subscriptions</h1>
 
 <p>When communicating with the Subscriptions microservice from other microservices, you have access to special actions that are not available when using the public API. This section concerns subscriptions endpoints that offer special functionality when handling requests from other microservices.</p>
@@ -2220,6 +2344,219 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 <p>Additionally to provider-specific limitations, every SQL query is transformed by <a href="https://github.com/resource-watch/sql2json">the <code class="prettyprint">sql2json</code> microservice</a>, also maintained as <a href="https://www.npmjs.com/package/sql2json">NPM package</a>. There is a first conversion from SQL to JSON, and then from JSON to a SQL syntax that is compatible with <a href="https://github.com/NLPchina/elasticsearch-sql">the Elasticsearch SQL plugin</a>.</p>
 
 <p>You can read more about the limitations of using SQL with Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html">here</a>.</p>
+
+          <h1 id="microservices">Microservices</h1>
+
+<p>A list of information related to the microservices</p>
+
+<aside class="notice">
+    These services are only available to ADMIN users.
+</aside>
+
+<h2 id="list-all-registered-microservices">List all registered microservices</h2>
+
+<p>To obtain a list of all the registered microservices:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.748Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="w">
+
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dataset"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://dataset.default.svc.cluster.local:3000"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/find-by-ids"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/find-by-ids"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-01-24T13:04:46.728Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.778Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"layer"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dataset"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"layer"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aa667d1aee7ae16fb419c23"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Layer"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://layer.default.svc.cluster.local:6000"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/layer"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/layer"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-08T12:07:38.014Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+<h3 id="filters">Filters</h3>
+
+<p>The microservice list provided by the endpoint can be filtered with the following attributes:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Accepted values</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>Status of the microservice</td>
+<td><code class="prettyprint">pending</code>, <code class="prettyprint">active</code> or <code class="prettyprint">error</code></td>
+</tr>
+<tr>
+<td>url</td>
+<td>Internal URL of the microservice within the cluster</td>
+<td>String</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>Filtering by status</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice?status<span class="o">=</span>active <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="get-a-microservice-by-id">Get a microservice by id</h2>
+
+<p>To obtain the details of a single microservice, use:</p>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/api/v1/microservice/5aa667d1aee7ae16fb419c23 <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5aa667d1aee7ae16fb419c23"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"infoStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"numRetries"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"lastCheck"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-02-04T14:05:30.778Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"pathInfo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/info"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"pathLive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ping"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"layer"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"uncache"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"dataset"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"layer"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Layer"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://layer.default.svc.cluster.local:6000"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/layer"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"redirect"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/dataset/:dataset/layer"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v1/dataset/:dataset/layer"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-08T12:07:38.014Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"swagger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{}"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="delete-microservice">Delete microservice</h2>
+
+<p>To remove a microservice:</p>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/api/v1/microservice/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<p>This will delete the microservice and its associated endpoints from the gateway&rsquo;s database. It does not remove the actual running microservice application instance, which may re-register and become available once again.</p>
 
       </div>
       <div class="dark-box">
