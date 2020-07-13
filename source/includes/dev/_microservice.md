@@ -76,7 +76,7 @@ To add a new endpoint, here's the short tasklist you have to tackle:
 
 ### Register your route in koa
 
-This can be done in the `app/src/routes/api/v1/dataset.router.js` file, usually at the bottom of if:
+Route registration is done using the [koa-router](https://github.com/ZijianHe/koa-router) library, and can be done in the `app/src/routes/api/v1/dataset.router.js` file, usually at the bottom of if:
 
 ```javascript
 
@@ -233,6 +233,7 @@ Many microservices require the ability to store data to perform their function. 
 **Warning**: microservices run on ephemeral containers managed by Kubernetes, and often in multiple parallel instances, so do not rely on storing data on the filesystem, unless you know there's something like a [Kubernetes' persistent volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) to back it up.
 
 When accessing these tools, there are a few things you should keep in mind:
+
 - Isolation is not guaranteed, meaning your microservice will have theoretical access to other microservice's data, and other microservices may access your data.
 - Despite having access to it, you should not manipulate other microservice's data directly at the data layer, unless there's a clear agreement between the involved microservices.
 - It's up to you to ensure logic level isolation of your data - for example, if you rely on an relational database, be sure to use a unique database name.
@@ -316,6 +317,10 @@ A common issue some developers have concerns logging errors. It's not uncommon t
 Both cases are, indeed, errors. However, the first one is not an application error - the microservice behaved as it should. In this scenario, logging this event should not involve an `error` level event, as nothing unexpected, from the application's point of view, happened: a user asked for something that does not exist, and the microservice handled that as it should.
 
 On the second case, however, something really unexpected did happen - the microservice could not contact the database. This is an application level error, as we assume that our databases are always available for to microservices. This is an example scenario where a `error` logging line should be generated. Or, putting it in another way, only use `errors` logging for situations where a RW API developer should look into it.
+
+Another best practice we recommend for log management is using an application-wide configuration value to define the logging level. This is prove extremely useful when you switch from your local development environment (where you may prefer the `debug` logging level for maximum detail) to production (where `warn` or `error` may be more reasonable). 
+
+When using Bunyan, logging levels are set [per stream](https://github.com/resource-watch/dataset/blob/5d4b6d1a3b243f5ba985b444633c0f6acf78b35d/app/src/logger.js#L7). Many microservices integrate the [Config](https://www.npmjs.com/package/config) library at this stage, allowing you to have different values for [production](https://github.com/resource-watch/dataset/blob/25ab6b6ac7b1c4618b3d4ae1690957b256bafca8/config/prod.json#L4), [staging](https://github.com/resource-watch/dataset/blob/685a799f79f2441a129e4cf5cfaf3ed06ace5546/config/staging.json#L4) or other environments. Config also allows you to [override selected values with a environment variable](https://github.com/resource-watch/dataset/blob/34d4b00fe06bd6d7c9b1dd25e043da4e820db653/config/custom-environment-variables.json#L12), typically `LOGGER_LEVEL`, which you may use, for example, to temporarily override the logging level on a particular environment without changing the predefined default values. 
 
 If you want to access your logging output for a microservice that's already deployed on either staging or production, you'll need access to `kubernetes` logging UI or CLI.
 
@@ -417,7 +422,7 @@ Different microservices and endpoint will have different requirements when it co
 
 - The example above creates an actual dataset, meaning a MongoDB (or equivalent mocks) need to exist. For MongoDB specifically, our approach so far has been to use a real MongoDB instance, and running the tests on a separate database (´dataset-tests´ for example), aiming for isolation. Other microservices (for example, those relying on Elasticsearch) use mocks instead. Mocking usually leads to faster execution times, but can be troublesome to properly code. Use whichever alternative is best for you, and refer to the [Data layer](#data-layer) section for examples of microservices that use (and test with) different tools.
 - Nock has a [feature that blocks all HTTP requests](https://github.com/nock/nock#enabledisable-real-http-requests), which is useful to ensure your code or tests are not relying on an external service without you being aware - just be sure to whitelist your own IP, otherwise the HTTP call your test makes to your microservice will fail too.
-- Individual tests should run in isolation, and without assuming order. For example, running a test that first tests an insert, and then using the inserted element to test a delete would be a bad practice. Instead, your insert test should clean up its data once it's done, and the delete test should prepopulate the database before actually trying to delete it. A corollary of this is that you should be able to run your tests multiple times, back-to-back, without that affecting the results.
+- Tests must be idempotent, and execute without assuming order. For example, running a test that first tests an insert, and then using the inserted element to test a delete would be a bad practice. Instead, your insert test should clean up its data once it's done, and the delete test should prepopulate the database before actually trying to delete it. A corollary of this is that you should be able to run your tests multiple times, back-to-back, without that affecting the results.
 
 ### Test coverage metrics
 
