@@ -18,7 +18,7 @@ In this whole section, we will use code examples from the [Dataset microservice]
 This section is completely implementation specific and opinionated, and does not reflect any technical requirement of the API. However, as all nodejs microservices use this architecture, we will cover it here as it's useful for new developers. Other microservice implementations in other languages will have different architectures, and you can also implement your own microservice using nodejs using a totally different architecture. Take this whole section as information/suggestion rather than as a ruleset.
 </aside>
 
-Nodejs microservices are based on the [Koa](https://koajs.com/) framework for nodejs. To understand the following code snippets, we assume you are familiar with the basics of the framework, like how routes are declared and handled, and what middleware are and how they work. You should also be somewhat familiar with tools like [npm](https://www.npmjs.com/), [mongo](https://www.mongodb.com/) and [mongoose](https://mongoosejs.com/), [Jenkins CI](https://jenkins.io/), [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/)
+Nodejs microservices are based on the [Koa](https://koajs.com/) framework for nodejs. To understand the following code snippets, we assume you are familiar with the basics of the framework, like how routes are declared and handled, what middleware is, and how it works. You should also be somewhat familiar with tools like [npm](https://www.npmjs.com/), [mongo](https://www.mongodb.com/) and [mongoose](https://mongoosejs.com/), [Jenkins CI](https://jenkins.io/), [docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/)
 
 ### Anatomy of a (nodejs) microservice
 
