@@ -1,6 +1,6 @@
 # Microservice development guide
 
-In this chapter, we'll cover additional details that you, as a RW API developer, should keep in mind when developing your microservice. We'll focus not only on the technical requirements you need to meet for your microservice to communicate with the remaining RW API internal components, bur also discuss the policy surrounding development for the RW API, as a way to achieve a certain degree of consistency across a naturally heterogeneous microservice-based system. 
+In this chapter, we'll cover additional details that you, as a RW API developer, should keep in mind when developing your microservice. We'll focus not only on the technical requirements you need to meet for your microservice to communicate with the remaining RW API internal components, but also discuss the policy surrounding development for the RW API, as a way to achieve a certain degree of consistency across a naturally heterogeneous microservice-based system. 
 
 <aside class="notice">
 Control Tower, which is mentioned throughout these docs, will be replaced soon with an equivalent but alternative solution. While we will aim to have this transition be as seamless as possible, you may need to adapt your code once this is done.
