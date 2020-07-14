@@ -16,7 +16,7 @@ Control Tower itself acts both as an API in itself - with endpoints for manageme
 
 ![Microservice dependency graph](https://raw.githubusercontent.com/gfw-api/wri-api-dependencies/master/graphs/dependencies_graph.png)
 
-The graph above illustrates the dependencies between different microservices. Most dependencies are based on endpoint calls: an arrow pointing from `query` to `dataset` means that the `query` microservice makes a call to one of the endpoints implemented by the `dataset` microservice. The exception to this rule are `doc-orchestrator`,  `doc-executor` and  `doc-writer`, who instead depend on each other via [RabbitMQ](https://www.rabbitmq.com/) messages.
+The graph above illustrates the dependencies between different microservices as of July 2020. Most dependencies are based on endpoint calls: an arrow pointing from `query` to `dataset` means that the `query` microservice makes a call to one of the endpoints implemented by the `dataset` microservice. The exception to this rule are `doc-orchestrator`,  `doc-executor` and  `doc-writer`, who instead depend on each other via [RabbitMQ](https://www.rabbitmq.com/) messages.
 
 
 ![Microservice with no dependencies](https://raw.githubusercontent.com/gfw-api/wri-api-dependencies/master/graphs/no_dependencies_graph.png)
@@ -43,4 +43,3 @@ We'll go into more details about these processes in the next sections
 Control Tower matches each incoming external request to a microservice, by comparing its URI and request method. It then generates a new HTTP request to that microservice and will wait for a response to it - which is used as a response to the original external request.
 
 Microservices can make requests to each other via Control Tower. They  also have unrestricted access to the public internet, so 3rd party services can be accessed as they normally would be. The API infrastructure also has other resources, like databases (MongoDB, ElasticSearch, Postgres) or publish-subscribe queues (RabbitMQ), which can be accessed. We'll cover those in more details in a separate section.
-
