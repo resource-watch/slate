@@ -152,7 +152,25 @@
 
 <p>Internal communication between CT and the microservices is done through HTTP requests, and as such each microservice is built on top of a web server..These different web servers create a network within the API itself, to which will refer throughout the rest of the documentation when we mention &ldquo;internal network&rdquo; or &ldquo;internal requests&rdquo;. By opposition, an &ldquo;external request&rdquo; will reference a request from/to the world wide web, and &ldquo;external network&rdquo; basically means &ldquo;the internet&rdquo;.</p>
 
-<p>Control Tower itself acts both as an API in itself - with endpoints for management and monitoring - as well as a catch-all side, that is used to proxy requests to the functional endpoints. gi</p>
+<p>Control Tower itself acts both as an API in itself - with endpoints for management and monitoring - as well as a catch-all side, that is used to proxy requests to the functional endpoints.</p>
+
+<h2 id="microservice-dependency-graphs">Microservice dependency graphs</h2>
+
+<p><img src="https://raw.githubusercontent.com/gfw-api/wri-api-dependencies/master/graphs/dependencies_graph.png" alt="Microservice dependency graph" /></p>
+
+<p>The graph above illustrates the dependencies between different microservices as of July 2020. Most dependencies are based on endpoint calls: an arrow pointing from <code class="prettyprint">query</code> to <code class="prettyprint">dataset</code> means that the <code class="prettyprint">query</code> microservice makes a call to one of the endpoints implemented by the <code class="prettyprint">dataset</code> microservice. The exception to this rule are <code class="prettyprint">doc-orchestrator</code>,  <code class="prettyprint">doc-executor</code> and  <code class="prettyprint">doc-writer</code>, who instead depend on each other via <a href="https://www.rabbitmq.com/">RabbitMQ</a> messages.</p>
+
+<p><img src="https://raw.githubusercontent.com/gfw-api/wri-api-dependencies/master/graphs/no_dependencies_graph.png" alt="Microservice with no dependencies" /></p>
+
+<p>The microservices above do not depend on any of the other microservices.</p>
+
+<p>It&rsquo;s worth noting that most microservices depend on Control Tower and functionality implicitly offered by it - for example, Control Tower will automatically pass to the microservice the details of the user, should the original HTTP request come with a valid JWT token.</p>
+
+<h2 id="data-layer-dependencies">Data layer dependencies</h2>
+
+<p><img src="https://raw.githubusercontent.com/gfw-api/wri-api-dependencies/master/graphs/storage_graph.png" alt="Data layer dependencies" /></p>
+
+<p>The graph above illustrates the different data layer elements present on the RW API, and the microservices or sites that depend on each of these.</p>
 
 <h2 id="lifecycle-of-a-request">Lifecycle of a request</h2>
 
