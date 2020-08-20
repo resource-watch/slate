@@ -9,6 +9,7 @@ toc_footers:
 
 includes:
   - tutorial/webdev_mapbox_quickstart/quickstart_webmap
+  - tutorial/webdev_geometry_analysis/geometry_analysis
 
 logo: logo-rw.png
 
