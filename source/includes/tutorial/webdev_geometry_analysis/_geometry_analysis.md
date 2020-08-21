@@ -434,12 +434,116 @@ From the above hexdump, and from not-listed-here information, it is known that t
 In future steps this groundwork set us up to use some of that information for calls to the `/query` endpoint.
 
 
-### Accessing vector attributes
+## Accessing vector attributes
 
-[[ TODO ]]
+As mentioned in the above section, vector tiles hold both geometry and attributes associated with each feature.
+All features within the same vector tile layer will have the same set of attribute fields.
+In this section, some of these attribute fields will be used in a popup that is displayed whenever a user clicks on a polygon.
 
-Add tooltip with attribute information (name, id, area, etc)
-Add href to protectedplanet.org.
+From the hexdump in the previous section, you can see the names of the fields associated with the `wdpa_protected_areas_201909` layer, including `wdpaid`, `name`, `desig`, `status_yr`, and many more.
+The full set of attributes is described in the [WDPA User Manual](https://www.protectedplanet.net/system/comfy/cms/files/files/000/000/203/original/WDPA_WDOECM_Manual_1_6.pdf), or the quick list without descriptions can be obtained easily with `ogrinfo -so wdpa_tmp.mvt wdpa_protected_areas_201909`:
+
+<div class="center-column"></div>
+```
+Layer name: wdpa_protected_areas_201909
+Geometry: Multi Polygon
+Feature Count: 2737
+Extent: (0.000000, 0.000000) - (4096.000000, 4096.000000)
+Layer SRS WKT:
+(unknown)
+mvt_id: Integer64 (0.0)
+wdpaid: Integer (0.0)
+wdpa_pid: String (0.0)
+pa_def: String (0.0)
+name: String (0.0)
+orig_name: String (0.0)
+desig: String (0.0)
+desig_eng: String (0.0)
+desig_type: String (0.0)
+iucn_cat: String (0.0)
+int_crit: String (0.0)
+marine: String (0.0)
+rep_m_area: Real (0.0)
+gis_m_area: Real (0.0)
+rep_area: Real (0.0)
+gis_area: Real (0.0)
+no_take: String (0.0)
+no_tk_area: Real (0.0)
+status: String (0.0)
+status_yr: Integer (0.0)
+gov_type: String (0.0)
+own_type: String (0.0)
+mang_auth: String (0.0)
+mang_plan: String (0.0)
+verif: String (0.0)
+metadataid: Integer (0.0)
+sub_loc: String (0.0)
+parent_iso: String (0.0)
+iso3: String (0.0)
+geostore_id: String (0.0)
+```
+
+To enable a popup with some of this information, add the following to the javascript file, above the start of the main script execution.
+
+<div class="center-column"></div>
+```javascript
+// declare a function that returns an HTML string to be displayed
+// in the popup on a vector element.
+// takes one parameter:
+//   (f) an element of the vector tile
+const popupContentForWDPA = (f) => {
+    // WDPA identifier string
+    const wdpaId = f.properties['wdpaid'];
+    // start assembling the string of HTML that will be displayed
+    // first make a hyperlink to a details page for this geometry (external site)
+    let content = '<span>name: ' + 
+                     '<a target="_blank" ' + 
+                        'href="https://protectedplanet.net/' + wdpaId + '" >' + 
+                           f.properties['name'] +
+                  '</a></span>';
+    // add the identifier, since that is being used it should also be displayed
+    content += '<br><span>wdpaid: ' + wdpaId + '</span>';
+    return content;
+}
+```
+
+and the following at the end of the file, after the map has been loaded.
+
+<div class="center-column"></div>
+```javascript
+// When a click event occurs on a feature in the WDPA vector layer,
+// open a popup at the location of the click.
+map.on('click', 'wdpa-tile-cache', async (e) => {
+    const features = map.queryRenderedFeatures(e.point, {layers: ['wdpa-tile-cache']});
+    new mapboxgl.Popup()
+    .setLngLat(e.lngLat)
+    .setHTML(await popupContentForWDPA(features[0]))  // use first feature if many selected
+    .addTo(map);
+});
+
+
+// Change the cursor to a pointer when the mouse is over the WDPA layer.
+map.on('mouseenter', 'wdpa-tile-cache', function() {
+    map.getCanvas().style.cursor = 'pointer';
+});
+
+
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'wdpa-tile-cache', function() {
+    map.getCanvas().style.cursor = '';
+});
+```
+
+The function `popupContentForWDPA` simply returns the HTML that will be used within the popup.
+There are two entries:
+
+- the `name` of the area, which is hyperlinked to this entry on the [protectedplanet.net](protectedplanet.net) website using the `wdpaid` property to construct the URL.
+- the `wdpaid`, a unique identifier for the protected area.
+
+There is no necessity for this to be an async function currently, but in later steps async will be needed, so this is laying the groundwork.
+
+The three calls at the end of the file exist to register functions with map events, importantly when a WDPA geometry is clicked, a popup will appear where the click occurred and display the two pieces of information described above.
+
 
 ## Querying a table
 
