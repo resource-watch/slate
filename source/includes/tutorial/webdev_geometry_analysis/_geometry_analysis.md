@@ -514,7 +514,9 @@ and the following at the end of the file, after the map has been loaded.
 // When a click event occurs on a feature in the WDPA vector layer,
 // open a popup at the location of the click.
 map.on('click', 'wdpa-tile-cache', async (e) => {
+    // get the features underneath the clicked point
     const features = map.queryRenderedFeatures(e.point, {layers: ['wdpa-tile-cache']});
+    // create a popup at the clicked point
     new mapboxgl.Popup()
     .setLngLat(e.lngLat)
     .setHTML(await popupContentForWDPA(features[0]))  // use first feature if many selected
@@ -535,7 +537,7 @@ map.on('mouseleave', 'wdpa-tile-cache', function() {
 ```
 
 The function `popupContentForWDPA` simply returns the HTML that will be used within the popup.
-There are two entries:
+There are two entries in the HTML string:
 
 - the `name` of the area, which is hyperlinked to this entry on the [protectedplanet.net](protectedplanet.net) website using the `wdpaid` property to construct the URL.
 - the `wdpaid`, a unique identifier for the protected area.
@@ -544,14 +546,203 @@ There is no necessity for this to be an async function currently, but in later s
 
 The three calls at the end of the file exist to register functions with map events, importantly when a WDPA geometry is clicked, a popup will appear where the click occurred and display the two pieces of information described above.
 
+In the next section the `/query` endpoint will be discussed.
+
 
 ## Querying a table
 
-[[ TODO ]]
+For the current example, the WDPA vector geometries has no _awareness_ of the tree cover loss values that are being displayed underneath them.
+There is no simple way to do spatial statistics on the raster tiles - as you should recall, the raster tiles are pre-rendered RGB versions of a much larger and complex dataset.
+The process for making the tiles is _lossy_ - there is no way to recover the _true values_ for tree cover loss from these rendered images.
+But we do, in fact, need to display tree cover loss values for the protected areas.
+Future tutorials will demonstrate _on-the-fly analysis_, but for now a more simple method will be employed.
 
-Walk through the WDPA -> TCL precomputed table.
+Here we will use a pre-computed lookup table to connect WDPA geometries with tree cover loss metrics.
+This table and its rows will be accessed through the `/query` endpoint using basic SQL functionality to _query_ a table and extract useable information.
+This section of the tutorial will introduce the basics of the `/query` endpoint, describe the table being queried, and demonstrate how real queries look.
 
-Do example queries in the terminal or browser.
+Let's begin with looking at the [`/query` endpoint reference](https://resource-watch.github.io/doc-api/index-rw.html#querying-datasets).
+You should read over the section for a comprehensive understanding.
+Below is a condensed version with the critical bits.
+
+The `/query` endpoint is used primarily in conjuction with the `?sql=...` URL parameter, which defines the query to be performed using a basic subset of SQL.
+All queries should be `SELECT`s, since they are _reading_ the information and not _updating_ the table.
+In practice, queries are likely to have the traditional form of `SELECT .... FROM .... WHERE ....`.
+The query construction will impact the structure of the returned information - you can get a single value, a list of values, or something looking like a table depending on what you request.
+The response is by default a JSON-deserializable string, but with the `?format={json|csv}` parameter that can be changed.
+
+
+The dataset ID for pre-computed tree cover loss within WDPA geometries is given below.
+This will be used throughout this section and the next section, where the queries will be included in the web application.
+For this section the queries will be made through the terminal or with the URL bar in your web browser.
+
+<div class="center-column"></div>
+```
+lookupTableId = 'a4d92f66-83f4-40f9-9d70-17297ef90e63';
+```
+
+Look at the Dataset by sending a GET request to:
+
+<div class="center-column"></div>
+```
+http://api.resourcewatch.org/v1/dataset/a4d92f66-83f4-40f9-9d70-17297ef90e63
+```
+
+The `legend` object in the response holds information about the structure and schema of the table.
+Look over the column names, organized by data type.
+
+<div class="center-column"></div>
+```
+{                                                                                                
+  ...
+  "legend": {
+    "date": [],
+    "region": [],
+    "country": [],
+    "nested": [],
+    "integer": [
+      "umd_tree_cover_loss__year",
+      "umd_tree_cover_density__threshold",
+      "ifl_intact_forest_landscape__year"
+    ],
+    "short": [],
+    "byte": [],
+    "double": [
+      "umd_tree_cover_loss__ha",
+      "whrc_aboveground_biomass_loss__Mg",
+      "whrc_aboveground_co2_emissions__Mg"
+    ],
+    "float": [],
+    "half_float": [],
+    "scaled_float": [],
+    "boolean": [],
+    "binary": [],
+    "text": [],
+    "keyword": [
+      "wdpa_protected_area__id",
+      "wdpa_protected_area__name",
+      "wdpa_protected_area__iucn_cat",
+      "wdpa_protected_area__iso",
+      "wdpa_protected_area__status",
+      "tsc_tree_cover_loss_drivers__type",
+      "esa_land_cover_2015__class",
+      "is__birdlife_alliance_for_zero_extinction_site",
+      "gfw_plantation__type",
+      "is__gmw_mangroves_1996",
+      "is__gmw_mangroves_2016",
+      "is__umd_regional_primary_forest_2001",
+      "is__gfw_tiger_landscape",
+      "is__landmark_land_right",
+      "is__gfw_land_right",
+      "is__birdlife_key_biodiversity_area",
+      "is__gfw_mining",
+      "is__peatland",
+      "is__gfw_oil_palm",
+      "is__idn_forest_moratorium",
+      "is__gfw_wood_fiber",
+      "is__gfw_resource_right",
+      "is__gfw_managed_forest"
+    ]
+  },
+  ...
+}
+
+```
+
+Let's issue a basic query to get all fields (columns) for five rows, so we have an opportunity to look at the information in the table:
+
+<div class="center-column"></div>
+```
+http://api.resourcewatch.org/v1/query/?sql=SELECT * FROM a4d92f66-83f4-40f9-9d70-17297ef90e63 LIMIT 5
+```
+
+The response should look something like:
+
+<div class="center-column"></div>
+```
+{
+  "data": [
+    {
+      "wdpa_protected_area__id": 555531125,
+      "wdpa_protected_area__name": "Peniche / Stª Cruz",
+      "wdpa_protected_area__iucn_cat": "Not Reported",
+      "wdpa_protected_area__iso": "PRT",
+      "wdpa_protected_area__status": "Designated",
+      "umd_tree_cover_loss__year": 2019,
+      "umd_tree_cover_density__threshold": 10,
+      "tsc_tree_cover_loss_drivers__type": "Forestry",
+      "esa_land_cover_2015__class": "Settlement",
+      "is__birdlife_alliance_for_zero_extinction_site": false,
+      "gfw_plantation__type": 0,
+      "is__gmw_mangroves_1996": false,
+      "is__gmw_mangroves_2016": false,
+      "ifl_intact_forest_landscape__year": 0,
+      "is__umd_regional_primary_forest_2001": false,
+      "is__gfw_tiger_landscape": false,
+      "is__landmark_land_right": false,
+      "is__gfw_land_right": false,
+      "is__birdlife_key_biodiversity_area": false,
+      "is__gfw_mining": false,
+      "is__peatland": false,
+      "is__gfw_oil_palm": false,
+      "is__idn_forest_moratorium": false,
+      "is__gfw_wood_fiber": false,
+      "is__gfw_resource_right": false,
+      "is__gfw_managed_forest": false,
+      "umd_tree_cover_loss__ha": 0.2391284441558024,
+      "whrc_aboveground_biomass_loss__Mg": 14.228141162972282,
+      "whrc_aboveground_co2_emissions__Mg": 26.08492546544918,
+      "_id": "AXJhK02CBq2MwHEKuVTU"
+    },
+    ...
+  ],
+  ...
+}
+```
+
+Most of these fields are not needed for our current pursuit of associating tree cover loss with a WDPA geometry.
+Some are very useful for that purpose, however:
+
+- `wdpa_protected_area__id`: the identifier for a WDPA protected area
+- `umd_tree_cover_loss__year`: the year of a record (row)
+- `umd_tree_cover_density__threshold`: the threshold of tree density for a record (row)
+- `umd_tree_cover_loss__ha`: the amount of forest loss in hectares for a record (row)
+
+We will use these in the future for the web application, but let's quickly try out another query that utilizes more of the SQL capabilities.
+
+Let's say you want to get an aggregated value for tree cover loss over a certain country.
+
+<div class="center-column"></div>
+```
+http://api.resourcewatch.org/v1/query/?sql=SELECT SUM(umd_tree_cover_loss__ha) AS total_loss FROM a4d92f66-83f4-40f9-9d70-17297ef90e63 WHERE wdpa_protected_area__iso='BRA' AND umd_tree_cover_loss__year=2015 AND umd_tree_cover_density__threshold=30
+```
+
+The return should look like:
+
+<div class="center-column"></div>
+```
+{
+  "data": [
+    {
+      "total_loss": 266476.8886672246
+    }
+  ],
+  ...
+}
+```
+
+This query used:
+
+- the `SUM` function to aggregate a numeric field (`umd_tree_cover_loss__year`)
+- the `AS` assigner to give a meaningful label to output field
+- the `WHERE` modifier to construct a clause that filters the rows
+  - the country must be Brasil (ISO code BRA)
+  - the year must be 2015
+  - the threshold for consideration is 30% tree cover loss
+
+Try to define more queries and explore the data a bit before moving to the next section.
+When aggregating values always remember to subselect in a meaningful way to get meaningful output values.
+In the above query it is important to supply a threshold in the `WHERE` clause, otherwise there is the potential for double counting (or multi-counting) the same lost forest (50% threshold fully encompasses the values for the 30% threshold).
 
 
 ## Dynamic queries at runtime
