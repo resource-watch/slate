@@ -747,15 +747,92 @@ In the above query it is important to supply a threshold in the `WHERE` clause, 
 
 ## Dynamic queries at runtime
 
-[[ TODO ]]
+Now that we have experience with writing queries, let's integrate that into the web application.
 
-Use polygon information to build a query, execute it, and display that information.
+Let's start with writing a function to do the querying.
+As a reminder of our intention, we are trying to get a measure of tree cover loss associated with a single WDPA geometry.
+
+Add this function above the main script execution.
+
+<div class="center-column"></div>
+```
+// declare an async function that calls an API endpoint for querying.
+// this uses a pre-computed table that links WDPA identifiers to tree cover loss values.
+// takes three parameters
+//   (wdpaId) integer; the WDPA geometry ID, which uniquely identifies a protected area
+//   (year) integer; the year of interest {2001 - 2019}
+//   (threshold) integer; the tree cover loss threshold {10, 15, 20, 25, 30, 50, 75}
+// returns an object interpreted from the JSON response
+const callApiQueryWDPATreeCoverLoss = async (wdpaId, year, threshold) => {
+    //construct the query
+    const queryDatasetId = 'a4d92f66-83f4-40f9-9d70-17297ef90e63';
+    const sqlQuery = 'https://api.resourcewatch.org/v1/query/' + 
+		     '?sql=SELECT SUM(umd_tree_cover_loss__ha) AS tcl_ha ' +
+	                  'FROM ' + queryDatasetId + 
+		          ' WHERE wdpa_protected_area__id=' + wdpaId +
+		          ' AND umd_tree_cover_loss__year=' + year + 
+	                  ' AND umd_tree_cover_density__threshold=' + threshold;
+    // fetch the API endpoint (GET request)
+    const response = await fetch(sqlQuery)
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    // convert response to JS object
+    return response.json();
+}
+```
+
+Reload the webpage and try this function with the developer console.
+<div class="center-column"></div>
+```
+await callApiQueryWDPATreeCoverLoss(40811, 2019, 30);
+```
+
+Now let's extract this information and get it into the popup.
+In the below function you will see there are some additional metrics being inserted as well.
+
+Delete the existing `popupContentForWDPA` function and replace it with the following:
+
+<div class="center-column"></div>
+```
+// declare a function that returns a string to be displayed
+// in the popup on a vector element.
+// takes one parameter:
+//   (e) an element of the vector tile
+const popupContentForWDPA = async (f) => {
+    // subtract marine area from total area and convert from square km to hectare
+    let landAreaHectare = (f.properties['rep_area'] - f.properties['rep_m_area']) * 100;
+    // WDPA identifier will be used to query the TCL data table
+    let wdpaId = f.properties['wdpaid'];
+    // get the Tree Cover Loss area, which is returned in units of hectare
+    let tclResponse = await callApiQueryWDPATreeCoverLoss(wdpaId, 2019, 30);
+
+    // start assembling the string of HTML that will be displayed
+    // first make a hyperlink to a details page for this geometry (external site)
+    let content = '<span>name: ' + 
+                     '<a target="_blank" ' + 
+                        'href="https://protectedplanet.net/' + wdpaId + '" >' + 
+                           f.properties['name'] +
+                  '</a></span>';
+    // add the identifier, since that is being used it should also be displayed
+    content += '<br><span>wdpaid: ' + wdpaId + '</span>';
+    // add the land area, truncating to two digits past the decimal
+    content += '<br><span>land area (ha): ' + landAreaHectare.toFixed(2) + '</span>';
+    // add the TCL area, truncating to two digits past the decimal
+    content += '<br><span>2019 TCL area (ha): ' + tclResponse['data'][0]['tcl_ha'].toFixed(2) + '</span>';
+    return content;
+}
+```
+
+With the popup now able to display the tree cover loss for each polygon, let's reload the webpage and try it out!
 
 
 ## Next Steps
 
-[[ TODO ]]
+The `/query` endpoint is _the_ method for getting the real data.
+The use of SQL-like functionality enables basic types of filtering, subselection, and aggregation to produce usable information.
+There are of course limitations and not all SQL functionality is available, notably the _relational_ aspect that some may expect.
+The `/query` endpoint does not support `JOIN`s and have very limited support for nested queries or subqueries.
 
-OTF analysis coming later.
-Additional tweaks to the query, more descriptions and quirks as discovered.
-...
+Future tutorials will discuss on-the-fly analyses, which will bypass the need for pre-computed tables.
+On-the-fly analysis allows for rasters to be _queried_ and analyzed with vector geometries, including those that are drawn by the user or not known ahead of time.
