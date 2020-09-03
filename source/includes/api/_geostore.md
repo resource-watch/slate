@@ -35,7 +35,7 @@ A number of endpoints are available for retrieving geostore objects, each with a
 | GET | `/v1/geostore/:id`        | [Get geostore by Geostore ID](#get-geostore-by-geostore-id) |
 | POST | `/v1/geostore/find-by-ids`| [Get geostores by Geostore IDs](#get-geostore-by-geostore-ids) |
 | GET | `/v1/geostore/:id/view`   | [Get geostore by Geostore ID and view at GeoJSON.io](#get-geostore-by-geostore-id-and-view-at-geojson-io) |
-| GET | `/v1/geostore/admin/list` | Return an array with the Geostore ID, name, and ISO 3166-1 alpha-3 code of all `admin` geostore objects in the Geostore [TODO: Confirm if this is ALL objects or a selection] |
+| GET | `/v1/geostore/admin/list` | [Get all Geostore IDs, names and ISO 3166-1 alpha-3 codes](#get-all-geostore-ids-names-and-iso-3166-1-alpha-3-codes) [TODO: Confirm if this is ALL objects or a selection] |
 | GET | `/v1/geostore/admin/:iso` | [Get geostore by ISO 3166-1 alpha-3 code](#get-geostore-by-iso-3166-1-alpha-code) |
 | GET | `/v1/geostore/admin/:iso/:id1` | Return a single geostore by ISO 3166-1 alpha-3 code and GADM admin code 1 |
 | GET | `/v1/geostore/admin/:iso/:id1/:id2` | Return a single geostore by ISO 3166-1 alpha-3 code, GADM admin code 1, and admin code 2 |
@@ -131,6 +131,8 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/ca38fa80a4ffa9ac6217a7e0bf
 
 ### Get geostore by Geostore ID and view at GeoJSON.io
 
+### Get geostores by Geostore IDs
+
 ### Get geostore by ISO 3166-1 alpha-3 code
 
 Geostore objects can be retrieved using [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) values (`iso`) via the `geostore/admin/` endpoint.
@@ -146,8 +148,6 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/<iso>
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
 ```
-
-### Get geostores by Geostore IDs
 
 ### Get all Geostore IDs, names and ISO 3166-1 alpha-3 codes
 
