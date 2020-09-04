@@ -25,6 +25,7 @@ includes:
   - api/widget
   - api/jiminy
   - api/fields
+  - api/forms
   - api/metadata
   - api/vocabulary
   - api/geostore
