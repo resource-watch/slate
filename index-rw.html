@@ -6969,6 +6969,34 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+          <h1 id="forms">Forms</h1>
+
+<p>This section details the endpoints provided by the GFW Forms API service.</p>
+
+<h2 id="requesting-a-webinar">Requesting a webinar</h2>
+
+<blockquote>
+<p>To create a new webinar request, you need to provide at least the following details:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/form/request-webinar"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d  <span class="se">\</span>
+<span class="s1">'{
+    "name": "Example name",
+    "email": "example@email.com",
+    "description": "Example description"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Successful response: 204 No Content</p>
+</blockquote>
+
+<p>In order to request a new webinar, you should make a POST request to the <code class="prettyprint">form/request-webinar</code> endpoint, providing at least a <code class="prettyprint">name</code> and an <code class="prettyprint">email</code> in the request body. You can also optionally provide a <code class="prettyprint">description</code>.</p>
+
+<p>Webinar requests are pushed into a Google Spreadsheet (using the Google Sheets API). Staging webinar requests are located <a href="https://docs.google.com/spreadsheets/d/1JsXX7aE_XlJm-WWhs6wM5IW0UfLi-K9OmOx0mkIb0uA/edit?usp=sharing">here</a>, and production webinar requests are located <a href="https://docs.google.com/spreadsheets/d/1zqiimFua1Lnm9KM4ki_njCaMuRhaPBif30zbvxIZWa4/edit?usp=sharing">here</a>.</p>
+
+<p>In case of success, this endpoint will return a response with status code <code class="prettyprint">204 No Content</code>. If an error occurs, a response with status code <code class="prettyprint">500 Internal Server Error</code> is returned.</p>
+
           <h1 id="metadata">Metadata</h1>
 
 <h2 id="metadata-definition">Metadata definition</h2>
