@@ -8,9 +8,193 @@ Control Tower, which is mentioned throughout these docs, will be replaced soon w
 
 ## Microservice overview
 
-As described in the [API Architecture](#api-architecture) section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API's core microservices are built using [nodejs](https://nodejs.org), with [python](https://www.python.org/) and [Rails](https://rubyonrails.org/) being distant 2nd and 3rd respectively. This is due to personal preference of the team behind the API, as there really isn't a technical reason or limitation preventing the creation of microservices in PHP, Go, Elixir, etc.
+As described in the [API Architecture](#api-architecture) section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API's core microservices are built using [nodejs](https://nodejs.org), with [Python](https://www.python.org/) and [Rails](https://rubyonrails.org/) being distant 2nd and 3rd respectively. This is due to personal preference of the team behind the API, as there really isn't a technical reason or limitation preventing the creation of microservices in PHP, Go, Elixir, etc.
 
 In this whole section, we will use code examples from the [Dataset microservice](https://github.com/resource-watch/dataset/), which is built using nodejs. We will discuss the general principles, which should apply to all implementations, as well as implementation details, which may apply to your scenario if you are also using nodejs, or that may not apply if you are using something else.
+
+## Setting up a development environment
+
+In this section, we'll cover the details of how you can configure your operating system to be used as a development environment for the [Dataset microservice](https://github.com/resource-watch/dataset/), which is built using nodejs. These instructions will apply, without major changes, to all other nodejs-based microservices. For microservices based on Python or Rails, and when using [Docker](https://www.docker.com/), you should also be able to use these instructions. Native execution for Python and Rails microservices is done using equivalent commands, which we'll outline as we go. 
+
+Note that these instructions aim at giving you the details about **what's specific to the RW API**, and it's not a step-by-step list of commands you can copy-paste. For example, we will not cover the details of how to install dependencies - that's something best answered by that particular piece of software's documentation page for your operating system, which you can easily find with your favourite search engine.
+
+Also, when applying these instruction to different microservices, be sure to review their respective `README.md` file for a comprehensive list of dependencies you'll need, or other specific details about its setup process.
+
+### Execution - native vs Docker
+
+All microservices can be executed in two ways: natively or using [Docker](https://www.docker.com/). If you are not familiar with Docker, we suggest briefly learning about it does before proceeding. In a nutshell, it simplifies setup and execution, at the expense of varying performance hit, depending on your operating system. Here are a few key points you should consider when making a decision between executing natively or using Docker:  
+
+- When using Docker, you typically do not need to set up any other dependency for any microservice - Docker will take care of that for you.
+- On Windows and Mac, Docker will run a small Linux virtual machine behind the scenes, which will mean a noticeable increase in resource consumption and a reduction in runtime performance, when compared to native execution. When using linux, that does not happen, and runtime performance and resource usage is roughly equivalent to native execution.
+- Docker does have its quirks, and it does come with a bootstrap time penalty when running your code, so if you are not very familiar with it, or are used to native execution of nodejs, Python or Rails code, it may pay off to use that approach. 
+
+### Using native execution
+
+
+#### Getting the code
+
+The first step will be getting the source code from [Github](https://github.com/resource-watch/dataset/) to your computer using the [Git](https://git-scm.com/) CLI (or equivalent). 
+
+```shell
+git clone git@github.com:resource-watch/dataset.git
+```
+
+#### Installing dependencies
+
+In the source code you just downloaded, you'll find a `README.md` file with detailed instruction for this microservice, including dependencies you'll need to install. For natively running the dataset microservice, you'll need [nodejs](https://nodejs.org/en/), [yarn](https://yarnpkg.com) and [MongoDB](https://www.mongodb.com/).
+
+When setting up nodejs locally, we recommend using a tool like [nvm](https://github.com/nvm-sh/nvm) that allows you to easily install and manage different nodejs versions on your computer. For Python, you can use something like [pyenv](https://github.com/pyenv/pyenv), and [rvm](https://rvm.io/) for Rails-based microservices. All of these tools' docs cover install instructions for different operating systems.
+
+You should also be mindful of the exact version of the language required by the microservice. For dataset, the `package.json` file typically has a `engine` value which will tell you which version(s) are required. Another place where you'll find this info (which also works for other languages) is the content of the `Dockerfile` (typically in the first line) - `FROM node:12-alpine` means this microservice runs on nodejs v12.
+
+[Yarn](https://yarnpkg.com) is a package manager for nodejs applications (a spiritual equivalent to [pip](https://pypi.org/project/pip/) or [Bundler](https://bundler.io/)) which is also needed. Once it's installed, be sure to use it to install the necessary libraries:
+
+```shell
+yarn
+```
+ 
+[MongoDB](https://www.mongodb.com/) is a common dependency of many RW API microservices, with applications like [Postgres](https://www.postgresql.org/), [Redis](https://redis.io/), [RabbitMQ](https://www.rabbitmq.com/) or [Elasticsearch](https://www.elastic.co/home) also being required on certain microservices. If a version number is not identified on the `README.md` file, the `docker-compose-test.yml` file may help. `image: mongo:3.4` means this microservice depends on MongoDB v3.4.
+
+Besides these dependencies, microservices may also depend on the Control Tower gateway, and other microservices: 
+
+- As we'll cover in the [Registering on Control Tower section](#registering-on-control-tower), on bootstrap, a microservice will register itself in Control Tower so it can expose its endpoints to the public facing API - but this behavior can be disabled, as we'll see in a moment.
+- Microservices expect user data to be provided by Control Tower in a specific format - a workaround for this is passing this data yourself when calling your microservice endpoints
+- [Requests to other microservices](#requests-to-other-microservices) are routed through Control Tower, so if the endpoints you will be developing rely on other microservices, you need to set up both Control Tower and those microservices.
+- Control Tower implements certain endpoints related to user management, which may also be required by the endpoints you'll be working on.
+
+If your endpoint does not rely on other microservices, and you don't rely on or can spoof the user data provided by Control Tower, you can set the `CT_REGISTER_MODE` environment variable to a value other than `auto` to disable the automatic registration on startup, thus removing the dependency on Control Tower. However, this is not recommended, as using Control Tower will have your development environment resemble the production setup, thus potentially highlighting any issues you may otherwise miss.
+
+To set up Control Tower, follow these same instructions, as the process is the same as for any nodejs microservice.
+
+#### Configuration
+
+With the dependencies set up, it's time to configure the microservice. This is done using [environment variables](https://en.wikipedia.org/wiki/Environment_variable) (env vars) which you can define in multiple ways, depending on your OS, way of executing the code (e.g. many IDEs have a "Run" feature that allow configuring environment variables using a GUI) and personal preference. For this tutorial, and going forward, we'll assume you'll run the code from a terminal and specify the environment variables inline.
+
+```shell
+NODE_ENV=production CT_REGISTER_MODE=none <more variables> <your command>
+```
+
+To find out more about which env vars you can/need to specify, refer to the microservice's `README.md` file, as it typically documents the main variables available to you. Nodejs-base microservices will often have a full list in the `config/custom-environment-variables.json` file. The `docker-compose-test.yml` and `docker-compose-develop.yml` files contain usages of said variables, and may be helpful if you are looking for an example or an undocumented variable.
+
+As a rule of thumb, env vars configure things like databases address and credentials, 3rd party services (for example, an AWS S3 bucket URL or AWS access credentials), or Control Tower URL (only necessary if you decide to use it).
+
+#### Starting the microservice
+
+Once you have determined the values you'll need to run your microservice with the desired configuration, you should have everything ready to run it. For nodejs based microservice like Dataset, you can do this by using the following command:
+
+```shell
+yarn start
+```
+
+For Python microservices it may look something like:
+
+```shell
+python main.py
+```
+
+Rails-based microservices can rely on the traditional Rails CLI:
+
+```shell
+rails server
+```
+
+If you're using inline environment variables, it will look something like this: 
+
+```shell
+NODE_ENV=production CT_REGISTER_MODE=none <your other environment variables> yarn start
+```
+
+You can also review the `entrypoint.sh` file content, under the `start` or `develop` sections, as it will contain the command you need to execute to run the code natively.
+
+The application should output useful information, like database connection status and HTTP port. Depending on your configuration for the Control Tower auto registration, it will also output the result of that process. Overall, if no error message is produced, the microservice should be up and running, and available at the port specified by its output.
+
+<aside class="notice">
+Windows users: If after yarn install, you get an error where `gyp` cannot find Visual Studio, the solution `should` be as easy as running `yarn global add windows-build-tools` from an admin command prompt
+</aside>
+
+#### Running the tests
+
+Most microservices (hopefully all in the future) come with tests included. Running these tests can help you identify issues with your code changes, and are required for any new modifications merged into the RW API. It's recommended that you run tests locally before pushing changes to Github.
+
+Tests sometimes mock certain dependencies, like external 3rd party service, but often require an actually running database, as a native execution would (think MongoDB or Postgres). Check the `docker-compose-test.yml` for whatever services it runs besides the microservice - those are the dependencies you'll need to have up and running to run the tests natively. Control Tower is not required to run the tests.
+
+Test execution requires roughly the same env vars as running the actual microservice. For microservices that rely on a database, make sure you are not using the same database as you do for development purposes - tests assume database isolation, and will delete preexisting data.
+
+To run tests for a microservice, use the following command:
+
+```shell
+yarn test
+```
+
+```shell
+exec pytest <test folder>
+```
+
+
+```shell
+bundle exec rspec spec
+```
+
+If you're using inline environment variables, it will look something like this: 
+
+```shell
+NODE_ENV=test CT_REGISTER_MODE=none <your other environment variables> yarn test
+```
+
+ 
+You can also review the `entrypoint.sh` file content, under the `test` section, as it will contain the command you need to execute to run the code natively.
+
+### Using Docker
+
+#### Getting the code
+
+The first step will be getting the source code from [Github](https://github.com/resource-watch/dataset/) to your computer using the [Git](https://git-scm.com/) CLI (or equivalent). 
+
+```shell
+git clone git@github.com:resource-watch/dataset.git
+```
+
+<aside class="notice">
+Make sure to checkout with `--config core.autocrlf=input`. This avoids an issue between Docker and Windows when handling line endings.
+</aside>
+
+#### Installing dependencies
+
+As we mentioned before, if you decide to use Docker, your only dependency will be Docker itself (and docker-compose, which comes included). Depending on your OS, Docker installation instructions will differ, but your favourite web search engine will hopefully point you in the right direction.
+
+When you run Docker, it will automatically fetch the necessary dependencies and run them for you. However, if you are not using Linux, you may have to fine-tune some settings so that dependencies like MongoDB can communicate with your microservice - we'll review this in detail in a bit.
+
+Note that Docker will not fetch nor run Control Tower for you - if you want to execute your microservice in integration with Control Tower, you'll have to set it up manually. Alternatively, set the `CT_REGISTER_MODE` [environment variable](https://en.wikipedia.org/wiki/Environment_variable) to any value other than `auto`.
+
+
+#### Configuration
+
+Configuration for Docker based execution is done using [environment variables](https://en.wikipedia.org/wiki/Environment_variable) passed to the Docker runtime using a special `dev.env` file. Some microservices will include a `dev.env.sample` or equivalent that you can copy-paste and use as a starting point when configuring your environment.
+
+To find out more about which env vars you can/need to specify, refer to the microservice's `README.md` file, as it typically documents the main variables available to you. Nodejs-base microservices will often have a full list in the `config/custom-environment-variables.json` file. The `docker-compose-test.yml` and `docker-compose-develop.yml` files contain usages of said variables, and may be helpful if you are looking for an example or an undocumented variable.
+
+As a rule of thumb, env vars configure things like databases address and credentials, 3rd party services (for example, an AWS S3 bucket URL or AWS access credentials), or Control Tower URL (only necessary if you decide to use it). Your docker-compose file may already have predefined values for some of these, in which case do not overwrite them unless you are certain of what you're doing.
+
+
+#### Starting the microservice
+
+For convenience, most microservices include a unix-based script that will run the Docker command that will start your microservice, along with the dependencies covered by Docker. The file name will vary from microservice to microservice, and the argument may also vary, but it's usually something along the lines of:
+
+```shell
+./dataset.sh develop
+```
+
+Mac users' mileage may vary with these scripts, and Windows users will need to manually open these file and reproduce the included logic in Windows-compatible syntax - don't worry, they are pretty simple and easy to understand. 
+
+Docker will take a few minutes to run, especially during the first execution, but once it's up and running, you should see the HTTP address where your microservice is available in the output printed to the console.
+
+#### Running the tests
+
+Running tests under Docker is similar to running the actual microservice. The easiest way to do so, for unix-based OSs is using the included `.sh` helper file:
+
+```shell
+./dataset.sh test
+```
 
 ## Microservice internal architecture - nodejs
 
