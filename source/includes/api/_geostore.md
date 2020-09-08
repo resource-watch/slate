@@ -8,42 +8,232 @@ Geostore is a database for storing geoStore objects which contain geographic dat
 
 The Geostore microservice provides a comprehensive way to communicate geographic data structures between platforms and microservices. It enables users to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) geographic data structures from the Geostore, and query information about a geoStore object, such as the bounding box of all its' geometries.
 
-[TODO: Add more general overview of functionality]
+This documentation describes the Geostore microservice in two sections:
 
-To keep this documentation easy to understand, we'll split our approach to the Geostore microservice into two sections:
-
-- We'll first discuss the details of the endpoints that allow you to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) geoStore objects, without focusing on the actual data contained in it.
-- Next we describe the structure used to store data in the Geostore's open format fields.
+- First we give an [overview of the available endpoints](#overview-of-available-endpoints) that allow you to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) geoStore objects.
+- Next we describe the [structure and properties of Geostore objects](#geostore-objects-and-properties).
 
 After viewing the documentation below, consider looking at the Geostore tutorial for a step-by-step guide to rendering an actual geoStore object on a web application.
 
 ***Remember — All of the Geostore endpoints do not require that users are authenticated.***
 
-## Getting geoStore objects
+## Overview of available endpoints
 
-A number of endpoints are available for retrieving geoStore objects, each with a different purposes in mind. [TODO: Explain general structure and logic for the specific endpoints; countries, GADM regions, WDPA ect., Where codes come from, source versions...]
+[TODO: Check if Update and Delete are available? Change titles to Create, Read, Update and Delete to fit with CRUD description?]
 
 | Method | Path                                     | Description                                                                                                                                    |
 | ------ | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| POST   | `/v1/geostore`                           | ??                                                                                                                                             |
-| POST   | `/v1/geostore/area`                      | ??                                                                                                                                             |
-| GET    | `/v1/geostore/:id`                       | [Get geoStore by Geostore ID](#get-geostore-by-geostore-id)                                                                                    |
-| POST   | `/v1/geostore/find-by-ids`               | [Get geoStores by Geostore IDs](#get-geostores-by-geostore-ids)                                                                                |
-| GET    | `/v1/geostore/:id/view`                  | [Get geoStore by Geostore ID and view at GeoJSON.io](#get-geostore-by-geostore-id-and-view-at-geojson-io)                                      |
-| GET    | `/v1/geostore/admin/list`                | [Get all Geostore IDs, names and ISO 3166-1 alpha-3 codes](#get-all-geostore-ids-names-and-iso-3166-1-alpha-3-codes)                           |
-| GET    | `/v1/geostore/admin/:iso`                | [Get geoStore by ISO 3166-1 alpha-3 code](#get-geostore-by-iso-3166-1-alpha-3-code)                                                            |
-| GET    | `/v1/geostore/admin/:iso/:id1`           | [Get geoStore by ISO 3166-1 alpha-3 code and GADM admin 1 ID](#get-geostore-by-iso-3166-1-alpha-3-code-and-gadm-admin-1-id)                    |
+| POST   | `/v1/geostore`                           | [Create using a GeoJSON](#create-using-a-geojson) |
+| POST   | `/v1/geostore/area`                      | [Create using a provider definition](#create-using-a-provider-definition) |
+| GET    | `/v1/geostore/:id`                       | [Get geoStore by Geostore ID](#get-geostore-by-geostore-id) |
+| POST   | `/v1/geostore/find-by-ids`               | [Get geoStores by Geostore IDs](#get-geostores-by-geostore-ids) |
+| GET    | `/v1/geostore/:id/view`                  | [Get geoStore by Geostore ID and view at GeoJSON.io](#get-geostore-by-geostore-id-and-view-at-geojson-io) |
+| GET    | `/v1/geostore/admin/list`                | [Get all Geostore IDs, names and ISO 3166-1 alpha-3 codes](#get-all-geostore-ids-names-and-iso-3166-1-alpha-3-codes) |
+| GET    | `/v1/geostore/admin/:iso`                | [Get geoStore by ISO 3166-1 alpha-3 code](#get-geostore-by-iso-3166-1-alpha-3-code) |
+| GET    | `/v1/geostore/admin/:iso/:id1`           | [Get geoStore by ISO 3166-1 alpha-3 code and GADM admin 1 ID](#get-geostore-by-iso-3166-1-alpha-3-code-and-gadm-admin-1-id) |
 | GET    | `/v1/geostore/admin/:iso/:id1/:id2`      | [Get geoStore by ISO 3166-1 alpha-3 code, GADM admin 1 and admin 2 IDs](#get-geostore-by-iso-3166-1-alpha-3-code-gadm-admin-1-and-admin-2-ids) |
-| GET    | `/v1/geostore/wdpa/:id`                  | [Get geoStore by WDPA ID](#get-geostore-by-wdpa-id)                                                                                            |
-| GET    | `/v1/geostore/use/:name/:id`             | [Get geoStore by Land Use Type name and ID](#get-geostore-by-land-use-type-name-and-id)                                                        |
-| GET    | `/v1/coverage/intersect/use/:name/:id`   | ??                                                                                                                                             |
-| GET    | `/v1/coverage/intersect/admin/:iso`      | ??                                                                                                                                             |
-| GET    | `/v1/coverage/intersect/admin/:iso/:id1` | ??                                                                                                                                             |
-| GET    | `/v1/coverage/intersect/wdpa/:id`        | ??                                                                                                                                             |
-| GET    | `/v1/coverage/intersect`                 | ??                                                                                                                                             |
-| GET    | `/v1/coverage/intersect/use/:name/:id`   | ??                                                                                                                                             |
+| GET    | `/v1/geostore/wdpa/:id`                  | [Get geoStore by WDPA ID](#get-geostore-by-wdpa-id) |
+| GET    | `/v1/geostore/use/:name/:id`             | [Get geoStore by Land Use Type name and ID](#get-geostore-by-land-use-type-name-and-id) |
+| GET    | `/v1/coverage/intersect/use/:name/:id`   | ? |
+| GET    | `/v1/coverage/intersect/admin/:iso`      | ? |
+| GET    | `/v1/coverage/intersect/admin/:iso/:id1` | ? |
+| GET    | `/v1/coverage/intersect/wdpa/:id`        | ? |
+| GET    | `/v1/coverage/intersect`                 | ? |
+| GET    | `/v1/coverage/intersect/use/:name/:id`   | ? |
 
 [TODO: Check if coverage should have its own documentation?]
+
+## Create geoStore objects
+
+Geostore objects can be created in the Geostore using a valid GeoJSON object or by selecting a row from a [Carto](https://carto.com/) table.
+
+### Create using a GeoJSON
+
+Geostore objects can be created via the POST `geostore` endpoint,
+which accepts as body a [GeoJSON](https://geojson.org/) object (`<geojson>`), if the object is correctly added to the Geostore a `200` response is returned, as well as the new geostore object.
+
+> Example request pattern
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/geostore/ \
+     -H "Content-Type: application/json" \
+     -d '{"geojson": <geojson>}'
+```
+
+> Example URL request
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/geostore/ \
+     -H "Content-Type: application/json" \
+     -d '{
+   "geojson":{
+      "type":"FeatureCollection",
+      "features":[
+         {
+            "type":"Feature",
+            "properties":{
+
+            },
+            "geometry":{
+               "type":"LineString",
+               "coordinates":[
+                  [
+                     -3.9942169189453125,
+                     41.044922165782175
+                  ],
+                  [
+                     -3.995418548583985,
+                     41.03767166215326
+                  ],
+                  [
+                     -3.9842605590820312,
+                     41.03844854003296
+                  ],
+                  [
+                     -3.9844322204589844,
+                     41.04589315472392
+                  ],
+                  [
+                     -3.9942169189453125,
+                     41.044922165782175
+                  ]
+               ]
+            }
+         },
+         {
+            "type":"Feature",
+            "properties":{
+
+            },
+            "geometry":{
+               "type":"Polygon",
+               "coordinates":[
+                  [
+                     [
+                        -4.4549560546875,
+                        40.84706035607122
+                     ],
+                     [
+                        -4.4549560546875,
+                        41.30257109430557
+                     ],
+                     [
+                        -3.5211181640624996,
+                        41.30257109430557
+                     ],
+                     [
+                        -3.5211181640624996,
+                        40.84706035607122
+                     ],
+                     [
+                        -4.4549560546875,
+                        40.84706035607122
+                     ]
+                  ]
+               ]
+            }
+         }
+      ]
+   }
+}'
+```
+
+> Example response
+
+```json
+{
+    "data": {
+        "type": "geoStore",
+        "id": "170f0ba59b3645de8f27e080a8ab4c78",
+        "attributes": {
+            "geojson": {
+                "crs": {},
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                [
+                                    -3.994216919,
+                                    41.044922166
+                                ],
+                                [
+                                    -3.995418549,
+                                    41.037671662
+                                ],
+                                [
+                                    -3.984260559,
+                                    41.03844854
+                                ],
+                                [
+                                    -3.98443222,
+                                    41.045893155
+                                ],
+                                [
+                                    -3.994216919,
+                                    41.044922166
+                                ]
+                            ],
+                            "type": "LineString"
+                        },
+                        "type": "Feature"
+                    }
+                ]
+            },
+            "hash": "170f0ba59b3645de8f27e080a8ab4c78",
+            "provider": {},
+            "areaHa": 0,
+            "bbox": [
+                -3.995418549,
+                41.037671662,
+                -3.984260559,
+                41.045893155
+            ],
+            "lock": false,
+            "info": {
+                "use": {}
+            }
+        }
+    }
+}
+```
+
+### Create using a provider definition
+
+Geostore objects can be created via the POST `geostore` endpoint, which accepts as body a [Provider definition](#provider-definition) object (`<provider>`), if the object is correctly added to the Geostore a `200` response is returned, as well as the new geostore object. At present the only provider definition supported is a [Carto](https://carto.com/) table, using `"type": "carto"`.
+
+> Example request pattern
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/geostore \
+-H "Content-Type: application/json" \
+-d '{"provider": <provider>}'
+```
+
+> Example URL request
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/geostore \
+-H "Content-Type: application/json" \
+-d '{
+        "provider":{
+            "type": "carto",
+            "table": "gfw_mining",
+            "user": "wri-01",
+            "filter": "cartodb_id=573"
+        }
+    }'
+```
+
+> Example response
+
+```json
+
+```
+
+## Getting geoStore objects
+
+A number of endpoints are available for retrieving geoStore objects, each with a different (application-specific) purposes in mind.
 
 ### Get geoStore by Geostore ID
 
@@ -570,194 +760,6 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/logging/1
         }
     }
 }
-```
-
-## Create geostore objects
-
-Geostore objects can be created and added to the Geostore using a valid GeoJSON object or by selecting a row from a Carto table.
-
-### Create using a GeoJSON
-
-Geostore objects can be created via the POST `geostore` endpoint,
-which accepts as body a [GeoJSON](https://geojson.org/) object (`<geojson>`), if the object is correctly added to the Geostore a `200` response is returned, as well as the new geostore object.
-
-> Example request pattern
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore/ \
-     -H "Content-Type: application/json" \
-     -d '{"geojson": <geojson>}'
-```
-
-> Example URL request
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore/ \
-     -H "Content-Type: application/json" \
-     -d '{
-   "geojson":{
-      "type":"FeatureCollection",
-      "features":[
-         {
-            "type":"Feature",
-            "properties":{
-
-            },
-            "geometry":{
-               "type":"LineString",
-               "coordinates":[
-                  [
-                     -3.9942169189453125,
-                     41.044922165782175
-                  ],
-                  [
-                     -3.995418548583985,
-                     41.03767166215326
-                  ],
-                  [
-                     -3.9842605590820312,
-                     41.03844854003296
-                  ],
-                  [
-                     -3.9844322204589844,
-                     41.04589315472392
-                  ],
-                  [
-                     -3.9942169189453125,
-                     41.044922165782175
-                  ]
-               ]
-            }
-         },
-         {
-            "type":"Feature",
-            "properties":{
-
-            },
-            "geometry":{
-               "type":"Polygon",
-               "coordinates":[
-                  [
-                     [
-                        -4.4549560546875,
-                        40.84706035607122
-                     ],
-                     [
-                        -4.4549560546875,
-                        41.30257109430557
-                     ],
-                     [
-                        -3.5211181640624996,
-                        41.30257109430557
-                     ],
-                     [
-                        -3.5211181640624996,
-                        40.84706035607122
-                     ],
-                     [
-                        -4.4549560546875,
-                        40.84706035607122
-                     ]
-                  ]
-               ]
-            }
-         }
-      ]
-   }
-}'
-```
-
-> Example response
-
-```json
-{
-    "data": {
-        "type": "geoStore",
-        "id": "170f0ba59b3645de8f27e080a8ab4c78",
-        "attributes": {
-            "geojson": {
-                "crs": {},
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "geometry": {
-                            "coordinates": [
-                                [
-                                    -3.994216919,
-                                    41.044922166
-                                ],
-                                [
-                                    -3.995418549,
-                                    41.037671662
-                                ],
-                                [
-                                    -3.984260559,
-                                    41.03844854
-                                ],
-                                [
-                                    -3.98443222,
-                                    41.045893155
-                                ],
-                                [
-                                    -3.994216919,
-                                    41.044922166
-                                ]
-                            ],
-                            "type": "LineString"
-                        },
-                        "type": "Feature"
-                    }
-                ]
-            },
-            "hash": "170f0ba59b3645de8f27e080a8ab4c78",
-            "provider": {},
-            "areaHa": 0,
-            "bbox": [
-                -3.995418549,
-                41.037671662,
-                -3.984260559,
-                41.045893155
-            ],
-            "lock": false,
-            "info": {
-                "use": {}
-            }
-        }
-    }
-}
-```
-
-### Create using a provider definition
-
-Geostore objects can be created via the POST `geostore` endpoint, which accepts as body a [Provider definition](#provider-definition-object) object (`<provider>`), if the object is correctly added to the Geostore a `200` response is returned, as well as the new geostore object. At present the only provider definition supported is a [Carto](https://carto.com/) table, using `"type": "carto"`.
-
-> Example request pattern
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore \
--H "Content-Type: application/json" \
--d '{"provider": <provider>}'
-```
-
-> Example URL request
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore \
--H "Content-Type: application/json" \
--d '{
-        "provider":{
-            "type": "carto",
-            "table": "gfw_mining",
-            "user": "wri-01",
-            "filter": "cartodb_id=573"
-        }
-    }'
-```
-
-> Example response
-
-```json
-
 ```
 
 ## Geostore objects and properties
