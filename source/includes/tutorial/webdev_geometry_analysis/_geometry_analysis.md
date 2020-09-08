@@ -11,7 +11,7 @@ The example will utilize three sources of information, reflecting the distribute
 
 Here:
 
-- Tree Cover Loss originates from [University of Maryland](https://glad.umd.edu/), but the raster tiles are prepared and hosted by WRI. This is the same dataset that was used in the earlier [quickstart tutorial](), so there should already be some familiarity with these raster tiles.
+- Tree Cover Loss originates from [University of Maryland](https://glad.umd.edu/), but the raster tiles are prepared and hosted by WRI. This is the same dataset that was used in the earlier [quickstart tutorial](#mapbox-webmap-quickstart), so there should already be some familiarity with these raster tiles.
 - a vector dataset of protected areas (think parks, reserves, etc) is created by a the [UN Environment Programme World Conservation Monitoring Centre](https://www.unep-wcmc.org/) , but working with those detailed polygon geometries is a challenge - they are simply too large for many purposes; precomputed vector tiles are used instead, and these were created and hosted by WRI to fit our web needs.
 - a hosted database table that links polygon geometries to tree-cover loss; this analysis is computationally intensive and for historical records unlikely to change frequently. Think of this as connecting to part of an OLAP system.
 
@@ -19,7 +19,7 @@ Over the course of this tutorial you will develop a simple web application that 
 
 - interacting with the HTTP-based API to retrieve metadata and catalog information using the [`/dataset` endpoint](https://resource-watch.github.io/doc-api/index-rw.html#what-is-a-dataset).
 - displaying raster and vector tiles in a webmap run by [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)
-- dynamically querying a hosted database with the [`/query` endpoint]()
+- dynamically querying a hosted database with the [`/query` endpoint](https://resource-watch.github.io/doc-api/index-rw.html#querying-datasets)
 
 
 ## Pre-requirements
@@ -218,7 +218,7 @@ map.on('load', async () => {
 
 Open `index.html` in a web browser and see a webpage that looks something like this:
 
-![Image of basic webpage, with a title, a large map zoomed to central Africa, and a green and black map depicting tree cover loss](tutorials/webdev_geometry_analysis/geometry-hello-world.png)
+![Image of basic webpage, with a title, a large map zoomed to central Africa, and a green and black map depicting tree cover loss](tutorials/webdev_geometry_analysis/webmap-initial-setup.png)
 
 If you are not seeing a map check the web developer console.
 
@@ -233,7 +233,7 @@ When zoomed out to the continent or world view, the problem continues: excessive
 These type of problems have motivated the creation of vector tiles, which mirror raster tiles in intention and design, but have the distinctive properties associated with the vector data model.
 
 Vector tiles are normally constructed as derivatives of an original dataset, with downsampled and simplified geometries created at different _zoom levels_, but maintaining feature attributes and properties.
-Like raster tiles, as you zoom in or out different tiles are fetched and rendered, reducing network burden by only pulling only what is needed for the immediate view.
+Like raster tiles, as you zoom in or out different tiles are fetched and rendered, reducing network burden by only pulling what is needed for the immediate view.
 Using some data assimilation methods built into the web map, the vector geometries can be stitched across different tiles to create seamless geometries.
 Vector tiles can have more than one _layer_, for example a street layer and a building layer, which helps reduce the need for lots of HTTP requests to render a complex map.
 
@@ -423,7 +423,7 @@ INFO: Open of `wdpa_tmp.mvt'
 
 Reload in the browser to see the updated map, which should look like:
 
-![Image of the webpage, with the same large map, but now with many semi-transparent white polygons representing the WDPA data.](images/tutorials/webdev_geometry_analysis/webmap-with-white-polygons.png)
+![Image of the webpage, with the same large map, but now with many semi-transparent white polygons representing the WDPA data.](images/tutorials/webdev_geometry_analysis/webmap-with-vector-tiles.png)
 
 Pan around the map, zoom in and out, and watch the vector tiles load remotely or from the cache of already-seen tiles.
 
@@ -491,7 +491,7 @@ To enable a popup with some of this information, add the following to the javasc
 // in the popup on a vector element.
 // takes one parameter:
 //   (f) an element of the vector tile
-const popupContentForWDPA = (f) => {
+const popupContentForWDPA = async (f) => {
     // WDPA identifier string
     const wdpaId = f.properties['wdpaid'];
     // start assembling the string of HTML that will be displayed
@@ -755,7 +755,7 @@ As a reminder of our intention, we are trying to get a measure of tree cover los
 Add this function above the main script execution.
 
 <div class="center-column"></div>
-```
+```javascript
 // declare an async function that calls an API endpoint for querying.
 // this uses a pre-computed table that links WDPA identifiers to tree cover loss values.
 // takes three parameters
@@ -783,8 +783,9 @@ const callApiQueryWDPATreeCoverLoss = async (wdpaId, year, threshold) => {
 ```
 
 Reload the webpage and try this function with the developer console.
+
 <div class="center-column"></div>
-```
+```javascript
 await callApiQueryWDPATreeCoverLoss(40811, 2019, 30);
 ```
 
@@ -794,7 +795,7 @@ In the below function you will see there are some additional metrics being inser
 Delete the existing `popupContentForWDPA` function and replace it with the following:
 
 <div class="center-column"></div>
-```
+```javascript
 // declare a function that returns a string to be displayed
 // in the popup on a vector element.
 // takes one parameter:
@@ -826,13 +827,14 @@ const popupContentForWDPA = async (f) => {
 
 With the popup now able to display the tree cover loss for each polygon, let's reload the webpage and try it out!
 
+![Image of the webmap, with a title, a large map zoomed to central Africa, a green and black map depicting tree cover loss, white polygons for WDPA features, and a popup with information about a selected polygon.](tutorials/webdev_geometry_analysis/webmap-final-popup.png)
 
 ## Next Steps
 
-The `/query` endpoint is _the_ method for getting the real data.
+The `/query` endpoint is _the method_ for getting the real data.
 The use of SQL-like functionality enables basic types of filtering, subselection, and aggregation to produce usable information.
 There are of course limitations and not all SQL functionality is available, notably the _relational_ aspect that some may expect.
-The `/query` endpoint does not support `JOIN`s and have very limited support for nested queries or subqueries.
+The `/query` endpoint does not support `JOIN`s and has very limited support for nested queries or subqueries.
 
 Future tutorials will discuss on-the-fly analyses, which will bypass the need for pre-computed tables.
 On-the-fly analysis allows for rasters to be _queried_ and analyzed with vector geometries, including those that are drawn by the user or not known ahead of time.
