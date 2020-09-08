@@ -264,9 +264,19 @@ Use this endpoint to create new areas.
 
 For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
+Keep in mind that you should provide one of the following when creating an area:
+
+* `geostore` with the ID of a geostore object if you are creating an area that references a geostore;
+* `wdpaid` with the ID of a protected area if you are creating an area that references a protected area;
+* `iso` object with a valid country/region/subregion if you are creating an area that references an admin country/region/subregion;
+* `use` object with valid id and name of a land use concessioned area, if you are creating an area that references a land use area.
+
 ### Errors for creating an area
 
-TODO!
+Error code     | Error message (example)  | Description
+-------------- | -------------- | --------------
+400            | `name can not be empty.` | You are missing a required field while creating the area.
+400            | `application cannot be empty` | You provided an invalid field while creating the area.
 
 ### Email notification
 
@@ -357,9 +367,20 @@ Use this endpoint to update an existing area. This endpoint requires authenticat
 
 For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
+Keep in mind that you should provide one of the following when updating an area:
+
+* `geostore` with the ID of a geostore object if you are updating an area that references a geostore;
+* `wdpaid` with the ID of a protected area if you are updating an area that references a protected area;
+* `iso` object with a valid country/region/subregion if you are updating an area that references an admin country/region/subregion;
+* `use` object with valid id and name of a land use concessioned area, if you are updating an area that references a land use area.
+
 ### Errors for updating an area
 
-TODO!
+Error code     | Error message (example)  | Description
+-------------- | -------------- | --------------
+400            | `name can not be empty.` | You are missing a required field while creating the area.
+400            | `application cannot be empty` | You provided an invalid field while creating the area.
+404            | `Area not found` | The area with id provided does not exist.
 
 ### Implementation details
 
@@ -394,6 +415,8 @@ DELETing an area deletes the area if it exists, and then if an associated subscr
 If the ID of a subscription is provided, then that subscription is deleted.
 
 ## Update areas by geostore
+
+> Example request to update all areas that reference geostores with ids "123" and "234":
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v2/area/update
@@ -446,7 +469,7 @@ You can use the `update_params` field of the request body to specify multiple fi
 
 In case of success a 200 OK response is returned, and all the areas that match the update criteria (belonging to one of the geostores provided in the request body) will be returned.
 
-After updating the areas, for each area that was updated (if it has a valid email associated), an email will be sent to the user to let them know that the area is ready to be viewed.
+After updating the areas, for each area that was updated which has a valid email associated and its status updated to `saved`, an email will be sent to the user to let them know that the area is ready to be viewed.
 
 The following parameters are provided to the email service and can be used in the construction of the email:
 
