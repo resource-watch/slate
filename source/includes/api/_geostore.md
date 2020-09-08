@@ -368,7 +368,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
 ### Get geoStore by ISO 3166-1 alpha-3 country code and GADM admin 1 ID
 
 Geostore objects can be retrieved via the GET `geostore/admin/:iso/:id1` endpoint,
-which returns a single object selected from the Geostore using a single [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) value (`<iso>`) and [GADM admin level 1](#gadm-admin-levels) ID (`<id1>`), if a geoStore with the specified `<iso>` and `<id1>` does not exist in the Geostore, a `404` response is returned.
+which returns a single object selected from the Geostore using a single [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) value (`<iso>`) and [GADM admin level 1](https://gadm.org/metadata.html) ID (`<id1>`), if a geoStore with the specified `<iso>` and `<id1>` does not exist in the Geostore, a `404` response is returned.
 
 > Example request pattern
 
@@ -432,7 +432,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP/9
 
 [TODO: Check this is still valid!!! How do you find valid GADM ids???]
 
-GeoStore objects can be retrieved via the GET `geostore/admin/:iso/:id1/:id2` endpoint, which returns a single object selected from the Geostore using a single [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) value (`<iso>`),  [GADM admin level 1](#gadm-admin-levels) ID (`<id1>`), and [GADM admin level 2](#gadm-admin-levels) ID (`<id2>`), if a geoStore with the specified `<iso>`, `<id1>`, and `<id1>` does not exist in the Geostore, a `404` response is returned.
+GeoStore objects can be retrieved via the GET `geostore/admin/:iso/:id1/:id2` endpoint, which returns a single object selected from the Geostore using a single [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) value (`<iso>`),  [GADM admin level 1](https://gadm.org/metadata.html) ID (`<id1>`), and [GADM admin level 2](https://gadm.org/metadata.html) ID (`<id2>`), if a geoStore with the specified `<iso>`, `<id1>`, and `<id1>` does not exist in the Geostore, a `404` response is returned.
 
 > Example request pattern
 
@@ -762,9 +762,11 @@ curl -X POST https://api.resourcewatch.org/v1/geostore \
 
 ## Geostore objects and properties
 
+[TODO: Provide overview about info objects? Convert schema to markdown? Make schema into URLS?]
+
 ### Geostore ID
 
-A unique identifier for the geoStore object in the form of a 128 bit [MD5 hash](https://en.wikipedia.org/wiki/MD5) generated from geojson.
+A unique identifier for the geoStore object in the form of a 128 bit [MD5 hash](https://en.wikipedia.org/wiki/MD5) generated from the GeoJSON object.
 
 ### GeoJSON
 
@@ -847,7 +849,7 @@ Provider definition objects are used when [creating geoStore objects](#create-us
 
 geoStore objects are created in, and retrieved from the Geostore. They define geographic strutures using the GeoJSON schema, as well as summary information, properties used for indexing, and metadata.
 
-They must contain a Geostore ID  and hash (`id`, `hash`), [GeoJSON](#geojson) object (`geojson`), indication if the object is locked to editing (`lock`), and bounding box of the GeoJSON geometries (`bbox`). Optionally they may contain a [Provider](#provider-definition) object (`provider`), the total surface area of all Polygon and MultiPolygon geometries (`areaHa`), and an `info` object with application/user defined properties.
+They must contain a [Geostore ID](#geostore-id)  and hash (`id`, `hash`), [GeoJSON](#geojson) object (`geojson`), indication if the object is locked to editing (`lock`), and bounding box of the GeoJSON geometries (`bbox`). Optionally they may contain a [Provider](#provider-definition) object (`provider`), the total surface area of all Polygon and MultiPolygon geometries (`areaHa`), and an `info` object with application/user defined properties.
 
 > geoStore schema
 
