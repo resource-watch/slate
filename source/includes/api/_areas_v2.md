@@ -1,8 +1,18 @@
 # Areas v2
 
-The following endpoints merge together **areas of interest** and **subscriptions**. This means they can be used to transition away from subscriptions without the users losing the subscriptions that they have already created.
+## What is an area?
 
-Please ensure that you are using `v2` in the URL when requesting these endpoints.
+Areas is a service in the RW API that allows you to define geographic areas of interest. This definition can be done in multiple ways, such as selecting a country or a region as your area of interest, a protected area from WDPA, or reference a custom geostore ID from the [Geostore service](#geostore).
+
+With your areas of interest, you can then choose to be notified about events that happen inside your area of interest, such as deforestation alerts (GLAD alerts) or fire alerts (VIIRS fire alerts). You can also choose to receive a monthly summary of both GLAD and VIIRS alerts in your area of interest, which will arrive in your inbox at the first day of every month.
+
+## What is the difference between v1 and v2?
+
+v2 areas are an upgrade in the functionality of areas, and provide you with an easier to understand interface for creating areas of interest. Features such as the notification of alerts inside you area of interest are also only available in v2 endpoints. 
+
+However, keep in mind that v2 areas endpoints were built with the intention of merging together **v1 areas of interest** and **subscriptions**. This means, in practice, that if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints.
+
+This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
 
 ## Getting all user areas
 
