@@ -14,6 +14,8 @@ However, keep in mind that v2 areas endpoints were built with the intention of m
 
 This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
 
+Below the documentation of each endpoint, you'll be able to find a **implementation details** section that goes into detail about how this sync is performed.
+
 ## Getting all user areas
 
 > Example request to get all areas for the logged user:
@@ -106,9 +108,36 @@ curl -X GET https://api.resourcewatch.org/v2/area?all=true
 }
 ```
 
-Returns the list of areas for the user who made the request. This endpoint requires authentication.
+This endpoint, by default, returns all the areas associated with the user who made the request. You can also provide the `all=true` flag as a query parameter to see all existing areas (this option will only be taken into account for ADMIN users).
 
-This endpoint supports the following query parameters as filters:
+**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
+
+For a detailed description of each field, check out the [Area reference](#area-reference) section.
+
+### Pagination
+
+> Custom pagination: load page 2 using 25 results per page
+
+```shell
+curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25
+```
+
+By default, no pagination is applied to the returned response, and every call to the `v2/areas` endpoint will return all of your areas. However, due to performance and memory management issues, when viewing all areas (using the `all=true` option), the returned result is then paginated. You can customize this behavior using the following query parameters:
+
+Field       |             Description                                                                                                                          | Type    | Example    |
+----------- | :----------------------------------------------------------------------------------------------------------------------------------------------: | ------: | ---------: |
+page[number]| The number of the page to fetch. Only taken into account when using the `all=true` filter.                                                       | Number  | 1          |
+page[size]  | The size of the page to fetch. Only taken into account when using the `all=true` filter. Maximum value is 100.                                   | Number  | 10         |
+
+### Filters
+
+> Filtering areas
+
+```shell
+curl -X GET https://api.resourcewatch.org/v2/area?application=rw&public=true
+```
+
+The `v2/areas` endpoint provides a range of parameters that you can use to tailor the returned listing. Here’s a list of filters supported by areas:
 
 Field       |             Description                                                                                                                          | Type    | Example    |
 ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------: | ------: | ---------: |
@@ -116,18 +145,14 @@ application | Filter results by the application associated with the areas.      
 status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
 all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
-page[number]| The number of the page to fetch. Only taken into account when using the `all=true` filter.                                                       | Number  | 1          |
-page[size]  | The size of the page to fetch. Only taken into account when using the `all=true` filter. Maximum value is 100.                                   | Number  | 10         |
 
-**Note: Due to performance and memory management issues, when the `all=true` filter is applied, the returned result is always paginated.**
-
-**Implementation details**
+### Implementation details
 
 Finds all areas for the user who requested the list of areas. For each area, if it has an associated subscription (i.e. the `subscriptionId` field of the area is not empty), it merges the subscription data over the area data, returning it as a single object. After that, the remaining user subscriptions are converted to area objects and returned.
 
 Note: if the `all=true` query filter is provided, then the `/find-all` endpoint of the subscriptions is used to find all existing subscriptions.
 
-## Getting a single user area
+## Getting an area by its id
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v2/area/:id
@@ -164,13 +189,15 @@ curl -X GET https://api.resourcewatch.org/v2/area/:id
 }
 ```
 
-Returns the information for the area with the id provided. This endpoint requires authentication.
+If you know the id or the slug of a area, then you can access it directly - keep in mind the id search is case-sensitive.
+
+**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
 
 If the area has the `public` attribute set to `false`, you will only be able to fetch its information if you are the owner of the area. Otherwise, a `401 Unauthorized` response will be returned.
 
 If the area has the `public` attribute set to `true` and the user who requests it is not the owner, some information will be hidden for privacy reasons.
 
-**Implementation details**
+### Implementation details
 
 Try to find an area with the id provided:
 
@@ -231,25 +258,15 @@ curl -X POST https://api.resourcewatch.org/v2/area
 }
 ```
 
-Use this endpoint to create new areas. This endpoint requires authentication.
+Use this endpoint to create new areas. 
 
-This endpoint supports the following request body parameters:
+**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
 
-Field                |             Description                                                                            | Type    | Example    |
--------------------- | :------------------------------------------------------------------------------------------------: | ------: | ---------: |
-name                 | The name of the area being created.                                                                | String  | 'Example'  |
-image                | Image associated with the dataset - in GET areas, this attribute will have the URL for the image.  | String  | https://www.google.com/example.jpg |
-application          | The application to which this area is associated with. Defaults to 'gfw'.                          | String  | 'gfw'      |
-language             | The language of this area. Defaults to 'en'.                                                       | String  | 'es'       |
-geostore             | An ID of a geostore to which this area relates to.                                                 | String  | '123'      |
-public               | If the area is public or not. Defaults to false.                                                   | Boolean | true       |
-fireAlerts           | If the area is intended to subscribe to fire alerts. Defaults to false.                            | Boolean | true       |
-deforestationAlerts  | If the area is intended to subscribe to deforestation alerts. Defaults to false.                   | Boolean | true       |
-monthlySummary       | If the area is intended to subscribe to monthly summaries. Defaults to false.                      | Boolean | true       |
-email                | Email to be provided to the subscription.                                                          | String  | youremail@resourcewatch.org |
-webhookUrl           | Webhook URL to be provided to the subscription (only used in case the email is not set).           | String  | https://www.google.com/ |
-status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
-subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
+For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
+
+### Errors for creating an area
+
+TODO!
 
 ### Email notification
 
@@ -338,44 +355,11 @@ curl -X PATCH https://api.resourcewatch.org/v2/area/:id
 
 Use this endpoint to update an existing area. This endpoint requires authentication and, in order to PATCH an area, you need to be either the owner of the area or be an ADMIN user.
 
-This endpoint supports the following request body parameters:
+For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
-Field                |             Description                                                                            | Type    | Example    |
--------------------- | :------------------------------------------------------------------------------------------------: | ------: | ---------: |
-name                 | The name of the area being created.                                                                | String  | 'Example'  |
-image                | Image associated with the dataset - in GET areas, this attribute will have the URL for the image.  | String  | https://www.google.com/example.jpg |
-application          | The application to which this area is associated with. Defaults to 'gfw'.                          | String  | 'gfw'      |
-language             | The language of this area. Defaults to 'en'.                                                       | String  | 'es'       |
-geostore             | An ID of a geostore to which this area relates to.                                                 | String  | '123'      |
-public               | If the area is public or not. Defaults to false.                                                   | Boolean | true       |
-fireAlerts           | If the area is intended to subscribe to fire alerts. Defaults to false.                            | Boolean | true       |
-deforestationAlerts  | If the area is intended to subscribe to deforestation alerts. Defaults to false.                   | Boolean | true       |
-monthlySummary       | If the area is intended to subscribe to monthly summaries. Defaults to false.                      | Boolean | true       |
-email                | Email to be provided to the subscription.                                                          | String  | youremail@resourcewatch.org |
-webhookUrl           | Webhook URL to be provided to the subscription (only used in case the email is not set).           | String  | https://www.google.com/ |
-status               | The status of the area - either 'saved' or 'pending'. Read-only attribute.                         | String  | 'saved'    |
-subscriptionId       | The ID of the subscription associated with this area. Read-only attribute.                         | String  | 5e4d7c47dd8fa31290d548ae |
+### Errors for updating an area
 
-### Email notification
-
-According to multiple factors (including the `geostore` that is associated with the area, if the area subscribes to `fireAlerts`, `deforestationAlerts`, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have `status` set to `'pending'`. Once the area data is ready, the `status` of the area will be updated to `'saved'`.
-
-After updating an area, if it has status `saved` and if the `email` field of the area has a valid email, an email is sent to the user, to let him know the area of interest is ready to be viewed.
-
-### Email substitution parameters
-
-The following parameters are provided to the email service and can be used in the construction of the email:
-
-* `id` : the ID of the area.
-* `name` : the name of the area.
-* `location` : an alias for the name of the area (contains the same as the `name` parameter).
-* `subscriptions_url` : the URL to manage the areas in the frontend (example: [https://staging.globalforestwatch.org/my-gfw](https://staging.globalforestwatch.org/my-gfw)).
-* `dashboard_link` : the link to the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
-* `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
-* `image_url` : the URL for the image associated with the area.
-* `tags` : a string containing the AOI tags, comma-separated.
-
-(`5d517b3fb8cfd4001061d0b2` is an example of an area ID).
+TODO!
 
 ### Implementation details
 
@@ -403,7 +387,7 @@ curl -X DELETE https://api.resourcewatch.org/v2/area/:id
 
 Use this endpoint to delete an existing area. This endpoint requires authentication and, in order to DELETE an area, you need to be either the owner of the area or be an ADMIN user.
 
-**Implementation details**
+### Implementation details
 
 DELETing an area deletes the area if it exists, and then if an associated subscription exists, it is also deleted.
 
