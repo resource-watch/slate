@@ -1,6 +1,6 @@
 # Geostore
 
-***Note — This is the documentation for version 1 of the Geostore microservice, the latest version is [version 2](https://resource-watch.github.io/doc-api/index-rw.html#geoStore-v2).***
+***Note — This is the documentation for version 2 of the Geostore microservice, the previous version is [version 1](https://resource-watch.github.io/doc-api/index-rw.html#geoStore).***
 
 ## What is Geostore
 
@@ -23,29 +23,33 @@ After viewing the documentation below, consider looking at the Geostore tutorial
 
 | Method | Path                                     | Description                                                                                                                                    |
 | ------ | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| POST   | `/v1/geostore`                           | [Create geoStore objects](#create-geostore-objects)                                                                                            |
-| POST   | `/v1/geostore/area`                      | ??                                                                                                                                             |
-| GET    | `/v1/geostore/:id`                       | [Get geoStore by Geostore ID](#get-geostore-by-geostore-id)                                                                                    |
-| POST   | `/v1/geostore/find-by-ids`               | [Get geoStores by Geostore IDs](#get-geostores-by-geostore-ids)                                                                                |
-| GET    | `/v1/geostore/:id/view`                  | [Get geoStore by Geostore ID and view at GeoJSON.io](#get-geostore-by-geostore-id-and-view-at-geojson-io)                                      |
-| GET    | `/v1/geostore/admin/list`                | [Get all Geostore IDs, names and ISO 3166-1 alpha-3 codes](#get-all-geostore-ids-names-and-iso-3166-1-alpha-3-codes)                           |
-| GET    | `/v1/geostore/admin/:iso`                | [Get geoStore by ISO 3166-1 alpha-3 code](#get-geostore-by-iso-3166-1-alpha-3-code)                                                            |
-| GET    | `/v1/geostore/admin/:iso/:id1`           | [Get geoStore by ISO 3166-1 alpha-3 code and GADM admin 1 ID](#get-geostore-by-iso-3166-1-alpha-3-code-and-gadm-admin-1-id)                    |
-| GET    | `/v1/geostore/admin/:iso/:id1/:id2`      | [Get geoStore by ISO 3166-1 alpha-3 code, GADM admin 1 and admin 2 IDs](#get-geostore-by-iso-3166-1-alpha-3-code-gadm-admin-1-and-admin-2-ids) |
-| GET    | `/v1/geostore/wdpa/:id`                  | [Get geoStore by WDPA ID](#get-geostore-by-wdpa-id)                                                                                            |
-| GET    | `/v1/geostore/use/:name/:id`             | [Get geoStore by Land Use Type name and ID](#get-geostore-by-land-use-type-name-and-id)                                                        |
-| GET    | `/v1/coverage/intersect/use/:name/:id`   | ?                                                                                                                                              |
-| GET    | `/v1/coverage/intersect/admin/:iso`      | ?                                                                                                                                              |
-| GET    | `/v1/coverage/intersect/admin/:iso/:id1` | ?                                                                                                                                              |
-| GET    | `/v1/coverage/intersect/wdpa/:id`        | ?                                                                                                                                              |
-| GET    | `/v1/coverage/intersect`                 | ?                                                                                                                                              |
-| GET    | `/v1/coverage/intersect/use/:name/:id`   | ?                                                                                                                                              |
+| POST   | `/v2/geostore`                           | [Create geoStore objects](#create-geostore-objects)                                                                                            |
+| POST   | `/v2/geostore/area`                      | ??                                                                                                                                             |
+| GET    | `/v2/geostore/:id`                       | [Get geoStore by Geostore ID](#get-geostore-by-geostore-id)                                                                                    |
+| POST   | `/v2/geostore/find-by-ids`               | [Get geoStores by Geostore IDs](#get-geostores-by-geostore-ids)                                                                                |
+| GET    | `/v2/geostore/:id/view`                  | [Get geoStore by Geostore ID and view at GeoJSON.io](#get-geostore-by-geostore-id-and-view-at-geojson-io)                                      |
+| GET    | `/v2/geostore/admin/list`                | [Get all Geostore IDs, names and ISO 3166-1 alpha-3 codes](#get-all-geostore-ids-names-and-iso-3166-1-alpha-3-codes)                           |
+| GET    | `/v2/geostore/admin/:iso`                | [Get geoStore by ISO 3166-1 alpha-3 code](#get-geostore-by-iso-3166-1-alpha-3-code)                                                            |
+| GET    | `/v2/geostore/admin/:iso/:id1`           | [Get geoStore by ISO 3166-1 alpha-3 code and GADM admin 1 ID](#get-geostore-by-iso-3166-1-alpha-3-code-and-gadm-admin-1-id)                    |
+| GET    | `/v2/geostore/admin/:iso/:id1/:id2`      | [Get geoStore by ISO 3166-1 alpha-3 code, GADM admin 1 and admin 2 IDs](#get-geostore-by-iso-3166-1-alpha-3-code-gadm-admin-1-and-admin-2-ids) |
+| GET    | `/v2/geostore/wdpa/:id`                  | [Get geoStore by WDPA ID](#get-geostore-by-wdpa-id)                                                                                            |
+| GET    | `/v2/geostore/use/:name/:id`             | [Get geoStore by Land Use Type name and ID](#get-geostore-by-land-use-type-name-and-id)                                                        |
+| GET    | `/v2/coverage/intersect/use/:name/:id`   | ?                                                                                                                                              |
+| GET    | `/v2/coverage/intersect/admin/:iso`      | ?                                                                                                                                              |
+| GET    | `/v2/coverage/intersect/admin/:iso/:id1` | ?                                                                                                                                              |
+| GET    | `/v2/coverage/intersect/wdpa/:id`        | ?                                                                                                                                              |
+| GET    | `/v2/coverage/intersect`                 | ?                                                                                                                                              |
+| GET    | `/v2/coverage/intersect/use/:name/:id`   | ?                                                                                                                                              |
 
 [TODO: Check if coverage should have its own documentation?]
 
 ## Create geoStore objects
 
 Geostore objects can be created in the Geostore using a valid GeoJSON object or by selecting a row from a [Carto](https://carto.com/) table.
+
+***Note - Large GeoJSON objects with a length of > 2000 are simplified during the creation process. [TODO: Confirm if all imports or only large ones!]***  
+
+[TODO: Find out about and document ["Create using ESRI JSON"](https://github.com/gfw-api/gfw-geostore-api/blob/ab23215e9887611f60b2662eae3e107142c5fa01/app/src/routes/api/v2/geoStore.router.js#L77)]
 
 ### Create using a GeoJSON
 
@@ -55,7 +59,7 @@ which accepts as body a [GeoJSON](https://geojson.org/) object (`<geojson>`), if
 > Example request pattern
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore/ \
+curl -X POST https://api.resourcewatch.org/v2/geostore/ \
      -H "Content-Type: application/json" \
      -d '{"geojson": <geojson>}'
 ```
@@ -63,7 +67,7 @@ curl -X POST https://api.resourcewatch.org/v1/geostore/ \
 > Example URL request
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore/ \
+curl -X POST https://api.resourcewatch.org/v2/geostore/ \
      -H "Content-Type: application/json" \
      -d '{
    "geojson":{
@@ -205,7 +209,7 @@ Geostore objects can be created via the POST `geostore` endpoint, which accepts 
 > Example request pattern
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore \
+curl -X POST https://api.resourcewatch.org/v2/geostore \
 -H "Content-Type: application/json" \
 -d '{"provider": <provider>}'
 ```
@@ -213,7 +217,7 @@ curl -X POST https://api.resourcewatch.org/v1/geostore \
 > Example URL request
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore \
+curl -X POST https://api.resourcewatch.org/v2/geostore \
 -H "Content-Type: application/json" \
 -d '{
         "provider":{
@@ -235,6 +239,8 @@ curl -X POST https://api.resourcewatch.org/v1/geostore \
 
 A number of endpoints are available for retrieving geoStore objects, each with a different (application-specific) purposes in mind.
 
+[TODO: Chat about how to explain the Get by iso, wdpa, and use better. These endpoints actually get a geojson from a specific Carto table (if they are not already in the store?). Should this be explained?]
+
 ### Get geoStore by Geostore ID
 
 Geostore objects can be retrieved via the GET `geostore/:id` endpoint,
@@ -243,13 +249,13 @@ which returns a single object selected from the Geostore using a single [Geostor
 > Example request pattern
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/<id>
+curl -X GET https://api.resourcewatch.org/v2/geostore/<id>
 ```
 
 > Example URL request
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/ca38fa80a4ffa9ac6217a7e0bf71e6df
+curl -X GET https://api.resourcewatch.org/v2/geostore/ca38fa80a4ffa9ac6217a7e0bf71e6df
 ```
 
 > Example response
@@ -321,13 +327,13 @@ Geostore objects can be retrieved and viewed via the GET `geostore/:id/view` end
 > Example request pattern
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/<id>/view
+curl -X GET https://api.resourcewatch.org/v2/geostore/<id>/view
 ```
 
 > Example URL request
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/ca38fa80a4ffa9ac6217a7e0bf71e6df/view
+curl -X GET https://api.resourcewatch.org/v2/geostore/ca38fa80a4ffa9ac6217a7e0bf71e6df/view
 ```
 
 > Example response
@@ -345,7 +351,7 @@ Many geoStore objects can be retrieved via the POST `geostore/find-by-ids` endpo
 > Example request pattern
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore/find-by-ids \
+curl -X POST https://api.resourcewatch.org/v2/geostore/find-by-ids \
      -H "Content-Type: application/json" \
      -d '{"geostores": [<id>, <id>]}'
 ```
@@ -353,7 +359,7 @@ curl -X POST https://api.resourcewatch.org/v1/geostore/find-by-ids \
 > Example URL request
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/geostore/find-by-ids \
+curl -X POST https://api.resourcewatch.org/v2/geostore/find-by-ids \
      -H "Content-Type: application/json" \
      -d '{"geostores": ["35a6d982388ee5c4e141c2bceac3fb72", "8f77fe62cf15d5098ba0ee11c5126aa6"]}'
 ```
@@ -460,20 +466,20 @@ curl -X POST https://api.resourcewatch.org/v1/geostore/find-by-ids \
 ### Get geoStore by ISO 3166-1 alpha-3 code
 
 Geostore objects can be retrieved via the GET `geostore/admin/:iso` endpoint,
-which returns a single object selected from the Geostore using a single [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) (`<iso>`), if a geoStore with the specified `<iso>` does not exist in the Geostore, a `404` response is returned.
+which returns a single object selected from the Geostore using a single [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) (`<iso>`), if a geoStore with the specified `<iso>` does not exist in the Geostore, a `404` response is returned. 
 
-***Note - The source of the country geometries is GADM version 2.8, and large geometries are simplified.***
+***Note - The source of the country geometries is GADM version 3.6, and large geometries are simplified.***
 
 > Example request pattern
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/admin/<iso>
+curl -X GET https://api.resourcewatch.org/v2/geostore/admin/<iso>
 ```
 
 > Example URL request
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
+curl -X GET https://api.resourcewatch.org/v2/geostore/admin/ESP
 ```
 
 > Example response (note coordinates are truncated)
@@ -532,7 +538,7 @@ All of the Geostore IDs, names, and ISO 3166-1 alpha-3 code values available und
 > Example URL request
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
+curl -X GET https://api.resourcewatch.org/v2/geostore/admin/list
 ```
 
 > Example response
@@ -562,18 +568,18 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
 Geostore objects can be retrieved via the GET `geostore/admin/:iso/:id1` endpoint,
 which returns a single object selected from the Geostore using a single [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) value (`<iso>`) and [GADM admin level 1](https://gadm.org/metadata.html) ID (`<id1>`), if a geoStore with the specified `<iso>` and `<id1>` does not exist in the Geostore, a `404` response is returned.
 
-***Note - The source of the admin level 1 geometries is GADM version 2.8, and large geometries are simplified.***
+***Note - The source of the admin level 1 geometries is GADM version 3.6, and large geometries are simplified.***
 
 > Example request pattern
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/admin/<iso>/<id1>
+curl -X GET https://api.resourcewatch.org/v2/geostore/admin/<iso>/<id1>
 ```
 
 > Example URL request
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP/9
+curl -X GET https://api.resourcewatch.org/v2/geostore/admin/ESP/9
 ```
 
 > Example response (note coordinates are truncated)
@@ -628,18 +634,18 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP/9
 
 GeoStore objects can be retrieved via the GET `geostore/admin/:iso/:id1/:id2` endpoint, which returns a single object selected from the Geostore using a single [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) value (`<iso>`),  [GADM admin level 1](https://gadm.org/metadata.html) ID (`<id1>`), and [GADM admin level 2](https://gadm.org/metadata.html) ID (`<id2>`), if a geoStore with the specified `<iso>`, `<id1>`, and `<id1>` does not exist in the Geostore, a `404` response is returned.
 
-***Note - The source of the admin level 2 geometries is GADM version 2.8, and large geometries are simplified.***
+***Note - The source of the admin level 2 geometries is GADM version 3.6, and large geometries are simplified.***
 
 > Example request pattern
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/admin/<iso>/<id1>/<id2>
+curl -X GET https://api.resourcewatch.org/v2/geostore/admin/<iso>/<id1>/<id2>
 ```
 
 > Example URL request
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP/9/2
+curl -X GET https://api.resourcewatch.org/v2/geostore/admin/ESP/9/2
 ```
 
 > Example response
@@ -653,18 +659,22 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP/9/2
 Geostore objects can be retrieved via the GET `geostore/admin/wdpa/:id` endpoint,
 which returns a single object selected from the Geostore using a single [World Database on Protected Areas](https://www.protectedplanet.net/) (WDPA) ID (`<id>`), if a geostore with the specified `<id>` does not exist in the Geostore, a `404` response is returned. To find valid WDPA ID values check the link.
 
+The source of the geometries is the [World Database on Protected Areas](https://www.protectedplanet.net/).
+
 ***Note marine protected areas are NOT included, and geometries maybe simplified.***
+
+[TODO: This database is updated regularily! Version used in the Carto table is UNDEFINED!!!]
 
 > Example request pattern
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/wdpa/<id>
+curl -X GET https://api.resourcewatch.org/v2/geostore/wdpa/<id>
 ```
 
 > Example URL request
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/wdpa/142809
+curl -X GET https://api.resourcewatch.org/v2/geostore/wdpa/142809
 ```
 
 > Example response (note coordinates are truncated)
@@ -712,18 +722,20 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/wdpa/142809
 
 ### Get geostore by Land Use Type keyword and ID
 
-Geostore objects can be retrieved via the GET `geostore/admin/use/:name/:id` endpoint, which returns a single object selected from the Geostore using a single [Land Use Type](#land-use-types) keyword (`<name>`) and  Land Use Type object ID (`<id>`), if a geostore with the specified `<name>` and `<id>` does not exist in the Geostore, a `404` response is returned. Goestores for four land use types are available; Oil Palm production (`oilpalm`), Mining activities (`mining`), Wood fiber production (`fiber`), and Forest logging activities (`logging`).
+Geostore objects can be retrieved via the GET `geostore/admin/use/:name/:id` endpoint, which returns a single object selected from the Geostore using a single [Land Use Type](#land-use-types) keyword (`<name>`) and  Land Use Type object ID (`<id>`), if a geostore with the specified `<name>` and `<id>` does not exist in the Geostore, a `404` response is returned. Geestores for five land use types are available; Tiger conservation landscapes (`tiger_conservation_landscapes`), Oil Palm production (`oilpalm`), Mining activities (`mining`), Wood fiber production (`fiber`), and Forest logging activities (`logging`).
+
+[TODO: Source and Version used in the Carto table is UNDEFINED!!!]
 
 > Example request pattern
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/use/<name>/<id>
+curl -X GET https://api.resourcewatch.org/v2/geostore/use/<name>/<id>
 ```
 
 > Example URL request
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/use/logging/1
+curl -X GET https://api.resourcewatch.org/v2/geostore/use/logging/1
 ```
 
 > Example response (note coordinates are truncated)
@@ -732,7 +744,7 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/use/logging/1
 {
     "data": {
         "type": "geoStore",
-        "id": "4160c97818384be4312229cada8218e7",
+        "id": "bd5feac1b0dd4e73f3a1553889807622",
         "attributes": {
             "geojson": {
                 "crs": {},
@@ -740,30 +752,30 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/use/logging/1
                 "features": [
                     {
                         "geometry": {
-                            "coordinates": [
-                                ...
-                            ],
+                            "coordinates": [...],
                             "type": "MultiPolygon"
                         },
-                        "type": "Feature"
+                        "type": "Feature",
+                        "properties": null
                     }
                 ]
             },
-            "hash": "4160c97818384be4312229cada8218e7",
+            "hash": "bd5feac1b0dd4e73f3a1553889807622",
             "provider": {},
-            "areaHa": 1235227.8662539488,
+            "areaHa": 45978.43408272762,
             "bbox": [
-                -99.3190423198471,
-                51.0787109324636,
-                -96.6033188303996,
-                52.49257057777
+                102.691404026,
+                -0.248440312,
+                103.036606,
+                -0.071735991
             ],
             "lock": false,
             "info": {
                 "use": {
                     "use": "gfw_logging",
                     "id": 1
-                }
+                },
+                "simplify": false
             }
         }
     }
