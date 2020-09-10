@@ -41,25 +41,42 @@ git clone git@github.com:resource-watch/dataset.git
 
 #### Installing dependencies
 
-In the source code you just downloaded, you'll find a `README.md` file with detailed instruction for this microservice, including dependencies you'll need to install. For natively running the dataset microservice, you'll need [nodejs](https://nodejs.org/en/), [yarn](https://yarnpkg.com) and [MongoDB](https://www.mongodb.com/).
+In the source code you just downloaded, you'll find a `README.md` file with detailed instruction for the microservice, including dependencies you'll need to install.
 
-When setting up nodejs locally, we recommend using a tool like [nvm](https://github.com/nvm-sh/nvm) that allows you to easily install and manage different nodejs versions on your computer. For Python, you can use something like [pyenv](https://github.com/pyenv/pyenv), and [rvm](https://rvm.io/) for Rails-based microservices. All of these tools' docs cover install instructions for different operating systems.
+For all Node.js microservices, you'll need to install [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com). Rather than installing Node.js from the official website, we recommend using [nvm](https://github.com/nvm-sh/nvm), which allows you to easily install and manage different Node.js versions on your computer, since different microservices may require different versions of Node.js to run.
 
-You should also be mindful of the exact version of the language required by the microservice. For dataset, the `package.json` file typically has a `engine` value which will tell you which version(s) are required. Another place where you'll find this info (which also works for other languages) is the content of the `Dockerfile` (typically in the first line) - `FROM node:12-alpine` means this microservice runs on nodejs v12.
-
-[Yarn](https://yarnpkg.com) is a package manager for nodejs applications (a spiritual equivalent to [pip](https://pypi.org/project/pip/) or [Bundler](https://bundler.io/)) which is also needed. Once it's installed, be sure to use it to install the necessary libraries:
+<aside class="notice">
+For Python, you can use something like <a href="https://github.com/pyenv/pyenv">pyenv</a>, and <a href="https://rvm.io/">rvm</a> for Rails-based microservices.
+</aside>
 
 ```shell
+# Install Node.js v12 for the dataset microservice
+nvm install 12
+
+# Switch to the v12 installation
+nvm use 12
+```
+
+Once you've installed a version manager like nvm, you need to check which version of the language to install. For Node.js microservices, the `package.json` file typically has a `engine` value which will tell you which version(s) of Node.js are supported. Another place where you'll find this info (which also works for other languages) is the content of the `Dockerfile` (typically in the first line) - in the dataset microservice, for example, `FROM node:12-alpine` means this microservice runs on Node.js v12.
+
+```shell
+# To install dependencies, navigate to the directory where you cloned the microservice and run:
 yarn
 ```
+
+[Yarn](https://yarnpkg.com) is a package manager for Node.js applications (a spiritual equivalent to [pip](https://pypi.org/project/pip/) for Python or [Bundler](https://bundler.io/) for Ruby). Once it's installed, be sure to use it to install the necessary libraries (see right).
+
+<aside class="notice">
+Windows users: If after running <code>yarn</code> you get an error where <code>gyp</code> cannot find Visual Studio, the solution <i>should</i> be as easy as running <code>yarn global add windows-build-tools</code> from an admin command prompt.
+</aside>
  
-[MongoDB](https://www.mongodb.com/) is a common dependency of many RW API microservices, with applications like [Postgres](https://www.postgresql.org/), [Redis](https://redis.io/), [RabbitMQ](https://www.rabbitmq.com/) or [Elasticsearch](https://www.elastic.co/home) also being required on certain microservices. If a version number is not identified on the `README.md` file, the `docker-compose-test.yml` file may help. `image: mongo:3.4` means this microservice depends on MongoDB v3.4.
+The microservice's `README` may specify additional dependencies you need to install. [MongoDB](https://www.mongodb.com/), for example, is a common dependency of many RW API microservices, with applications like [Postgres](https://www.postgresql.org/), [Redis](https://redis.io/), [RabbitMQ](https://www.rabbitmq.com/) or [Elasticsearch](https://www.elastic.co/home) also being required on certain microservices. If a version number is not identified on the `README.md` file, the `docker-compose-test.yml` file may help. `image: mongo:3.4` means this microservice depends on MongoDB v3.4.
 
 Besides these dependencies, microservices may also depend on the Control Tower gateway, and other microservices: 
 
 - As we'll cover in the [Registering on Control Tower section](#registering-on-control-tower), on bootstrap, a microservice will register itself in Control Tower so it can expose its endpoints to the public facing API - but this behavior can be disabled, as we'll see in a moment.
 - Microservices expect user data to be provided by Control Tower in a specific format - a workaround for this is passing this data yourself when calling your microservice endpoints
-- [Requests to other microservices](#requests-to-other-microservices) are routed through Control Tower, so if the endpoints you will be developing rely on other microservices, you need to set up both Control Tower and those microservices.
+- [Requests to other microservices](#requests-to-other-microservices) are routed through Control Tower, so if the endpoints you will be developing rely on other microservices, you need to set up both Control Tower and those microservices locally.
 - Control Tower implements certain endpoints related to user management, which may also be required by the endpoints you'll be working on.
 
 If your endpoint does not rely on other microservices, and you don't rely on or can spoof the user data provided by Control Tower, you can set the `CT_REGISTER_MODE` environment variable to a value other than `auto` to disable the automatic registration on startup, thus removing the dependency on Control Tower. However, this is not recommended, as using Control Tower will have your development environment resemble the production setup, thus potentially highlighting any issues you may otherwise miss.
@@ -80,69 +97,49 @@ As a rule of thumb, env vars configure things like databases address and credent
 
 #### Starting the microservice
 
-Once you have determined the values you'll need to run your microservice with the desired configuration, you should have everything ready to run it. For nodejs based microservice like Dataset, you can do this by using the following command:
-
 ```shell
+# Starting a Node.js microservice:
 yarn start
-```
 
-For Python microservices it may look something like:
+# Node.js using inline environment variables:
+NODE_ENV=production CT_REGISTER_MODE=none <your other environment variables> yarn start
 
-```shell
+# Starting a Python microservice may look something like this:
 python main.py
-```
 
-Rails-based microservices can rely on the traditional Rails CLI:
-
-```shell
+# Rails-based microservices can rely on the traditional Rails CLI:
 rails server
 ```
 
-If you're using inline environment variables, it will look something like this: 
-
-```shell
-NODE_ENV=production CT_REGISTER_MODE=none <your other environment variables> yarn start
-```
+Once you have determined the values you'll need to run your microservice with the desired configuration, you should have everything ready to run it. For nodejs based microservice like Dataset, you can do this by running `yarn start`. For other languages, the startup command will be different (see right).
 
 You can also review the `entrypoint.sh` file content, under the `start` or `develop` sections, as it will contain the command you need to execute to run the code natively.
 
 The application should output useful information, like database connection status and HTTP port. Depending on your configuration for the Control Tower auto registration, it will also output the result of that process. Overall, if no error message is produced, the microservice should be up and running, and available at the port specified by its output.
 
-<aside class="notice">
-Windows users: If after yarn install, you get an error where `gyp` cannot find Visual Studio, the solution `should` be as easy as running `yarn global add windows-build-tools` from an admin command prompt
-</aside>
-
 #### Running the tests
+
+```shell
+# Running tests for a Node.js microservice:
+yarn test
+
+# Node.js with environment variables:
+NODE_ENV=test CT_REGISTER_MODE=none <your other environment variables> yarn test
+
+# Python:
+exec pytest <test folder>
+
+# Ruby:
+bundle exec rspec spec
+```
 
 Most microservices (hopefully all in the future) come with tests included. Running these tests can help you identify issues with your code changes, and are required for any new modifications merged into the RW API. It's recommended that you run tests locally before pushing changes to Github.
 
 Tests sometimes mock certain dependencies, like external 3rd party service, but often require an actually running database, as a native execution would (think MongoDB or Postgres). Check the `docker-compose-test.yml` for whatever services it runs besides the microservice - those are the dependencies you'll need to have up and running to run the tests natively. Control Tower is not required to run the tests.
 
 Test execution requires roughly the same env vars as running the actual microservice. For microservices that rely on a database, make sure you are not using the same database as you do for development purposes - tests assume database isolation, and will delete preexisting data.
-
-To run tests for a microservice, use the following command:
-
-```shell
-yarn test
-```
-
-```shell
-exec pytest <test folder>
-```
-
-
-```shell
-bundle exec rspec spec
-```
-
-If you're using inline environment variables, it will look something like this: 
-
-```shell
-NODE_ENV=test CT_REGISTER_MODE=none <your other environment variables> yarn test
-```
-
  
-You can also review the `entrypoint.sh` file content, under the `test` section, as it will contain the command you need to execute to run the code natively.
+See right for how to run tests for microservices in different languages. You can also review the `entrypoint.sh` file content, under the `test` section, which will contain the exact command you need to execute.
 
 ### Using Docker
 
