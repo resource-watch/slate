@@ -169,11 +169,13 @@ Note that Docker will not fetch nor run Control Tower for you - if you want to e
 
 #### Configuration
 
-Configuration for Docker based execution is done using [environment variables](https://en.wikipedia.org/wiki/Environment_variable) passed to the Docker runtime using a special `dev.env` file. Some microservices will include a `dev.env.sample` or equivalent that you can copy-paste and use as a starting point when configuring your environment.
+Configuration for Docker based execution is done using [environment variables](https://en.wikipedia.org/wiki/Environment_variable) (env vars) passed to the Docker runtime using a special `dev.env` file. Some microservices will include a `dev.env.sample` or equivalent that you can copy-paste and use as a starting point when configuring your environment.
 
 To find out more about which env vars you can/need to specify, refer to the microservice's `README.md` file, as it typically documents the main variables available to you. Nodejs-base microservices will often have a full list in the `config/custom-environment-variables.json` file. The `docker-compose-test.yml` and `docker-compose-develop.yml` files contain usages of said variables, and may be helpful if you are looking for an example or an undocumented variable.
 
 As a rule of thumb, env vars configure things like databases address and credentials, 3rd party services (for example, an AWS S3 bucket URL or AWS access credentials), or Control Tower URL (only necessary if you decide to use it). Your docker-compose file may already have predefined values for some of these, in which case do not overwrite them unless you are certain of what you're doing.
+
+Docker networking works differently on Linux vs other operating systems, and you need to keep this in mind when specifying values for things like MongoDB or Control Tower addresses. Under Linux, Docker containers and the host operating system run in the same network host, so you can use `localhost`, for example, when telling a dockerized Dataset microservice where it can reach Control Tower (running natively or in a Docker container). Under other operating systems, however, Docker containers run on a different network host, so you should instead use your local network IP - using `localhost` will not reach your expected target. 
 
 
 #### Starting the microservice
