@@ -1,10 +1,8 @@
 # Areas v2
 
-## What is an area?
+Before reading any further, please ensure you have read the [area concept](#area) documentation first. It gives you a brief and clear description of what an area is and what it can do for you. 
 
-Areas is a service provided by the RW API which allows you to define geographic areas of interest. Areas can be defined in multiple ways, such as selecting a whole country or region as your area of interest, a protected area from WDPA, or reference a custom geostore ID from the [Geostore service](#geostore).
-
-With your areas of interest, you can then choose to be notified about events that happen inside your area of interest, such as deforestation alerts (GLAD alerts) or fire alerts (VIIRS fire alerts). You can also choose to receive a monthly summary of both GLAD and VIIRS alerts in your area of interest, which will arrive in your inbox at the first day of every month.
+Once you've read that section, you can come back here to learn more details about using the RW API's areas of interest feature. Areas of interest are used by the Global Forest Watch website to subscribe to notifications on deforestation and fire alerts inside a particular areas you might be interest in. The sections below describe in detail how you can use the endpoints provided by RW API's [Areas service](https://github.com/gfw-api/gfw-area) to define your own  geographic areas of interest.
 
 ## What is the difference between v1 and v2?
 
