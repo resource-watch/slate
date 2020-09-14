@@ -2,19 +2,19 @@
 
 ## What is an area?
 
-Areas is a service in the RW API that allows you to define geographic areas of interest. This definition can be done in multiple ways, such as selecting a country or a region as your area of interest, a protected area from WDPA, or reference a custom geostore ID from the [Geostore service](#geostore).
+Areas is a service provided by the RW API which allows you to define geographic areas of interest. Areas can be defined in multiple ways, such as selecting a whole country or region as your area of interest, a protected area from WDPA, or reference a custom geostore ID from the [Geostore service](#geostore).
 
 With your areas of interest, you can then choose to be notified about events that happen inside your area of interest, such as deforestation alerts (GLAD alerts) or fire alerts (VIIRS fire alerts). You can also choose to receive a monthly summary of both GLAD and VIIRS alerts in your area of interest, which will arrive in your inbox at the first day of every month.
 
 ## What is the difference between v1 and v2?
 
-v2 areas are an upgrade in the functionality of areas, and provide you with an easier to understand interface for creating areas of interest. Features such as the notification of alerts inside you area of interest are also only available in v2 endpoints. 
+v2 areas are an upgrade in the functionality of areas and provide you with an easier-to-use interface for creating areas of interest. Features such as the notification of alerts inside you area of interest are also only available in v2 endpoints.
 
-However, keep in mind that v2 areas endpoints were built with the intention of merging together **v1 areas of interest** and **subscriptions**. This means, in practice, that if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints.
+However, keep in mind that v2 areas endpoints were built with the intention of merging together [**v1 areas of interest**](/index-rw.html#areas) and [**subscriptions**](/index-rw.html#subscriptions). This means, in practice, that if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints.
 
 This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
 
-Below the documentation of each endpoint, you'll be able to find a **implementation details** section that goes into detail about how this sync is performed.
+Below the documentation of each endpoint, you'll be able to find a **implementation details** section that goes into detail on how this synchronization is performed.
 
 ## Getting all user areas
 
@@ -56,6 +56,39 @@ curl -X GET https://api.resourcewatch.org/v2/area
     ]
 }
 ```
+
+The `v2/areas` endpoint returns all the areas of interest associated with the user who made the request. 
+
+**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
+
+For a detailed description of each field, check out the [Area reference](#area-reference) section.
+
+### Pagination
+
+Pagination is not applied when requesting all of the areas for the logged user, so all of the logged user's areas are returned in every call of the `v2/areas` endpoint.
+
+### Filters
+
+> Filtering areas
+
+```shell
+curl -X GET https://api.resourcewatch.org/v2/area?application=rw&public=true
+```
+
+The `v2/areas` endpoint provides the following parameters to tailor the returned listing:
+
+Field       |             Description                                                                                                                          | Type    | Example    |
+----------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | ------: | ---------: |
+application | Filter results by the application associated with the areas.                                                                                     | String  | 'gfw'      |
+status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
+public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
+all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
+
+### Implementation details
+
+Finds all areas for the user who requested the list of areas. For each area, if it has an associated subscription (i.e. the `subscriptionId` field of the area is not empty), it merges the subscription data over the area data, returning it as a single object. After that, the remaining user subscriptions are converted to area objects and returned.
+
+## Getting all areas
 
 > Example request to get ALL areas (only available for ADMIN users):
 
@@ -108,9 +141,7 @@ curl -X GET https://api.resourcewatch.org/v2/area?all=true
 }
 ```
 
-This endpoint, by default, returns all the areas associated with the user who made the request. You can also provide the `all=true` flag as a query parameter to see all existing areas (this option will only be taken into account for ADMIN users).
-
-**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
+The same `v2/areas` endpoint, used to retrieve all of the logged user's areas, can be used to retrieve ALL areas (for all users). To trigger this behavior, all you need to do is provide the `all=true` flag as a query parameter - **keep in mind this option will only be taken into account for ADMIN users** (i.e. if the logged user is not an ADMIN, the `all=true` flag is ignored and the logged user's areas are returned).
 
 For a detailed description of each field, check out the [Area reference](#area-reference) section.
 
@@ -122,7 +153,7 @@ For a detailed description of each field, check out the [Area reference](#area-r
 curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25
 ```
 
-By default, no pagination is applied to the returned response, and every call to the `v2/areas` endpoint will return all of your areas. However, due to performance and memory management issues, when viewing all areas (using the `all=true` option), the returned result is then paginated. You can customize this behavior using the following query parameters:
+Due to performance and memory management issues, when viewing all areas (using the `v2/areas` endpoint with the `all=true` query parameter), the returned result is paginated. You can customize this behavior using the following query parameters:
 
 Field       |             Description                                                                                                                          | Type    | Example    |
 ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------: | ------: | ---------: |
@@ -137,10 +168,10 @@ page[size]  | The size of the page to fetch. Only taken into account when using 
 curl -X GET https://api.resourcewatch.org/v2/area?application=rw&public=true
 ```
 
-The `v2/areas` endpoint provides a range of parameters that you can use to tailor the returned listing. Here’s a list of filters supported by areas:
+The filters for this endpoint are the same as the `v2/areas` endpoint described above:
 
 Field       |             Description                                                                                                                          | Type    | Example    |
------------ | :----------------------------------------------------------------------------------------------------------------------------------------------: | ------: | ---------: |
+----------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | ------: | ---------: |
 application | Filter results by the application associated with the areas.                                                                                     | String  | 'gfw'      |
 status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
@@ -148,9 +179,9 @@ all         | Return all the areas instead of just the areas associated with use
 
 ### Implementation details
 
-Finds all areas for the user who requested the list of areas. For each area, if it has an associated subscription (i.e. the `subscriptionId` field of the area is not empty), it merges the subscription data over the area data, returning it as a single object. After that, the remaining user subscriptions are converted to area objects and returned.
+If the `all=true` query filter is provided, the `/find-all` endpoint of the Subscriptions service is used to find all existing subscriptions (for all users).
 
-Note: if the `all=true` query filter is provided, then the `/find-all` endpoint of the subscriptions is used to find all existing subscriptions.
+Then, for each area in the Areas service database, if it has an associated subscription (i.e. the `subscriptionId` field of the area is not empty), it merges the subscription data over the area data, returning it as a single object. After that, the remaining subscriptions are converted to area objects and returned.
 
 ## Getting an area by its id
 
@@ -258,11 +289,7 @@ curl -X POST https://api.resourcewatch.org/v2/area
 }
 ```
 
-Use this endpoint to create new areas. 
-
-**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
-
-For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
+Use this endpoint to create new areas. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
 Keep in mind that you should provide one of the following when creating an area:
 
@@ -271,12 +298,15 @@ Keep in mind that you should provide one of the following when creating an area:
 * `iso` object with a valid country/region/subregion if you are creating an area that references an admin country/region/subregion;
 * `use` object with valid id and name of a land use concessioned area, if you are creating an area that references a land use area.
 
+**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
+
 ### Errors for creating an area
 
-Error code     | Error message (example)  | Description
--------------- | -------------- | --------------
-400            | `name can not be empty.` | You are missing a required field while creating the area.
-400            | `application cannot be empty` | You provided an invalid field while creating the area.
+Error code     | Error message (example)     | Description
+-------------- | --------------------------- | ------------------------------------------------------------
+400            | `<field> can not be empty.` | You are missing a required field while creating the area.
+400            | `<field> is not valid.`     | You provided an invalid field while creating the area.
+401            | `Unauthorized`              | No token was provided.
 
 ### Email notification
 
@@ -294,9 +324,9 @@ The following parameters are provided to the email service and can be used in th
 * `id` : the ID of the area.
 * `name` : the name of the area.
 * `location` : an alias for the name of the area (contains the same as the `name` parameter).
-* `subscriptions_url` : the URL to manage the areas in the frontend (example: [https://staging.globalforestwatch.org/my-gfw](https://staging.globalforestwatch.org/my-gfw)).
-* `dashboard_link` : the link to the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
-* `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
+* `subscriptions_url` : the URL for managing areas of interest in the flagship application (example: [https://staging.globalforestwatch.org/my-gfw](https://staging.globalforestwatch.org/my-gfw)).
+* `dashboard_link` : the URL for the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
+* `map_link` : the "view on map" URL for this area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
 * `image_url` : the URL for the image associated with the area.
 * `tags` : a string containing the AOI tags, comma-separated.
 
@@ -304,7 +334,7 @@ The following parameters are provided to the email service and can be used in th
 
 ### Implementation details
 
-POST of a new area always starts by creating the area and, taking into account the area attributes, it might also create a subscription which will then be associated with the area. The area's `subscriptionId` attribute will then be updated with the id of the created subscription if that's the case. The created area is then returned.
+POST of a new area always starts by creating the area. Then, taking into account the area attributes, it might also create a subscription which will then be associated with the area. The area's `subscriptionId` attribute will then be updated with the id of the created subscription if that's the case. The created area is then returned.
 
 The subscription is created only if the area has selected set to `true` at least one of the following attributes:
 
@@ -363,9 +393,7 @@ curl -X PATCH https://api.resourcewatch.org/v2/area/:id
 }
 ```
 
-Use this endpoint to update an existing area. This endpoint requires authentication and, in order to PATCH an area, you need to be either the owner of the area or be an ADMIN user.
-
-For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
+Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
 Keep in mind that you should provide one of the following when updating an area:
 
@@ -374,13 +402,16 @@ Keep in mind that you should provide one of the following when updating an area:
 * `iso` object with a valid country/region/subregion if you are updating an area that references an admin country/region/subregion;
 * `use` object with valid id and name of a land use concessioned area, if you are updating an area that references a land use area.
 
+**This endpoint requires authentication and, in order to PATCH an area, you need to be either the owner of the area or be an ADMIN user.**
+
 ### Errors for updating an area
 
-Error code     | Error message (example)  | Description
--------------- | -------------- | --------------
-400            | `name can not be empty.` | You are missing a required field while creating the area.
+Error code     | Error message (example)       | Description
+-------------- | ----------------------------- | --------------
+400            | `name can not be empty.`      | You are missing a required field while creating the area.
 400            | `application cannot be empty` | You provided an invalid field while creating the area.
-404            | `Area not found` | The area with id provided does not exist.
+401            | `Unauthorized`                | No token was provided.
+404            | `Area not found`              | The area with id provided does not exist.
 
 ### Implementation details
 
