@@ -30,7 +30,6 @@ All microservices can be executed in two ways: natively or using [Docker](https:
 
 ### Using native execution
 
-
 #### Getting the code
 
 The first step will be getting the source code from [Github](https://github.com/resource-watch/dataset/) to your computer using the [Git](https://git-scm.com/) CLI (or equivalent). 
@@ -141,6 +140,14 @@ Test execution requires roughly the same env vars as running the actual microser
  
 See right for how to run tests for microservices in different languages. You can also review the `entrypoint.sh` file content, under the `test` section, which will contain the exact command you need to execute.
 
+#### Common errors and pitfalls
+
+- **Your microservice cannot connect to MongoDB/other database**: ensure that the corresponding service is running and listening on the configured address and port - be mindful that `localhost`, `127.0.0.1` and your local IP are not always interchangeable. Also confirm user and password data.
+- **Your microservice crashes shortly after start, trying to reach a network address**: this may be your microservice trying to reach Control Tower. Either disable Control Tower auto registration, or run Control Tower.
+- **Your microservice crashes when handling an API call, trying to reach a network address**: this may be your microservice trying to reach another microservice through Control Tower. Make sure that both Control Tower and the necessary dependent microservices are up and running, and that all microservices involved are registered in Control Tower. Be sure that Control Tower's cron is running.
+- **Your microservice has user-related issues, even though you are providing a `Bearer` token**: Bearer tokens are processed by Control Tower, and transformed into a `loggedUser` JSON object that microservices expect. Either provide said object directly to your microservice, or route you request with the token through Control Tower.
+- **Your tests keep failing**: This can be due to multiple reasons. Check the microservice's travis status (link in the README.md) to see if it's just you, or if there's an issue with the preexisting code base. Run your tests a few more times and see if the output is consistent - some tests are not deterministic, and have varying results. Ensure your env vars are correct - check `docker-compose-test.yml` or `travis.yml` for examples on values.
+
 ### Using Docker
 
 #### Getting the code
@@ -163,7 +170,6 @@ When you run Docker, it will automatically fetch the necessary dependencies and 
 
 Note that Docker will not fetch nor run Control Tower for you - if you want to execute your microservice in integration with Control Tower, you'll have to set it up manually. Alternatively, set the `CT_REGISTER_MODE` [environment variable](https://en.wikipedia.org/wiki/Environment_variable) to any value other than `auto`.
 
-
 #### Configuration
 
 Configuration for Docker based execution is done using [environment variables](https://en.wikipedia.org/wiki/Environment_variable) (env vars) passed to the Docker runtime using a special `dev.env` file. Some microservices will include a `dev.env.sample` or equivalent that you can copy-paste and use as a starting point when configuring your environment.
@@ -173,7 +179,6 @@ To find out more about which env vars you can/need to specify, refer to the micr
 As a rule of thumb, env vars configure things like databases address and credentials, 3rd party services (for example, an AWS S3 bucket URL or AWS access credentials), or Control Tower URL (only necessary if you decide to use it). Your docker-compose file may already have predefined values for some of these, in which case do not overwrite them unless you are certain of what you're doing.
 
 Docker networking works differently on Linux vs other operating systems, and you need to keep this in mind when specifying values for things like MongoDB or Control Tower addresses. Under Linux, Docker containers and the host operating system run in the same network host, so you can use `localhost`, for example, when telling a dockerized Dataset microservice where it can reach Control Tower (running natively or in a Docker container). Under other operating systems, however, Docker containers run on a different network host, so you should instead use your local network IP - using `localhost` will not reach your expected target. 
-
 
 #### Starting the microservice
 
@@ -194,6 +199,14 @@ Running tests under Docker is similar to running the actual microservice. The ea
 ```shell
 ./dataset.sh test
 ```
+
+#### Common errors and pitfalls
+
+- **Your microservice cannot connect to MongoDB/other database**: this can happen with Docker setups if the database container takes longer to start than the microservice container - which is common on first time executions. Re-run the docker-compose command fixes it most times. Check if the address, port, username and password values on the `dev.env` file are correct - most of the time, the default values will work, and your `dev.env` file should not override them.
+- **Your microservice crashes shortly after start, trying to reach a network address**: this may be your microservice trying to reach Control Tower. Either disable Control Tower auto registration, or run Control Tower. Ensure that the address and port pointing to Control Tower are correct - typically you need to use your private IP address (`localhost` or `127.0.0.1` won't do for non linux OSs).
+- **Your microservice crashes when handling an API call, trying to reach a network address**: this may be your microservice trying to reach another microservice through Control Tower. Make sure that both Control Tower and the necessary dependent microservices are up and running, and that all microservices involved are registered in Control Tower. Be sure that Control Tower's cron is running.
+- **Your microservice has user-related issues, even though you are providing a `Bearer` token**: Bearer tokens are processed by Control Tower, and transformed into a `loggedUser` JSON object that microservices expect. Either provide said object directly to your microservice, or route you request with the token through Control Tower.
+- **Your tests keep failing**: This can be due to multiple reasons. Check the microservice's travis status (link in the README.md) to see if it's just you, or if there's an issue with the preexisting code base. Run your tests a few more times and see if the output is consistent - some tests are not deterministic, and have varying results.
 
 ## Microservice internal architecture - nodejs
 
