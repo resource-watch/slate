@@ -16,6 +16,7 @@ includes:
   - concept/query
   - concept/layer
   - concept/widget
+  - concept/area
   - api/authentication
   - api/contact
   - api/collections
