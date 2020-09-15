@@ -6,7 +6,7 @@ Once you've read that section, you can come back here to learn more details abou
 
 ## What is the difference between v1 and v2?
 
-v2 areas are an upgrade in the functionality of areas and provide you with an easier-to-use interface for creating areas of interest. Features such as the notification of alerts inside you area of interest are also only available in v2 endpoints.
+v2 areas are an upgrade in the functionality of areas and provide you with an easier-to-use interface for creating areas of interest. Features such as the notification of alerts inside your area of interest are also only available in v2 endpoints.
 
 However, keep in mind that v2 areas endpoints were built with the intention of merging together [**v1 areas of interest**](/index-rw.html#areas) and [**subscriptions**](/index-rw.html#subscriptions). This means, in practice, that if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints.
 
