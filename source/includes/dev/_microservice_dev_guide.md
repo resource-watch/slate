@@ -280,7 +280,7 @@ With your code live on one of the clusters, you should now proceed to testing it
 - Test the assumptions you used for behavior of other microservices - E2E testing mocks other microservices, so this may be the first time your code is running alongside real instances of other microservices.
 - Clean up after your tests - if you created a bunch of test data, do your best to delete it once you're done. This is particularly important if you are testing something in the production environment, as that test data may be visible to real world users. Cleaning up in staging is also highly recommended.
 
-If you are implementing a new endpoint and it's mission critical to the RW API or one of the applications it powers, you may want to add an [AWS Cloudwatch Canary](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Create.html) to ensure that any issue affecting its availability is detected and reported. The best way to create a new Canary is by copying an existing one and modifying the source code to point to your endpoint. Typically, Canaries are only created for the production environment, and should be configured to run once per hour. Don't forget to set up an alarm to go with your Canary, otherwise a notification will not be issued if a failure is detected.
+If you are implementing a new endpoint and it's mission critical to the RW API or one of the applications it powers, you may want to add a [API smoke test](#api-smoke-tests) to ensure that any issue affecting its availability is detected and reported. Refer to that section of the docs for more details.
 
 ## Microservice internal architecture - nodejs
 
