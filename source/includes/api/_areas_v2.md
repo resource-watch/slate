@@ -393,7 +393,7 @@ curl -X PATCH https://api.resourcewatch.org/v2/area/:id
 
 Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
-Keep in mind that you should provide one of the following when updating an area:
+Keep in mind that you must provide one of the following when updating an area:
 
 * `geostore` with the ID of a geostore object if you are updating an area that references a geostore;
 * `wdpaid` with the ID of a protected area if you are updating an area that references a protected area;
@@ -406,8 +406,8 @@ Keep in mind that you should provide one of the following when updating an area:
 
 Error code     | Error message (example)       | Description
 -------------- | ----------------------------- | --------------
-400            | `name can not be empty.`      | You are missing a required field while creating the area.
-400            | `application cannot be empty` | You provided an invalid field while creating the area.
+400            | `<field> can not be empty.`   | You are missing a required field while updating the area.
+400            | `<field> is invalid.`         | You provided an invalid field while updating the area.
 401            | `Unauthorized`                | No token was provided.
 404            | `Area not found`              | The area with id provided does not exist.
 
