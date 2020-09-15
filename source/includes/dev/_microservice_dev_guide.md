@@ -146,7 +146,7 @@ See right for how to run tests for microservices in different languages. You can
 - **Your microservice crashes shortly after start, trying to reach a network address**: this may be your microservice trying to reach Control Tower. Either disable Control Tower auto registration, or run Control Tower.
 - **Your microservice crashes when handling an API call, trying to reach a network address**: this may be your microservice trying to reach another microservice through Control Tower. Make sure that both Control Tower and the necessary dependent microservices are up and running, and that all microservices involved are registered in Control Tower. Be sure that Control Tower's cron is running.
 - **Your microservice has user-related issues, even though you are providing a `Bearer` token**: Bearer tokens are processed by Control Tower, and transformed into a `loggedUser` JSON object that microservices expect. Either provide said object directly to your microservice, or route you request with the token through Control Tower.
-- **Your tests keep failing**: This can be due to multiple reasons. Check the microservice's travis status (link in the README.md) to see if it's just you, or if there's an issue with the preexisting code base. Run your tests a few more times and see if the output is consistent - some tests are not deterministic, and have varying results. Ensure your env vars are correct - check `docker-compose-test.yml` or `travis.yml` for examples on values.
+- **Your tests keep failing**: This can be due to multiple reasons. Check the microservice's travis status (link in the README.md) to see if it's just you, or if there's an issue with the preexisting code base. Run your tests a few more times and see if the output is consistent - some tests are not deterministic, and have varying results. Ensure your env vars are correct - check `docker-compose-test.yml` or `.travis.yml` for examples on values.
 
 ### Using Docker
 
@@ -207,6 +207,80 @@ Running tests under Docker is similar to running the actual microservice. The ea
 - **Your microservice crashes when handling an API call, trying to reach a network address**: this may be your microservice trying to reach another microservice through Control Tower. Make sure that both Control Tower and the necessary dependent microservices are up and running, and that all microservices involved are registered in Control Tower. Be sure that Control Tower's cron is running.
 - **Your microservice has user-related issues, even though you are providing a `Bearer` token**: Bearer tokens are processed by Control Tower, and transformed into a `loggedUser` JSON object that microservices expect. Either provide said object directly to your microservice, or route you request with the token through Control Tower.
 - **Your tests keep failing**: This can be due to multiple reasons. Check the microservice's travis status (link in the README.md) to see if it's just you, or if there's an issue with the preexisting code base. Run your tests a few more times and see if the output is consistent - some tests are not deterministic, and have varying results.
+
+## CI/CD
+
+The RW API uses multiple tools in it's [CI](https://en.wikipedia.org/wiki/Continuous_integration) and [CD](https://en.wikipedia.org/wiki/Continuous_delivery) pipelines. All microservices that compose the RW API use a common set of tools:
+
+- [Github](https://github.com) for version control and code repository.
+- [Travis CI](travis-ci.org/) for automatic test execution.
+- [Code Climate](codeclimate.com/) for code coverage monitoring.
+- [Jenkins](https://www.jenkins.io/) for deployment.
+
+We assume, at this point, that you're already familiar with Github and its core functionality, like branches and pull requests (PRs). If that's not the case, use your favourite search engine to learn more about those concepts.
+
+Each microservice lives in a separate Github repository, most of which have Travis and Code Climate integrations configured. Whenever a pull request is created, both tools will be triggered automatically - Travis will run the tests included in the code, and notify the PR author of the result. Code Climate builds on top of that, and monitors and reports [code coverage](https://en.wikipedia.org/wiki/Code_coverage). The behavior of both tools is controlled by a single `.travis.yml` file you'll find in the root of each microservice's code base, and you can learn about it on each of the tool's documentation page. You can see the result directly on the PR page.
+
+When you want to submit a change to the code of one of the microservices, you should:
+
+- Do your changes in a separate git branch, named after the change you're making.
+- Target the `dev` branch (or `develop`, if `dev` does not exist yet).
+- Include tests to cover the change you're making.
+- Ensure your PR tests pass when executed by Travis.
+- Maintain/increase the code coverage value reported by Code Climate.
+- Briefly describe the changes you're doing in a `CHANGELOG.md` entry and, if these are public-facing, do a PR to the [RW API documentation repository](github.com/resource-watch/doc-api).
+
+At this stage, and even if your tests pass locally, they may fail when executed in Travis. We recommend running them again if this happens, to see if any [hiccup](https://whatis.techtarget.com/definition/hiccup) occurred. If that's not the case, look into the Travis logs to learn more. Unfortunately, the reasons for these are diverse. It can be related to env vars defined inside the `.travis.yml` file, missing or incorrectly configured dependencies, differences in packages between your local environment and Travis', etc. At the time of writing, and by default which can be overridden, Travis uses Ubuntu and is configured to [use native execution](#using-native-execution) when running tests, so using that very same approach locally may get you closer to the source of the problem you're experiencing. Travis' output log will usually help you identify what's happening, and get you closer to a solution.
+
+Once reviewed by a peer, your changes will be merged and will be ready for deployment to one of the live environments.
+
+Currently, the RW API has 3 different environments:
+
+- `dev` for internal testing and development of new features. There are no guarantees of stability or data persistence. While it's not bared from public access, it's meant to be used only by developers working on the RW API code, for testing, debugging and experimentation.
+- `staging` is a more stable environment, meant to be used by both the RW API developers as well as other developers working on applications built using the RW API. It aims to be functionally stable, but occasional interruptions may occur if needed as part of a process, and code is sometimes in "release candidate" status, meaning it can have some issues. Data is often relied on by users of this API, so be mindful when performing destructive actions.
+- `production` is meant to be as stable as possible, as it's used by real users.
+
+Each microservice repository has a branch matching the name of each of these 3 environments, and changes will always go from a feature branch to `dev`, then to `staging`, and finally to `production`. To push your changes across the different environments, you should:
+
+- Create a PR from the source branch to the target branch (from `dev` to `staging`, or from `staging` to `production`)
+- Deploy the code to the respective environment (we'll see how in a moment)
+- Test it with actual calls to the API, to validate that no side effects were introduced.
+
+Depending on the scale of the changes you're doing, it's recommended to use [git tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging) with [semantic versioning](https://semver.org/). Also be sure to update the `CHANGELOG.md` accordingly, and the `package.json` or equivalent files if they refer a version number. It's also best practice to announce the changes you're about to deploy before doing so, so that other developers of RW API applications can be on the lookout for regressions, and can quickly get in touch with you should any undesired behavior change be detected.
+
+Each of the referred environments lives on a separate [Kubernetes](https://kubernetes.io/) cluster (hosted with [AWS EKS](https://aws.amazon.com/eks/)), and deployment is done using individual Jenkins instances:
+
+- [Jenkins for the dev environment](https://jenkins.aws-dev.resourcewatch.org)
+- [Jenkins for the staging environment](https://jenkins.aws-staging.resourcewatch.org)
+- [Jenkins for the production environment](https://jenkins.aws-prod.resourcewatch.org)
+
+All 3 instances have similar overall configuration, but different microservices may deploy differently depending on the behavior coded into the `Jenkinsfile` that's part of their source code - for example, some WRI sites are also deployed using this approach, but opt to deploy both staging and production versions to the `production` cluster, and may not be in the `staging` or `dev` Jenkins.
+
+The list of jobs you find on each Jenkins instance will match the list of services deployed on that environment. In the details of each job, you should find a branch named after the environment, which corresponds to the Github branch with the same name (some services may still have the old approach, with `develop` for `dev` and `staging`, and `master` for `production`). You may also find other branches, or a different branch structure, depending on the service itself - again, the `Jenkinsfile` configuration is king here, and you should refer to it to better understand what is the desired behavior per branch. In some cases, old branches will be listed on Jenkins but should be ignored.
+
+Once you start a deployment process, Jenkins will run the `Jenkinsfile` content - it is, after all, a script - and perform the actions contained in it. While it's up to the maintainer of each microservice to modify this script, more often that not it will run the tests included in the microservice, using Docker, and if these pass, push the newly generated Docker image to [Docker Hub](https://hub.docker.com/). It will then update the respective Kubernetes cluster with content of the matching subfolder inside the `k8s` folder of the microservice, plus the `k8s/service` folder if one exists. The last step is to deploy the recently pushed Docker image from Docker Hub to the cluster, which will cause Kubernetes to progressively replace running old instances of the service with ones based on the new version.
+
+**A couple of important notes here:**
+
+- All code deployed this way is made public through Docker Hub. If you have sensitive information in your codebase, and are using a Github private repository but are deploying using this approach, your information is NOT kept private.
+- When deploying to production, most microservices will have an additional step at the end of the `Jenkinsfile` execution, which will require a human to explicitly click a link at the end of the Jenkins build log to trigger a deployment to the cluster. This is made intentionally so that deployment to the production environment are explicit and intentional, and are not triggered by accident.
+
+While it's rare, tests ran by Jenkins at this stage may also fail, preventing your deployment. In these cases, refer to the Jenkins build log for details, which most of the times can be reproduced locally [running your tests using Docker](#running-the-tests69). If your Jenkins log mentions issues related with disk capacity or network address assignment problems, please reach out to someone with access to the Jenkins VMs and ask for a [docker system prune](https://docs.docker.com/engine/reference/commandline/system_prune/).
+
+## Testing your deployed code
+
+With your code live on one of the clusters, you should now proceed to testing it. The type of tests you should run vary greatly with the nature of the changes you did, so common sense and industry best practices apply here:
+
+- The bigger the change, the broader the testing should be.
+- Test your changes with different types of users, `applications`, payloads, etc.
+- Try to break your code - send unexpected input, try to access resources you should not have access to, etc. More important than doing what it should is not doing what it shouldn't .
+- If you can, ask for help - testing can be seen as an exercise in creativity, and having someone's assistance will help think outside the box.
+- If you find a bug, fix it, and test everything again, not only what you just fixed.
+- If a test is "simple", write it as a code test, which is reproducible. Save manual testing for the complex scenarios.
+- Test the assumptions you used for behavior of other microservices - E2E testing mocks other microservices, so this may be the first time your code is running alongside real instances of other microservices.
+- Clean up after your tests - if you created a bunch of test data, do your best to delete it once you're done. This is particularly important if you are testing something in the production environment, as that test data may be visible to real world users. Cleaning up in staging is also highly recommended.
+
+If you are implementing a new endpoint and it's mission critical to the RW API or one of the applications it powers, you may want to add an [AWS Cloudwatch Canary](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Create.html) to ensure that any issue affecting its availability is detected and reported. The best way to create a new Canary is by copying an existing one and modifying the source code to point to your endpoint. Typically, Canaries are only created for the production environment, and should be configured to run once per hour. Don't forget to set up an alarm to go with your Canary, otherwise a notification will not be issued if a failure is detected.
 
 ## Microservice internal architecture - nodejs
 
