@@ -256,9 +256,9 @@ Once reviewed by a peer, your changes will be merged and will be ready for deplo
 
 Currently, the RW API has 3 different environments:
 
-- `dev` for internal testing and development of new features. There are no guarantees of stability or data persistence. While it's not barred from public access, it's meant to be used only by developers working on the RW API code, for testing, debugging and experimentation.
-- `staging` is a more stable environment, meant to be used by both the RW API developers as well as other developers working on applications built using the RW API. It aims to be functionally stable, but occasional interruptions may occur if needed as part of a process, and code is sometimes in "release candidate" status, meaning it can have some issues. Data is often relied on by users of this API, so be mindful when performing destructive actions.
-- `production` is meant to be as stable as possible, as it's used by real users.
+- `dev` at [https://aws-dev.resourcewatch.org](https://aws-dev.resourcewatch.org) for internal testing and development of new features. There are no guarantees of stability or data persistence. While it's not barred from public access, it's meant to be used only by developers working on the RW API code, for testing, debugging and experimentation.
+- `staging` at [https://staging-api.resourcewatch.org/](https://staging-api.resourcewatch.org/) is a more stable environment, meant to be used by both the RW API developers as well as other developers working on applications built using the RW API. It aims to be functionally stable, but occasional interruptions may occur if needed as part of a process, and code is sometimes in "release candidate" status, meaning it can have some issues. Data is often relied on by users of this API, so be mindful when performing destructive actions.
+- `production` at [https://api.resourcewatch.org/](https://api.resourcewatch.org/) is meant to be as stable as possible, as it's used by real users.
 
 Each microservice repository has a branch matching the name of each of these 3 environments, and changes will always go from a feature branch to `dev`, then to `staging`, and finally to `production`. To push your changes across the different environments, you should:
 
