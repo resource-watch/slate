@@ -1,6 +1,6 @@
 # Microservice development guide
 
-In this chapter, we'll cover additional details that you, as a RW API developer, should keep in mind when developing your microservice. We'll focus not only on the technical requirements you need to meet for your microservice to communicate with the remaining RW API internal components, but also discuss the policy surrounding development for the RW API, as a way to achieve a certain degree of consistency across a naturally heterogeneous microservice-based system. 
+In this chapter, we'll cover additional details that you, as a RW API developer, should keep in mind when developing your microservice. We'll focus not only on the technical requirements you need to meet for your microservice to communicate with the remaining RW API internal components, but also discuss the policy surrounding development for the RW API, as a way to achieve a certain degree of consistency across a naturally heterogeneous microservice-based system.
 
 <aside class="notice">
 Control Tower, which is mentioned throughout these docs, will be replaced soon with an equivalent but alternative solution. While we will aim to have this transition be as seamless as possible, you may need to adapt your code once this is done.
@@ -11,6 +11,26 @@ Control Tower, which is mentioned throughout these docs, will be replaced soon w
 As described in the [API Architecture](#api-architecture) section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API's core microservices are built using [nodejs](https://nodejs.org), with [Python](https://www.python.org/) and [Rails](https://rubyonrails.org/) being distant 2nd and 3rd respectively. This is due to personal preference of the team behind the API, as there really isn't a technical reason or limitation preventing the creation of microservices in PHP, Go, Elixir, etc.
 
 In this whole section, we will use code examples from the [Dataset microservice](https://github.com/resource-watch/dataset/), which is built using nodejs. We will discuss the general principles, which should apply to all implementations, as well as implementation details, which may apply to your scenario if you are also using nodejs, or that may not apply if you are using something else.
+
+## Development lifecycle
+
+As a developer of the RW API, your ultimate goal is to make an improvement to the API source code and push it to the production environment. Of course, this is an overly simplistic description of a complex process, and the goal of the next section is to dive deeper into the steps you need to take to achieve that. Breaking this down into a more detailed list, these are the high-level steps you'll need to take in order to contribute to the RW API:
+
+- Checkout the code
+- Run it locally
+- Make a feature branch
+- Write your code
+- Test your feature branch locally
+- Push your code to Github
+- Make a PR from your feature branch to `dev`
+- Wait for Travis' approval, then merge your code
+- Deploy your changes to the `dev` cluster for testing in a real-world infrastructure.
+- Make a PR from `dev` to `staging`, wait for Travis' approval, then merge your code.
+- Make an announcement about an upcoming changes, deploy to `staging` and test your code with real-world data.
+- Make a PR from `staging` to `production`, wait for Travis' approval, then merge your code.
+- Make an announcement about an upcoming changes, deploy to `production` and test your code.
+
+In the next sections we'll dive deeper into the details of each step. 
 
 ## Setting up a development environment
 
@@ -224,7 +244,7 @@ Each microservice lives in a separate Github repository, most of which have Trav
 When you want to submit a change to the code of one of the microservices, you should:
 
 - Do your changes in a separate git branch, named after the change you're making.
-- Target the `dev` branch (or `develop`, if `dev` does not exist yet).
+- Target the `dev` branch (or `develop`, if `dev` does not exist yet - we're in the process of migrating to a `dev`+`staging`+`production` branch structure, but haven't done so for all repos yet).
 - Include tests to cover the change you're making.
 - Ensure your PR tests pass when executed by Travis.
 - Maintain/increase the code coverage value reported by Code Climate.
@@ -246,7 +266,12 @@ Each microservice repository has a branch matching the name of each of these 3 e
 - Deploy the code to the respective environment (we'll see how in a moment)
 - Test it with actual calls to the API, to validate that no side effects were introduced.
 
-Depending on the scale of the changes you're doing, it's recommended to use [git tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging) with [semantic versioning](https://semver.org/). Also be sure to update the `CHANGELOG.md` accordingly, and the `package.json` or equivalent files if they refer a version number. It's also best practice to announce the changes you're about to deploy before doing so, so that other developers of RW API applications can be on the lookout for regressions, and can quickly get in touch with you should any undesired behavior change be detected.
+Depending on the scale of the changes you're doing, it's recommended to use [git tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging) with [semantic versioning](https://semver.org/). Also be sure to update the `CHANGELOG.md` accordingly, and the `package.json` or equivalent files if they refer a version number. 
+
+Changes being pushed to either `production` or `staging` should be announced in advance in the `general` channel in the WRI API Slack (and to contact Ethan Roday if you're not in that Slack workspace). Specifically, for changes going to `production`, that notice period should be of at least 14 days, during which said changes should be available in `staging` for testing by everyone. In rare cases, if a hotfix is needed to fix a breaking change in `production`, the 14-day lead time can be circumvented, but an announcement still must be made. 
+
+
+It's also best practice to announce the changes you're about to deploy before doing so, so that other developers of RW API applications can be on the lookout for regressions, and can quickly get in touch with you should any undesired behavior change be detected.
 
 Each of the referred environments lives on a separate [Kubernetes](https://kubernetes.io/) cluster (hosted with [AWS EKS](https://aws.amazon.com/eks/)), and deployment is done using individual Jenkins instances:
 
@@ -258,7 +283,7 @@ All 3 instances have similar overall configuration, but different microservices 
 
 The list of jobs you find on each Jenkins instance will match the list of services deployed on that environment. In the details of each job, you should find a branch named after the environment, which corresponds to the Github branch with the same name (some services may still have the old approach, with `develop` for `dev` and `staging`, and `master` for `production`). You may also find other branches, or a different branch structure, depending on the service itself - again, the `Jenkinsfile` configuration is king here, and you should refer to it to better understand what is the desired behavior per branch. In some cases, old branches will be listed on Jenkins but should be ignored.
 
-Once you start a deployment process, Jenkins will run the `Jenkinsfile` content - it is, after all, a script - and perform the actions contained in it. While it's up to the maintainer of each microservice to modify this script, more often that not it will run the tests included in the microservice, using Docker, and if these pass, push the newly generated Docker image to [Docker Hub](https://hub.docker.com/). It will then update the respective Kubernetes cluster with content of the matching subfolder inside the `k8s` folder of the microservice, plus the `k8s/service` folder if one exists. The last step is to deploy the recently pushed Docker image from Docker Hub to the cluster, which will cause Kubernetes to progressively replace running old instances of the service with ones based on the new version.
+Deployments need to be triggered manually, on a per-microservice and per-branch basis. Once a deployment starts, Jenkins will run the `Jenkinsfile` content - it is, after all, a script - and perform the actions contained in it. While it's up to the maintainer of each microservice to modify this script, more often that not it will run the tests included in the microservice, using Docker, and if these pass, push the newly generated Docker image to [Docker Hub](https://hub.docker.com/). It will then update the respective Kubernetes cluster with content of the matching subfolder inside the `k8s` folder of the microservice, plus the `k8s/service` folder if one exists. The last step is to deploy the recently pushed Docker image from Docker Hub to the cluster, which will cause Kubernetes to progressively replace running old instances of the service with ones based on the new version.
 
 **A couple of important notes here:**
 
