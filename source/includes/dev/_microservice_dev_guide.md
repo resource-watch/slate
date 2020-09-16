@@ -236,7 +236,7 @@ Once reviewed by a peer, your changes will be merged and will be ready for deplo
 
 Currently, the RW API has 3 different environments:
 
-- `dev` for internal testing and development of new features. There are no guarantees of stability or data persistence. While it's not bared from public access, it's meant to be used only by developers working on the RW API code, for testing, debugging and experimentation.
+- `dev` for internal testing and development of new features. There are no guarantees of stability or data persistence. While it's not barred from public access, it's meant to be used only by developers working on the RW API code, for testing, debugging and experimentation.
 - `staging` is a more stable environment, meant to be used by both the RW API developers as well as other developers working on applications built using the RW API. It aims to be functionally stable, but occasional interruptions may occur if needed as part of a process, and code is sometimes in "release candidate" status, meaning it can have some issues. Data is often relied on by users of this API, so be mindful when performing destructive actions.
 - `production` is meant to be as stable as possible, as it's used by real users.
 
