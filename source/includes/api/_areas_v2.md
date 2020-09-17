@@ -1,18 +1,24 @@
 # Areas v2
 
-Before reading any further, please ensure you have read the [area concept](#area) documentation first. It gives you a brief and clear description of what an area is and what it can do for you. 
+Before reading any further, please ensure you have read the [Areas of Interest concept documentation](#area) first. It gives you a brief and clear description of what an Area of Interest is and what it can do for you. 
 
-Once you've read that section, you can come back here to learn more details about using the RW API's areas of interest feature. Areas of interest are used by the Global Forest Watch website to subscribe to notifications on deforestation and fire alerts inside a particular areas you might be interest in. The sections below describe in detail how you can use the endpoints provided by RW API's [Areas service](https://github.com/gfw-api/gfw-area) to define your own  geographic areas of interest.
+Once you've read that section, you can come back here to learn more details about using the RW API's Areas service. Areas of interest are used by the Global Forest Watch website to subscribe to notifications on deforestation and fire alerts inside a particular areas you might be interest in. The sections below describe in detail how you can use the endpoints provided by RW API's [Areas service](https://github.com/gfw-api/gfw-area) to define your own geographic areas of interest.
 
 ## What is the difference between v1 and v2?
 
-v2 areas are an upgrade in the functionality of areas and provide you with an easier-to-use interface for creating areas of interest. Features such as the notification of alerts inside your area of interest are also only available in v2 endpoints.
+v2 areas are an upgrade in the functionality of the Areas service, and provide you with an easier-to-use interface for creating Areas of Interest. Features such as the notification of alerts inside your Area of Interest **are only available in v2 endpoints**.
 
-However, keep in mind that v2 areas endpoints were built with the intention of merging together [**v1 areas of interest**](/index-rw.html#areas) and [**subscriptions**](/index-rw.html#subscriptions). This means, in practice, that if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints.
+Up until v2 areas endpoints were available, you could create Areas of Interest, but you could not define deforestation or fire alerts for your areas. In order to do that, you would need to manually [create a subscription that referenced your Area of Interest](/index-rw.html#subscribing-to-an-area-of-interest). Not only that, but you also needed to manage this interaction between Areas of Interest and Subscriptions by yourself. 
 
-This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
+v2 areas endpoints were built with the intention of automating this interaction between areas and subscriptions, thus merging together [**v1 areas of interest**](/index-rw.html#areas) and [**subscriptions**](/index-rw.html#subscriptions). This means, in practice, that if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints. This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
 
-Below the documentation of each endpoint, you'll be able to find a **implementation details** section that goes into detail on how this synchronization is performed.
+Throughout the sections below, you'll be able to find **Implementation details** sections that dive deeper into how this synchronization between Areas and Subscriptions is performed on each particular case.
+
+## Interaction between Areas and Subscriptions
+
+As it was stated in the paragraphs above, you can use v2 endpoint to create Areas of Interest and subscribe to deforestation of fire alerts. These subscriptions (and the associated emails or webhook notifications) are handled by the [Subscriptions service](/index-rw.html#subscriptions). This means in practice that each Area might have a Subscription associated. If this is the case, the Area's `subscriptionId` property will contain the ID of the associated Subscription from the Subscriptions service.
+
+This interaction between Areas and Subscriptions is transparent for the API users, meaning that you don't need to worry about creating, updating or deleting the subscriptions associated to your areas - this happens automatically, taken into account the Area properties.
 
 ## Getting all user areas
 
