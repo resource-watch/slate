@@ -306,6 +306,8 @@ Keep in mind that you should provide one of the following when creating an area:
 
 Please check the [Area model reference](/index-rw.html#area-reference) for details on what values each field is expected to provide.
 
+According to multiple factors (including the `geostore` that is associated with the area, if the area subscribes to `fireAlerts`, `deforestationAlerts`, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have `status` set to `'pending'`. Once the area data is ready, the `status` of the area will be updated to `'saved'`.
+
 ### Errors for creating an area
 
 Error code     | Error message (example)     | Description
@@ -315,8 +317,6 @@ Error code     | Error message (example)     | Description
 401            | `Unauthorized`              | No token was provided.
 
 ### Email notification
-
-According to multiple factors (including the `geostore` that is associated with the area, if the area subscribes to `fireAlerts`, `deforestationAlerts`, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have `status` set to `'pending'`. Once the area data is ready, the `status` of the area will be updated to `'saved'`.
 
 After creating an area, if the `email` field of the area has a valid email, an email is sent to the user. The email content varies according to the status of the area:
 
