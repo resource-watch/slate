@@ -295,6 +295,8 @@ curl -X POST https://api.resourcewatch.org/v2/area
 
 Use this endpoint to create new areas. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
+**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
+
 Keep in mind that you should provide one of the following when creating an area:
 
 * `geostore` with the ID of a geostore object if you are creating an area that references a geostore;
@@ -302,7 +304,7 @@ Keep in mind that you should provide one of the following when creating an area:
 * `iso` object with a valid country/region/subregion if you are creating an area that references an admin country/region/subregion;
 * `use` object with valid id and name of a land use concessioned area, if you are creating an area that references a land use area.
 
-**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
+Please check the [Area model reference](/index-rw.html#area-reference) for details on what values each field is expected to provide.
 
 ### Errors for creating an area
 
@@ -399,6 +401,8 @@ curl -X PATCH https://api.resourcewatch.org/v2/area/:id
 
 Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
+**This endpoint requires authentication and, in order to PATCH an area, you need to be either the owner of the area or be an ADMIN user.**
+
 Keep in mind that you must provide one of the following when updating an area:
 
 * `geostore` with the ID of a geostore object if you are updating an area that references a geostore;
@@ -406,7 +410,7 @@ Keep in mind that you must provide one of the following when updating an area:
 * `iso` object with a valid country/region/subregion if you are updating an area that references an admin country/region/subregion;
 * `use` object with valid id and name of a land use concessioned area, if you are updating an area that references a land use area.
 
-**This endpoint requires authentication and, in order to PATCH an area, you need to be either the owner of the area or be an ADMIN user.**
+Please check the [Area model reference](/index-rw.html#area-reference) for details on what values each field is expected to provide.
 
 ### Errors for updating an area
 
@@ -580,11 +584,11 @@ wdpaId         | String  | No                  |               | If this area re
 userId         | String  | Yes (autopopulated) |               | Id of the user who owns the area. Set automatically on creation. Cannot be modified by users.
 use            | Object  | No                  |               | If this area references a land use concession, this field will contain an object that identifies the concrete area referred.
 use.id         | String  | No                  |               | The ID of the land use concession to track.
-use.name       | String  | No                  |               | The name of the land use concession to track (example: `logging`).
+use.name       | String  | No                  |               | The name of the land use concession to track. The supported values for this field include `mining` for [mining areas](http://api.resourcewatch.org/v1/dataset/c2142922-84d9-4564-8216-a4867b9e48c5), `logging` for [Congo Basin logging roads](https://wri-01.carto.com/tables/gfw_oil_palm/public/map), `oilpalm` for [palm oil plantations](https://wri-01.carto.com/tables/gfw_woodfiber/public/map) and `fiber` for [wood fiber plantations](https://wri-01.carto.com/tables/osm_logging_roads/public/map).
 iso            | Object  | No                  |               | If this area references an admin country or region, this field will contain an object that identifies the concrete area referred.
-iso.country    | String  | No                  |               | The 3-letter ISO code of the country being referred by this area.
-iso.region     | String  | No                  |               | An ID of the region inside the country to reference (optional, you can reference the whole country, or just on specific region of the country).
-iso.subregion  | String  | No                  |               | An ID of the subregion inside the region to reference (optional, you can reference the whole region, or just on specific subregion of the region).
+iso.country    | String  | No                  |               | The [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) of the country being referred by this area.
+iso.region     | String  | No                  |               | The [GADM ID](https://gadm.org/data.html) of the region inside the country to reference (optional, you can reference the whole country, or just on specific region of the country).
+iso.subregion  | String  | No                  |               | The [GADM ID](https://gadm.org/data.html) of the subregion inside the region to reference (optional, you can reference the whole region, or just on specific subregion of the region).
 admin          | Object  | No                  |               | Alternative syntax, see the `iso` field above.
 admin.adm0     | String  | No                  |               | Alternative syntax, see the `iso.country` field above.
 admin.adm1     | String  | No                  |               | Alternative syntax, see the `iso.region` field above.
