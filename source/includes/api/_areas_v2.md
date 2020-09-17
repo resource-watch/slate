@@ -316,16 +316,32 @@ Error code     | Error message (example)     | Description
 400            | `<field> is not valid.`     | You provided an invalid field while creating the area.
 401            | `Unauthorized`              | No token was provided.
 
-### Email notification
+### Email notifications
 
-After creating an area, if the `email` field of the area has a valid email, an email is sent to the user. The email content varies according to the status of the area:
+After creating an area, if the `email` field of the area contains a valid email, an email is sent to the user. The email content varies according to the status of the area:
 
 * If the area has status `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
 * If the area has status `pending`, an email is sent to let the user know the area of interest is being generated and will be available later.
 
-### Email substitution parameters
+Emails are sent using [Sparkpost](https://www.sparkpost.com/) - so, for the emails to be sent, there should exist templates in Sparkpost ready to be sent, taking into account the different languages supported by the Areas service:
 
-The following parameters are provided to the email service and can be used in the construction of the email:
+* For the email sent to users when the Area of Interest is ready to be viewed, there should exist the following email templates on Sparkpost:
+    * `dashboard-complete-zh` (Mandarin)
+    * `dashboard-complete-pt-br` (Brazilian Portuguese)
+    * `dashboard-complete-id` (Indonesian)
+    * `dashboard-complete-fr` (French)
+    * `dashboard-complete-es-mx` (Spanish)
+    * `dashboard-complete-en` (English)
+
+* For the email sent to users when the Area of Interest is being generated, there should exist the following email templates on Sparkpost:
+    * `dashboard-pending-zh` (Mandarin)
+    * `dashboard-pending-pt-br` (Brazilian Portuguese)
+    * `dashboard-pending-id` (Indonesian)
+    * `dashboard-pending-fr` (French)
+    * `dashboard-pending-es-mx` (Spanish)
+    * `dashboard-pending-en` (English)
+
+In order to build your templates on Sparkpost, you can use variable interpolation to customize the emails sent taking into account the area that is being processed/has been processed. While building the `dashboard-pending-*` or `dashboard-complete-*` emails, the following variables are provided and can be used in the construction of the email body:
 
 * `id` : the ID of the area.
 * `name` : the name of the area.
@@ -508,9 +524,20 @@ You can use the `update_params` field of the request body to specify multiple fi
 
 In case of success a 200 OK response is returned, and all the areas that match the update criteria (belonging to one of the geostores provided in the request body) will be returned.
 
+### Email notifications
+
 After updating the areas, for each area that was updated which has a valid email associated and its status updated to `saved`, an email will be sent to the user to let them know that the area is ready to be viewed.
 
-The following parameters are provided to the email service and can be used in the construction of the email:
+Emails are sent using [Sparkpost](https://www.sparkpost.com/) - so, for the emails to be sent, there should exist templates in Sparkpost ready to be sent, taking into account the different languages supported by the Areas service:
+
+  * `dashboard-complete-zh` (Mandarin)
+  * `dashboard-complete-pt-br` (Brazilian Portuguese)
+  * `dashboard-complete-id` (Indonesian)
+  * `dashboard-complete-fr` (French)
+  * `dashboard-complete-es-mx` (Spanish)
+  * `dashboard-complete-en` (English)
+
+In order to build your templates on Sparkpost, you can use variable interpolation to customize the emails sent taking into account the area that is being processed/has been processed. While building the `dashboard-complete-*` emails, the following variables are provided and can be used in the construction of the email body:
 
 * `id` : the ID of the area.
 * `name` : the name of the area.
