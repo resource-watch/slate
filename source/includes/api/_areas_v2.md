@@ -330,34 +330,7 @@ After creating an area, if the `email` field of the area contains a valid email,
 * If the area has status `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
 * If the area has status `pending`, an email is sent to let the user know the area of interest is being generated and will be available later.
 
-Emails are sent using [Sparkpost](https://www.sparkpost.com/) - so, for the emails to be sent, there should exist templates in Sparkpost ready to be sent, taking into account the different languages supported by the Areas service:
-
-* For the email sent to users when the Area of Interest is ready to be viewed, there should exist the following email templates on Sparkpost:
-    * `dashboard-complete-zh` (Mandarin)
-    * `dashboard-complete-pt-br` (Brazilian Portuguese)
-    * `dashboard-complete-id` (Indonesian)
-    * `dashboard-complete-fr` (French)
-    * `dashboard-complete-es-mx` (Spanish)
-    * `dashboard-complete-en` (English)
-
-* For the email sent to users when the Area of Interest is being generated, there should exist the following email templates on Sparkpost:
-    * `dashboard-pending-zh` (Mandarin)
-    * `dashboard-pending-pt-br` (Brazilian Portuguese)
-    * `dashboard-pending-id` (Indonesian)
-    * `dashboard-pending-fr` (French)
-    * `dashboard-pending-es-mx` (Spanish)
-    * `dashboard-pending-en` (English)
-
-In order to build your templates on Sparkpost, you can use variable interpolation to customize the emails sent taking into account the area that is being processed/has been processed. While building the `dashboard-pending-*` or `dashboard-complete-*` emails, the following variables are provided and can be used in the construction of the email body:
-
-* `id` : the ID of the area.
-* `name` : the name of the area.
-* `location` : an alias for the name of the area (contains the same as the `name` parameter).
-* `subscriptions_url` : the URL for managing areas of interest in the flagship application (example: [https://globalforestwatch.org/my-gfw](https://globalforestwatch.org/my-gfw)).
-* `dashboard_link` : the URL for the area dashboard (example: [https://globalforestwatch.org/dashboards/aoi/<areaId>](https://globalforestwatch.org/dashboards/aoi/<areaId>)).
-* `map_link` : the "view on map" URL for this area (example: [https://globalforestwatch.org/map/aoi/<areaId>](https://globalforestwatch.org/map/aoi/<areaId>)).
-* `image_url` : the URL for the image associated with the area.
-* `tags` : a string containing the AOI tags, comma-separated.
+If you want to understand more about how these emails are sent or how you can update its content, please check the developer docs section on [Areas v2 Email Notifications](/developer.html#areas-v2-notification-emails).
 
 ### Implementation details
 
@@ -420,11 +393,7 @@ curl -X PATCH https://api.resourcewatch.org/v2/area/:id
 }
 ```
 
-Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
-
-**This endpoint requires authentication and, in order to PATCH an area, you need to be either the owner of the area or be an ADMIN user.**
-
-Keep in mind that you must provide one of the following when updating an area:
+Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section. Keep in mind that you must provide one of the following when updating an area:
 
 * `geostore` with the ID of a geostore object if you are updating an area that references a geostore;
 * `wdpaid` with the ID of a protected area if you are updating an area that references a protected area;
@@ -443,6 +412,12 @@ Error code     | Error message (example)       | Description
 401            | `Unauthorized`                | No token was provided.
 403            | `Not authorized`              | You are trying to update an area that is not owned by you and you are not an ADMIN user.
 404            | `Area not found`              | The area with id provided does not exist.
+
+### Email notifications
+
+After updating an area, if the `email` field of the area contains a valid email and the area's status is `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
+
+If you want to understand more about how these emails are sent or how you can update its content, please check the developer docs section on [Areas v2 Email Notifications](/developer.html#areas-v2-notification-emails).
 
 ### Implementation details
 
@@ -542,27 +517,9 @@ In case of success a 200 OK response is returned, and all the areas that match t
 
 ### Email notifications
 
-After updating the areas, for each area that was updated which has a valid email associated and its status updated to `saved`, an email will be sent to the user to let them know that the area is ready to be viewed.
+After updating areas by geostore, for each area that was updated which has a valid email associated and its status updated to `saved`, an email will be sent to the user to let them know that the area is ready to be viewed.
 
-Emails are sent using [Sparkpost](https://www.sparkpost.com/) - so, for the emails to be sent, there should exist templates in Sparkpost ready to be sent, taking into account the different languages supported by the Areas service:
-
-  * `dashboard-complete-zh` (Mandarin)
-  * `dashboard-complete-pt-br` (Brazilian Portuguese)
-  * `dashboard-complete-id` (Indonesian)
-  * `dashboard-complete-fr` (French)
-  * `dashboard-complete-es-mx` (Spanish)
-  * `dashboard-complete-en` (English)
-
-In order to build your templates on Sparkpost, you can use variable interpolation to customize the emails sent taking into account the area that is being processed/has been processed. While building the `dashboard-complete-*` emails, the following variables are provided and can be used in the construction of the email body:
-
-* `id` : the ID of the area.
-* `name` : the name of the area.
-* `location` : an alias for the name of the area (contains the same as the `name` parameter).
-* `subscriptions_url` : the URL to manage the areas in the frontend (example: [https://globalforestwatch.org/my-gfw](https://globalforestwatch.org/my-gfw)).
-* `dashboard_link` : the link to the area dashboard (example: [https://globalforestwatch.org/dashboards/aoi/<areaId>](https://globalforestwatch.org/dashboards/aoi/<areaId>)).
-* `map_link` : the "view on map" for the area (example: [https://globalforestwatch.org/map/aoi/<areaId>](https://globalforestwatch.org/map/aoi/<areaId>)).
-* `image_url` : the URL for the image associated with the area.
-* `tags` : a string containing the AOI tags, comma-separated.
+If you want to understand more about how these emails are sent or how you can update its content, please check the developer docs section on [Areas v2 Email Notifications](/developer.html#areas-v2-notification-emails).
 
 ## Sync areas
 
