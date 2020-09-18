@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>WRI API Geometry Analysis</title>
+
+  <!-- Mapbox GL JS includes -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
+
+  <!-- CSS embedded in head tag since this is a small app -->
+  <style>
+    /* basic reset of styling */
+    body { margin: 0; padding: 0; }
+
+    #map-container {
+      width: 100%;
+      height: 90%;
+      position: absolute;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+  </style>
+
+</head>
+
+<body>
+  <h1>WRI-API Geometry Analysis Tutorial</h1>
+
+    <!-- Container (grid cell) for interactive map -->
+    <div id="map-container">
+      <div id="map"></div>
+    </div>
+
+  <script src="tutorial-index.js"></script>
+</body>
+</html>
