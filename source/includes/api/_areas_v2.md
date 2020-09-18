@@ -2,7 +2,7 @@
 
 Before reading any further, please ensure you have read the [Areas of Interest concept documentation](#area) first. It gives you a brief and clear description of what an Area of Interest is and what it can do for you. 
 
-Once you've read that section, you can come back here to learn more details about using the RW API's Areas service. Areas of interest are used by the Global Forest Watch website to subscribe to notifications on deforestation and fire alerts inside a particular areas you might be interest in. The sections below describe in detail how you can use the endpoints provided by RW API's [Areas service](https://github.com/gfw-api/gfw-area) to define your own geographic areas of interest.
+Once you've read that section, you can come back here to learn more details about using the RW API's Areas service. Areas of interest are used by the [Global Forest Watch website](https://www.globalforestwatch.org/) to subscribe to notifications on deforestation and fire alerts inside a particular areas you might be interest in. The sections below describe in detail how you can use the endpoints provided by RW API's [Areas service](https://github.com/gfw-api/gfw-area) to define your own geographic areas of interest.
 
 ## What is the difference between v1 and v2?
 
@@ -61,11 +61,7 @@ curl -X GET https://api.resourcewatch.org/v2/area
 }
 ```
 
-The `v2/areas` endpoint returns all the areas of interest associated with the user who made the request. 
-
-**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
-
-For a detailed description of each field, check out the [Area reference](#area-reference) section.
+The `v2/areas` endpoint returns all the areas of interest associated with the user who made the request. For a detailed description of each field, check out the [Area reference](#area-reference) section.
 
 ### Pagination
 
@@ -87,6 +83,12 @@ application | Filter results by the application associated with the areas.      
 status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
 all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
+
+### Errors for getting user areas
+
+Error code     | Error message (example)     | Description
+-------------- | --------------------------- | ------------------------------------------------------------
+401            | `Unauthorized`              | No authorization token was provided.
 
 ### Implementation details
 
@@ -181,6 +183,12 @@ status      | Filter results by the status of the area.                         
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
 all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
 
+### Errors for getting all areas
+
+Error code     | Error message (example)     | Description
+-------------- | --------------------------- | ------------------------------------------------------------
+401            | `Unauthorized`              | No authorization token was provided.
+
 ### Implementation details
 
 If the `all=true` query filter is provided, the `/find-all` endpoint of the Subscriptions service is used to find all existing subscriptions (for all users).
@@ -224,13 +232,14 @@ curl -X GET https://api.resourcewatch.org/v2/area/:id
 }
 ```
 
-If you know the id or the slug of a area, then you can access it directly - keep in mind the id search is case-sensitive.
+If you know the id or the slug of a area, then you can access it directly - keep in mind the id search is case-sensitive. If the area has the `public` attribute set to `false`, you will only be able to fetch its information if you are the owner of the area. If the area has the `public` attribute set to `true` and the user who requests it is not the owner, some information will be hidden for privacy reasons.
 
-**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
+### Errors for getting an area by its id
 
-If the area has the `public` attribute set to `false`, you will only be able to fetch its information if you are the owner of the area. Otherwise, a `401 Unauthorized` response will be returned.
-
-If the area has the `public` attribute set to `true` and the user who requests it is not the owner, some information will be hidden for privacy reasons.
+Error code     | Error message (example)     | Description
+-------------- | --------------------------- | ------------------------------------------------------------
+401            | `Unauthorized`              | No authorization token was provided.
+401            | `Area private`              | You are trying to get the information of a private area without being the owner of the area.
 
 ### Implementation details
 
@@ -295,8 +304,6 @@ curl -X POST https://api.resourcewatch.org/v2/area
 
 Use this endpoint to create new areas. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
 
-**This endpoint requires authentication, and it will return 401 Unauthorized if none is provided.**
-
 Keep in mind that you should provide one of the following when creating an area:
 
 * `geostore` with the ID of a geostore object if you are creating an area that references a geostore;
@@ -346,13 +353,11 @@ In order to build your templates on Sparkpost, you can use variable interpolatio
 * `id` : the ID of the area.
 * `name` : the name of the area.
 * `location` : an alias for the name of the area (contains the same as the `name` parameter).
-* `subscriptions_url` : the URL for managing areas of interest in the flagship application (example: [https://staging.globalforestwatch.org/my-gfw](https://staging.globalforestwatch.org/my-gfw)).
-* `dashboard_link` : the URL for the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
-* `map_link` : the "view on map" URL for this area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
+* `subscriptions_url` : the URL for managing areas of interest in the flagship application (example: [https://globalforestwatch.org/my-gfw](https://globalforestwatch.org/my-gfw)).
+* `dashboard_link` : the URL for the area dashboard (example: [https://globalforestwatch.org/dashboards/aoi/<areaId>](https://globalforestwatch.org/dashboards/aoi/<areaId>)).
+* `map_link` : the "view on map" URL for this area (example: [https://globalforestwatch.org/map/aoi/<areaId>](https://globalforestwatch.org/map/aoi/<areaId>)).
 * `image_url` : the URL for the image associated with the area.
 * `tags` : a string containing the AOI tags, comma-separated.
-
-(`5d517b3fb8cfd4001061d0b2` is an example of an area ID).
 
 ### Implementation details
 
@@ -434,7 +439,9 @@ Error code     | Error message (example)       | Description
 -------------- | ----------------------------- | --------------
 400            | `<field> can not be empty.`   | You are missing a required field while updating the area.
 400            | `<field> is invalid.`         | You provided an invalid field while updating the area.
+400            | `Id required`                 | No ID was provided in the URL.
 401            | `Unauthorized`                | No token was provided.
+403            | `Not authorized`              | You are trying to update an area that is not owned by you and you are not an ADMIN user.
 404            | `Area not found`              | The area with id provided does not exist.
 
 ### Implementation details
@@ -462,6 +469,15 @@ curl -X DELETE https://api.resourcewatch.org/v2/area/:id
 > Returns 204 No Content in case of success.
 
 Use this endpoint to delete an existing area. This endpoint requires authentication and, in order to DELETE an area, you need to be either the owner of the area or be an ADMIN user.
+
+### Errors for deleting an area
+
+Error code     | Error message (example)       | Description
+-------------- | ----------------------------- | --------------
+400            | `Id required`                 | No ID was provided in the URL.
+401            | `Unauthorized`                | No token was provided.
+403            | `Not authorized`              | You are trying to delete an area that is not owned by you and you are not an ADMIN user.
+404            | `Area not found`              | The area with id provided does not exist.
 
 ### Implementation details
 
@@ -542,9 +558,9 @@ In order to build your templates on Sparkpost, you can use variable interpolatio
 * `id` : the ID of the area.
 * `name` : the name of the area.
 * `location` : an alias for the name of the area (contains the same as the `name` parameter).
-* `subscriptions_url` : the URL to manage the areas in the frontend (example: [https://staging.globalforestwatch.org/my-gfw](https://staging.globalforestwatch.org/my-gfw)).
-* `dashboard_link` : the link to the area dashboard (example: [https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/dashboards/aoi/5d517b3fb8cfd4001061d0b2)).
-* `map_link` : the "view on map" for the area (example: [https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2](https://staging.globalforestwatch.org/map/aoi/5d517b3fb8cfd4001061d0b2)).
+* `subscriptions_url` : the URL to manage the areas in the frontend (example: [https://globalforestwatch.org/my-gfw](https://globalforestwatch.org/my-gfw)).
+* `dashboard_link` : the link to the area dashboard (example: [https://globalforestwatch.org/dashboards/aoi/<areaId>](https://globalforestwatch.org/dashboards/aoi/<areaId>)).
+* `map_link` : the "view on map" for the area (example: [https://globalforestwatch.org/map/aoi/<areaId>](https://globalforestwatch.org/map/aoi/<areaId>)).
 * `image_url` : the URL for the image associated with the area.
 * `tags` : a string containing the AOI tags, comma-separated.
 
@@ -630,7 +646,7 @@ deforestationAlerts | Boolean | Yes                 | false         | If the are
 monthlySummary | Boolean | Yes                 | false         | If the area subscribes to monthly summary notifications - set this field to true if you wish to be notified monthly about deforestation and fire alerts in your area of interest.
 email          | String  | No                  |               | The email that will be used as receiver of the notification emails.
 webhookUrl     | String  | No                  |               | Instead of receiving an email as notification, you can choose to receive a hit in the webhook URL you set in this field.
-language       | String  | No                  | 'en'          | The language in which you wish to receive the email notifications. `en`, `fr`, `zh`, `id`, `pt-br` or `es-mx` are the supported values for this field. If any other value is provided, `en` is automatically set.
+language       | String  | No                  | 'en'          | The language in which you wish to receive the email notifications. `en`, `fr`, `zh`, `id`, `pt_BR` or `es_MX` are the supported values for this field. If any other value is provided, `en` is automatically set.
 subscriptionId | String  | No                  |               | If an area is returned as the reflection of an existing subscription in the Subscriptions service, this field will contain the ID of the corresponding subscription.
 createdAt      | Date    | No (autogenerated)  | now           | Automatically maintained date of when the area was created. Cannot be modified by users.
 updatedAt      | Date    | No (autogenerated)  | now           | Automatically maintained date of when the area was last updated. Cannot be modified by users.
