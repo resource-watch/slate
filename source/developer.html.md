@@ -16,11 +16,12 @@ includes:
   - dev/control_tower_plugin_development
   - dev/microservice
   - dev/endpoints
-  - dev/subscriptions
   - dev/microservice_reference
   - dev/smoke_tests
   - dev/query_transformations
   - api/microservices
+  - dev/areas_notification_emails
+  - dev/subscriptions
 
 logo: logo-rw.png
 
