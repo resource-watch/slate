@@ -16,6 +16,7 @@ includes:
   - concept/query
   - concept/layer
   - concept/widget
+  - concept/geostore
   - concept/area
   - api/before_you_get_started
   - api/authentication
