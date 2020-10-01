@@ -6,13 +6,13 @@ Both these questions imply defining the (geographical) boundaries of the questio
 
 **Geostore**, **Geostore micro-service**, and **geostore objects** are the RW APIs way to provide users the ability to add, use, and communicate their geographic vector-data structures.
 
-A full discussion about the [ways of representing geographic vector-data](https://en.wikipedia.org/wiki/Comparison_of_GIS_vector_file_formats) is beyond the scope of this document, in short we have chosen to use [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) as it allows the storage of [simple geographical features](https://en.wikipedia.org/wiki/Simple_Features), and being an extension of [JSON](https://es.wikipedia.org/wiki/JSON) has concepts which are already familiar to many developers.
+A full discussion about the [ways of representing geographic vector-data](https://en.wikipedia.org/wiki/Comparison_of_GIS_vector_file_formats) is beyond the scope of this documentation, in short we have chosen to use [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) as it allows the storage of [simple geographical features](https://en.wikipedia.org/wiki/Simple_Features), and being an extension of [JSON](https://es.wikipedia.org/wiki/JSON) has concepts which are already familiar to many developers.
 
 ***Note the conventions of this documentation are that geostore objects are data structures, for example an object that describes the boundaries of Spain, Geostore represents the entity that stores geostore objects, for example a database, and Geostore micro-service refers to the REST API for interacting with the Geostore and its geostore objects.***
 
 ### geostore objects
 
-A geostore object represents a geographic structure defined using [GeoJSON](#geojson-object) which has a [unique identifier]((#geostore-id-and-hash)). It may also contain summary information about the geometry (such as bounds, area or length), properties used for indexing, and metadata (such as the [provider](#provider-definition) of the data).
+A geostore object represents a geographic structure defined using [GeoJSON](#geojson-object) which has a [unique identifier](#geostore-id-and-hash). It may also contain summary information about the geometry (such as bounds, area or length), properties used for indexing, and metadata (such as the [provider](#provider-object) of the data).
 
 #### GeoJSON object
 
@@ -29,9 +29,9 @@ Assuming you are now familiar with the basic structure of GeoJSON, next we will 
 
 ### Geostore ID and hash
 
-A unique identifier for the geoStore object in the form of a 128 bit [MD5 hash](https://en.wikipedia.org/wiki/MD5) generated from the GeoJSON object after being processed by Geostore with the considerations described above. This means that each identifier is a unique fingerprint of the GeoJSON string; adding an exact copy of your GeoJSON will generate the same hash, but if it is changed in *any way* it will have a different hash. Note that these changes maybe by adding properties or other fields, not only by changing the geometry.
+A unique identifier for the geostore object in the form of a 128 bit [MD5 hash](https://en.wikipedia.org/wiki/MD5) is generated from the GeoJSON object after being processed by Geostore with the considerations described above. This means that each identifier is a unique fingerprint of the GeoJSON string; adding an exact copy of your GeoJSON will generate the same hash, but if it is changed in *any way* it will have a different hash. Note that these changes maybe by adding properties or other fields, not only by changing the geometry.
 
-[TODO: Describe behavior when adding exact same GeoJSON. Is the geostore overwritten, no action?]
+If, when creating a Geostore object, we provide the exact same GeoJSON as the one for an existing Geostore object, then the Geostore object returned will be the already existing Geostore object - i.e. no action is done and the existing Geostore object is returned.
 
 ### Bounding box
 
