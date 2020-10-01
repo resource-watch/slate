@@ -889,4 +889,54 @@ Error code     | Error message       | Description
 
 ## Calculate the area of a geostore object
 
-TODO!
+If you have a GeoJSON geometry and you intend to know the area that your geometry occupies or what is the bounding box for your geometry, you can use the POST `v2/geostore/area` endpoint to calculate the area of your geometry.
+
+> Example request pattern
+
+```shell
+curl -X POST https://api.resourcewatch.org/v2/geostore/area \
+  -d '{"geojson": <geojson>}'
+```
+
+> Example URL request
+
+```shell
+curl -X POST https://api.resourcewatch.org/v2/geostore/area \
+  -d '{
+      "geojson":{
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [-0.1758,51.2894],
+                [8.4375,51.1793],
+                [6.8555,47.5172],
+                [-0.1758,51.2894]
+            ]
+        ]
+    }}'
+```
+
+> Example response:
+
+```json
+{
+    "data": {
+        "type": "geomArea",
+        "attributes": {
+            "bbox": [
+                -0.1758,
+                47.5172,
+                8.4375,
+                51.2894
+            ],
+            "areaHa": 12797498.414088473
+        }
+    }
+}
+```
+
+#### Errors for calculating the area of a geostore object
+
+Error code     | Error message       | Description
+-------------- | ------------------- | -----------------------------------------------
+400            | `geojson, esrijson or provider required.` | You need to provide the GeoJSON for the geometry you intend to calculate the area.
