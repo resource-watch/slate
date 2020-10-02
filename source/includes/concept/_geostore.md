@@ -4,11 +4,11 @@ Allowing users to interact with data in the context of geographic data structure
 
 Both these questions imply defining the (geographical) boundaries of the question. In the case of regions these are often expressed as bounding polygons, however as seen in the examples above, geographic structures may also represent lines (such as the coast-line) or point (locations of power-plants). All of which are efficiently represented using the [Vector data model](https://www.spatialpost.com/raster-vector-data-model/)  
 
-**Geostore**, **Geostore micro-service**, and **geostore objects** are the RW APIs way to provide users the ability to add, use, and communicate their geographic vector-data structures.
+**Geostore**, **Geostore microservice**, and **geostore objects** are the RW APIs way to provide users the ability to add, use, and communicate their geographic vector-data structures.
 
 A full discussion about the [ways of representing geographic vector-data](https://en.wikipedia.org/wiki/Comparison_of_GIS_vector_file_formats) is beyond the scope of this documentation, in short we have chosen to use [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) as it allows the storage of [simple geographical features](https://en.wikipedia.org/wiki/Simple_Features), and being an extension of [JSON](https://es.wikipedia.org/wiki/JSON) has concepts which are already familiar to many developers.
 
-***Note the conventions of this documentation are that geostore objects are data structures, for example an object that describes the boundaries of Spain, Geostore represents the entity that stores geostore objects, for example a database, and Geostore micro-service refers to the REST API for interacting with the Geostore and its geostore objects.***
+***Note the conventions of this documentation are that geostore objects are data structures, for example an object that describes the boundaries of Spain, Geostore represents the entity that stores geostore objects, for example a database, and Geostore microservice refers to the REST API for interacting with the Geostore and its geostore objects.***
 
 ### geostore objects
 
@@ -20,14 +20,14 @@ If you are not familiar with GeoJSON this [article](https://developer.here.com/b
 
 Assuming you are now familiar with the basic structure of GeoJSON, next we will highlight some important considerations about how Geostore treats GeoJSON objects.
 
-- Geojson objects are always stored and returned as a `FeatureCollection`; when creating a geostore using a `Feature` or `Geometry` it is always converted to a `FeatureCollection`.
+- GeoJSON objects are always stored and returned as a `FeatureCollection`; when creating a geostore using a `Feature` or `Geometry` it is always converted to a `FeatureCollection`.
 - When creating a geostore from a `FeatureCollection` only the first `Feature` is stored, all other features are discarded with no warning.
 - Geostore retains all `Feature` properties.
 - All geometry types are accepted, except `GeometryCollection`.
 - GeoJSON [only supports one geographic coordinate reference system [CRS]](https://tools.ietf.org/html/rfc7946#section-4), using the World Geodetic System 1984 (WGS 84) datum, with longitude and latitude units of decimal degrees. Other CRS are not supported. Geostore does not check for the validity of the coordinate CRS.
 - During creation the GeoJSON geometry is checked for geometric validity and, if required, an attempt is made to repair the geometry (using [ST_MakeValid](https://postgis.net/docs/ST_MakeValid.html)).
 
-### Geostore ID and hash
+### Geostore id and hash
 
 A unique identifier for the geostore object in the form of a 128 bit [MD5 hash](https://en.wikipedia.org/wiki/MD5) is generated from the GeoJSON object after being processed by Geostore with the considerations described above. This means that each identifier is a unique fingerprint of the GeoJSON string; adding an exact copy of your GeoJSON will generate the same hash, but if it is changed in *any way* it will have a different hash. Note that these changes maybe by adding properties or other fields, not only by changing the geometry.
 
@@ -43,7 +43,7 @@ The area property contains the total surface area of all Polygon and MultiPolygo
 
 ### Provider object
 
-The optional provider object defines information used to fetch geographic structures from data APIs. At present the only provider definition supported by the Geostore micro-service is a [Carto](https://carto.com/) table, using `"type": "carto"`.
+The optional provider object defines information used to fetch geographic structures from data APIs. At present the only provider definition supported by the Geostore microservice is a [Carto](https://carto.com/) table, using `"type": "carto"`.
 
 ### Info object
 
