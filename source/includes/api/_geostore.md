@@ -213,8 +213,6 @@ Geostore objects can be created via the POST `geostore` endpoint, which accepts 
 
 If the specified `table`, `user`, or `filter` is not recognized a `400` response is returned with the error message "Geojson not found".
 
-[TODO: find an example that works]
-
 > Overview of provider object
 
 | Field    | Type   | Description                |
@@ -251,12 +249,61 @@ curl -X POST https://api.resourcewatch.org/v1/geostore \
 
 ```json
 {
-    "errors": [
-        {
-            "status": 400,
-            "detail": "Geojson not found"
-        }
-    ]
+  "data": {
+    "type": "geoStore",
+    "id": "b3b2875affa75f145b4f3e5289fd47d7",
+    "attributes": {
+      "geojson": {
+        "crs": {},
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "geometry": {
+              "coordinates": [
+                [
+                  14.26438308756265,
+                  14.062500000000002
+                ],
+                [
+                  5.266007882805498,
+                  2.8125
+                ],
+                [
+                  44.84029065139799,
+                  16.523437500000004
+                ],
+                [
+                  -7.362466865535738,
+                  -3.1640625000000004
+                ],
+              ],
+              "type": "MultiPoint"
+            },
+            "type": "Feature",
+            "properties": null
+          }
+        ]
+      },
+      "hash": "b3b2875affa75f145b4f3e5289fd47d7",
+      "provider": {
+        "type": "carto",
+        "table": "gfw_mining",
+        "user": "wri-01",
+        "filter": "cartodb_id=573"
+      },
+      "areaHa": 0,
+      "bbox": [
+        -102.65625,
+        -29.688052749856787,
+        45.87890625,
+        57.79794388498275
+      ],
+      "lock": false,
+      "info": {
+        "use": {}
+      }
+    }
+  }
 }
 ```
 
