@@ -67,6 +67,8 @@ The `v2/areas` endpoint returns all the areas of interest associated with the us
 
 Pagination is not applied when requesting all of the areas for the logged user, so all of the logged user's areas are returned in every call of the `v2/areas` endpoint.
 
+*However, please keep in mind that we intend to add pagination to this endpoint in the future.*
+
 ### Filters
 
 > Filtering areas
