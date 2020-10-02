@@ -2,7 +2,7 @@
 
 Before reading any further, please ensure you have read the [Areas of Interest concept documentation](#area) first. It gives you a brief and clear description of what an Area of Interest is and what it can do for you. 
 
-Once you've read that section, you can come back here to learn more details about using the RW API's Areas service. Areas of interest are used by the [Global Forest Watch website](https://www.globalforestwatch.org/) to subscribe to notifications on deforestation and fire alerts inside a particular areas you might be interest in. The sections below describe in detail how you can use the endpoints provided by RW API's [Areas service](https://github.com/gfw-api/gfw-area) to define your own geographic areas of interest.
+Once you've read that section, you can come back here to learn more details about using the RW API's Areas service. Areas of Interest are used by the [Global Forest Watch website](https://www.globalforestwatch.org/) to subscribe to notifications on deforestation and fire alerts inside a particular areas you might be interest in. The sections below describe in detail how you can use the endpoints provided by RW API's [Areas service](https://github.com/gfw-api/gfw-area) to define your own geographic areas of interest.
 
 ## What is the difference between v1 and v2?
 
@@ -10,13 +10,13 @@ v2 areas are an upgrade in the functionality of the Areas service, and provide y
 
 Up until v2 areas endpoints were available, you could create Areas of Interest, but you could not define deforestation or fire alerts for your areas. In order to do that, you would need to manually [create a subscription that referenced your Area of Interest](/index-rw.html#subscribing-to-an-area-of-interest). Not only that, but you also needed to manage this interaction between Areas of Interest and Subscriptions by yourself. 
 
-v2 areas endpoints were built with the intention of automating this interaction between areas and subscriptions, thus merging together [**v1 areas of interest**](/index-rw.html#areas) and [**subscriptions**](/index-rw.html#subscriptions). This means, in practice, that if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints. This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
+v2 areas endpoints were built with the intention of automating this interaction between areas and subscriptions, thus merging together [**v1 areas of interest**](/index-rw.html#areas) and [**subscriptions**](/index-rw.html#subscriptions). In practice, this means that, if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints. This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
 
 Throughout the sections below, you'll be able to find **Implementation details** sections that dive deeper into how this synchronization between Areas and Subscriptions is performed on each particular case.
 
 ## Interaction between Areas and Subscriptions
 
-As it was stated in the paragraphs above, you can use v2 endpoint to create Areas of Interest and subscribe to deforestation of fire alerts. These subscriptions (and the associated emails or webhook notifications) are handled by the [Subscriptions service](/index-rw.html#subscriptions). This means in practice that each Area might have a Subscription associated. If this is the case, the Area's `subscriptionId` property will contain the ID of the associated Subscription from the Subscriptions service.
+As it was stated in the paragraphs above, you can use v2 endpoint to create Areas of Interest and subscribe to deforestation of fire alerts. These subscriptions (and the associated emails or webhook notifications) are handled by the [Subscriptions service](/index-rw.html#subscriptions). This means in practice that each Area might have a Subscription associated. If this is the case, the Area's `subscriptionId` property will contain the id of the associated Subscription from the Subscriptions service.
 
 This interaction between Areas and Subscriptions is transparent for the API users, meaning that you don't need to worry about creating, updating or deleting the subscriptions associated to your areas - this happens automatically, taken into account the Area properties.
 
@@ -61,11 +61,11 @@ curl -X GET https://api.resourcewatch.org/v2/area
 }
 ```
 
-The `v2/areas` endpoint returns all the areas of interest associated with the user who made the request. For a detailed description of each field, check out the [Area reference](#area-reference) section.
+The `/v2/areas` endpoint returns all the areas of interest associated with the user who made the request. For a detailed description of each field, check out the [Area reference](#area-reference) section.
 
 ### Pagination
 
-Pagination is not applied when requesting all of the areas for the logged user, so all of the logged user's areas are returned in every call of the `v2/areas` endpoint.
+Pagination is not applied when requesting all of the areas for the logged user, so all of the logged user's areas are returned in every call of the `/v2/areas` endpoint.
 
 *However, please keep in mind that we intend to add pagination to this endpoint in the future.*
 
@@ -77,7 +77,7 @@ Pagination is not applied when requesting all of the areas for the logged user, 
 curl -X GET https://api.resourcewatch.org/v2/area?application=rw&public=true
 ```
 
-The `v2/areas` endpoint provides the following parameters to tailor the returned listing:
+The `/v2/areas` endpoint provides the following parameters to tailor the returned listing:
 
 Field       |             Description                                                                                                                          | Type    | Example    |
 ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | ------: | ---------: |
@@ -149,7 +149,7 @@ curl -X GET https://api.resourcewatch.org/v2/area?all=true
 }
 ```
 
-The same `v2/areas` endpoint, used to retrieve all of the logged user's areas, can be used to retrieve ALL areas (for all users). To trigger this behavior, all you need to do is provide the `all=true` flag as a query parameter - **keep in mind this option will only be taken into account for ADMIN users** (i.e. if the logged user is not an ADMIN, the `all=true` flag is ignored and the logged user's areas are returned).
+The same `/v2/areas` endpoint, used to retrieve all of the logged user's areas, can be used to retrieve ALL areas (for all users). To trigger this behavior, all you need to do is provide the `all=true` flag as a query parameter - **keep in mind this option will only be taken into account for ADMIN users** (i.e. if the logged user is not an ADMIN, the `all=true` flag is ignored and the logged user's areas are returned).
 
 For a detailed description of each field, check out the [Area reference](#area-reference) section.
 
@@ -158,10 +158,10 @@ For a detailed description of each field, check out the [Area reference](#area-r
 > Custom pagination: load page 2 using 25 results per page
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25
+curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25&all=true
 ```
 
-Due to performance and memory management issues, when viewing all areas (using the `v2/areas` endpoint with the `all=true` query parameter), the returned result is paginated. You can customize this behavior using the following query parameters:
+Due to performance and memory management issues, when viewing all areas (using the `/v2/areas` endpoint with the `all=true` query parameter), the returned result is paginated. You can customize this behavior using the following query parameters:
 
 Field       |             Description                                                                                                                          | Type    | Example    |
 ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------: | ------: | ---------: |
@@ -173,10 +173,10 @@ page[size]  | The size of the page to fetch. Only taken into account when using 
 > Filtering areas
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v2/area?application=rw&public=true
+curl -X GET https://api.resourcewatch.org/v2/area?application=rw&public=true&all=true
 ```
 
-The filters for this endpoint are the same as the `v2/areas` endpoint described above:
+The filters for this endpoint are the same as the `/v2/areas` endpoint described above:
 
 Field       |             Description                                                                                                                          | Type    | Example    |
 ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | ------: | ---------: |
@@ -308,8 +308,8 @@ Use this endpoint to create new areas. For a detailed description of each field 
 
 Keep in mind that you should provide one of the following when creating an area:
 
-* `geostore` with the ID of a geostore object if you are creating an area that references a geostore;
-* `wdpaid` with the ID of a protected area if you are creating an area that references a protected area;
+* `geostore` with the id of a geostore object if you are creating an area that references a geostore;
+* `wdpaid` with the id of a protected area if you are creating an area that references a protected area;
 * `iso` object with a valid country/region/subregion if you are creating an area that references an admin country/region/subregion;
 * `use` object with valid id and name of a land use concessioned area, if you are creating an area that references a land use area.
 
@@ -327,7 +327,7 @@ Error code     | Error message (example)     | Description
 
 ### Email notifications
 
-After creating an area, if the `email` field of the area contains a valid email, an email is sent to the user. The email content varies according to the status of the area:
+After creating an area, if the `email` field of the area contains a valid email address, an email is sent to the user. The email content varies according to the status of the area:
 
 * If the area has status `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
 * If the area has status `pending`, an email is sent to let the user know the area of interest is being generated and will be available later.
@@ -340,9 +340,9 @@ POST of a new area always starts by creating the area. Then, taking into account
 
 The subscription is created only if the area has selected set to `true` at least one of the following attributes:
 
-* deforestationAlerts
-* fireAlerts
-* monthlySummary
+* `deforestationAlerts`
+* `fireAlerts`
+* `monthlySummary`
 
 ## Updating an area
 
@@ -397,8 +397,8 @@ curl -X PATCH https://api.resourcewatch.org/v2/area/:id
 
 Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section. Keep in mind that you must provide one of the following when updating an area:
 
-* `geostore` with the ID of a geostore object if you are updating an area that references a geostore;
-* `wdpaid` with the ID of a protected area if you are updating an area that references a protected area;
+* `geostore` with the id of a geostore object if you are updating an area that references a geostore;
+* `wdpaid` with the id of a protected area if you are updating an area that references a protected area;
 * `iso` object with a valid country/region/subregion if you are updating an area that references an admin country/region/subregion;
 * `use` object with valid id and name of a land use concessioned area, if you are updating an area that references a land use area.
 
@@ -410,14 +410,14 @@ Error code     | Error message (example)       | Description
 -------------- | ----------------------------- | --------------
 400            | `<field> can not be empty.`   | You are missing a required field while updating the area.
 400            | `<field> is invalid.`         | You provided an invalid field while updating the area.
-400            | `Id required`                 | No ID was provided in the URL.
+400            | `Id required`                 | No id was provided in the URL.
 401            | `Unauthorized`                | No token was provided.
 403            | `Not authorized`              | You are trying to update an area that is not owned by you and you are not an ADMIN user.
 404            | `Area not found`              | The area with id provided does not exist.
 
 ### Email notifications
 
-After updating an area, if the `email` field of the area contains a valid email and the area's status is `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
+After updating an area, if the `email` field of the area contains a valid email address and the area's status is `saved`, an email is sent to let the user know the area of interest is ready to be viewed.
 
 If you want to understand more about how these emails are sent or how you can update its content, please check the developer docs section on [Areas v2 Email Notifications](/developer.html#areas-v2-notification-emails).
 
@@ -431,7 +431,7 @@ PATCHing an area is a bit more complex, and it comes down to 3 major cases:
 2. The area already exists and doesn’t has subscription preferences (`deforestationAlerts`, `fireAlerts` or `monthlySummary` set to true) in the request data:
    1. If the area had a subscription associated, then the subscription associated is deleted.
    2. Otherwise, just save the area.
-3. The area doesn’t exist because on the fetch it returned a mapped subscription (meaning we are PATCHing an area using the ID of a subscription):
+3. The area doesn’t exist because on the fetch it returned a mapped subscription (meaning we are PATCHing an area using the id of a subscription):
    1. First, create a new area, and then:
       1. If the request data has subscriptions preference (`deforestationAlerts`, `fireAlerts` or `monthlySummary` set to true), also PATCH the subscription.
       2. If the request data doesn't have subscriptions preference (`deforestationAlerts`, `fireAlerts` or `monthlySummary` set to true), delete the associated subscription.
@@ -451,7 +451,7 @@ Use this endpoint to delete an existing area. This endpoint requires authenticat
 
 Error code     | Error message (example)       | Description
 -------------- | ----------------------------- | --------------
-400            | `Id required`                 | No ID was provided in the URL.
+400            | `Id required`                 | No id was provided in the URL.
 401            | `Unauthorized`                | No token was provided.
 403            | `Not authorized`              | You are trying to delete an area that is not owned by you and you are not an ADMIN user.
 404            | `Area not found`              | The area with id provided does not exist.
@@ -460,7 +460,7 @@ Error code     | Error message (example)       | Description
 
 DELETing an area deletes the area if it exists, and then if an associated subscription exists, it is also deleted.
 
-If the ID of a subscription is provided, then that subscription is deleted.
+If the id of a subscription is provided, then that subscription is deleted.
 
 ## Update areas by geostore
 
@@ -519,7 +519,7 @@ In case of success a 200 OK response is returned, and all the areas that match t
 
 ### Email notifications
 
-After updating areas by geostore, for each area that was updated which has a valid email associated and its status updated to `saved`, an email will be sent to the user to let them know that the area is ready to be viewed.
+After updating areas by geostore, for each area that was updated which has a valid email address associated and its status updated to `saved`, an email will be sent to the user to let them know that the area is ready to be viewed.
 
 If you want to understand more about how these emails are sent or how you can update its content, please check the developer docs section on [Areas v2 Email Notifications](/developer.html#areas-v2-notification-emails).
 
@@ -581,16 +581,16 @@ Field name     | Type    | Required            | Default value | Description |
 id             | String  | Yes (autogenerated) |               | Unique Id of the area. Auto generated on creation. Cannot be modified by users.    
 name           | String  | No                  |               | Name of the area.
 application    | String  | Yes                 | 'gfw'         | The application this area belongs to.  
-geostore       | String  | No                  |               | If this area references a geostore, the ID of the geostore will be saved in this field.     
-wdpaId         | String  | No                  |               | If this area references a WDPA, the ID of the WDPA will be saved in this field.     
+geostore       | String  | No                  |               | If this area references a geostore, the id of the geostore will be saved in this field.     
+wdpaId         | String  | No                  |               | If this area references a WDPA, the id of the WDPA will be saved in this field.     
 userId         | String  | Yes (autopopulated) |               | Id of the user who owns the area. Set automatically on creation. Cannot be modified by users.
 use            | Object  | No                  |               | If this area references a land use concession, this field will contain an object that identifies the concrete area referred.
-use.id         | String  | No                  |               | The ID of the land use concession to track.
+use.id         | String  | No                  |               | The id of the land use concession to track.
 use.name       | String  | No                  |               | The name of the land use concession to track. The supported values for this field include `mining` for [mining areas](http://api.resourcewatch.org/v1/dataset/c2142922-84d9-4564-8216-a4867b9e48c5), `logging` for [Congo Basin logging roads](https://wri-01.carto.com/tables/gfw_oil_palm/public/map), `oilpalm` for [palm oil plantations](https://wri-01.carto.com/tables/gfw_woodfiber/public/map) and `fiber` for [wood fiber plantations](https://wri-01.carto.com/tables/osm_logging_roads/public/map).
 iso            | Object  | No                  |               | If this area references an admin country or region, this field will contain an object that identifies the concrete area referred.
 iso.country    | String  | No                  |               | The [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) of the country being referred by this area.
-iso.region     | String  | No                  |               | The [GADM ID](https://gadm.org/data.html) of the region inside the country to reference (optional, you can reference the whole country, or just on specific region of the country).
-iso.subregion  | String  | No                  |               | The [GADM ID](https://gadm.org/data.html) of the subregion inside the region to reference (optional, you can reference the whole region, or just on specific subregion of the region).
+iso.region     | String  | No                  |               | The [GADM id](https://gadm.org/data.html) of the region inside the country to reference (optional, you can reference the whole country, or just on specific region of the country).
+iso.subregion  | String  | No                  |               | The [GADM id](https://gadm.org/data.html) of the subregion inside the region to reference (optional, you can reference the whole region, or just on specific subregion of the region).
 admin          | Object  | No                  |               | Alternative syntax, see the `iso` field above.
 admin.adm0     | String  | No                  |               | Alternative syntax, see the `iso.country` field above.
 admin.adm1     | String  | No                  |               | Alternative syntax, see the `iso.region` field above.
@@ -606,6 +606,6 @@ monthlySummary | Boolean | Yes                 | false         | If the area sub
 email          | String  | No                  |               | The email that will be used as receiver of the notification emails.
 webhookUrl     | String  | No                  |               | Instead of receiving an email as notification, you can choose to receive a hit in the webhook URL you set in this field.
 language       | String  | No                  | 'en'          | The language in which you wish to receive the email notifications. `en`, `fr`, `zh`, `id`, `pt_BR` or `es_MX` are the supported values for this field. If any other value is provided, `en` is automatically set.
-subscriptionId | String  | No                  |               | If an area is returned as the reflection of an existing subscription in the Subscriptions service, this field will contain the ID of the corresponding subscription.
+subscriptionId | String  | No                  |               | If an area is returned as the reflection of an existing subscription in the Subscriptions service, this field will contain the id of the corresponding subscription.
 createdAt      | Date    | No (autogenerated)  | now           | Automatically maintained date of when the area was created. Cannot be modified by users.
 updatedAt      | Date    | No (autogenerated)  | now           | Automatically maintained date of when the area was last updated. Cannot be modified by users.
