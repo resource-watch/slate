@@ -16,6 +16,6 @@ Querying in the RW API is meant to be used only to read data, not to manipulate 
 
 If you've used SQL in the past, you know how powerful (and complex) it can be. Things like nested queries or joins can be hard to use and even more to maintain, even without the added complexity of an environment where multiple data providers coexist. That's why the RW API limits its support to basic SQL syntax, so we can focus on delivering a tool that's simple and easy to use for most users. The [supported SQL syntax reference](#supported-sql-syntax-reference) section below will go into more detail on what's supported and what's not, and will help you understand the specifics of what you can achieve with RW API queries.
 
-### Some operation will depend on the provider of the dataset you're querying
+### Some operations will depend on the provider of the dataset you're querying
 
 Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we've achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provider, but not for another. The [supported SQL syntax reference](#supported-sql-syntax-reference) below has more details on these limitations, per provider.
