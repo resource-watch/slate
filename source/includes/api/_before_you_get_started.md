@@ -1,20 +1,41 @@
 # Before you get started
 
-This section covers a list of topics you should be familiar with before using the API. The concepts described here span across multiple API endpoints, and are important for a better understanding of how to interact with the RW API.
+This section covers a list of topics you should be familiar with before using the API. The concepts described in this section span across multiple API endpoints and are fundamental for a better understanding of how to interact with the RW API.
 
 ## Applications
 
 As you might have come across while reading these docs, different applications and websites rely on the RW API as the principal source for their data. While navigating through the catalog of available datasets, you will find some datasets used by the [Resource Watch website](https://resourcewatch.org/), others used by [Global Forest Watch](https://www.globalforestwatch.org/). In many cases, applications even share the same datasets!
 
-To ensure the correct separation of content across the different applications that use the RW API, you will come across a field named `application` in many of the API's resources (such as datasets, layers, widgets, among others). Using this field, the RW API allows users to namespace every single resource, so that it's associated only with the applications that use it.
+To ensure the correct separation of content across the different applications that use the RW API, you will come across a field named `application` in many of the API's resources (such as datasets, layers, widgets, and others). Using this field, the RW API allows users to namespace every single resource, so that it's associated only with the applications that use it.
 
-TODO: different application values available
+### Officially supported applications
 
-TODO: examples for fetching content exclusive to a given application
+Currently, the following applications are using the API as the principal source for their data:
 
-TODO: pointers for some examples of the usage of applications
+* the [Resource Watch website](https://resourcewatch.org/), where the `application` field takes the value `rw`;
+* the [Global Forest Watch website](https://www.globalforestwatch.org/), where the `application` field takes the value `gfw`;
+* the [Partnership for Resilience and Preparedness website](https://prepdata.org/), where the `application` field takes the value `prep`;
+* the [Forest Atlases websites](https://www.wri.org/our-work/project/forest-atlases) for different countries of the world also rely on the RW API - in the case of these websites, the `application` field takes the value `forest-atlas`;
 
-TODO: add references to sections across the API docs pointing to this section
+However, please keep in mind that, in most API resources, the values provided for the `application` field are not subject to validation. Thus, feel free to identify your applications in whatever way you prefer when creating content for your applications. --> TODO: check if we actually want to broadcast this...?
+
+### Filtering content by the application field
+
+> Fetching datasets for the Resource Watch application
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?application=rw
+```
+
+> Fetching datasets for the Global Forest Watch application
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?application=gfw
+```
+
+You can use the `application` field as a query parameter filter in many of the resources of the RW API to filter content specific to the given application. Check out on the side some examples of the usage of the `application` field when fetching RW API datasets.
+
+Please keep in mind that some API resources might not use the `application` field. Filtering capabilities may also vary from one resource to another. Always make sure you check the specific documentation for the `application` field of the corresponding API resource.
 
 <!-- ## Authentication
 
