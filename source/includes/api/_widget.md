@@ -1122,7 +1122,7 @@ queryUrl                | String         | No                   |               
 thumbnailUrl            | String         | No                   |                            | URL of a example thumbnail of the rendered widget.
 env                     | String         | Yes                  | production                 | Environment to which the widget belongs.
 widgetConfig            | Object         | No                   |                            | Schema-less object meant to host widget behavior configuration.
-application             | Array          | Yes                  |                            | Applications associated with this widget.
+application             | Array          | Yes                  |                            | Applications associated with this widget. Read more about this field [here](/index-rw.html#applications).
 layerId                 | String         | No                   |                            | Id of the layer to which the widget corresponds.  
 verified                | Boolean        | Yes                  | false                      | 
 default                 | Boolean        | No                   | false                      | If the widget should be used as the dataset's default widget.

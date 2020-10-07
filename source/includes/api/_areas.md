@@ -9,9 +9,9 @@ Returns the list of areas created by the user provided
 
 ### Parameters
 
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-application         |           Application            |    Text |                                        Any Text, values separated by commas |      No
+Parameter   | Description | Type | Values | Required |
+----------- | :---------: | ---: | -----: | -------: |
+application | Application. Read more about this field [here](/index-rw.html#applications). | Text | Any Text, values separated by commas | No |
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/area?application=<application>
@@ -82,11 +82,11 @@ Creates a new area
 
 ### Parameters
 
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-application         |           Application            |    Text |                                        Any Text, values separated by commas |      Yes
-name         |           Name of the new area            |    Text |                                        Any Text |      Yes
-geostore         |           Geostore ID            |    Text |                                        Any Text |      Yes
+Parameter | Description | Type | Values | Required |
+--------- | :---------: | ---: | -----: | -------: |
+application | Application. Read more about this field [here](/index-rw.html#applications). | Text | Any Text, values separated by commas | Yes |
+name      | Name of the new area | Text | Any Text | Yes |
+geostore  | Geostore ID  | Text | Any Text | Yes |
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/area \

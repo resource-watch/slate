@@ -10,7 +10,7 @@ Some fields are important to identify the entity properly; others are just optio
 
 | Field             | Description                                                       | Type
 | ------------------|:-----------------------------------------:                        | -----:
-| application       | The metadata application                                          | String
+| application       | The metadata application. Read more about this field [here](/index-rw.html#applications). | String
 | language          | The metadata language                                             | String
 | dataset           | The associated dataset id to the metadata                         | String
 | resource          | The resource associated to the metadata                           | Object
@@ -353,7 +353,7 @@ The metadata list provided by the endpoint can be filtered with the following at
 
 Filter        | Description                                                                  | Accepted values
 ------------- | ---------------------------------------------------------------------------- | -------------------------------------------
-application   | Application associated with the metadata entity                              | any valid text
+application   | Application associated with the metadata entity. Read more about this field [here](/index-rw.html#applications). | any valid text
 language      | Language of the metadata entity                                              | any valid text
 
 > Finding metadata by ids for a dataset

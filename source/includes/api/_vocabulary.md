@@ -18,7 +18,7 @@ To do it, the only parameter that is required is the name of the Vocabulary.
 | Field             | Description                                                       | Type
 | ------------------|:-----------------------------------------:                        | -----:
 | name              | The name of the Vocabulary (**it has to be unique and it represents the "primaryKey"**) | String
-| application  | The associated application for this vocabulary  | String
+| application  | The associated application for this vocabulary. Read more about the `application` field [here](/index-rw.html#applications). | String
 
 However, the most common use case relies on the relationships creation.
 

@@ -102,7 +102,7 @@ This endpoint supports the following query parameters as filters:
 
 Field       |             Description                                                                                                                          | Type    | Example    |
 ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------: | ------: | ---------: |
-application | Filter results by the application associated with the areas.                                                                                     | String  | 'gfw'      |
+application | Filter results by the application associated with the areas. Read more about this field [here](/index-rw.html#applications).                                                                                    | String  | 'gfw'      |
 status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
 all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
@@ -229,7 +229,7 @@ Field                |             Description                                  
 -------------------- | :------------------------------------------------------------------------------------------------: | ------: | ---------: |
 name                 | The name of the area being created.                                                                | String  | 'Example'  |
 image                | Image associated with the dataset - in GET areas, this attribute will have the URL for the image.  | String  | https://www.google.com/example.jpg |
-application          | The application to which this area is associated with. Defaults to 'gfw'.                          | String  | 'gfw'      |
+application          | The application to which this area is associated with. Defaults to 'gfw'. Read more about this field [here](/index-rw.html#applications). | String  | 'gfw'      |
 language             | The language of this area. Defaults to 'en'.                                                       | String  | 'es'       |
 geostore             | An ID of a geostore to which this area relates to.                                                 | String  | '123'      |
 public               | If the area is public or not. Defaults to false.                                                   | Boolean | true       |
@@ -334,7 +334,7 @@ Field                |             Description                                  
 -------------------- | :------------------------------------------------------------------------------------------------: | ------: | ---------: |
 name                 | The name of the area being created.                                                                | String  | 'Example'  |
 image                | Image associated with the dataset - in GET areas, this attribute will have the URL for the image.  | String  | https://www.google.com/example.jpg |
-application          | The application to which this area is associated with. Defaults to 'gfw'.                          | String  | 'gfw'      |
+application          | The application to which this area is associated with. Defaults to 'gfw'. Read more about this field [here](/index-rw.html#applications). | String  | 'gfw'      |
 language             | The language of this area. Defaults to 'en'.                                                       | String  | 'es'       |
 geostore             | An ID of a geostore to which this area relates to.                                                 | String  | '123'      |
 public               | If the area is public or not. Defaults to false.                                                   | Boolean | true       |
