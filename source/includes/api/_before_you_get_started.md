@@ -37,6 +37,12 @@ You can use the `application` field as a query parameter filter in many of the r
 
 Please keep in mind that some API resources might not use the `application` field. Filtering capabilities may also vary from one resource to another. Always make sure you check the specific documentation for the `application` field of the corresponding API resource.
 
+### Usage of applications for access management
+
+As you'll be able to understand from reading the [General notes on RW API users](#general-notes-on-rw-api-users) section, RW API users' values in the `application` field are also used to determine if a given user can administrate a given API resource. Typically, to manipulate said RW API resource, that resource and the user account must have at least one overlapping value in the `application` field.
+
+Keep in mind that it’s up to each RW API service to define how they restrict or allow actions based on these or other factors. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding the usage of the `application` field for access management.
+
 <!-- ## Authentication
 
 TODO
