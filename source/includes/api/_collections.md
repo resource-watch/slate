@@ -12,7 +12,7 @@ Collection endpoints require authentication, and the collections are associated 
 | -------------|:--------------------------------------------------------------: | -----:
 | name         | Name of collection.                                             | String
 | ownerId      | Id of the user owner of this collection.                        | String
-| application  | The application this collection belongs to (defaults to `'rw'`) | String
+| application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/index-rw.html#applications). | String
 | resources    | Array of resources in the collection.                           | Array of Objects
 | --- type     | The type of resource.                                           | String (dataset, layer, widget)
 | --- id       | The id of the resource.                                         | String
@@ -95,7 +95,7 @@ To create a collection, you should send a POST request to the `v1/collection` en
 | Field name   | Description                                                     | Required | Type
 | -------------|:--------------------------------------------------------------: | -----:   | -----:
 | name         | Name of collection.                                             | Yes      | String
-| application  | The application this collection belongs to (defaults to `'rw'`) | No       | String
+| application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/index-rw.html#applications). | No       | String
 | resources    | Array of resources in the collection.                           | No       | Array of Objects
 
 ## Update a collection

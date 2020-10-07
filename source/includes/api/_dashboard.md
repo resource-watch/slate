@@ -87,7 +87,7 @@ published      | Filter dashboards by publishing status (true, false).          
 private        | Filter dashboards by private status (true, false).                                | Boolean
 user           | Filter dashboards by author user id.                                              | Text
 user.role      | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
-application    | The application to which the dashboard belongs.                                   | Text (single value)
+application    | The application to which the dashboard belongs. Read more about this field [here](/index-rw.html#applications). | Text (single value)
 is-highlighted | Filter dashboards by highlighted ones (true,false).                               | Boolean
 is-featured    | Filter dashboards by featured ones (true,false).                                  | Boolean
 author-title   | Filter dashboards by the title of the author of the dashboard.                    | Text
@@ -339,7 +339,7 @@ private         | If the dashboard is private or publicly available.            
 production      | If the dashboard is available in the production environment.                 | boolean
 preproduction   | If the dashboard is available in the preproduction environment.              | boolean
 staging         | If the dashboard is available in the staging environment.                    | boolean
-application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`.         | array of strings
+application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`. Read more about this field [here](/index-rw.html#applications). | array of strings
 is-highlighted  | If this dashboard is highlighted (`true`/`false`). Defaults to `false`. Only accessible to users with `ADMIN` role. | boolean
 is-featured     | If this dashboard is featured (`true`/`false`). Defaults to `false`. Can only be set by user with `ADMIN` role. | boolean
 author-title    | The title of the author of the dashboard.                                    | any valid text

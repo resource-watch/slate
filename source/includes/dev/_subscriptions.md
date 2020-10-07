@@ -149,7 +149,7 @@ This endpoint supports the following optional query parameters as filters:
 
 Field       |             Description                              |   Type |
 ----------- | :--------------------------------------------------: | -----: |
-application | Application to which the subscription is associated. | String |
+application | Application to which the subscription is associated. Read more about the `application` field [here](/index-rw.html#applications). | String |
 env         | Environment to which the subscription is associated. | String |
 
 ## Finding all subscriptions
@@ -209,7 +209,7 @@ This endpoint supports the following optional query parameters as filters:
 
 Field          |             Description                              |   Type | Example      |
 -------------- | :--------------------------------------------------: | -----: | -----------: |
-application    | Application to which the subscription is associated. | String | 'rw'         |
+application    | Application to which the subscription is associated. Read more about the `application` field [here](/index-rw.html#applications). | String | 'rw'         |
 env            | Environment to which the subscription is associated. | String | 'production' |
 updatedAtSince | Filter returned subscriptions by the updatedAt date being before the date provided. Should be a valid ISO date string. | String | '2020-03-25T09:16:22.068Z' |
 updatedAtUntil | Filter returned subscriptions by the updatedAt date being after the date provided. Should be a valid ISO date string. | String | '2020-03-25T09:16:22.068Z' |

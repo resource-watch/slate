@@ -181,7 +181,7 @@ The filters for this endpoint are the same as the `/v2/areas` endpoint described
 
 Field       |             Description                                                                                                                          | Type    | Example    |
 ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | ------: | ---------: |
-application | Filter results by the application associated with the areas.                                                                                     | String  | 'gfw'      |
+application | Filter results by the application associated with the areas. Read more about this field [here](/index-rw.html#applications).                                                                                    | String  | 'gfw'      |
 status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
 all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
