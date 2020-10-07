@@ -8,7 +8,7 @@ As you might have come across while reading these docs, different applications a
 
 To ensure the correct separation of content across the different applications that use the RW API, you will come across a field named `application` in many of the API's resources (such as datasets, layers, widgets, and others). Using this field, the RW API allows users to namespace every single resource, so that it's associated only with the applications that use it.
 
-### Officially supported applications
+### Existing applications
 
 Currently, the following applications are using the API as the principal source for their data:
 
@@ -17,7 +17,7 @@ Currently, the following applications are using the API as the principal source 
 * the [Partnership for Resilience and Preparedness website](https://prepdata.org/), where the `application` field takes the value `prep`;
 * the [Forest Atlases websites](https://www.wri.org/our-work/project/forest-atlases) for different countries of the world also rely on the RW API - in the case of these websites, the `application` field takes the value `forest-atlas`;
 
-However, please keep in mind that, in most API resources, the values provided for the `application` field are not subject to validation. Thus, feel free to identify your applications in whatever way you prefer when creating content for your applications. --> TODO: check if we actually want to broadcast this...?
+If you would like to see your application added to the list of applications supported by the RW API, please contact us.
 
 ### Filtering content by the application field
 
