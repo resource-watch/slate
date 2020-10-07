@@ -271,7 +271,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset/<datase
 Parameter        |               Description               |    Type |                                          Values | Required
 ------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
 published         |   Include only published datasets            |    Boolean |                                        true/false |      No
-app  |   List of applications datasets should belong to (at least one of them)      |    Text |     Any text, values separated by commas |       No
+app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
 env  |   Include only datasets with at least one of the specified environments | Text | One or more values from ['production', 'preproduction'] |       No
 limit | Maximum number of datasets returned by the endpoint | Integer | A positive integer (3 by default) | No
 
@@ -347,7 +347,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-includi
 Parameter        |               Description               |    Type |                                          Values | Required
 ------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
 published         |   Include only published datasets            |    Boolean |                                        true/false |      No
-app  |   List of applications datasets should belong to (at least one of them)      |    Text |     Any text, values separated by commas |       No
+app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
 env  |   Include only datasets with at least one of the specified environments | Text | One or more values from ['production', 'preproduction'] |       No
 limit | Maximum number of datasets returned by the endpoint | Integer | A positive integer (3 by default) | No
 
@@ -445,7 +445,7 @@ The url should be formed as follows:
 Parameter        |               Description               |    Type |                                          Values | Required
 ------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
 published         |   Include only published datasets            |    Boolean |                                        true/false |      No
-app  |   List of applications datasets should belong to (at least one of them)      |    Text |     Any text, values separated by commas |       No
+app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
 env  |   Include only datasets with at least one of the specified environments | Text | One or more values from ['production', 'preproduction'] |       No
 page[size] | Maximum number of results returned by the endpoint | Number | No
 

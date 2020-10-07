@@ -58,7 +58,7 @@ Field     |                         Description                          |    Ty
 published |   Filter topics by publishing status (true, false)       | Boolean
 private   |   Filter topics by private status (true, false)          | Boolean
 user      |           Filter topics by author user id                | Text
-application | The application to which the topic belongs             | Text (single value)
+application | The application to which the topic belongs. Read more about this field [here](/index-rw.html#applications). | Text (single value)
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/topic?user=57bc2608f098ce98007985e4&private=false
@@ -146,7 +146,7 @@ published     | If the topic is in a publishable state                          
 photo         | Object containing a set of image urls associated with the topic          | object
 user_id       | Id of the user who created the topic                                     | string with valid user id (not validated)
 private       |                                                                              | boolean
-application   | Application(s) to which the topic belongs. Defaults to `["rw"]`.         | array of strings
+application   | Application(s) to which the topic belongs. Defaults to `["rw"]`. Read more about this field [here](/index-rw.html#applications). | array of strings
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/topics \

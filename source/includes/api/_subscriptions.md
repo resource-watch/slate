@@ -171,7 +171,7 @@ The `v1/subscriptions` endpoint supports the following optional query parameters
 
 Field       |  Description                                             | Type   | Default value
 ----------- | :------------------------------------------------------: | -----: | ---------------:
-application | Application to which the subscription is associated.     | String | 'gfw'
+application | Application to which the subscription is associated. Read more about this field [here](/index-rw.html#applications). | String | 'gfw'
 env         | The environment to which the subscription is associated. | String | 'production'
 
 **Deprecation notice:** the default value for the `application` filter (currently, `gfw`) will be removed and the `application` filter will then have no default value. We recommend reviewing your application to ensure you set and load the correct `application` explicitly.
@@ -737,7 +737,7 @@ Field       |             Description                                           
 ----------- | :----------------------------------------------------------------------------------: | -----: | ------: | ---------: |
 start       | The start of the date range to fetch the statistics. **This parameter is required.** | String | None    | 01-01-2020 |
 end         | The end of the date range to fetch the statistics. **This parameter is required.**   | String | None    | 02-20-2020 |
-application | The application for which the statistics will be fetched.                            | String | 'gfw'   | 'rw'       |
+application | The application for which the statistics will be fetched. Read more about this field [here](/index-rw.html#applications). | String | 'gfw'   | 'rw'       |
 
 ### Grouped subscription statistics
 
@@ -809,7 +809,7 @@ Field       |             Description                                           
 ----------- | :----------------------------------------------------------------------------------: | -----: | ------: | ---------: |
 start       | The start of the date range to fetch the statistics. **This parameter is required.** | String | None    | 01-01-2020 |
 end         | The end of the date range to fetch the statistics. **This parameter is required.**   | String | None    | 02-20-2020 |
-application | The application for which the statistics will be fetched.                            | String | 'gfw'   | 'rw'       |
+application | The application for which the statistics will be fetched. Read more about this field [here](/index-rw.html#applications). | String | 'gfw'   | 'rw'       |
 
 ## Subscription reference
 
@@ -835,7 +835,7 @@ datasetsQuery[0].lastSentDate | Date     | No    | (auto-generated)    | This va
 params           | Object  | No                  | `{}`                | Determines the area of interest that this subscription should track. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).
 userId           | String  | Yes                 | (auto-populated)    | Id of the user who owns the subscription. Set automatically on creation. Cannot be modified by users.
 language         | String  | No                  | `'en'`              | The language for this subscription. Useful for customizing email notifications according to the language of the subscription. Possible values include `'en'`, `'es'`, `'fr'`, `'pt'` or `'zh'`.
-application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription.
+application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription. Read more about this field [here](/index-rw.html#applications).
 env              | String  | Yes                 | `'production'`      | Environment to which the subscription belongs.
 createdAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was created. Cannot be modified by users.
 updatedAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was last updated. Cannot be modified by users.
