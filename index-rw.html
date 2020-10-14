@@ -4266,6 +4266,8 @@ curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/:dataset
 
 <p>This section describes the SQL support for querying datasets with connector type <code class="prettyprint">document</code> and providers <code class="prettyprint">csv</code>, <code class="prettyprint">tsv</code>, <code class="prettyprint">json</code> or <code class="prettyprint">xml</code>.</p>
 
+<p>While the API has it&rsquo;s own query handling mechanism, it mostly relies on <a href="https://opendistro.github.io/for-elasticsearch-docs/docs/sql/">Opendistro for Elasticsearch 1.x SQL support</a>, meaning its limitations will also apply to queries done to document-based datasets.</p>
+
 <table><thead>
 <tr>
 <th>Supported</th>
