@@ -585,6 +585,8 @@ This section describes the SQL support for querying datasets with connector type
 
 This section describes the SQL support for querying datasets with connector type `document` and providers `csv`, `tsv`, `json` or `xml`.
 
+While the API has it's own query handling mechanism, it mostly relies on [Opendistro for Elasticsearch 1.x SQL support](https://opendistro.github.io/for-elasticsearch-docs/docs/sql/), meaning its limitations will also apply to queries done to document-based datasets.
+
 | Supported | Feature | Example URL |
 |-----------|---------|-------------|
 | YES | SELECT: Selecting all columns using wildcard | [SELECT \* FROM data LIMIT 5](https://api.resourcewatch.org/v1/query/9be3bf63-97fc-4bb0-b913-775ccae3cf9e?sql=SELECT%20\*%20FROM%20data%20LIMIT%205) |
