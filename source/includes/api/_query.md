@@ -442,6 +442,8 @@ Error code     | Error message  | Description
 
 ## Supported SQL syntax reference
 
+This section details the support for SQL syntax for the different dataset providers RW API supports. Keep in mind that your HTTP request parameters (like `sql`) should always be escaped according to the official HTTP specification. You can use [this online tool](https://www.urlencoder.org/) as an example of proper URL parameter encoding.
+
 ### CartoDB datasets
 
 This section describes the SQL support for querying datasets with provider `cartodb`.
