@@ -5,29 +5,20 @@ The following area endpoints are available
 
 ## Get user areas
 
-Returns the list of areas created by the user provided
 
-### Parameters
+> Getting a list of areas for the current user
 
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-application         |           Application            |    Text |                                        Any Text, values separated by commas |      No
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/area?application=<application>
+curl -X GET https://api.resourcewatch.org/v1/area
 -H "Authorization: Bearer <your-token>"
 ```
 
-### Example
 
-Areas created by an user for the application RW.
 
-```shell
-curl -X POST https://api.resourcewatch.org/v1/area?application=rw
--H "Authorization: Bearer <your-token>"
-```
+> Response:
 
-```
+```json
 {
   "data": [
     {
@@ -75,6 +66,71 @@ curl -X POST https://api.resourcewatch.org/v1/area?application=rw
   ]
 }
 ```
+
+Returns the list of areas created by the user provided
+
+### Filters
+
+
+> Getting a list of areas for the current user and a given application
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/area?application=rw
+-H "Authorization: Bearer <your-token>"
+```
+
+Parameter    |        Description |    Type |                                 Values |
+------------ | :----------------: | ------: | -------------------------------------: |
+application  |        Application |    Text |  Any Text, values separated by commas
+
+
+
+### Pagination
+
+
+The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, and for compatibility reasons, areas are listed in pages of 1000 elements each, but we recommend that you use the options below to set the page size to a much smaller number. You can customize this behavior using the following query parameters:
+
+> Custom pagination: load page 2 using 25 results per page
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/area?page[number]=2&page[size]=25
+```
+
+Field        |         Description          |   Type |   Default
+------------ | :--------------------------: | -----: | ----------:
+page[size]   | The number elements per page. | Number | 1000
+page[number] |       The page number        | Number | 1
+
+
+### Sorting
+
+#### Basics of sorting
+
+> Sorting areas
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/area?sort=name
+```
+
+> Sorting areas by multiple criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/area?sort=name,createdAt
+```
+
+> Sort by name descending, createdAt ascending
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/area?sort=-name,+createdAt
+```
+
+The API currently supports sorting by means of the `sort` query parameter. Sorting can be done using most fields from the area model. Sorting by nested fields is not supported at the moment.
+
+Multiple sorting criteria can be used, separating them by commas.
+
+You can also specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
+
 
 ## Create area
 
