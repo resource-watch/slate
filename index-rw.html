@@ -10966,17 +10966,78 @@ Given the following sets of concepts:</p>
 
 <h2 id="get-user-areas">Get user areas</h2>
 
+<blockquote>
+<p>Getting a list of areas for the current user</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"area"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59ca3213d08a7d001054522b"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test area France"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8f77fe62cf15d5098ba0ee11c5126aa6"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58e22f662071c01c02f76a0f"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-09-26T10:55:15.990Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"area"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59ca32ea3209db0014e9a7b7"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test custom area"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b12640deba9d3c5012c5359dd5572e2d"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58e22f662071c01c02f76a0f"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-09-26T10:58:50.226Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <p>Returns the list of areas created by the user provided</p>
 
-<h3 id="parameters">Parameters</h3>
+<h3 id="filters">Filters</h3>
 
+<blockquote>
+<p>Getting a list of areas for the current user and a given application</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area?application<span class="o">=</span>rw
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
 <table><thead>
 <tr>
 <th>Parameter</th>
 <th style="text-align: center">Description</th>
 <th style="text-align: right">Type</th>
 <th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
 </tr>
 </thead><tbody>
 <tr>
@@ -10984,64 +11045,65 @@ Given the following sets of concepts:</p>
 <td style="text-align: center">Application</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">Any Text, values separated by commas</td>
-<td style="text-align: right">No</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/area?application<span class="o">=</span>&lt;application&gt;
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+
+<h3 id="pagination">Pagination</h3>
+
+<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, and for compatibility reasons, areas are listed in pages of 1000 elements each, but we recommend that you use the options below to set the page size to a much smaller number. You can customize this behavior using the following query parameters:</p>
+
+<blockquote>
+<p>Custom pagination: load page 2 using 25 results per page</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25
 </code></pre>
-<h3 id="example">Example</h3>
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1000</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page number</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
 
-<p>Areas created by an user for the application RW.</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/area?application<span class="o">=</span>rw
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre><pre class="highlight plaintext"><code>{
-  "data": [
-    {
-      "type": "area",
-      "id": "59ca3213d08a7d001054522b",
-      "attributes": {
-        "name": "Test area France",
-        "application": "rw",
-        "geostore": "8f77fe62cf15d5098ba0ee11c5126aa6",
-        "userId": "58e22f662071c01c02f76a0f",
-        "createdAt": "2017-09-26T10:55:15.990Z",
-        "image": "",
-        "datasets": [
+<h3 id="sorting">Sorting</h3>
 
-        ],
-        "use": {
+<h4 id="basics-of-sorting">Basics of sorting</h4>
 
-        },
-        "iso": {
-
-        }
-      }
-    },
-    {
-      "type": "area",
-      "id": "59ca32ea3209db0014e9a7b7",
-      "attributes": {
-        "name": "Test custom area",
-        "application": "rw",
-        "geostore": "b12640deba9d3c5012c5359dd5572e2d",
-        "userId": "58e22f662071c01c02f76a0f",
-        "createdAt": "2017-09-26T10:58:50.226Z",
-        "image": "",
-        "datasets": [
-
-        ],
-        "use": {
-
-        },
-        "iso": {
-
-        }
-      }
-    }
-  ]
-}
+<blockquote>
+<p>Sorting areas</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area?sort<span class="o">=</span>name
 </code></pre>
+<blockquote>
+<p>Sorting areas by multiple criteria</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area?sort<span class="o">=</span>name,createdAt
+</code></pre>
+<blockquote>
+<p>Sort by name descending, createdAt ascending</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area?sort<span class="o">=</span>-name,+createdAt
+</code></pre>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> query parameter. Sorting can be done using most fields from the area model. Sorting by nested fields is not supported at the moment.</p>
+
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<p>You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+
 <h2 id="create-area">Create area</h2>
 
 <p>Creates a new area</p>
