@@ -43,7 +43,7 @@ Finally, all geostore objects have a property for storing application specific a
 
 ## Overview of available endpoints
 
-The RW APIs Geostore feature has a number of endpoints to help users interact with geostore objects. Many of them are essentially helpers to make it easy to access geometries from useful data sources, such as:
+The Geostore API consists of a number of endpoints to help users interact with geostore objects. Many of them are essentially helpers to make it easy to access geometries from useful data sources, such as:
 
 - **Administrative areas** (countries, regions, ect.) from the [Database of Global Administrative Areas (GADM)](https://en.wikipedia.org/wiki/GADM).
 - **Protected areas** (world heritage sites, national parks, ect.) from the [The World Database on Protected Areas](https://www.protectedplanet.net/c/world-database-on-protected-areas).
