@@ -293,7 +293,40 @@ Deployments need to be triggered manually, on a per-microservice and per-branch 
 
 While it's rare, tests ran by Jenkins at this stage may also fail, preventing your deployment. In these cases, refer to the Jenkins build log for details, which most of the times can be reproduced locally [running your tests using Docker](#running-the-tests69). If your Jenkins log mentions issues related with disk capacity or network address assignment problems, please reach out to someone with access to the Jenkins VMs and ask for a [docker system prune](https://docs.docker.com/engine/reference/commandline/system_prune/).
 
-## Testing your deployed code
+
+## Infrastructure configuration
+
+While the workflow above will cover most of the changes you'll do as an RW API developer - changes to the code that powers the API - from time to time you'll need to adjust the actual infrastructure on which the API runs. This section covers what you need to know to be able to manage the infrastructure.
+
+### Infrastructure as code using Terraform
+
+Each of the 3 RW API environments lives on a separate AWS account. Aside from scale-related aspects, the 3 infrastructures are meant to be as equal to each other as possible. To achieve this, as well as ease of maintenance, infrastructure is maintained using [Terraform](https://www.terraform.io/), an [infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code) tool. If you are not familiar with Terraform, we recommend learning about it before proceeding.
+
+Due to the structure of the RW API infrastructure, the final architecture is defined by 2 Terraform projects:
+
+- [The first Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform) contains lower level elements, like networking, a [bastion host](https://en.wikipedia.org/wiki/Bastion_host), Jenkins and an AWS EKS Kubernetes cluster. This configuration is automatically applied to each AWS account using [Github Actions](https://github.com/features/actions) when merged to the respective branch. Github actions are also used to run a `terraform plan` preview of changes for each Pull Request.
+- [The second Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform-k8s-infrastructure) mostly contains the configuration for Kubernetes services, as well as some database-level services. Unlike the previous, this Terraform project needs to be applied manually.
+
+The second project relies on the resources provisioned by the first (which is why they [can't be merged into a single one](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources)), so be sure that they are applied in that order. 
+
+While the second Terraform project contains an increasingly large portion of the Kubernetes configuration, there are some additional Kubernetes elements provisioned outside of it.
+
+- [Some resources](https://github.com/resource-watch/api-infrastructure/tree/production/k8s-aws) are provisioned using traditional YAML files, that need to be manually applied using `kubectl apply` once the Kubernetes cluster is up and running. The link above contains not only said YAML files, but also associated documentation.
+- [Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/) are kept in a separate, private repository. Said repository has multiple YAML files, and organized by cluster, and then by Kubernetes namespace. Each of these YAML files needs to be manually applied whenever needed.
+
+### Access to infrastructure
+
+For management or debug purposes, you may need to access the infrastructure resources. Depending on what you want to achieve, there are multiple paths forward:
+
+- The AWS Console is a great tool to view logs (using Cloudwatch), inspect the current structure of a given AWS service and it's detailed configuration. You can also use this UI for things like S3 bucket navigation.
+- The AWS CLI gives you a more powerful tool to achieve the previous goals.
+- If you need to modify the infrastructure, you can do so using the AWS Console or CLI, but note that this is **not recommended**, as any changes you make may be overwritten by Terraform. However, in some scenarios, this may be a good way forward if, for example, you want to experiment with different configuration, before coding one using Terraform.
+- If you need access to any resource *within* the infrastructure (say the Kubernetes control plane a database server, for example), you need to go through the respective [bastion host](https://en.wikipedia.org/wiki/Bastion_host). An [SSH tunnel](https://en.wikipedia.org/wiki/Tunneling_protocol) is commonly used to achieve this - you define a local port that is mapped to a port on a remote host (the service you want to reach), connected through the bastion host, as to overcome the network layer security measures preventing access to said remote hosts from a public network. Note that, to achieve this, you need to have been granted SSH access to the bastion host. Reach out to one of the RW API developers to request access, if you need it.
+- Besides an SSH tunnel, accessing certain resources within the infrastructure require a functional and configured AWS CLI tool, so you may need to refer to the official documentation on that.
+- If you need access to the Kubernetes control plane of the cluster, besides an SSH tunnel and AWS CLI, you will also need `kubectl` configured. The output of the Github actions that run Terraform will contain the `kubectl` configuration details you'll need to be able to interact with each of the RW API Kubernetes clusters. For more information on how too use those elements to configure your locally running `kubectl` application, please refer to the tool's official documentation, or to your favourite search engine.
+
+
+## Testing your changes
 
 With your code live on one of the clusters, you should now proceed to testing it. The type of tests you should run vary greatly with the nature of the changes you did, so common sense and industry best practices apply here:
 
