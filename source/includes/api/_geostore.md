@@ -588,6 +588,8 @@ curl -X GET https://api.resourcewatch.org/v2/geostore/admin/list
 
 ## Getting predefined geostores for commonly used geometries
 
+The endpoints described below allow API users to retrieve geostores representative of the boundaries of countries, GADM admin regions, WDPA and land use areas. These endpoints can be used as utility methods to retrieve commonly used geometries.
+
 ### Get geostore by country code
 
 > Example request pattern

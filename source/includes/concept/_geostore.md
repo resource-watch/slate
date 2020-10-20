@@ -4,13 +4,7 @@ Allowing users to interact with data in the context of geographic data structure
 
 Both these questions imply defining the (geographical) boundaries of the question. In the case of regions these are often expressed as bounding polygons, however as seen in the examples above, geographic structures may also represent lines (such as the coast-line) or point (locations of power-plants). All of which are efficiently represented using the [Vector data model](https://www.spatialpost.com/raster-vector-data-model/).
 
-**Geostore**, **Geostore API**, and **Geostore objects** are the RW APIs way to provide users the ability to add, use, and communicate their geographic vector-data structures. Using the Geostore API, you can define geographic spatial representations using [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON). It allows the storage of [simple geographical features](https://en.wikipedia.org/wiki/Simple_Features), and, being an extension of [JSON](https://es.wikipedia.org/wiki/JSON), its format is familiar to API users. A full discussion about the [ways of representing geographic vector-data](https://en.wikipedia.org/wiki/Comparison_of_GIS_vector_file_formats) is beyond the scope of this documentation.
-
-***Note the conventions of this documentation are that Geostore objects are data structures, for example an object that describes the boundaries of Spain. Geostore represents the entity that stores Geostore objects, for example a database. Geostore API refers to the REST API for interacting with the Geostore and its Geostore objects.***
-
-### Geostore objects
-
-A Geostore object represents a geographic structure defined using [GeoJSON](#geojson-object) which has a [unique identifier](#geostore-id-and-hash). It may also contain summary information about the geometry (such as bounds, area or length), properties used for indexing, and metadata (such as the [provider](#provider-object) of the data).
+The Resource Watch API allows users to define custom vector data structures in [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) format. It allows the storage of [simple geographical features](https://en.wikipedia.org/wiki/Simple_Features), and, being an extension of [JSON](https://es.wikipedia.org/wiki/JSON), its format is familiar to API users. In the context of the RW API, these custom geographical structures are called **geostores**. 
 
 ### GeoJSON object
 
