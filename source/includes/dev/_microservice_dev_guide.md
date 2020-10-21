@@ -304,26 +304,70 @@ Each of the 3 RW API environments lives on a separate AWS account. Aside from sc
 
 Due to the structure of the RW API infrastructure, the final architecture is defined by 2 Terraform projects:
 
-- [The first Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform) contains lower level elements, like networking, a [bastion host](https://en.wikipedia.org/wiki/Bastion_host), Jenkins and an AWS EKS Kubernetes cluster. This configuration is automatically applied to each AWS account using [Github Actions](https://github.com/features/actions) when merged to the respective branch. Github actions are also used to run a `terraform plan` preview of changes for each Pull Request.
-- [The second Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform-k8s-infrastructure) mostly contains the configuration for Kubernetes services, as well as some database-level services. Unlike the previous, this Terraform project needs to be applied manually.
+- [The AWS Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform) contains lower level elements, like networking, a [bastion host](https://en.wikipedia.org/wiki/Bastion_host), Jenkins and an AWS EKS Kubernetes cluster. This configuration is automatically applied to each AWS account using [Github Actions](https://github.com/features/actions) when merged to the respective branch. Github actions are also used to run a `terraform plan` preview of changes for each Pull Request.
+- [The Kubernetes Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform-k8s-infrastructure) mostly contains the configuration for Kubernetes services, as well as some database-level services. Unlike the previous, this Terraform project needs to be applied manually.
 
-The second project relies on the resources provisioned by the first (which is why they [can't be merged into a single one](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources)), so be sure that they are applied in that order. 
+The Kubernetes Terraform project relies on the resources provisioned by the AWS Terraform project (which is why they [can't be merged into a single one](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources)), so be sure that they are applied in that order. 
 
-While the second Terraform project contains an increasingly large portion of the Kubernetes configuration, there are some additional Kubernetes elements provisioned outside of it.
+While the Kubernetes Terraform project contains an increasingly large portion of the overall Kubernetes configuration, there are some additional Kubernetes elements provisioned outside of it.
 
 - [Some resources](https://github.com/resource-watch/api-infrastructure/tree/production/k8s-aws) are provisioned using traditional YAML files, that need to be manually applied using `kubectl apply` once the Kubernetes cluster is up and running. The link above contains not only said YAML files, but also associated documentation.
 - [Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/) are kept in a separate, private repository. Said repository has multiple YAML files, and organized by cluster, and then by Kubernetes namespace. Each of these YAML files needs to be manually applied whenever needed.
 
-### Access to infrastructure
+### Access to infrastructure resources
 
-For management or debug purposes, you may need to access the infrastructure resources. Depending on what you want to achieve, there are multiple paths forward:
+For management or debug purposes, you may need to access the infrastructure resources. Depending on what you want to achieve, there are multiple paths forward. However, for all of them, a common required element is an AWS account with the adequate permissions. These permissions will depend on what you're trying to achieve in particular. The AWS IAM permission mechanism is too powerful and complex to cover here, so be prepared to see a few "permission denied" from time to time, and to discuss with your fellow RW API developers what permissions you are missing that will allow you to access a give resource.
 
-- The AWS Console is a great tool to view logs (using Cloudwatch), inspect the current structure of a given AWS service and it's detailed configuration. You can also use this UI for things like S3 bucket navigation.
-- The AWS CLI gives you a more powerful tool to achieve the previous goals.
-- If you need to modify the infrastructure, you can do so using the AWS Console or CLI, but note that this is **not recommended**, as any changes you make may be overwritten by Terraform. However, in some scenarios, this may be a good way forward if, for example, you want to experiment with different configuration, before coding one using Terraform.
-- If you need access to any resource *within* the infrastructure (say the Kubernetes control plane a database server, for example), you need to go through the respective [bastion host](https://en.wikipedia.org/wiki/Bastion_host). An [SSH tunnel](https://en.wikipedia.org/wiki/Tunneling_protocol) is commonly used to achieve this - you define a local port that is mapped to a port on a remote host (the service you want to reach), connected through the bastion host, as to overcome the network layer security measures preventing access to said remote hosts from a public network. Note that, to achieve this, you need to have been granted SSH access to the bastion host. Reach out to one of the RW API developers to request access, if you need it.
-- Besides an SSH tunnel, accessing certain resources within the infrastructure require a functional and configured AWS CLI tool, so you may need to refer to the official documentation on that.
-- If you need access to the Kubernetes control plane of the cluster, besides an SSH tunnel and AWS CLI, you will also need `kubectl` configured. The output of the Github actions that run Terraform will contain the `kubectl` configuration details you'll need to be able to interact with each of the RW API Kubernetes clusters. For more information on how too use those elements to configure your locally running `kubectl` application, please refer to the tool's official documentation, or to your favourite search engine.
+#### Infrastructure details
+
+Infrastructure details are accessible in multiple ways, depending on exactly what you're looking for. 
+
+If you are looking for a high-level piece of information (like "how many CPUs are we running?"), you may use the AWS Console directly, as it provides a simple UI for a lot of information. Alternatively, investigating the Terraform files are a good way to learn about what services are configured overall, without having to browse every page of the AWS Console, or worry that you may be looking in the wrong AWS Region.
+
+Finally, for very low level details, AWS has a CLI tool that may expose information not available through the channels mentioned above.
+
+In all scenarios, if you are looking to permanently modify the infrastructure, keep in mind that the Terraform projects are kings here, and any change made using either the AWS Console or AWS CLI that is not persisted to Terraform should be considered ephemeral, as it may be overwritten at any time without prior warning. You may, however, modify the infrastructure using the AWS Console or AWS CLI as a means of experimentation, before projecting your final changes on Terraform. 
+
+#### Infrastructure access
+
+Infrastructure access is often need as a way to access things like Kubernetes, database dumps, system status, etc. It's not an end in itself, but rather a necessary step to achieve other goals. To configure your infrastructure access, you'll need two elements. 
+
+The first of which is a running and configured [AWS CLI](https://aws.amazon.com/cli/) tool installation. The AWS CLI tool has comprehensive documentation, which should also cover the install steps for your particular operating system. To configure it you'll also need the AWS account covered in the previous section.
+
+The second element you'll need is access to the [bastion host](https://en.wikipedia.org/wiki/Bastion_host). If you are not familiar with bastion hosts, we recommend reading about it before proceeding but, in a nutshell, a bastion host works as a single point of entry into key parts of the infrastructure, which are otherwise inaccessible from the public internet. A way to contact a service running in the infrastructure from the outside world is creating an SSH tunnel that proxies traffic to that service through the bastion host, thus bypassing this restriction. For this to work, you need SSH access to the bastion host, which a fellow RW API developer may grant you.
+
+
+#### Database access
+
+Access to databases (to extract a dump for testing, for example) depends on how said database service is configured. At the time of writing, some database services run as AWS managed services, while other live inside the Kubernetes cluster, as Kubernetes services. 
+
+For database services provided by AWS managed services, the only necessary steps are the ones covered previously on the [Infrastructure access](#infrastructure-access) section. After that, you should be able to reach the host of the database service, per details provided by the service itself. You may also need authentication details for a specific service, which you may find either on the Terraform configuration, the Kubernetes secrets files or AWS secret storage.
+
+For access to database services running as a Kubernetes service, you'll need Kubernetes access (which we will cover next). Once you have that configured, you should configure a [Kubernetes port forward](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) to map said service to a port of your local host. Access credentials are typically available on the Kubernetes secrets files.
+
+
+#### Kubernetes access
+
+The RW API runs in a AWS EKS Kubernetes cluster, which can be accessed using the [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) command line tool, which you should install on your computer. You also need the elements previously covered in the [Infrastructure access](#infrastructure-access) section, so be sure that your AWS CLI is installed and configured, and that you have a way to communicate with the infrastructure's inner elements.
+
+To configure `kubectl`, you will need some details that are specific to the kubernetes cluster you're trying to access. Said details are available as the output of the `terraform apply` command that's executed by Github Actions for the [AWS Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform). Be mindful that, amongst those details, is the URL through which `kubectl` should contact the Kubernetes control plane. Given that you are using an SSH tunnel, you should:
+
+- Modify the Kubernetes URL in the `kubectl` by adding a custom port value to it (say 4433, for the sake of example)
+- Modify the you local hosts file so that the Kubernetes URL is resolved to your 127.0.0.1 IP (or equivalent)
+- Create a SSH tunnel that maps your local port (the 4433 from the example above) to the actual EKS URL and port, proxied through the bastion host.
+
+
+```shell
+ssh -N -L 4433:<EKS URL>:443 <bastion host user>@<bastion host URL>
+```
+Here's an example of how you could create said SSH tunnel:
+
+
+#### Log access
+
+Logs for the whole infrastructure are centralized in AWS Cloudwatch. Optionally, if you find it more convenient, you can opt to use `kubectl` to access logs for a particular pod or container, but you'll also find that output on AWS Cloudwatch.
+
+Certain AWS managed services' logs will only be available on Cloudwatch, so we encourage you to learn how to navigate it.
 
 
 ## Testing your changes
