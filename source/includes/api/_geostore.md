@@ -62,17 +62,17 @@ As these data sets are periodically updated, these "helper" endpoints are update
 
 | Method | Path                                | Description                                                                   |
 |--------|-------------------------------------|------------------------------------------------------------------------------ |
-| POST   | `/v1/geostore`                      | [Create a geostore object](#create-a-geostore-object)                         |
-| GET    | `/v2/geostore/:id`                  | [Get a geostore object by Geostore id](#get-a-geostore-object-by-geostore-id) |
-| POST   | `/v2/geostore/find-by-ids`          | [Get geostore objects by Geostore ids](#get-geostore-objects-by-geostore-ids) |
-| GET    | `/v2/geostore/:id/view`             | [Get a geostore object by Geostore id and view at GeoJSON.io](#get-a-geostore-object-by-geostore-id-and-view-at-geojson-io) |
-| GET    | `/v2/geostore/admin/list`           | [Get all Geostore ids, names and country codes](#get-all-geostore-ids-names-and-country-codes) |
-| GET    | `/v2/geostore/admin/:iso`           | [Get a geostore object by country code](#get-country-code)                    |
-| GET    | `/v2/geostore/admin/:iso/:id1`      | [Get a geostore object by country code and GADM admin 1 id](#get-a-geostore-object-by-country-code-and-gadm-admin-1-id) |
-| GET    | `/v2/geostore/admin/:iso/:id1/:id2` | [Get a geostore object by country code, GADM admin 1 and admin 2 ids](#get-geostore-by-country-code-gadm-admin-1-and-admin-2-ids) |
-| GET    | `/v2/geostore/wdpa/:id`             | [Get a geostore object by WDPA id](#get-a-geostore-object-by-wdpa-id)         |
-| GET    | `/v2/geostore/use/:name/:id`        | [Get a geostore object by Land Use Type name and id](#get-a-geostore-object-by-land-use-type-name-and-id) |
-| POST   | `/v1/geostore/area`                 | [Calculate the area of a provided Geostore object](#calculate-the-area-of-a-geostore-object) |
+| POST   | `/v1/geostore`                      | [Create a geostore object](/index-rw.html#create-a-geostore-object)                         |
+| GET    | `/v2/geostore/:id`                  | [Get a geostore object by Geostore id](/index-rw.html#get-a-geostore-object-by-geostore-id) |
+| POST   | `/v2/geostore/find-by-ids`          | [Get geostore objects by Geostore ids](/index-rw.html#get-geostore-objects-by-geostore-ids) |
+| GET    | `/v2/geostore/:id/view`             | [Get a geostore object by Geostore id and view at GeoJSON.io](/index-rw.html#get-geostore-by-geostore-id-and-view-at-geojson-io) |
+| GET    | `/v2/geostore/admin/list`           | [Get all Geostore ids, names and country codes](/index-rw.html#get-all-geostore-ids-names-and-country-codes) |
+| GET    | `/v2/geostore/admin/:iso`           | [Get a geostore object by country code](/index-rw.html#get-geostore-by-country-code)                    |
+| GET    | `/v2/geostore/admin/:iso/:id1`      | [Get a geostore object by country code and GADM admin 1 id](/index-rw.html#get-geostore-by-country-code-and-gadm-admin-1-id) |
+| GET    | `/v2/geostore/admin/:iso/:id1/:id2` | [Get a geostore object by country code, GADM admin 1 and admin 2 ids](/index-rw.html#get-geostore-by-country-code-gadm-admin-1-and-admin-2-ids) |
+| GET    | `/v2/geostore/wdpa/:id`             | [Get a geostore object by WDPA id](/index-rw.html#get-geostore-by-world-database-on-protected-areas-id)         |
+| GET    | `/v2/geostore/use/:name/:id`        | [Get a geostore object by Land Use Type name and id](/index-rw.html#get-geostore-by-land-use-type-keyword-and-id) |
+| POST   | `/v1/geostore/area`                 | [Calculate the area of a provided Geostore object](/index-rw.html#calculate-the-area-of-a-geostore-object) |
 
 ## Create a geostore object
 
@@ -595,7 +595,7 @@ The endpoints described below allow API users to retrieve geostores representati
 > Example request pattern
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v2/geostore/admin/<iso>simplify=<value>
+curl -X GET https://api.resourcewatch.org/v2/geostore/admin/<iso>
 ```
 
 > Example URL request
