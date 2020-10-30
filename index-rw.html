@@ -353,7 +353,7 @@
 
 <h2 id="logging-in-or-registering-a-new-user-account">Logging in or registering a new user account</h2>
 
-<p>The easiest way to access your account is through the <a href="https://api.resourcewatch.org/auth/sign-up">login page</a> of the RW API. Here you can authenticate using your existing Facebook, Google or Twitter account, or you can register or login using your email address and password. </p>
+<p>The easiest way to access your account is through the <a href="https://api.resourcewatch.org/auth/sign-up">login page</a> of the RW API. Here you can authenticate using your existing Facebook, Google, Twitter or Apple account, or you can register or login using your email address and password. </p>
 
 <p><em>Note: if you create a new user account using email and password, a confirmation link will be sent to the email address you provided. Your account will only be active once you&rsquo;ve clicked the link in that email, so ensure that you use a valid email address. If you don&rsquo;t receive this email message within a few minutes, check your spam.</em></p>
 
@@ -367,7 +367,7 @@
 
 <p>To get you token, you first need to login using your browser and the steps above. No matter which login strategy you prefer, once you&rsquo;ve logged in, you can visit <a href="https://api.resourcewatch.org/auth/generate-token">https://api.resourcewatch.org/auth/generate-token</a> to get your token.</p>
 
-<p><strong>Warning</strong>: treat a token in the same way you would treat a password - don&rsquo;t share it and always store it in a safe place (like a password manager, for example). A token is sufficient to authenticate you on the RW API, meaning that, if someone else gains access to your token, they&rsquo;ll be able to do anything that you would be able to do on the RW API, even without access to your Facebook/Google/Twitter login or your email and password.</p>
+<p><strong>Warning</strong>: treat a token in the same way you would treat a password - don&rsquo;t share it and always store it in a safe place (like a password manager, for example). A token is sufficient to authenticate you on the RW API, meaning that, if someone else gains access to your token, they&rsquo;ll be able to do anything that you would be able to do on the RW API, even without access to your Facebook/Google/Twitter/Apple login or your email and password.</p>
 
 <h2 id="how-to-use-your-private-token-to-authenticate-a-request">How to use your private token to authenticate a request</h2>
 
@@ -13797,7 +13797,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
 
 <h2 id="login-3rd-party-oauth">Login (3rd party oauth)</h2>
 
-<p>Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Twitter or Google. These 3 authentication mechanisms use <a href="https://en.wikipedia.org/wiki/OAuth">OAuth</a> access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.</p>
+<p>Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Twitter, Apple or Google. These 4 authentication mechanisms use <a href="https://en.wikipedia.org/wiki/OAuth">OAuth</a> access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.</p>
 
 <p>For each provider, there&rsquo;s a corresponding endpoint that starts the authentication flow. These endpoints simply redirect the user to the respective provider page, along with some data that allows the provider to contact the RW API when the login process is finished. You can forward users to these endpoints if, for example, you want to have your own login links on your UI.</p>
 
@@ -13815,15 +13815,23 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <ul>
 <li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/google</code> - Starts authentication using the configured Google settings</li>
 <li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/google/callback</code> - Callback used once Google auth is done</li>
-<li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/google/token</code> - Endpoint that expects the Google token used by the API to validate the user session.</li>
+<li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/google/token?access_token=&lt;Google token&gt;</code> - Endpoint that expects the Google token used by the API to validate the user session. It</li>
 </ul>
 
 <h3 id="3rd-party-authentication-using-facebook">3rd party authentication using Facebook</h3>
 
 <ul>
-<li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/facebook</code> - Starts authentication using the configured Google settings</li>
+<li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/facebook</code> - Starts authentication using the configured Facebook settings</li>
 <li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/facebook/callback</code> - Callback used once Facebook auth is done</li>
-<li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/facebook/token</code> - Endpoint that expects the Facebook token used by the API to validate the user session.</li>
+<li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/facebook/token?access_token=&lt;Facebook token&gt;</code> - Endpoint that expects the Facebook token used by the API to validate the user session.</li>
+</ul>
+
+<h3 id="3rd-party-authentication-using-apple">3rd party authentication using Apple</h3>
+
+<ul>
+<li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/apple</code> - Starts authentication using the configured Apple settings</li>
+<li>POST <code class="prettyprint">&lt;BASE API URL&gt;/auth/apple/callback</code> - Callback used once Apple auth is done</li>
+<li>GET <code class="prettyprint">&lt;BASE API URL&gt;/auth/apple/token?access_token=&lt;Apple JWT token&gt;</code> - Endpoint that expects the Apple JWT token obtained by the user while authenticating using another application. It validates that token using Apple&rsquo;s services, and if valid, creates/updates the user&rsquo;s RW API account. It returns a RW API JWT token.</li>
 </ul>
 
 <h2 id="registration">Registration</h2>
@@ -13878,7 +13886,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
 </code></pre>
 <p>Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.</p>
 
-<p>The combination of both <code class="prettyprint">user email</code> and <code class="prettyprint">provider</code> must be unique - a given email address may be associated with multiple, non-related user accounts by using different authentication providers (email+password, facebook, twitter, etc).</p>
+<p>The combination of both <code class="prettyprint">user email</code> and <code class="prettyprint">provider</code> must be unique - a given email address may be associated with multiple, non-related user accounts by using different authentication providers (email+password, facebook, twitter, apple, etc).</p>
 
 <p>For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.</p>
 
@@ -14246,7 +14254,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <td>provider</td>
 <td>Filter returned users by their provider.</td>
 <td>String</td>
-<td><code class="prettyprint">local</code>, <code class="prettyprint">google</code>, <code class="prettyprint">twitter</code> or <code class="prettyprint">facebook</code></td>
+<td><code class="prettyprint">local</code>, <code class="prettyprint">google</code>, <code class="prettyprint">twitter</code>, <code class="prettyprint">facebook</code> or <code class="prettyprint">apple</code></td>
 </tr>
 <tr>
 <td>role</td>
