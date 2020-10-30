@@ -169,7 +169,7 @@ Error code     | Error message  | Description
 
 ## Login (3rd party oauth)
 
-Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Twitter or Google. These 3 authentication mechanisms use [OAuth](https://en.wikipedia.org/wiki/OAuth) access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.
+Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Twitter, Apple or Google. These 4 authentication mechanisms use [OAuth](https://en.wikipedia.org/wiki/OAuth) access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.
 
 For each provider, there's a corresponding endpoint that starts the authentication flow. These endpoints simply redirect the user to the respective provider page, along with some data that allows the provider to contact the RW API when the login process is finished. You can forward users to these endpoints if, for example, you want to have your own login links on your UI.
 
@@ -184,13 +184,19 @@ Keep in mind that, depending on the `origin` application you specify, different 
 
 - GET `<BASE API URL>/auth/google` - Starts authentication using the configured Google settings
 - GET `<BASE API URL>/auth/google/callback` - Callback used once Google auth is done
-- GET `<BASE API URL>/auth/google/token` - Endpoint that expects the Google token used by the API to validate the user session.
+- GET `<BASE API URL>/auth/google/token?access_token=<Google token>` - Endpoint that expects the Google token used by the API to validate the user session. It
 
 ### 3rd party authentication using Facebook
 
-- GET `<BASE API URL>/auth/facebook` - Starts authentication using the configured Google settings
+- GET `<BASE API URL>/auth/facebook` - Starts authentication using the configured Facebook settings
 - GET `<BASE API URL>/auth/facebook/callback` - Callback used once Facebook auth is done
-- GET `<BASE API URL>/auth/facebook/token` - Endpoint that expects the Facebook token used by the API to validate the user session.
+- GET `<BASE API URL>/auth/facebook/token?access_token=<Facebook token>` - Endpoint that expects the Facebook token used by the API to validate the user session.
+
+### 3rd party authentication using Apple
+
+- GET `<BASE API URL>/auth/apple` - Starts authentication using the configured Apple settings
+- POST `<BASE API URL>/auth/apple/callback` - Callback used once Apple auth is done
+- GET `<BASE API URL>/auth/apple/token?access_token=<Apple JWT token>` - Endpoint that expects the Apple JWT token obtained by the user while authenticating using another application. It validates that token using Apple's services, and if valid, creates/updates the user's RW API account. It returns a RW API JWT token.
 
 ## Registration
 
@@ -251,7 +257,7 @@ curl -X POST "https://api.resourcewatch.org/auth/sign-up?origin=rw" \
 
 Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.
 
-The combination of both `user email` and `provider` must be unique - a given email address may be associated with multiple, non-related user accounts by using different authentication providers (email+password, facebook, twitter, etc).
+The combination of both `user email` and `provider` must be unique - a given email address may be associated with multiple, non-related user accounts by using different authentication providers (email+password, facebook, twitter, apple, etc).
 
 For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.
 
@@ -539,7 +545,7 @@ Filter         | Description                                                    
 -------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------
 name           | Filter returned users by their name.                                         | String      | any valid text
 email          | Filter returned users by their email address. Keep in mind that user accounts that rely on 3rd party authentication mechanisms may not have an email address. | String      | any valid text
-provider       | Filter returned users by their provider.                                     | String      | `local`, `google`, `twitter` or `facebook`
+provider       | Filter returned users by their provider.                                     | String      | `local`, `google`, `twitter`, `facebook` or `apple`
 role           | Filter returned users by their role.                                         | String      | `USER`, `MANAGER` or `ADMIN`
 app            | Filter returned users by their app. Multiple values can be passed, separated by commas, in which case any user associated with at least one of the applications will be returned. Pass `all` to show users for all apps. | String      | any valid text
 

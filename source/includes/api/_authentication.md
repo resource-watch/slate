@@ -6,7 +6,7 @@ In this section you will learn the very basics of how you can quickly create a u
 
 ## Logging in or registering a new user account
 
-The easiest way to access your account is through the [login page](https://api.resourcewatch.org/auth/sign-up) of the RW API. Here you can authenticate using your existing Facebook, Google or Twitter account, or you can register or login using your email address and password. 
+The easiest way to access your account is through the [login page](https://api.resourcewatch.org/auth/sign-up) of the RW API. Here you can authenticate using your existing Facebook, Google, Twitter or Apple account, or you can register or login using your email address and password. 
 
 *Note: if you create a new user account using email and password, a confirmation link will be sent to the email address you provided. Your account will only be active once you've clicked the link in that email, so ensure that you use a valid email address. If you don't receive this email message within a few minutes, check your spam.*
 
@@ -20,7 +20,7 @@ The RW API uses JWT [(JSON Web Tokens)](https://tools.ietf.org/html/rfc7519) tok
 
 To get you token, you first need to login using your browser and the steps above. No matter which login strategy you prefer, once you've logged in, you can visit [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to get your token.
 
-**Warning**: treat a token in the same way you would treat a password - don't share it and always store it in a safe place (like a password manager, for example). A token is sufficient to authenticate you on the RW API, meaning that, if someone else gains access to your token, they'll be able to do anything that you would be able to do on the RW API, even without access to your Facebook/Google/Twitter login or your email and password.
+**Warning**: treat a token in the same way you would treat a password - don't share it and always store it in a safe place (like a password manager, for example). A token is sufficient to authenticate you on the RW API, meaning that, if someone else gains access to your token, they'll be able to do anything that you would be able to do on the RW API, even without access to your Facebook/Google/Twitter/Apple login or your email and password.
 
 ## How to use your private token to authenticate a request
 

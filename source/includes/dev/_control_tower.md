@@ -607,7 +607,7 @@ Adds support for storing session data on MongoDB
 
 ### Oauth plugin
 
-User management and authentication plugin. Supports email+password based registration, as well as Facebook, Twitter and Google+ oauth-based authentication.
+User management and authentication plugin. Supports email+password based registration, as well as Facebook, Twitter, Apple and Google oauth-based authentication.
 
 
 ### Redis cache
