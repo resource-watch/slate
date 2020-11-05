@@ -305,7 +305,7 @@ Each of the 3 RW API environments lives on a separate AWS account. Aside from sc
 Due to the structure of the RW API infrastructure, the final architecture is defined by 2 Terraform projects:
 
 - [The AWS Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform) contains lower level elements, like networking, a [bastion host](https://en.wikipedia.org/wiki/Bastion_host), Jenkins and an AWS EKS Kubernetes cluster. This configuration is automatically applied to each AWS account using [Github Actions](https://github.com/features/actions) when merged to the respective branch. Github actions are also used to run a `terraform plan` preview of changes for each Pull Request.
-- [The Kubernetes Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform-k8s-infrastructure) mostly contains the configuration for Kubernetes services, as well as some database-level services. Unlike the previous, this Terraform project needs to be applied manually.
+- [The Kubernetes Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform-k8s-infrastructure) mostly contains the configuration for Kubernetes services, as well as some database-level services. Unlike the previous, this Terraform project needs to be applied manually, using the `terraform apply` command.
 
 The Kubernetes Terraform project relies on the resources provisioned by the AWS Terraform project (which is why they [can't be merged into a single one](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources)), so be sure that they are applied in that order. 
 
@@ -336,6 +336,11 @@ The first of which is a running and configured [AWS CLI](https://aws.amazon.com/
 
 The second element you'll need is access to the [bastion host](https://en.wikipedia.org/wiki/Bastion_host). If you are not familiar with bastion hosts, we recommend reading about it before proceeding but, in a nutshell, a bastion host works as a single point of entry into key parts of the infrastructure, which are otherwise inaccessible from the public internet. A way to contact a service running in the infrastructure from the outside world is creating an SSH tunnel that proxies traffic to that service through the bastion host, thus bypassing this restriction. For this to work, you need SSH access to the bastion host, which a fellow RW API developer may grant you.
 
+```shell script
+ssh -N -L <local port>:<target service address>:<target service port> <bastion host user>@<bastion host address>
+```
+
+To create an SSH tunnel under a unix-based system, you'll need to run a command like the example here.
 
 #### Database access
 
