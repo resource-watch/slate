@@ -884,7 +884,7 @@ This plugin is disabled and is no longer supported.
 
           <h1 id="microservice-development-guide">Microservice development guide</h1>
 
-<p>In this chapter, we&rsquo;ll cover additional details that you, as a RW API developer, should keep in mind when developing your microservice. We&rsquo;ll focus not only on the technical requirements you need to meet for your microservice to communicate with the remaining RW API internal components, but also discuss the policy surrounding development for the RW API, as a way to achieve a certain degree of consistency across a naturally heterogeneous microservice-based system. </p>
+<p>In this chapter, we&rsquo;ll cover additional details that you, as a RW API developer, should keep in mind when developing your microservice. We&rsquo;ll focus not only on the technical requirements you need to meet for your microservice to communicate with the remaining RW API internal components, but also discuss the policy surrounding development for the RW API, as a way to achieve a certain degree of consistency across a naturally heterogeneous microservice-based system.</p>
 
 <aside class="notice">
 Control Tower, which is mentioned throughout these docs, will be replaced soon with an equivalent but alternative solution. While we will aim to have this transition be as seamless as possible, you may need to adapt your code once this is done.
@@ -892,9 +892,383 @@ Control Tower, which is mentioned throughout these docs, will be replaced soon w
 
 <h2 id="microservice-overview">Microservice overview</h2>
 
-<p>As described in the <a href="#api-architecture">API Architecture</a> section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API&rsquo;s core microservices are built using <a href="https://nodejs.org">nodejs</a>, with <a href="https://www.python.org/">python</a> and <a href="https://rubyonrails.org/">Rails</a> being distant 2nd and 3rd respectively. This is due to personal preference of the team behind the API, as there really isn&rsquo;t a technical reason or limitation preventing the creation of microservices in PHP, Go, Elixir, etc.</p>
+<p>As described in the <a href="#api-architecture">API Architecture</a> section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API&rsquo;s core microservices are built using <a href="https://nodejs.org">nodejs</a>, with <a href="https://www.python.org/">Python</a> and <a href="https://rubyonrails.org/">Rails</a> being distant 2nd and 3rd respectively. New microservices being developed should respect this hierarchy when it comes to choosing a development language, and the adoption of a different stack should be validated with the remaining development team members beforehand.</p>
 
 <p>In this whole section, we will use code examples from the <a href="https://github.com/resource-watch/dataset/">Dataset microservice</a>, which is built using nodejs. We will discuss the general principles, which should apply to all implementations, as well as implementation details, which may apply to your scenario if you are also using nodejs, or that may not apply if you are using something else.</p>
+
+<h2 id="development-lifecycle">Development lifecycle</h2>
+
+<p>As a developer of the RW API, your ultimate goal is to make an improvement to the API source code and push it to the production environment. Of course, this is an overly simplistic description of a complex process, and the goal of the next section is to dive deeper into the steps you need to take to achieve that. Breaking this down into a more detailed list, these are the high-level steps you&rsquo;ll need to take in order to contribute to the RW API:</p>
+
+<ul>
+<li>Checkout the code</li>
+<li>Run it locally</li>
+<li>Make a feature branch</li>
+<li>Write your code</li>
+<li>Test your feature branch locally</li>
+<li>Push your code to Github</li>
+<li>Make a PR from your feature branch to <code class="prettyprint">dev</code></li>
+<li>Wait for Travis&rsquo; approval, then merge your code</li>
+<li>Deploy your changes to the <code class="prettyprint">dev</code> cluster for testing in a real-world infrastructure.</li>
+<li>Make a PR from <code class="prettyprint">dev</code> to <code class="prettyprint">staging</code>, wait for Travis&rsquo; approval, then merge your code.</li>
+<li>Make an announcement about an upcoming changes, deploy to <code class="prettyprint">staging</code> and test your code with real-world data.</li>
+<li>Make a PR from <code class="prettyprint">staging</code> to <code class="prettyprint">production</code>, wait for Travis&rsquo; approval, then merge your code.</li>
+<li>Make an announcement about an upcoming changes, deploy to <code class="prettyprint">production</code> and test your code.</li>
+</ul>
+
+<p>In the next sections we&rsquo;ll dive deeper into the details of each step. </p>
+
+<h2 id="setting-up-a-development-environment">Setting up a development environment</h2>
+
+<p>In this section, we&rsquo;ll cover the details of how you can configure your operating system to be used as a development environment for the <a href="https://github.com/resource-watch/dataset/">Dataset microservice</a>, which is built using nodejs. These instructions will apply, without major changes, to all other nodejs-based microservices. For microservices based on Python or Rails, and when using <a href="https://www.docker.com/">Docker</a>, you should also be able to use these instructions. Native execution for Python and Rails microservices is done using equivalent commands, which we&rsquo;ll outline as we go. </p>
+
+<p>Note that these instructions aim at giving you the details about <strong>what&rsquo;s specific to the RW API</strong>, and it&rsquo;s not a step-by-step list of commands you can copy-paste. For example, we will not cover the details of how to install dependencies - that&rsquo;s something best answered by that particular piece of software&rsquo;s documentation page for your operating system, which you can easily find with your favourite search engine.</p>
+
+<p>Also, when applying these instruction to different microservices, be sure to review their respective <code class="prettyprint">README.md</code> file for a comprehensive list of dependencies you&rsquo;ll need, or other specific details about its setup process.</p>
+
+<h3 id="execution-native-vs-docker">Execution - native vs Docker</h3>
+
+<p>All microservices can be executed in two ways: natively or using <a href="https://www.docker.com/">Docker</a>. If you are not familiar with Docker, we suggest briefly learning about it does before proceeding. In a nutshell, it simplifies setup and execution, at the expense of varying performance hit, depending on your operating system. Here are a few key points you should consider when making a decision between executing natively or using Docker:  </p>
+
+<ul>
+<li>When using Docker, you typically do not need to set up any other dependency for any microservice - Docker will take care of that for you.</li>
+<li>On Windows and Mac, Docker will run a small Linux virtual machine behind the scenes, which will mean a noticeable increase in resource consumption and a reduction in runtime performance, when compared to native execution. When using linux, that does not happen, and runtime performance and resource usage is roughly equivalent to native execution.</li>
+<li>Docker does have its quirks, and it does come with a bootstrap time penalty when running your code, so if you are not very familiar with it, or are used to native execution of nodejs, Python or Rails code, it may pay off to use that approach. </li>
+<li>The final service will run inside a Docker container. When using Docker containers during development, you reduce the risks of &ldquo;it worked on my machine&rdquo; type of problems.</li>
+</ul>
+
+<h3 id="using-native-execution">Using native execution</h3>
+
+<h4 id="getting-the-code">Getting the code</h4>
+
+<p>The first step will be getting the source code from <a href="https://github.com/resource-watch/dataset/">Github</a> to your computer using the <a href="https://git-scm.com/">Git</a> CLI (or equivalent). </p>
+<pre class="highlight shell"><code>git clone git@github.com:resource-watch/dataset.git
+</code></pre>
+<h4 id="installing-dependencies">Installing dependencies</h4>
+
+<p>In the source code you just downloaded, you&rsquo;ll find a <code class="prettyprint">README.md</code> file with detailed instruction for the microservice, including dependencies you&rsquo;ll need to install.</p>
+
+<p>For all Node.js microservices, you&rsquo;ll need to install <a href="https://nodejs.org/en/">Node.js</a> and <a href="https://yarnpkg.com">Yarn</a>. Rather than installing Node.js from the official website, we recommend using <a href="https://github.com/nvm-sh/nvm">nvm</a>, which allows you to easily install and manage different Node.js versions on your computer, since different microservices may require different versions of Node.js to run.</p>
+
+<aside class="notice">
+For Python, you can use something like <a href="https://github.com/pyenv/pyenv">pyenv</a>, and <a href="https://rvm.io/">rvm</a> for Rails-based microservices.
+</aside>
+<pre class="highlight shell"><code><span class="c"># Install Node.js v12 for the dataset microservice</span>
+nvm install 12
+
+<span class="c"># Switch to the v12 installation</span>
+nvm use 12
+</code></pre>
+<p>Once you&rsquo;ve installed a version manager like nvm, you need to check which version of the language to install. For Node.js microservices, the <code class="prettyprint">package.json</code> file typically has a <code class="prettyprint">engine</code> value which will tell you which version(s) of Node.js are supported. Another place where you&rsquo;ll find this info (which also works for other languages) is the content of the <code class="prettyprint">Dockerfile</code> (typically in the first line) - in the dataset microservice, for example, <code class="prettyprint">FROM node:12-alpine</code> means this microservice runs on Node.js v12.</p>
+<pre class="highlight shell"><code><span class="c"># To install dependencies, navigate to the directory where you cloned the microservice and run:</span>
+yarn
+</code></pre>
+<p><a href="https://yarnpkg.com">Yarn</a> is a package manager for Node.js applications (a spiritual equivalent to <a href="https://pypi.org/project/pip/">pip</a> for Python or <a href="https://bundler.io/">Bundler</a> for Ruby). Once it&rsquo;s installed, be sure to use it to install the necessary libraries (see right).</p>
+
+<aside class="notice">
+Windows users: If after running <code>yarn</code> you get an error where <code>gyp</code> cannot find Visual Studio, the solution <i>should</i> be as easy as running <code>yarn global add windows-build-tools</code> from an admin command prompt.
+</aside>
+ 
+
+<p>The microservice&rsquo;s <code class="prettyprint">README</code> may specify additional dependencies you need to install. <a href="https://www.mongodb.com/">MongoDB</a>, for example, is a common dependency of many RW API microservices, with applications like <a href="https://www.postgresql.org/">Postgres</a>, <a href="https://redis.io/">Redis</a>, <a href="https://www.rabbitmq.com/">RabbitMQ</a> or <a href="https://www.elastic.co/home">Elasticsearch</a> also being required on certain microservices. If a version number is not identified on the <code class="prettyprint">README.md</code> file, the <code class="prettyprint">docker-compose-test.yml</code> file may help. <code class="prettyprint">image: mongo:3.4</code> means this microservice depends on MongoDB v3.4.</p>
+
+<p>Besides these dependencies, microservices may also depend on the Control Tower gateway, and other microservices: </p>
+
+<ul>
+<li>As we&rsquo;ll cover in the <a href="#registering-on-control-tower">Registering on Control Tower section</a>, on bootstrap, a microservice will register itself in Control Tower so it can expose its endpoints to the public facing API - but this behavior can be disabled, as we&rsquo;ll see in a moment.</li>
+<li>Microservices expect user data to be provided by Control Tower in a specific format - a workaround for this is passing this data yourself when calling your microservice endpoints</li>
+<li><a href="#requests-to-other-microservices">Requests to other microservices</a> are routed through Control Tower, so if the endpoints you will be developing rely on other microservices, you need to set up both Control Tower and those microservices locally.</li>
+<li>Control Tower implements certain endpoints related to user management, which may also be required by the endpoints you&rsquo;ll be working on.</li>
+</ul>
+
+<p>If your endpoint does not rely on other microservices, and you don&rsquo;t rely on or can spoof the user data provided by Control Tower, you can set the <code class="prettyprint">CT_REGISTER_MODE</code> environment variable to a value other than <code class="prettyprint">auto</code> to disable the automatic registration on startup, thus removing the dependency on Control Tower. However, this is not recommended, as using Control Tower will have your development environment resemble the production setup, thus potentially highlighting any issues you may otherwise miss.</p>
+
+<p>To set up Control Tower, follow these same instructions, as the process is the same as for any nodejs microservice.</p>
+
+<h4 id="configuration">Configuration</h4>
+
+<p>With the dependencies set up, it&rsquo;s time to configure the microservice. This is done using <a href="https://en.wikipedia.org/wiki/Environment_variable">environment variables</a> (env vars) which you can define in multiple ways, depending on your OS, way of executing the code (e.g. many IDEs have a &ldquo;Run&rdquo; feature that allow configuring environment variables using a GUI) and personal preference. For this tutorial, and going forward, we&rsquo;ll assume you&rsquo;ll run the code from a terminal and specify the environment variables inline.</p>
+<pre class="highlight shell"><code><span class="nv">NODE_ENV</span><span class="o">=</span>production <span class="nv">CT_REGISTER_MODE</span><span class="o">=</span>none &lt;more variables&gt; &lt;your <span class="nb">command</span>&gt;
+</code></pre>
+<p>To find out more about which env vars you can/need to specify, refer to the microservice&rsquo;s <code class="prettyprint">README.md</code> file, as it typically documents the main variables available to you. Nodejs-base microservices will often have a full list in the <code class="prettyprint">config/custom-environment-variables.json</code> file. The <code class="prettyprint">docker-compose-test.yml</code> and <code class="prettyprint">docker-compose-develop.yml</code> files contain usages of said variables, and may be helpful if you are looking for an example or an undocumented variable.</p>
+
+<p>As a rule of thumb, env vars configure things like databases address and credentials, 3rd party services (for example, an AWS S3 bucket URL or AWS access credentials), or Control Tower URL (only necessary if you decide to use it).</p>
+
+<h4 id="starting-the-microservice">Starting the microservice</h4>
+<pre class="highlight shell"><code><span class="c"># Starting a Node.js microservice:</span>
+yarn start
+
+<span class="c"># Node.js using inline environment variables:</span>
+<span class="nv">NODE_ENV</span><span class="o">=</span>production <span class="nv">CT_REGISTER_MODE</span><span class="o">=</span>none &lt;your other environment variables&gt; yarn start
+
+<span class="c"># Starting a Python microservice may look something like this:</span>
+python main.py
+
+<span class="c"># Rails-based microservices can rely on the traditional Rails CLI:</span>
+rails server
+</code></pre>
+<p>Once you have determined the values you&rsquo;ll need to run your microservice with the desired configuration, you should have everything ready to run it. For nodejs based microservice like Dataset, you can do this by running <code class="prettyprint">yarn start</code>. For other languages, the startup command will be different (see right).</p>
+
+<p>You can also review the <code class="prettyprint">entrypoint.sh</code> file content, under the <code class="prettyprint">start</code> or <code class="prettyprint">develop</code> sections, as it will contain the command you need to execute to run the code natively.</p>
+
+<p>The application should output useful information, like database connection status and HTTP port. Depending on your configuration for the Control Tower auto registration, it will also output the result of that process. Overall, if no error message is produced, the microservice should be up and running, and available at the port specified by its output.</p>
+
+<h4 id="running-the-tests">Running the tests</h4>
+<pre class="highlight shell"><code><span class="c"># Running tests for a Node.js microservice:</span>
+yarn <span class="nb">test</span>
+
+<span class="c"># Node.js with environment variables:</span>
+<span class="nv">NODE_ENV</span><span class="o">=</span><span class="nb">test </span><span class="nv">CT_REGISTER_MODE</span><span class="o">=</span>none &lt;your other environment variables&gt; yarn <span class="nb">test</span>
+
+<span class="c"># Python:</span>
+<span class="nb">exec </span>pytest &lt;<span class="nb">test </span>folder&gt;
+
+<span class="c"># Ruby:</span>
+bundle <span class="nb">exec </span>rspec spec
+</code></pre>
+<p>Most microservices (hopefully all in the future) come with tests included. Running these tests can help you identify issues with your code changes, and are required for any new modifications merged into the RW API. It&rsquo;s recommended that you run tests locally before pushing changes to Github.</p>
+
+<p>Tests sometimes mock certain dependencies, like external 3rd party service, but often require an actually running database, as a native execution would (think MongoDB or Postgres). Check the <code class="prettyprint">docker-compose-test.yml</code> for whatever services it runs besides the microservice - those are the dependencies you&rsquo;ll need to have up and running to run the tests natively. Control Tower is not required to run the tests.</p>
+
+<p>Test execution requires roughly the same env vars as running the actual microservice. For microservices that rely on a database, make sure you are not using the same database as you do for development purposes - tests assume database isolation, and will delete preexisting data.</p>
+
+<p>See right for how to run tests for microservices in different languages. You can also review the <code class="prettyprint">entrypoint.sh</code> file content, under the <code class="prettyprint">test</code> section, which will contain the exact command you need to execute.</p>
+
+<h4 id="common-errors-and-pitfalls">Common errors and pitfalls</h4>
+
+<ul>
+<li><strong>Your microservice cannot connect to MongoDB/other database</strong>: ensure that the corresponding service is running and listening on the configured address and port - be mindful that <code class="prettyprint">localhost</code>, <code class="prettyprint">127.0.0.1</code> and your local IP are not always interchangeable. Also confirm user and password data.</li>
+<li><strong>Your microservice crashes shortly after start, trying to reach a network address</strong>: this may be your microservice trying to reach Control Tower. Either disable Control Tower auto registration, or run Control Tower.</li>
+<li><strong>Your microservice crashes when handling an API call, trying to reach a network address</strong>: this may be your microservice trying to reach another microservice through Control Tower. Make sure that both Control Tower and the necessary dependent microservices are up and running, and that all microservices involved are registered in Control Tower. Be sure that Control Tower&rsquo;s cron is running. Be sure you are using the correct and up-to-date versions of Control Tower and dependent microservices.</li>
+<li><strong>Your microservice has user-related issues, even though you are providing a <code class="prettyprint">Bearer</code> token</strong>: Bearer tokens are processed by Control Tower, and transformed into a <code class="prettyprint">loggedUser</code> JSON object that microservices expect. Either provide said object directly to your microservice, or route your request with the token through Control Tower.</li>
+<li><strong>Your tests keep failing</strong>: This can be due to multiple reasons. Check the microservice&rsquo;s travis status (link in the README.md) to see if it&rsquo;s just you, or if there&rsquo;s an issue with the preexisting code base. Run your tests a few more times and see if the output is consistent - some tests are not deterministic, and have varying results. Ensure your env vars are correct - check <code class="prettyprint">docker-compose-test.yml</code> or <code class="prettyprint">.travis.yml</code> for examples on values.</li>
+</ul>
+
+<h3 id="using-docker">Using Docker</h3>
+
+<h4 id="getting-the-code">Getting the code</h4>
+
+<p>The first step will be getting the source code from <a href="https://github.com/resource-watch/dataset/">Github</a> to your computer using the <a href="https://git-scm.com/">Git</a> CLI (or equivalent). </p>
+<pre class="highlight shell"><code>git clone git@github.com:resource-watch/dataset.git
+</code></pre>
+<aside class="notice">
+Make sure to checkout with `&ndash;config core.autocrlf=input`. This avoids an issue between Docker and Windows when handling line endings.
+</aside>
+
+<h4 id="installing-dependencies">Installing dependencies</h4>
+
+<p>As we mentioned before, if you decide to use Docker, your only dependency will be Docker itself (and docker-compose, which comes included). Depending on your OS, Docker installation instructions will differ, but your favourite web search engine will hopefully point you in the right direction.</p>
+
+<p>When you run Docker, it will automatically fetch the necessary dependencies and run them for you. However, if you are not using Linux, you may have to fine-tune some settings so that dependencies like MongoDB can communicate with your microservice - we&rsquo;ll review this in detail in a bit.</p>
+
+<p>Note that Docker will not fetch nor run Control Tower for you - if you want to execute your microservice in integration with Control Tower, you&rsquo;ll have to set it up manually. Alternatively, set the <code class="prettyprint">CT_REGISTER_MODE</code> <a href="https://en.wikipedia.org/wiki/Environment_variable">environment variable</a> to any value other than <code class="prettyprint">auto</code>.</p>
+
+<h4 id="configuration">Configuration</h4>
+
+<p>Configuration for Docker based execution is done using <a href="https://en.wikipedia.org/wiki/Environment_variable">environment variables</a> (env vars) passed to the Docker runtime using a special <code class="prettyprint">dev.env</code> file. Some microservices will include a <code class="prettyprint">dev.env.sample</code> or equivalent that you can copy-paste and use as a starting point when configuring your environment.</p>
+
+<p>To find out more about which env vars you can/need to specify, refer to the microservice&rsquo;s <code class="prettyprint">README.md</code> file, as it typically documents the main variables available to you. Nodejs-base microservices will often have a full list in the <code class="prettyprint">config/custom-environment-variables.json</code> file. The <code class="prettyprint">docker-compose-test.yml</code> and <code class="prettyprint">docker-compose-develop.yml</code> files contain usages of said variables, and may be helpful if you are looking for an example or an undocumented variable.</p>
+
+<p>As a rule of thumb, env vars configure things like databases address and credentials, 3rd party services (for example, an AWS S3 bucket URL or AWS access credentials), or Control Tower URL (only necessary if you decide to use it). Your docker-compose file may already have predefined values for some of these, in which case do not overwrite them unless you are certain of what you&rsquo;re doing.</p>
+
+<p>Docker networking works differently on Linux vs other operating systems, and you need to keep this in mind when specifying values for things like MongoDB or Control Tower addresses. Under Linux, Docker containers and the host operating system run in the same network host, so you can use <code class="prettyprint">localhost</code>, for example, when telling a dockerized Dataset microservice where it can reach Control Tower (running natively or in a Docker container). Under other operating systems, however, Docker containers run on a different network host, so you should instead use your local network IP - using <code class="prettyprint">localhost</code> will not reach your expected target. </p>
+
+<h4 id="starting-the-microservice">Starting the microservice</h4>
+
+<p>For convenience, most microservices include a unix-based script that will run the Docker command that will start your microservice, along with the dependencies covered by Docker. The file name will vary from microservice to microservice, and the argument may also vary, but it&rsquo;s usually something along the lines of:</p>
+<pre class="highlight shell"><code>./dataset.sh develop
+</code></pre>
+<p>Mac users&rsquo; mileage may vary with these scripts, and Windows users will need to manually open these file and reproduce the included logic in Windows-compatible syntax - don&rsquo;t worry, they are pretty simple and easy to understand. </p>
+
+<p>Docker will take a few minutes to run, especially during the first execution, but once it&rsquo;s up and running, you should see the HTTP address where your microservice is available in the output printed to the console.</p>
+
+<h4 id="running-the-tests">Running the tests</h4>
+
+<p>Running tests under Docker is similar to running the actual microservice. The easiest way to do so, for unix-based OSs is using the included <code class="prettyprint">.sh</code> helper file:</p>
+<pre class="highlight shell"><code>./dataset.sh <span class="nb">test</span>
+</code></pre>
+<h4 id="common-errors-and-pitfalls">Common errors and pitfalls</h4>
+
+<ul>
+<li><strong>Your microservice cannot connect to MongoDB/other database</strong>: this can happen with Docker setups if the database container takes longer to start than the microservice container - which is common on first time executions. Re-run the docker-compose command fixes it most times. Check if the address, port, username and password values on the <code class="prettyprint">dev.env</code> file are correct - most of the time, the default values will work, and your <code class="prettyprint">dev.env</code> file should not override them.</li>
+<li><strong>Your microservice crashes shortly after start, trying to reach a network address</strong>: this may be your microservice trying to reach Control Tower. Either disable Control Tower auto registration, or run Control Tower. Ensure that the address and port pointing to Control Tower are correct - typically you need to use your private IP address (<code class="prettyprint">localhost</code> or <code class="prettyprint">127.0.0.1</code> won&rsquo;t do for non linux OSs).</li>
+<li><strong>Your microservice crashes when handling an API call, trying to reach a network address</strong>: this may be your microservice trying to reach another microservice through Control Tower. Make sure that both Control Tower and the necessary dependent microservices are up and running, and that all microservices involved are registered in Control Tower. Be sure that Control Tower&rsquo;s cron is running.</li>
+<li><strong>Your microservice has user-related issues, even though you are providing a <code class="prettyprint">Bearer</code> token</strong>: Bearer tokens are processed by Control Tower, and transformed into a <code class="prettyprint">loggedUser</code> JSON object that microservices expect. Either provide said object directly to your microservice, or route you request with the token through Control Tower.</li>
+<li><strong>Your tests keep failing</strong>: This can be due to multiple reasons. Check the microservice&rsquo;s travis status (link in the README.md) to see if it&rsquo;s just you, or if there&rsquo;s an issue with the preexisting code base. Run your tests a few more times and see if the output is consistent - some tests are not deterministic, and have varying results.</li>
+</ul>
+
+<h2 id="ci-cd">CI/CD</h2>
+
+<p>The RW API uses multiple tools in it&rsquo;s <a href="https://en.wikipedia.org/wiki/Continuous_integration">CI</a> and <a href="https://en.wikipedia.org/wiki/Continuous_delivery">CD</a> pipelines. All microservices that compose the RW API use a common set of tools:</p>
+
+<ul>
+<li><a href="https://github.com">Github</a> for version control and code repository.</li>
+<li><a href="travis-ci.org/">Travis CI</a> for automatic test execution.</li>
+<li><a href="codeclimate.com/">Code Climate</a> for code coverage monitoring.</li>
+<li><a href="https://www.jenkins.io/">Jenkins</a> for deployment.</li>
+</ul>
+
+<p>We assume, at this point, that you&rsquo;re already familiar with Github and its core functionality, like branches and pull requests (PRs). If that&rsquo;s not the case, use your favourite search engine to learn more about those concepts.</p>
+
+<p>Each microservice lives in a separate Github repository, most of which have Travis and Code Climate integrations configured. Whenever a pull request is created, both tools will be triggered automatically - Travis will run the tests included in the code, and notify the PR author of the result. Code Climate builds on top of that, and monitors and reports <a href="https://en.wikipedia.org/wiki/Code_coverage">code coverage</a>. The behavior of both tools is controlled by a single <code class="prettyprint">.travis.yml</code> file you&rsquo;ll find in the root of each microservice&rsquo;s code base, and you can learn about it on each of the tool&rsquo;s documentation page. You can see the result directly on the PR page.</p>
+
+<p>When you want to submit a change to the code of one of the microservices, you should:</p>
+
+<ul>
+<li>Do your changes in a separate git branch, named after the change you&rsquo;re making.</li>
+<li>Target the <code class="prettyprint">dev</code> branch (or <code class="prettyprint">develop</code>, if <code class="prettyprint">dev</code> does not exist yet - we&rsquo;re in the process of migrating to a <code class="prettyprint">dev</code>+<code class="prettyprint">staging</code>+<code class="prettyprint">production</code> branch structure, but haven&rsquo;t done so for all repos yet).</li>
+<li>Include tests to cover the change you&rsquo;re making.</li>
+<li>Ensure your PR tests pass when executed by Travis.</li>
+<li>Maintain/increase the code coverage value reported by Code Climate.</li>
+<li>Briefly describe the changes you&rsquo;re doing in a <code class="prettyprint">CHANGELOG.md</code> entry and, if these are public-facing, do a PR to the <a href="github.com/resource-watch/doc-api">RW API documentation repository</a>.</li>
+</ul>
+
+<p>At this stage, and even if your tests pass locally, they may fail when executed in Travis. We recommend running them again if this happens, to see if any <a href="https://whatis.techtarget.com/definition/hiccup">hiccup</a> occurred. If that&rsquo;s not the case, look into the Travis logs to learn more. Unfortunately, the reasons for these are diverse. It can be related to env vars defined inside the <code class="prettyprint">.travis.yml</code> file, missing or incorrectly configured dependencies, differences in packages between your local environment and Travis&rsquo;, etc. At the time of writing, and by default which can be overridden, Travis uses Ubuntu and is configured to <a href="#using-native-execution">use native execution</a> when running tests, so using that very same approach locally may get you closer to the source of the problem you&rsquo;re experiencing. Travis&rsquo; output log will usually help you identify what&rsquo;s happening, and get you closer to a solution.</p>
+
+<p>Once reviewed by a peer, your changes will be merged and will be ready for deployment to one of the live environments.</p>
+
+<p>Currently, the RW API has 3 different environments:</p>
+
+<ul>
+<li><code class="prettyprint">dev</code> at <a href="https://aws-dev.resourcewatch.org">https://aws-dev.resourcewatch.org</a> for internal testing and development of new features. There are no guarantees of stability or data persistence. While it&rsquo;s not barred from public access, it&rsquo;s meant to be used only by developers working on the RW API code, for testing, debugging and experimentation.</li>
+<li><code class="prettyprint">staging</code> at <a href="https://staging-api.resourcewatch.org/">https://staging-api.resourcewatch.org/</a> is a more stable environment, meant to be used by both the RW API developers as well as other developers working on applications built using the RW API. It aims to be functionally stable, but occasional interruptions may occur if needed as part of a process, and code is sometimes in &ldquo;release candidate&rdquo; status, meaning it can have some issues. Data is often relied on by users of this API, so be mindful when performing destructive actions.</li>
+<li><code class="prettyprint">production</code> at <a href="https://api.resourcewatch.org/">https://api.resourcewatch.org/</a> is meant to be as stable as possible, as it&rsquo;s used by real users.</li>
+</ul>
+
+<p>Each microservice repository has a branch matching the name of each of these 3 environments, and changes will always go from a feature branch to <code class="prettyprint">dev</code>, then to <code class="prettyprint">staging</code>, and finally to <code class="prettyprint">production</code>. To push your changes across the different environments, you should:</p>
+
+<ul>
+<li>Create a PR from the source branch to the target branch (from <code class="prettyprint">dev</code> to <code class="prettyprint">staging</code>, or from <code class="prettyprint">staging</code> to <code class="prettyprint">production</code>)</li>
+<li>Deploy the code to the respective environment (we&rsquo;ll see how in a moment)</li>
+<li>Test it with actual calls to the API, to validate that no side effects were introduced.</li>
+</ul>
+
+<p>Depending on the scale of the changes you&rsquo;re doing, it&rsquo;s recommended to use <a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging">git tags</a> with <a href="https://semver.org/">semantic versioning</a>. Also be sure to update the <code class="prettyprint">CHANGELOG.md</code> accordingly, and the <code class="prettyprint">package.json</code> or equivalent files if they refer a version number. </p>
+
+<p>Changes being pushed to either <code class="prettyprint">production</code> or <code class="prettyprint">staging</code> should be announced in advance in the <code class="prettyprint">general</code> channel in the WRI API Slack (and to contact Ethan Roday if you&rsquo;re not in that Slack workspace). Specifically, for changes going to <code class="prettyprint">production</code>, that notice period should be of at least 14 days, during which said changes should be available in <code class="prettyprint">staging</code> for testing by everyone. In rare cases, if a hotfix is needed to fix a breaking change in <code class="prettyprint">production</code>, the 14-day lead time can be circumvented, but an announcement still must be made. </p>
+
+<p>It&rsquo;s also best practice to announce the changes you&rsquo;re about to deploy before doing so, so that other developers of RW API applications can be on the lookout for regressions, and can quickly get in touch with you should any undesired behavior change be detected.</p>
+
+<p>Each of the referred environments lives on a separate <a href="https://kubernetes.io/">Kubernetes</a> cluster (hosted with <a href="https://aws.amazon.com/eks/">AWS EKS</a>), and deployment is done using individual Jenkins instances:</p>
+
+<ul>
+<li><a href="https://jenkins.aws-dev.resourcewatch.org">Jenkins for the dev environment</a></li>
+<li><a href="https://jenkins.aws-staging.resourcewatch.org">Jenkins for the staging environment</a></li>
+<li><a href="https://jenkins.aws-prod.resourcewatch.org">Jenkins for the production environment</a></li>
+</ul>
+
+<p>All 3 instances have similar overall configuration, but different microservices may deploy differently depending on the behavior coded into the <code class="prettyprint">Jenkinsfile</code> that&rsquo;s part of their source code - for example, some WRI sites are also deployed using this approach, but opt to deploy both staging and production versions to the <code class="prettyprint">production</code> cluster, and may not be in the <code class="prettyprint">staging</code> or <code class="prettyprint">dev</code> Jenkins. However, the majority of services follow the convention of a single branch per Jenkins instance, with the branch name matching the name of the respective environment. </p>
+
+<p>The list of jobs you find on each Jenkins instance will match the list of services deployed on that environment. In the details of each job, you should find a branch named after the environment, which corresponds to the Github branch with the same name (some services may still have the old approach, with <code class="prettyprint">develop</code> for <code class="prettyprint">dev</code> and <code class="prettyprint">staging</code>, and <code class="prettyprint">master</code> for <code class="prettyprint">production</code>). You may also find other branches, or a different branch structure, depending on the service itself - again, the <code class="prettyprint">Jenkinsfile</code> configuration is king here, and you should refer to it to better understand what is the desired behavior per branch. In some cases, old branches will be listed on Jenkins but should be ignored.</p>
+
+<p>Deployments need to be triggered manually, on a per-microservice and per-branch basis. Once a deployment starts, Jenkins will run the <code class="prettyprint">Jenkinsfile</code> content - it is, after all, a script - and perform the actions contained in it. While it&rsquo;s up to the maintainer of each microservice to modify this script, more often than not it will run the tests included in the microservice, using Docker, and if these pass, push the newly generated Docker image to <a href="https://hub.docker.com/">Docker Hub</a>. It will then update the respective Kubernetes cluster with content of the matching subfolder inside the <code class="prettyprint">k8s</code> folder of the microservice, plus the <code class="prettyprint">k8s/service</code> folder if one exists. The last step is to deploy the recently pushed Docker image from Docker Hub to the cluster, which will cause Kubernetes to progressively replace running old instances of the service with ones based on the new version.</p>
+
+<p><strong>A couple of important notes here:</strong></p>
+
+<ul>
+<li>All code deployed this way is made public through Docker Hub. If you have sensitive information in your codebase, and are using a Github private repository but are deploying using this approach, your information is NOT kept private.</li>
+<li>When deploying to production, most microservices will have an additional step at the end of the <code class="prettyprint">Jenkinsfile</code> execution, which will require a human to explicitly click a link at the end of the Jenkins build log to trigger a deployment to the cluster. This is made intentionally so that deployment to the production environment are explicit and intentional, and are not triggered by accident.</li>
+</ul>
+
+<p>While it&rsquo;s rare, tests ran by Jenkins at this stage may also fail, preventing your deployment. In these cases, refer to the Jenkins build log for details, which most of the times can be reproduced locally <a href="#running-the-tests69">running your tests using Docker</a>. If your Jenkins log mentions issues related with disk capacity or network address assignment problems, please reach out to someone with access to the Jenkins VMs and ask for a <a href="https://docs.docker.com/engine/reference/commandline/system_prune/">docker system prune</a>.</p>
+
+<h2 id="infrastructure-configuration">Infrastructure configuration</h2>
+
+<p>While the workflow above will cover most of the changes you&rsquo;ll do as an RW API developer - changes to the code that powers the API - from time to time you&rsquo;ll need to adjust the actual infrastructure on which the API runs. This section covers what you need to know to be able to manage the infrastructure.</p>
+
+<h3 id="infrastructure-as-code-using-terraform">Infrastructure as code using Terraform</h3>
+
+<p>Each of the 3 RW API environments lives on a separate AWS account. Aside from scale-related aspects, the 3 infrastructures are meant to be as equal to each other as possible. To achieve this, as well as ease of maintenance, infrastructure is maintained using <a href="https://www.terraform.io/">Terraform</a>, an <a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">infrastructure as code</a> tool. If you are not familiar with Terraform, we recommend learning about it before proceeding.</p>
+
+<p>Due to the structure of the RW API infrastructure, the final architecture is defined by 2 Terraform projects:</p>
+
+<ul>
+<li><a href="https://github.com/resource-watch/api-infrastructure/tree/production/terraform">The AWS Terraform project</a> contains lower level elements, like networking, a <a href="https://en.wikipedia.org/wiki/Bastion_host">bastion host</a>, Jenkins and an AWS EKS Kubernetes cluster. This configuration is automatically applied to each AWS account using <a href="https://github.com/features/actions">Github Actions</a> when merged to the respective branch. Github actions are also used to run a <code class="prettyprint">terraform plan</code> preview of changes for each Pull Request.</li>
+<li><a href="https://github.com/resource-watch/api-infrastructure/tree/production/terraform-k8s-infrastructure">The Kubernetes Terraform project</a> mostly contains the configuration for Kubernetes services, as well as some database-level services. Unlike the previous, this Terraform project needs to be applied manually, using the <code class="prettyprint">terraform apply</code> command.</li>
+</ul>
+
+<p>The Kubernetes Terraform project relies on the resources provisioned by the AWS Terraform project (which is why they <a href="https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#stacking-with-managed-kubernetes-cluster-resources">can&rsquo;t be merged into a single one</a>), so be sure that they are applied in that order. </p>
+
+<p>While the Kubernetes Terraform project contains an increasingly large portion of the overall Kubernetes configuration, there are some additional Kubernetes elements provisioned outside of it.</p>
+
+<ul>
+<li><a href="https://github.com/resource-watch/api-infrastructure/tree/production/k8s-aws">Some resources</a> are provisioned using traditional YAML files, that need to be manually applied using <code class="prettyprint">kubectl apply</code> once the Kubernetes cluster is up and running. The link above contains not only said YAML files, but also associated documentation.</li>
+<li><a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes secrets</a> are kept in a separate, private repository. Said repository has multiple YAML files, and organized by cluster, and then by Kubernetes namespace. Each of these YAML files needs to be manually applied whenever needed.</li>
+</ul>
+
+<h3 id="access-to-infrastructure-resources">Access to infrastructure resources</h3>
+
+<p>For management or debug purposes, you may need to access the infrastructure resources. Depending on what you want to achieve, there are multiple paths forward. However, for all of them, a common required element is an AWS account with the adequate permissions. These permissions will depend on what you&rsquo;re trying to achieve in particular. The AWS IAM permission mechanism is too powerful and complex to cover here, so be prepared to see a few &ldquo;permission denied&rdquo; from time to time, and to discuss with your fellow RW API developers what permissions you are missing that will allow you to access a give resource.</p>
+
+<h4 id="infrastructure-details">Infrastructure details</h4>
+
+<p>Infrastructure details are accessible in multiple ways, depending on exactly what you&rsquo;re looking for. </p>
+
+<p>If you are looking for a high-level piece of information (like &ldquo;how many CPUs are we running?&rdquo;), you may use the AWS Console directly, as it provides a simple UI for a lot of information. Alternatively, investigating the Terraform files are a good way to learn about what services are configured overall, without having to browse every page of the AWS Console, or worry that you may be looking in the wrong AWS Region.</p>
+
+<p>Finally, for very low level details, AWS has a CLI tool that may expose information not available through the channels mentioned above.</p>
+
+<p>In all scenarios, if you are looking to permanently modify the infrastructure, keep in mind that the Terraform projects are kings here, and any change made using either the AWS Console or AWS CLI that is not persisted to Terraform should be considered ephemeral, as it may be overwritten at any time without prior warning. You may, however, modify the infrastructure using the AWS Console or AWS CLI as a means of experimentation, before projecting your final changes on Terraform. </p>
+
+<h4 id="infrastructure-access">Infrastructure access</h4>
+
+<p>Infrastructure access is often need as a way to access things like Kubernetes, database dumps, system status, etc. It&rsquo;s not an end in itself, but rather a necessary step to achieve other goals. To configure your infrastructure access, you&rsquo;ll need two elements. </p>
+
+<p>The first of which is a running and configured <a href="https://aws.amazon.com/cli/">AWS CLI</a> tool installation. The AWS CLI tool has comprehensive documentation, which should also cover the install steps for your particular operating system. To configure it you&rsquo;ll also need the AWS account covered in the previous section.</p>
+
+<p>The second element you&rsquo;ll need is access to the <a href="https://en.wikipedia.org/wiki/Bastion_host">bastion host</a>. If you are not familiar with bastion hosts, we recommend reading about it before proceeding but, in a nutshell, a bastion host works as a single point of entry into key parts of the infrastructure, which are otherwise inaccessible from the public internet. A way to contact a service running in the infrastructure from the outside world is creating an SSH tunnel that proxies traffic to that service through the bastion host, thus bypassing this restriction. For this to work, you need SSH access to the bastion host, which a fellow RW API developer may grant you.</p>
+
+<p><code class="prettyprint">shell script
+ssh -N -L &lt;local port&gt;:&lt;target service address&gt;:&lt;target service port&gt; &lt;bastion host user&gt;@&lt;bastion host address&gt;
+</code></p>
+
+<p>To create an SSH tunnel under a unix-based system, you&rsquo;ll need to run a command like the example here.</p>
+
+<h4 id="database-access">Database access</h4>
+
+<p>Access to databases (to extract a dump for testing, for example) depends on how said database service is configured. At the time of writing, some database services run as AWS managed services, while other live inside the Kubernetes cluster, as Kubernetes services. </p>
+
+<p>For database services provided by AWS managed services, the only necessary steps are the ones covered previously on the <a href="#infrastructure-access">Infrastructure access</a> section. After that, you should be able to reach the host of the database service, per details provided by the service itself. You may also need authentication details for a specific service, which you may find either on the Terraform configuration, the Kubernetes secrets files or AWS secret storage.</p>
+
+<p>For access to database services running as a Kubernetes service, you&rsquo;ll need Kubernetes access (which we will cover next). Once you have that configured, you should configure a <a href="https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/">Kubernetes port forward</a> to map said service to a port of your local host. Access credentials are typically available on the Kubernetes secrets files.</p>
+
+<h4 id="kubernetes-access">Kubernetes access</h4>
+
+<p>The RW API runs in a AWS EKS Kubernetes cluster, which can be accessed using the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">kubectl</a> command line tool, which you should install on your computer. You also need the elements previously covered in the <a href="#infrastructure-access">Infrastructure access</a> section, so be sure that your AWS CLI is installed and configured, and that you have a way to communicate with the infrastructure&rsquo;s inner elements.</p>
+
+<p>To configure <code class="prettyprint">kubectl</code>, you will need some details that are specific to the kubernetes cluster you&rsquo;re trying to access. Said details are available as the output of the <code class="prettyprint">terraform apply</code> command that&rsquo;s executed by Github Actions for the <a href="https://github.com/resource-watch/api-infrastructure/tree/production/terraform">AWS Terraform project</a>. Be mindful that, amongst those details, is the URL through which <code class="prettyprint">kubectl</code> should contact the Kubernetes control plane. Given that you are using an SSH tunnel, you should:</p>
+
+<ul>
+<li>Modify the Kubernetes URL in the <code class="prettyprint">kubectl</code> by adding a custom port value to it (say 4433, for the sake of example)</li>
+<li>Modify the you local hosts file so that the Kubernetes URL is resolved to your 127.0.0.1 IP (or equivalent)</li>
+<li>Create a SSH tunnel that maps your local port (the 4433 from the example above) to the actual EKS URL and port, proxied through the bastion host.</li>
+</ul>
+<pre class="highlight shell"><code>ssh -N -L 4433:&lt;EKS URL&gt;:443 &lt;bastion host user&gt;@&lt;bastion host URL&gt;
+</code></pre>
+<p>Here&rsquo;s an example of how you could create said SSH tunnel:</p>
+
+<h4 id="log-access">Log access</h4>
+
+<p>Logs for the whole infrastructure are centralized in AWS Cloudwatch. Optionally, if you find it more convenient, you can opt to use <code class="prettyprint">kubectl</code> to access logs for a particular pod or container, but you&rsquo;ll also find that output on AWS Cloudwatch.</p>
+
+<p>Certain AWS managed services&rsquo; logs will only be available on Cloudwatch, so we encourage you to learn how to navigate it.</p>
+
+<h2 id="testing-your-changes">Testing your changes</h2>
+
+<p>With your code live on one of the clusters, you should now proceed to testing it. The type of tests you should run vary greatly with the nature of the changes you did, so common sense and industry best practices apply here:</p>
+
+<ul>
+<li>The bigger the change, the broader the testing should be.</li>
+<li>Test your changes with different types of users, <code class="prettyprint">applications</code>, payloads, etc.</li>
+<li>Try to break your code - send unexpected input, try to access resources you should not have access to, etc. More important than doing what it should is not doing what it shouldn&rsquo;t .</li>
+<li>If you can, ask for help - testing can be seen as an exercise in creativity, and having someone&rsquo;s assistance will help think outside the box.</li>
+<li>If you find a bug, fix it, and test everything again, not only what you just fixed.</li>
+<li>If a test is &ldquo;simple&rdquo;, write it as a code test, which is reproducible. Save manual testing for the complex scenarios.</li>
+<li>Test the assumptions you used for behavior of other microservices - E2E testing mocks other microservices, so this may be the first time your code is running alongside real instances of other microservices.</li>
+<li>Clean up after your tests - if you created a bunch of test data, do your best to delete it once you&rsquo;re done. This is particularly important if you are testing something in the production environment, as that test data may be visible to real world users. Cleaning up in staging is also highly recommended.</li>
+</ul>
+
+<p>If you are implementing a new endpoint and it&rsquo;s mission critical to the RW API or one of the applications it powers, you may want to add a <a href="#api-smoke-tests">API smoke test</a> to ensure that any issue affecting its availability is detected and reported. Refer to that section of the docs for more details.</p>
 
 <h2 id="microservice-internal-architecture-nodejs">Microservice internal architecture - nodejs</h2>
 
