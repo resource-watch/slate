@@ -261,7 +261,7 @@
 
 <p>If you&rsquo;ve used SQL in the past, you know how powerful (and complex) it can be. Things like nested queries or joins can be hard to use and even more to maintain, even without the added complexity of an environment where multiple data providers coexist. That&rsquo;s why the RW API limits its support to basic SQL syntax, so we can focus on delivering a tool that&rsquo;s simple and easy to use for most users. The <a href="#supported-sql-syntax-reference">supported SQL syntax reference</a> section below will go into more detail on what&rsquo;s supported and what&rsquo;s not, and will help you understand the specifics of what you can achieve with RW API queries.</p>
 
-<h3 id="some-operation-will-depend-on-the-provider-of-the-dataset-you-39-re-querying">Some operation will depend on the provider of the dataset you&rsquo;re querying</h3>
+<h3 id="some-operations-will-depend-on-the-provider-of-the-dataset-you-39-re-querying">Some operations will depend on the provider of the dataset you&rsquo;re querying</h3>
 
 <p>Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we&rsquo;ve achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provider, but not for another. The <a href="#supported-sql-syntax-reference">supported SQL syntax reference</a> below has more details on these limitations, per provider.</p>
 
@@ -406,7 +406,7 @@
 </tr>
 <tr>
 <td>application</td>
-<td style="text-align: center">The application this collection belongs to (defaults to <code class="prettyprint">&#39;rw&#39;</code>)</td>
+<td style="text-align: center">The application this collection belongs to (defaults to <code class="prettyprint">&#39;rw&#39;</code>). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
 <td style="text-align: right">String</td>
 </tr>
 <tr>
@@ -513,7 +513,7 @@
 </tr>
 <tr>
 <td>application</td>
-<td style="text-align: center">The application this collection belongs to (defaults to <code class="prettyprint">&#39;rw&#39;</code>)</td>
+<td style="text-align: center">The application this collection belongs to (defaults to <code class="prettyprint">&#39;rw&#39;</code>). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
 <td style="text-align: right">No</td>
 <td style="text-align: right">String</td>
 </tr>
@@ -954,7 +954,7 @@
 </tr>
 <tr>
 <td>application</td>
-<td>Applications associated to this dataset.</td>
+<td>Applications associated to this dataset. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
 <td>Array</td>
 <td>any valid text</td>
 </tr>
@@ -2845,7 +2845,7 @@ If you have the <code class="prettyprint">ADMIN</code> role, you can use the <co
 <td>Array</td>
 <td>Yes</td>
 <td></td>
-<td>Applications associated with this dataset.</td>
+<td>Applications associated with this dataset. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
 </tr>
 <tr>
 <td>applicationConfig</td>
@@ -5416,7 +5416,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 <td>Array</td>
 <td>Yes</td>
 <td></td>
-<td>Applications associated with this layer.</td>
+<td>Applications associated with this layer. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
 </tr>
 <tr>
 <td>iso</td>
@@ -6797,7 +6797,7 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 <td>Array</td>
 <td>Yes</td>
 <td></td>
-<td>Applications associated with this widget.</td>
+<td>Applications associated with this widget. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
 </tr>
 <tr>
 <td>layerId</td>
@@ -6994,7 +6994,7 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 </thead><tbody>
 <tr>
 <td>application</td>
-<td style="text-align: center">The metadata application</td>
+<td style="text-align: center">The metadata application. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
 <td style="text-align: right">String</td>
 </tr>
 <tr>
@@ -7388,7 +7388,7 @@ to dictates which of 3 endpoints you should use when deleting a metadata entity.
 </thead><tbody>
 <tr>
 <td>application</td>
-<td>Application associated with the metadata entity</td>
+<td>Application associated with the metadata entity. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
 <td>any valid text</td>
 </tr>
 <tr>
@@ -7528,7 +7528,7 @@ To do it, the only parameter that is required is the name of the Vocabulary.</p>
 </tr>
 <tr>
 <td>application</td>
-<td style="text-align: center">The associated application for this vocabulary</td>
+<td style="text-align: center">The associated application for this vocabulary. Read more about the <code class="prettyprint">application</code> field <a href="index-rw.html#applications">here</a>.</td>
 <td style="text-align: right">String</td>
 </tr>
 </tbody></table>
@@ -8155,150 +8155,239 @@ operations are only available to SUPERADMINS.</p>
 
           <h1 id="geostore">Geostore</h1>
 
-<h2 id="what-is-geostore">What is Geostore?</h2>
+<h2 id="what-is-geostore">What is Geostore</h2>
 
-<p>Geostore is a geojson database. You can save your geojson or obtain geojson by country, region, Protected areas, etc.</p>
+<p>If you are new to the RW API, or want to learn more about the concept of a geostore, we strongly encourage you to read the <a href="#geostore">geostore concept</a> documentation first. It gives you a brief and clear description of what a geostore is, and what it can do for you.</p>
 
-<p>Geostore object contains the following fields:</p>
+<p>Once you&rsquo;ve read that section, you can come back here to learn more details about using the RW API Geostore feature, which aims to provide a comprehensive way to communicate geographic vector-data structures described using <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> between platforms and microservices.</p>
+
+<p><a href="index-rw.html#what-are-geostore-objects">Geostore objects</a>, describing things like the boundaries of countries, protected areas or land use types, have been uploaded by <a href="https://www.wri.org/">WRI</a>, its partner organizations, or by API users like you. They are particularly useful for combining with the range of <a href="#dataset">datasets</a> available in the RW API, for example to create national summaries or for making a specific analysis within your own user-defined region.</p>
+
+<p>To find out more about accessing the geostore objects already available on the RW API, check out the documentation on <a href="#getting-geostore-objects">getting geostore objects</a>. A quick, visual way to view an existing geostore is by using the <a href="#get-geostore-by-geostore-id-and-view-at-geojson-io"><code class="prettyprint">/geostore/:id/view</code></a> endpoint.</p>
+
+<p>You can also <a href="#create-a-geostore-object">create you own geostore objects</a> on the RW API, if you&rsquo;d like to share your data with the world, or if you are looking to use the RW API and its features to gain insights into your data.</p>
+
+<h2 id="what-are-geostore-objects">What are Geostore objects</h2>
+
+<p>Geostore objects contain <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> <code class="prettyprint">FeatureCollection</code> objects (<code class="prettyprint">geojson</code>), with a single <code class="prettyprint">Feature</code> whose <code class="prettyprint">Geometry</code> has been checked for geometric validity, and have been assigned an identifier (<code class="prettyprint">id</code>, <code class="prettyprint">hash</code>) upon creation.</p>
+
+<p>This identifier is a 128-bit hash generated by passing the <a href="#geostore">pre-processed GeoJSON string</a> through the <a href="https://en.wikipedia.org/wiki/MD5">MD5 message-digest algorithm</a>. This means that each identifier is a unique fingerprint of the GeoJSON string.</p>
+
+<p>If you add an exact copy of your GeoJSON string, it will generate the same hash. But if any GeoJSON property is changed in any way, the generated hash will be different. Hence, the Geostore identifier provides the RW API a way to ensure that platforms and microservices are using <em>exactly</em> the same geographic structures. This also means that Geostore objects are static and cannot be modified.</p>
+
+<p>To prevent overwriting of existing geostore objects, they contain a field indicated if the object is locked to editing (<code class="prettyprint">lock</code>); which can be <a href="#create-a-geostore-object">set when creating geostore objects</a>.</p>
+
+<p>Also, during object creation the minimum bounding box enclosing all geometries in the GeoJSON (<code class="prettyprint">bbox</code>), and, if the geometries are type (Multi) Polygon, total surface area in hectares of the geometries (<code class="prettyprint">areaHa</code>) are added to the geostore. <em>Note these values are not calculated if supplied when creating a geostore.</em></p>
+
+<p>Geostore objects can also be <a href="#create-using-a-provider-definition">created by getting a GeoJSON from provider API</a>; in which case the geostore will also include an object which gives information used to connect to the provider data source (<code class="prettyprint">provider</code>). At present the only provider definition supported is a <a href="https://carto.com/">Carto</a> table, using  <code class="prettyprint">&quot;type&quot;: &quot;carto&quot;</code>.</p>
+
+<p>Finally, all geostore objects have a property for storing application specific attributes (<code class="prettyprint">info</code>), which has no formalized schema. Here, fields used for indexing, and metadata, related to use on different platforms are added.</p>
+
+<blockquote>
+<p>Overview of a geostore object</p>
+</blockquote>
 
 <table><thead>
 <tr>
 <th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
+<th>Type</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>id</td>
-<td style="text-align: center">Id of the geostore</td>
-<td style="text-align: right">Text</td>
+<td><code class="prettyprint">id</code></td>
+<td>string</td>
+<td>A unique identifier for the geostore object in the form of a 128 bit <a href="https://en.wikipedia.org/wiki/MD5">MD5 hash</a> generated from the GeoJSON object.</td>
 </tr>
 <tr>
-<td>geojson</td>
-<td style="text-align: center">Geojson with the geometry</td>
-<td style="text-align: right">Object</td>
+<td><code class="prettyprint">hash</code></td>
+<td>string</td>
+<td>A unique identifier for the geostore object in the form of a 128 bit <a href="https://en.wikipedia.org/wiki/MD5">MD5 hash</a> generated from the GeoJSON object.</td>
 </tr>
 <tr>
-<td>hash</td>
-<td style="text-align: center">MD5 hash generated from geojson. Is the same that the id</td>
-<td style="text-align: right">Object</td>
+<td><code class="prettyprint">geojson</code></td>
+<td>object</td>
+<td>A valid <code class="prettyprint">FeatureCollection</code>, <code class="prettyprint">Feature</code>, or <code class="prettyprint">Geometry</code> <a href="https://geojson.org/">GeoJSON</a> object.</td>
 </tr>
 <tr>
-<td>provider</td>
-<td style="text-align: center">This field should be completed if the geostore was created from a provider</td>
-<td style="text-align: right">Object</td>
+<td><code class="prettyprint">provider</code></td>
+<td>object</td>
+<td>Optional <a href="#create-using-a-provider-definition">provider definition</a> used to fetch GeoJSON data from APIs.</td>
 </tr>
 <tr>
-<td>&ndash; type</td>
-<td style="text-align: center">Provider type</td>
-<td style="text-align: right">Text</td>
+<td><code class="prettyprint">lock</code></td>
+<td>string</td>
+<td>Optional indication if the object is locked for editing</td>
 </tr>
 <tr>
-<td>&ndash; table</td>
-<td style="text-align: center">Table name</td>
-<td style="text-align: right">Text</td>
+<td><code class="prettyprint">areaHa</code></td>
+<td>number</td>
+<td>Optional total surface area in hectares of all Polygon and MultiPolygon geometries in the GeoJSON object.</td>
 </tr>
 <tr>
-<td>&ndash; user</td>
-<td style="text-align: center">User of the account</td>
-<td style="text-align: right">Text</td>
+<td><code class="prettyprint">bbox</code></td>
+<td>array</td>
+<td>Array describing the <a href="https://en.wikipedia.org/wiki/Minimum_bounding_box">minimum bounding box</a> enclosing all of the geometries in the GeoJSON object, expressed as an array of the form min Longitude , min Latitude , max Longitude , max Latitude.</td>
 </tr>
 <tr>
-<td>&ndash; filter</td>
-<td style="text-align: center">Conditions to obtain the geojson. It is possible use AND &amp; OR conditions. This conditions must only return one row.</td>
-<td style="text-align: right">Text</td>
-</tr>
-<tr>
-<td>areaHa</td>
-<td style="text-align: center">Area in Hectares of the geojson</td>
-<td style="text-align: right">Number</td>
-</tr>
-<tr>
-<td>bbox</td>
-<td style="text-align: center">Bounding box of the geojson</td>
-<td style="text-align: right">Array</td>
+<td><code class="prettyprint">info</code></td>
+<td>object</td>
+<td>Object that defines application specific properties, for example used for indexing or related to editing of the geostore object.</td>
 </tr>
 </tbody></table>
 
-<aside class="notice">
-Remember — All endpoint of geostore don&rsquo;t need that you are authenticated.
-</aside>
+<h2 id="overview-of-available-endpoints">Overview of available endpoints</h2>
 
-<h2 id="create-geostore">Create Geostore</h2>
+<p>The Geostore API consists of a number of endpoints to help users interact with geostore objects. Many of them are essentially helpers to make it easy to access geometries from useful data sources, such as:</p>
 
-<p>You can create a geostore in 4 different ways:</p>
+<ul>
+<li><strong>Administrative areas</strong> (countries, regions, ect.) from the <a href="https://en.wikipedia.org/wiki/GADM">Database of Global Administrative Areas (GADM)</a>.</li>
+<li><strong>Protected areas</strong> (world heritage sites, national parks, ect.) from the <a href="https://www.protectedplanet.net/c/world-database-on-protected-areas">The World Database on Protected Areas</a>.</li>
+<li><strong>Land activity/use types</strong> (logging, mining, ect.) from the <a href="https://www.wri.org/">WRI</a> <a href="https://data.globalforestwatch.org/datasets/managed-forest-concessions">managed forest</a>, <a href="https://data.globalforestwatch.org/datasets/mining-concessions">mining</a>, and <a href="https://data.globalforestwatch.org/datasets/20398d4dc36e47bd92b559786670f270_1">oil palm</a> concessions, and <a href="https://wwf.panda.org">WWF</a>/<a href="https://www.resolve.ngo/about.htm">RESOLVE</a> <a href="https://data.globalforestwatch.org/datasets/tiger-conservation-landscapes">tiger conservation</a> datasets.<br></li>
+</ul>
 
-<h3 id="with-a-geojson">With a Geojson</h3>
+<p>As these data sets are periodically updated, these &ldquo;helper&rdquo; endpoints are updated to use the latest data. So unless you really need an older version of a data set, such as GADM, you should always use the latest endpoint version. See the table below to get an overview of what can be done; click on the description to get more details.</p>
 
-<p>If you have your own geojson, you can save it in geostore. To create the geostore, you need to define all the required fields in the request body. The fields that compose a geostore are:</p>
+<blockquote>
+<p>Comparison of endpoint versions</p>
+</blockquote>
 
 <table><thead>
 <tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th>Values</th>
-<th style="text-align: right">Required</th>
+<th>Version</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>geojson</td>
-<td style="text-align: center">Geojson with your geometry</td>
-<td style="text-align: right">Object</td>
-<td></td>
-<td style="text-align: right">Yes</td>
+<td><code class="prettyprint">v1</code></td>
+<td>GADM version 2.8.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">v2</code></td>
+<td>GADM version 3.6.</td>
 </tr>
 </tbody></table>
 
 <blockquote>
-<p>To create a Geostore, you have to do a POST query with the following body:</p>
+<p>Overview of endpoints</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/geostore <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "geojson": &lt;yourGeoJSONObject&gt;
-  }'</span>
+
+<table><thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>POST</td>
+<td><code class="prettyprint">/v1/geostore</code></td>
+<td><a href="index-rw.html#create-a-geostore-object">Create a geostore object</a></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class="prettyprint">/v2/geostore/:id</code></td>
+<td><a href="index-rw.html#get-a-geostore-object-by-geostore-id">Get a geostore object by Geostore id</a></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code class="prettyprint">/v2/geostore/find-by-ids</code></td>
+<td><a href="index-rw.html#get-geostore-objects-by-geostore-ids">Get geostore objects by Geostore ids</a></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class="prettyprint">/v2/geostore/:id/view</code></td>
+<td><a href="index-rw.html#get-geostore-by-geostore-id-and-view-at-geojson-io">Get a geostore object by Geostore id and view at GeoJSON.io</a></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class="prettyprint">/v2/geostore/admin/list</code></td>
+<td><a href="index-rw.html#get-all-geostore-ids-names-and-country-codes">Get all Geostore ids, names and country codes</a></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class="prettyprint">/v2/geostore/admin/:iso</code></td>
+<td><a href="index-rw.html#get-geostore-by-country-code">Get a geostore object by country code</a></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class="prettyprint">/v2/geostore/admin/:iso/:id1</code></td>
+<td><a href="index-rw.html#get-geostore-by-country-code-and-gadm-admin-1-id">Get a geostore object by country code and GADM admin 1 id</a></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class="prettyprint">/v2/geostore/admin/:iso/:id1/:id2</code></td>
+<td><a href="index-rw.html#get-geostore-by-country-code-gadm-admin-1-and-admin-2-ids">Get a geostore object by country code, GADM admin 1 and admin 2 ids</a></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class="prettyprint">/v2/geostore/wdpa/:id</code></td>
+<td><a href="index-rw.html#get-geostore-by-world-database-on-protected-areas-id">Get a geostore object by WDPA id</a></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code class="prettyprint">/v2/geostore/use/:name/:id</code></td>
+<td><a href="index-rw.html#get-geostore-by-land-use-type-keyword-and-id">Get a geostore object by Land Use Type name and id</a></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code class="prettyprint">/v1/geostore/area</code></td>
+<td><a href="index-rw.html#calculate-the-area-of-a-geostore-object">Calculate the area of a provided Geostore object</a></td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-geostore-object">Create a geostore object</h2>
+
+<p>Geostore objects can be created in the RW API Geostore using a valid GeoJSON object or by selecting a row from a <a href="https://carto.com/">Carto</a> table.</p>
+
+<blockquote>
+<p>Errors for creating a geostore object</p>
+</blockquote>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">&lt;field&gt;</code>: <code class="prettyprint">&lt;field&gt;</code> can not be empty</td>
+<td>Your are missing a required field value.</td>
+</tr>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">&lt;field&gt;</code>: empty or invalid <code class="prettyprint">&lt;field&gt;</code></td>
+<td>The provided value for <code class="prettyprint">&lt;field&gt;</code> is invalid. This is usually happens if an invalid value type is provided, but certain fields use more advanced validation rules, that may produce this error message if validation fails (ie: <code class="prettyprint">geojson</code>, which must be <code class="prettyprint">type:</code> <code class="prettyprint">FeatureCollection</code>, <code class="prettyprint">Feature</code>, or <code class="prettyprint">Geometry</code>).</td>
+</tr>
+<tr>
+<td>400</td>
+<td>provider: must be valid <list of valid providers></td>
+<td>Your <code class="prettyprint">provider</code> <code class="prettyprint">type</code> value is invalid. The <code class="prettyprint">&lt;list of valid providers&gt;</code> will contain the list of providers that are supported.</td>
+</tr>
+</tbody></table>
+
+<h3 id="create-using-a-geojson">Create using a GeoJSON</h3>
+
+<p>Geostore objects can be created via the POST <code class="prettyprint">geostore</code> endpoint, which accepts as body a GeoJSON object (<code class="prettyprint">&lt;geojson&gt;</code>). This must be a <code class="prettyprint">FeatureCollection</code>, <code class="prettyprint">Feature</code> or <code class="prettyprint">Geometry</code>. If the object is correctly added to the Geostore a <code class="prettyprint">200</code> response is returned, as well as the new geostore object.</p>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/geostore/ <span class="se">\</span>
+     -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+     -d <span class="s1">'{"geojson": &lt;geojson&gt;}'</span>
 </code></pre>
 <blockquote>
-<p>Real example</p>
+<p>Example URL request</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/geostore <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
+<pre class="highlight shell"><code>curl --location --request POST <span class="s1">'https://api.resourcewatch.org/v1/geostore'</span> <span class="se">\</span>
+--header <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+--data-raw <span class="s1">'{
    "geojson":{
       "type":"FeatureCollection",
       "features":[
-         {
-            "type":"Feature",
-            "properties":{
-
-            },
-            "geometry":{
-               "type":"LineString",
-               "coordinates":[
-                  [
-                     -3.9942169189453125,
-                     41.044922165782175
-                  ],
-                  [
-                     -3.995418548583985,
-                     41.03767166215326
-                  ],
-                  [
-                     -3.9842605590820312,
-                     41.03844854003296
-                  ],
-                  [
-                     -3.9844322204589844,
-                     41.04589315472392
-                  ],
-                  [
-                     -3.9942169189453125,
-                     41.044922165782175
-                  ]
-               ]
-            }
-         },
          {
             "type":"Feature",
             "properties":{
@@ -8336,87 +8425,467 @@ Remember — All endpoint of geostore don&rsquo;t need that you are authenticate
    }
 }'</span>
 </code></pre>
-<p>The response will be 200 if the geostore saves correctly and returns the geostore object with all information:</p>
-
 <blockquote>
 <p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-   </span><span class="s2">"data"</span><span class="p">:{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"c9bacccfb9c3fe225dc67545bb93a5cb"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:{</span><span class="w">
-         </span><span class="s2">"geojson"</span><span class="p">:{</span><span class="w">
-            </span><span class="s2">"features"</span><span class="p">:[</span><span class="w">
-               </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"geometry"</span><span class="p">:{</span><span class="w">
-                     </span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"Polygon"</span><span class="p">,</span><span class="w">
-                     </span><span class="s2">"coordinates"</span><span class="p">:[</span><span class="w">
-                        </span><span class="p">[</span><span class="w">
-                           </span><span class="p">[</span><span class="w">
-                              </span><span class="mf">-4.4549560546875</span><span class="p">,</span><span class="w">
-                              </span><span class="mf">40.84706035607122</span><span class="w">
-                           </span><span class="p">],</span><span class="w">
-                           </span><span class="p">[</span><span class="w">
-                              </span><span class="mf">-4.4549560546875</span><span class="p">,</span><span class="w">
-                              </span><span class="mf">41.30257109430557</span><span class="w">
-                           </span><span class="p">],</span><span class="w">
-                           </span><span class="p">[</span><span class="w">
-                              </span><span class="mf">-3.5211181640624996</span><span class="p">,</span><span class="w">
-                              </span><span class="mf">41.30257109430557</span><span class="w">
-                           </span><span class="p">],</span><span class="w">
-                           </span><span class="p">[</span><span class="w">
-                              </span><span class="mf">-3.5211181640624996</span><span class="p">,</span><span class="w">
-                              </span><span class="mf">40.84706035607122</span><span class="w">
-                           </span><span class="p">],</span><span class="w">
-                           </span><span class="p">[</span><span class="w">
-                              </span><span class="mf">-4.4549560546875</span><span class="p">,</span><span class="w">
-                              </span><span class="mf">40.84706035607122</span><span class="w">
-                           </span><span class="p">]</span><span class="w">
-                        </span><span class="p">]</span><span class="w">
-                     </span><span class="p">]</span><span class="w">
-                  </span><span class="p">}</span><span class="w">
-               </span><span class="p">}</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="s2">"crs"</span><span class="p">:{</span><span class="w">
-
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4b25676360d8bbd5106a022103e0cd28"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                </span><span class="p">[</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-4.454956055</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">40.847060356</span><span class="w">
+                                    </span><span class="p">],</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-4.454956055</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">41.302571094</span><span class="w">
+                                    </span><span class="p">],</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-3.521118164</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">41.302571094</span><span class="w">
+                                    </span><span class="p">],</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-3.521118164</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">40.847060356</span><span class="w">
+                                    </span><span class="p">],</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-4.454956055</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">40.847060356</span><span class="w">
+                                    </span><span class="p">]</span><span class="w">
+                                </span><span class="p">]</span><span class="w">
+                            </span><span class="p">],</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Polygon"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
             </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"FeatureCollection"</span><span class="w">
-         </span><span class="p">},</span><span class="w">
-         </span><span class="s2">"hash"</span><span class="p">:</span><span class="s2">"c9bacccfb9c3fe225dc67545bb93a5cb"</span><span class="p">,</span><span class="w">
-         </span><span class="s2">"provider"</span><span class="p">:{</span><span class="w">
-
-         </span><span class="p">},</span><span class="w">
-         </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="mf">397372.34122605197</span><span class="p">,</span><span class="w">
-         </span><span class="s2">"bbox"</span><span class="p">:[</span><span class="w">
-            </span><span class="mf">-4.4549560546875</span><span class="p">,</span><span class="w">
-            </span><span class="mf">40.84706035607122</span><span class="p">,</span><span class="w">
-            </span><span class="mf">-3.5211181640624996</span><span class="p">,</span><span class="w">
-            </span><span class="mf">41.30257109430557</span><span class="w">
-         </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-   </span><span class="p">}</span><span class="w">
+            </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4b25676360d8bbd5106a022103e0cd28"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">397372.34118232</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="mf">-4.454956055</span><span class="p">,</span><span class="w">
+                </span><span class="mf">40.847060356</span><span class="p">,</span><span class="w">
+                </span><span class="mf">-3.521118164</span><span class="p">,</span><span class="w">
+                </span><span class="mf">41.302571094</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="from-country">From country</h3>
+<h3 id="create-using-a-provider-definition">Create using a provider definition</h3>
 
-<p>If you need obtain the geostore of a country, you can obtain it with the ISO3 code in the Geostore API.</p>
+<p>Geostore objects can be created via the POST <code class="prettyprint">geostore</code> endpoint, which accepts as body a provider definition object (<code class="prettyprint">&lt;provider&gt;</code>), the API then fetches a GeoJSON from the provider, and adds it to the Geostore. If the object is correctly added to the Geostore a <code class="prettyprint">200</code> response is returned, as well as the new geostore object. At present the only provider definition supported is a <a href="https://carto.com/">Carto</a> table, using <code class="prettyprint">&quot;type&quot;: &quot;carto&quot;</code>.</p>
 
-<p><code class="prettyprint">GET https://api.resourcewatch.org/v1/geostore/admin/&lt;ISO3&gt;</code></p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/admin/&lt;ISO3&gt;
-</code></pre>
+<p>If the specified <code class="prettyprint">table</code>, <code class="prettyprint">user</code>, or <code class="prettyprint">filter</code> is not recognized a <code class="prettyprint">400</code> response is returned with the error message &ldquo;Geojson not found&rdquo;.</p>
+
 <blockquote>
-<p>Real example obtaining the geostore of Spain
-<code class="prettyprint">shell
-curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
-</code></p>
+<p>Overview of provider object</p>
 </blockquote>
 
-<h3 id="country-list">Country list</h3>
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">type</code></td>
+<td>string</td>
+<td>Keyword of the provider</td>
+</tr>
+<tr>
+<td><code class="prettyprint">table</code></td>
+<td>string</td>
+<td>Name of the provider table</td>
+</tr>
+<tr>
+<td><code class="prettyprint">user</code></td>
+<td>string</td>
+<td>Provider username</td>
+</tr>
+<tr>
+<td><code class="prettyprint">filter</code></td>
+<td>string</td>
+<td>Provider specific filter</td>
+</tr>
+</tbody></table>
 
-<p>A list of countries can be obtained from this endpoint.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/admin/list
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/geostore <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{"provider": &lt;provider&gt;}'</span>
+</code></pre>
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/geostore <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{
+        "provider":{
+            "type": "carto",
+            "table": "gfw_mining",
+            "user": "wri-01",
+            "filter": "cartodb_id=573"
+        }
+    }'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b3b2875affa75f145b4f3e5289fd47d7"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">[</span><span class="w">
+                  </span><span class="mf">14.26438308756265</span><span class="p">,</span><span class="w">
+                  </span><span class="mf">14.062500000000002</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="p">[</span><span class="w">
+                  </span><span class="mf">5.266007882805498</span><span class="p">,</span><span class="w">
+                  </span><span class="mf">2.8125</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="p">[</span><span class="w">
+                  </span><span class="mf">44.84029065139799</span><span class="p">,</span><span class="w">
+                  </span><span class="mf">16.523437500000004</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="p">[</span><span class="w">
+                  </span><span class="mf">-7.362466865535738</span><span class="p">,</span><span class="w">
+                  </span><span class="mf">-3.1640625000000004</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+              </span><span class="p">],</span><span class="w">
+              </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPoint"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b3b2875affa75f145b4f3e5289fd47d7"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"carto"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw_mining"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wri-01"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb_id=573"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mf">-102.65625</span><span class="p">,</span><span class="w">
+        </span><span class="mf">-29.688052749856787</span><span class="p">,</span><span class="w">
+        </span><span class="mf">45.87890625</span><span class="p">,</span><span class="w">
+        </span><span class="mf">57.79794388498275</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h2 id="getting-geostore-objects">Getting geostore objects</h2>
+
+<p>The fundamental way to read geometries from the RW APIs Geostore is by using Geostore ids. Using these identifiers you can ensure that you are always <a href="#geostore-objects">retrieving exactly the same <code class="prettyprint">Feature</code></a>. If you <a href="#create-a-geostore-object">add your own geostore objects</a> you will be using <a href="#get-geostore-by-geostore-id">these endpoints</a>.</p>
+
+<p>Alternatively you may prefer to get selected geometries from the datasets already added to the RW API Geostore, such as the <a href="#overview-of-available-endpoints">latest administrative areas, protected areas, or land use types</a>. Note, these are periodically updated, and potentially both geometries and ids may change between versions. By design this means that, for example, the Geostore ids of countries change between versions. These geometries can also be simplified when reading them from the Geostore, using the parameter <code class="prettyprint">?simplify=&lt;value&gt;</code>, where <code class="prettyprint">&lt;value&gt;</code> is given to the simplification algorithm - <code class="prettyprint">0.005</code> usually works well.</p>
+
+<h3 id="get-a-geostore-object-by-geostore-id">Get a geostore object by Geostore id</h3>
+
+<p>Geostore objects can be retrieved via the GET <code class="prettyprint">geostore/:id</code> endpoint, which returns a single object selected from the Geostore using a single <a href="#geostore">Geostore id</a> (<code class="prettyprint">&lt;id&gt;</code>).</p>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/&lt;id&gt;
+</code></pre>
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/ca38fa80a4ffa9ac6217a7e0bf71e6df
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ca38fa80a4ffa9ac6217a7e0bf71e6df"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Polygon"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                </span><span class="p">[</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-5.273512601852417</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">42.81137220349083</span><span class="w">
+                                    </span><span class="p">],</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-5.273512601852417</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">42.811803118457306</span><span class="w">
+                                    </span><span class="p">],</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-5.272732079029083</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">42.811803118457306</span><span class="w">
+                                    </span><span class="p">],</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-5.272732079029083</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">42.81137220349083</span><span class="w">
+                                    </span><span class="p">],</span><span class="w">
+                                    </span><span class="p">[</span><span class="w">
+                                        </span><span class="mf">-5.273512601852417</span><span class="p">,</span><span class="w">
+                                        </span><span class="mf">42.81137220349083</span><span class="w">
+                                    </span><span class="p">]</span><span class="w">
+                                </span><span class="p">]</span><span class="w">
+                            </span><span class="p">]</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ca38fa80a4ffa9ac6217a7e0bf71e6df"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3057556230214663</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="mf">-5.273512601852417</span><span class="p">,</span><span class="w">
+                </span><span class="mf">42.81137220349083</span><span class="p">,</span><span class="w">
+                </span><span class="mf">-5.272732079029083</span><span class="p">,</span><span class="w">
+                </span><span class="mf">42.811803118457306</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="errors-for-getting-geostore-objects-by-id">Errors for getting geostore objects by id</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Geostore not found.</td>
+<td>A geostore with the id provided was not found.</td>
+</tr>
+</tbody></table>
+
+<h3 id="get-geostore-by-geostore-id-and-view-at-geojson-io">Get geostore by Geostore id and view at GeoJSON.io</h3>
+
+<p>Geostore objects can be retrieved and viewed via the GET <code class="prettyprint">geostore/:id/view</code> endpoint, which returns a URL allowing viewing of a single geostore object selected by <a href="#geostore-id">Geostore id</a> (<code class="prettyprint">&lt;id&gt;</code>)  at GeoSON.io.</p>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/&lt;id&gt;/view
+</code></pre>
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/ca38fa80a4ffa9ac6217a7e0bf71e6df/view
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"view_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://geojson.io/#data=data:application/json,%7B%22crs%22%3A%7B%7D%2C%22type%22%3A%22FeatureCollection%22%2C%22features%22%3A%5B%7B%22type%22%3A%22Feature%22%2C%22geometry%22%3A%7B%22type%22%3A%22Polygon%22%2C%22coordinates%22%3A%5B%5B%5B-5.273512601852417%2C42.81137220349083%5D%2C%5B-5.273512601852417%2C42.811803118457306%5D%2C%5B-5.272732079029083%2C42.811803118457306%5D%2C%5B-5.272732079029083%2C42.81137220349083%5D%2C%5B-5.273512601852417%2C42.81137220349083%5D%5D%5D%7D%2C%22properties%22%3Anull%7D%5D%7D"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="errors-for-viewing-geostore-objects-by-id">Errors for viewing geostore objects by id</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Geometry too large, please try again with a smaller geometry.</td>
+<td>The Geostore provided is too large (more than 150k chars when stringified) and cannot be viewed.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Geostore not found.</td>
+<td>A geostore with the id provided was not found.</td>
+</tr>
+</tbody></table>
+
+<h3 id="get-geostore-objects-by-geostore-ids">Get geostore objects by Geostore ids</h3>
+
+<p>Many geostore objects can be retrieved via the POST <code class="prettyprint">geostore/find-by-ids</code> endpoint, which returns an array of a geostore objects selected by an array of <a href="#geostore-objects">Geostore ids</a> (<code class="prettyprint">[&lt;id&gt;, &lt;id&gt;]</code>). In case of success, the returned response will contain an array with all of the geostore objects found and summary info is available in the root property <code class="prettyprint">info</code>.</p>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v2/geostore/find-by-ids <span class="se">\</span>
+     -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+     -d <span class="s1">'{"geostores": [&lt;id&gt;, &lt;id&gt;]}'</span>
+</code></pre>
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v2/geostore/find-by-ids <span class="se">\</span>
+     -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+     -d <span class="s1">'{"geostores": ["35a6d982388ee5c4e141c2bceac3fb72", "8f77fe62cf15d5098ba0ee11c5126aa6"]}'</span>
+</code></pre>
+<blockquote>
+<p>Example response (coordinates are truncated)</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geostoreId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"35a6d982388ee5c4e141c2bceac3fb72"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"35a6d982388ee5c4e141c2bceac3fb72"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                </span><span class="p">{</span><span class="w">
+                                    </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                                        </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                            </span><span class="err">...</span><span class="w">
+                                        </span><span class="p">],</span><span class="w">
+                                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="w">
+                                </span><span class="p">}</span><span class="w">
+                            </span><span class="p">]</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"35a6d982388ee5c4e141c2bceac3fb72"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                        </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">50662609.25209112</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="mf">-18.1604175567627</span><span class="p">,</span><span class="w">
+                            </span><span class="mf">27.6384716033936</span><span class="p">,</span><span class="w">
+                            </span><span class="mf">4.32819509506226</span><span class="p">,</span><span class="w">
+                            </span><span class="mf">43.7915267944337</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                            </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ESP"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Spain"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geostoreId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8f77fe62cf15d5098ba0ee11c5126aa6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8f77fe62cf15d5098ba0ee11c5126aa6"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                </span><span class="p">{</span><span class="w">
+                                    </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                                        </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                            </span><span class="err">...</span><span class="w">
+                                        </span><span class="p">],</span><span class="w">
+                                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="w">
+                                </span><span class="p">}</span><span class="w">
+                            </span><span class="p">]</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8f77fe62cf15d5098ba0ee11c5126aa6"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                        </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">54935531.53854849</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="mf">-5.14375114440907</span><span class="p">,</span><span class="w">
+                            </span><span class="mf">41.3337516784668</span><span class="p">,</span><span class="w">
+                            </span><span class="mf">9.5604162216186</span><span class="p">,</span><span class="w">
+                            </span><span class="mf">51.08939743042</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                            </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FRA"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"France"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"found"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"foundIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"35a6d982388ee5c4e141c2bceac3fb72"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"8f77fe62cf15d5098ba0ee11c5126aa6"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"returned"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="errors-for-getting-multiple-geostore-objects-by-id">Errors for getting multiple geostore objects by id</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Geostore not found.</td>
+<td>A geostore with the id provided was not found.</td>
+</tr>
+</tbody></table>
+
+<h3 id="get-all-geostore-ids-names-and-country-codes">Get all Geostore ids, names and country codes</h3>
+
+<p>All of the Geostore ids, names, and country ISO 3166-1 alpha-3 code values available from the GADM data source in the Geostore can be retrieved via the GET <code class="prettyprint">geostore/admin/list</code> endpoint, which returns an array of objects with the properties <code class="prettyprint">geostoreId</code>, <code class="prettyprint">name</code>, and <code class="prettyprint">iso</code>.</p>
+
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/admin/list
 </code></pre>
 <blockquote>
 <p>Example response</p>
@@ -8437,292 +8906,466 @@ curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP
     </span><span class="p">}]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h3 id="from-country-and-region">From country and region</h3>
+<p><em>Note - This endpoint does not return a unique array of iso codes and names.</em></p>
 
-<p>If you need obtain the geostore of a region in a country, you can obtain it with the ISO3 and region code:</p>
+<h2 id="getting-predefined-geostores-for-commonly-used-geometries">Getting predefined geostores for commonly used geometries</h2>
 
-<p><code class="prettyprint">GET https://api.resourcewatch.org/v1/geostore/admin/&lt;ISO3&gt;/&lt;regionCode&gt;</code></p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/admin/&lt;ISO3&gt;/&lt;regionCode&gt;
+<p>The endpoints described below allow API users to retrieve geostores representative of the boundaries of countries, GADM admin regions, WDPA and land use areas. These endpoints can be used as utility methods to retrieve commonly used geometries.</p>
+
+<h3 id="get-geostore-by-country-code">Get geostore by country code</h3>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/admin/&lt;iso&gt;
 </code></pre>
 <blockquote>
-<p>Real example obtaining the geostore of Madrid&rsquo;s Comunity in Spain</p>
+<p>Example URL request</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/admin/ESP/8
-</code></pre>
-<h3 id="from-world-database-on-protected-areas-wdpa">From World Database on Protected Areas (wdpa)</h3>
-
-<p>Is possible obtain the geostore of a World Database on Protected Areas of the world. You only need the id of the protected area (WDPA).
-<a href="https://www.protectedplanet.net/">World Database on Protected Areas web</a></p>
-
-<p><code class="prettyprint">GET https://api.resourcewatch.org/v1/geostore/wdpa/&lt;wdpaId&gt;</code></p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/wdpa/&lt;wdpaId&gt;
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/admin/ESP
 </code></pre>
 <blockquote>
-<p>Real example obtaining the geostore of &lsquo;Sierra de Guadarrama&rsquo; protected area</p>
+<p>Example response (note coordinates are truncated)</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/wdpa/555538160
-</code></pre>
-<h3 id="from-land-use-areas">From land use areas</h3>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"56f9a919e061d5edd10c042a8fcd31b6"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                </span><span class="err">...</span><span class="w">
+                            </span><span class="p">],</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"56f9a919e061d5edd10c042a8fcd31b6"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">50662609.2516529</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="mf">-18.160417557</span><span class="p">,</span><span class="w">
+                </span><span class="mf">27.638471603</span><span class="p">,</span><span class="w">
+                </span><span class="mf">4.328195095</span><span class="p">,</span><span class="w">
+                </span><span class="mf">43.791526794</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ESP"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"id1"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"id2"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"gadm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.8"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Spain"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Use the GET <code class="prettyprint">geostore/admin/:iso</code> endpoint to retrieve a geostore object representative of the boundaries of the country with <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">ISO 3166-1 alpha-3 code</a> (<code class="prettyprint">&lt;iso&gt;</code>). The returned geometries can be simplified using the parameter <code class="prettyprint">?simplify=&lt;value&gt;</code>. Where <code class="prettyprint">&lt;value&gt;</code> is given to the simplification algorithm- 0.005 usually works well.</p>
 
-<p>Geostore has the geojson of 4 different lands use:</p>
+<p><em>Note - The source of the geometries is GADM version 3.6.</em></p>
 
-<h4 id="oil-palm">Oil palm</h4>
-
-<p><code class="prettyprint">GET https://api.resourcewatch.org/v1/geostore/use/oilpalm/&lt;id&gt;</code></p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/oilpalm/&lt;id&gt;
-</code></pre>
-<blockquote>
-<p>Real example obtaining the geostore of one Oil palm area</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/oilpalm/556
-</code></pre>
-<h4 id="mining">Mining</h4>
-
-<p><code class="prettyprint">GET https://api.resourcewatch.org/v1/geostore/use/mining/&lt;id&gt;</code></p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/mining/&lt;id&gt;
-</code></pre>
-<blockquote>
-<p>Real example obtaining the geostore of one mining area</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/mining/573
-</code></pre>
-<h4 id="wood-fiber">Wood fiber</h4>
-
-<p><code class="prettyprint">GET https://api.resourcewatch.org/v1/geostore/use/fiber/&lt;id&gt;</code></p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/fiber/&lt;id&gt;
-</code></pre>
-<blockquote>
-<p>Real example obtaining the geostore of one Wood fiber area</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/fiber/346
-</code></pre>
-<h4 id="congo-basin-logging-roads">Congo Basin logging roads</h4>
-
-<p><code class="prettyprint">GET https://api.resourcewatch.org/v1/geostore/use/logging/&lt;id&gt;</code></p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/logging/&lt;id&gt;
-</code></pre>
-<blockquote>
-<p>Real example obtaining the geostore of Oil palm area</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/logging/102
-</code></pre>
-<h3 id="from-carto">From Carto</h3>
-
-<p>If your geojson is in carto table, is possible import this geojson in geostore.
-To import the geojson in geostore, you need to define all of the required fields in the request body. The fields that compose a import are:</p>
+<h4 id="errors-for-getting-geostore-objects-by-country-code">Errors for getting geostore objects by country code</h4>
 
 <table><thead>
 <tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th>Values</th>
-<th style="text-align: right">Required</th>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>provider</td>
-<td style="text-align: center">Provider of data</td>
-<td style="text-align: right">Object</td>
-<td></td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>&ndash; type</td>
-<td style="text-align: center">Provider type</td>
-<td style="text-align: right">Text</td>
-<td>carto</td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>&ndash; table</td>
-<td style="text-align: center">Table name</td>
-<td style="text-align: right">Text</td>
-<td></td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>&ndash; user</td>
-<td style="text-align: center">User of the account</td>
-<td style="text-align: right">Text</td>
-<td></td>
-<td style="text-align: right">Yes</td>
-</tr>
-<tr>
-<td>&ndash; filter</td>
-<td style="text-align: center">Conditions to obtain the geojson. Is possible put and and or conditions. This conditions must only return one row.</td>
-<td style="text-align: right">Text</td>
-<td></td>
-<td style="text-align: right">Yes</td>
+<td>404</td>
+<td>Geostore not found.</td>
+<td>A geostore for the country ISO code provided was not found.</td>
 </tr>
 </tbody></table>
 
-<blockquote>
-<p>To import a Geostore, you have to do a POST with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/geostore <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "provider":{
-        "type": "carto",
-        "table": &lt;tableName&gt;,
-        "user": &lt;userName&gt;,
-        "filter": &lt;conditions&gt;
-    }
-}'</span>
-</code></pre>
-<blockquote>
-<p>Real example</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/geostore <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "provider":{
-        "type": "carto",
-        "table": "gfw_mining",
-        "user": "wri-01",
-        "filter": "cartodb_id=573"
-    }
-}'</span>
-</code></pre>
-<blockquote>
-<p>Example response</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"26f8975c4c647c19a2edaa11f23880a2"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">[</span><span class="w">
-                  </span><span class="p">[</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.0957370284411</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.6814701233475</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.0957357154309</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.654348341203</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.1100850695703</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.6543473339623</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.1100876551212</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.6814691125096</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.0957370284411</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.6814701233475</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                  </span><span class="p">]</span><span class="w">
-                </span><span class="p">]</span><span class="w">
-              </span><span class="p">]</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"26f8975c4c647c19a2edaa11f23880a2"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb_id=573"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wri-01"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw_mining"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"carto"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">471.001953054716</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="mf">-74.1100876551212</span><span class="p">,</span><span class="w">
-        </span><span class="mf">10.6543473339623</span><span class="p">,</span><span class="w">
-        </span><span class="mf">-74.0957357154309</span><span class="p">,</span><span class="w">
-        </span><span class="mf">10.6814701233475</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h2 id="obtain-a-geostore">Obtain a Geostore</h2>
+<h3 id="get-geostore-by-country-code-and-gadm-admin-1-id">Get geostore by country code and GADM admin 1 id</h3>
 
-<p>To obtain a geostore, you only need the id of the Geostore. You can perform a GET request for the geostore with its id.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/&lt;geostoreId&gt;
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/admin/&lt;iso&gt;/&lt;id1&gt;
 </code></pre>
 <blockquote>
-<p>Real example obtaining one geostore</p>
+<p>Example URL request</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/geostore/use/logging/26f8975c4c647c19a2edaa11f23880a2
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/admin/ESP/9
+</code></pre>
+<blockquote>
+<p>Example response (note coordinates are truncated)</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7d1534d7c24b2f907c4ae37d11fc51fe"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                </span><span class="err">...</span><span class="w">
+                            </span><span class="p">],</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7d1534d7c24b2f907c4ae37d11fc51fe"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">1036273.8136673134</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="mf">-2.500030994</span><span class="p">,</span><span class="w">
+                </span><span class="mf">41.909896851</span><span class="p">,</span><span class="w">
+                </span><span class="mf">-0.726752043</span><span class="p">,</span><span class="w">
+                </span><span class="mf">43.314189911</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ESP"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"id1"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"id2"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"gadm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.8"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Use the GET <code class="prettyprint">geostore/admin/:iso/:id1</code> endpoint to retrieve a geostore object representative of the boundaries of a <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">ISO 3166-1 alpha-3 code</a> (<code class="prettyprint">&lt;iso&gt;</code>) and <a href="https://gadm.org/metadata.html">GADM admin level 1</a> id (<code class="prettyprint">&lt;id1&gt;</code>). The returned geometries can be simplified using the parameter <code class="prettyprint">?simplify=&lt;value&gt;</code>. Where <code class="prettyprint">&lt;value&gt;</code> is given to the simplification algorithm- 0.005 usually works well.</p>
+
+<p><em>Note - The source of the geometries is GADM version 3.6.</em></p>
+
+<h4 id="errors-for-getting-geostore-objects-by-country-code-and-gadm-admin-1-id">Errors for getting geostore objects by country code and GADM admin 1 id</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Geostore not found.</td>
+<td>A geostore for the combination of country ISO code and GADM admin 1 id provided was not found.</td>
+</tr>
+</tbody></table>
+
+<h3 id="get-geostore-by-country-code-gadm-admin-1-and-admin-2-ids">Get geostore by country code, GADM admin 1 and admin 2 ids</h3>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/admin/&lt;iso&gt;/&lt;id1&gt;/&lt;id2&gt;
+</code></pre>
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/admin/ESP/1/2
 </code></pre>
 <blockquote>
 <p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"26f8975c4c647c19a2edaa11f23880a2"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">[</span><span class="w">
-                  </span><span class="p">[</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.0957370284411</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.6814701233475</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.0957357154309</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.654348341203</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.1100850695703</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.6543473339623</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.1100876551212</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.6814691125096</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="p">[</span><span class="w">
-                      </span><span class="mf">-74.0957370284411</span><span class="p">,</span><span class="w">
-                      </span><span class="mf">10.6814701233475</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                  </span><span class="p">]</span><span class="w">
-                </span><span class="p">]</span><span class="w">
-              </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"214e74a9e8702f78354ed5cb0297c10d"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"214e74a9e8702f78354ed5cb0297c10d"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">744195.8099038196</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="mf">-6.47347212</span><span class="p">,</span><span class="w">
+                </span><span class="mf">35.9995842</span><span class="p">,</span><span class="w">
+                </span><span class="mf">-5.08662891</span><span class="p">,</span><span class="w">
+                </span><span class="mf">37.05246735</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"simplifyThresh"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00005</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"gadm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3.6"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cádiz"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"id2"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"id1"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ESP"</span><span class="w">
             </span><span class="p">}</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"26f8975c4c647c19a2edaa11f23880a2"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cartodb_id=573"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wri-01"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw_mining"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"carto"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">471.001953054716</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="mf">-74.1100876551212</span><span class="p">,</span><span class="w">
-        </span><span class="mf">10.6543473339623</span><span class="p">,</span><span class="w">
-        </span><span class="mf">-74.0957357154309</span><span class="p">,</span><span class="w">
-        </span><span class="mf">10.6814701233475</span><span class="w">
-      </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>Use the GET <code class="prettyprint">geostore/admin/:iso/:id1/:id2</code> endpoint to retrieve a geostore object representative of the boundaries of a <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">ISO 3166-1 alpha-3 code</a> (<code class="prettyprint">&lt;iso&gt;</code>),  <a href="https://gadm.org/metadata.html">GADM admin level 1</a> id (<code class="prettyprint">&lt;id1&gt;</code>), and <a href="https://gadm.org/metadata.html">GADM admin level 2</a> id (<code class="prettyprint">&lt;id2&gt;</code>). The returned geometries can be simplified using the parameter <code class="prettyprint">?simplify=&lt;value&gt;</code>. Where <code class="prettyprint">&lt;value&gt;</code> is given to the simplification algorithm- 0.005 usually works well.</p>
+
+<p><em>Note - The source of the geometries is GADM version 3.6.</em></p>
+
+<h4 id="errors-for-getting-geostore-objects-by-country-code-gadm-admin-1-id-and-admin-2-id">Errors for getting geostore objects by country code, GADM admin 1 id and admin 2 id</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Geostore not found.</td>
+<td>A geostore for the combination of country ISO code, GADM admin 1 id and admin 2 id provided was not found.</td>
+</tr>
+</tbody></table>
+
+<h3 id="get-geostore-by-world-database-on-protected-areas-id">Get geostore by World Database on Protected Areas id</h3>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/wdpa/&lt;id&gt;
+</code></pre>
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/wdpa/142809
+</code></pre>
+<blockquote>
+<p>Example response (note coordinates are truncated)</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"88db597b6bcd096fb80d1542cdc442be"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                                </span><span class="err">...</span><span class="w">
+                                </span><span class="p">],</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"88db597b6bcd096fb80d1542cdc442be"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">5081.838068566336</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="mf">-6.031685272</span><span class="p">,</span><span class="w">
+                </span><span class="mf">36.160220287</span><span class="p">,</span><span class="w">
+                </span><span class="mf">-5.879245686</span><span class="p">,</span><span class="w">
+                </span><span class="mf">36.249656987</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"wdpaid"</span><span class="p">:</span><span class="w"> </span><span class="mi">142809</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Use the GET <code class="prettyprint">geostore/admin/wdpa/:id</code> endpoint to retrieve a geostore object representative of the boundaries of a <a href="https://www.protectedplanet.net/">World Database on Protected Areas</a> (WDPA) with id (<code class="prettyprint">&lt;id&gt;</code>) provided. To find valid WDPA id values check the link above.</p>
+
+<p><em>Note marine protected areas are NOT included</em></p>
+
+<h4 id="errors-for-getting-geostore-objects-by-wdpa-id">Errors for getting geostore objects by WDPA id</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Geostore not found.</td>
+<td>A geostore for the WDPA id provided was not found.</td>
+</tr>
+</tbody></table>
+
+<h3 id="get-geostore-by-land-use-type-keyword-and-id">Get geostore by Land Use Type keyword and id</h3>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/use/&lt;name&gt;/&lt;id&gt;
+</code></pre>
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/geostore/use/logging/1
+</code></pre>
+<blockquote>
+<p>Example response (note coordinates are truncated)</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geoStore"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bd5feac1b0dd4e73f3a1553889807622"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"crs"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FeatureCollection"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span><span class="w">
+                            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MultiPolygon"</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Feature"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bd5feac1b0dd4e73f3a1553889807622"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">45978.43408272762</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="mf">102.691404026</span><span class="p">,</span><span class="w">
+                </span><span class="mf">-0.248440312</span><span class="p">,</span><span class="w">
+                </span><span class="mf">103.036606</span><span class="p">,</span><span class="w">
+                </span><span class="mf">-0.071735991</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"lock"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw_logging"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"simplify"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Use the GET <code class="prettyprint">geostore/admin/use/:name/:id</code> endpoint to retrieve a geostore object representative of the boundaries of a <a href="#land-use-types">Land Use Type</a> keyword (<code class="prettyprint">&lt;name&gt;</code>) and  Land Use Type object id (<code class="prettyprint">&lt;id&gt;</code>). </p>
+
+<p>Geostore objects for five land use types are available: </p>
+
+<ul>
+<li>Tiger conservation landscapes (<code class="prettyprint">tiger_conservation_landscapes</code>)</li>
+<li><a href="https://wri-01.carto.com/tables/gfw_oil_palm/public/map">Oil Palm production (<code class="prettyprint">oilpalm</code>)</a></li>
+<li><a href="http://api.resourcewatch.org/v1/dataset/c2142922-84d9-4564-8216-a4867b9e48c5">Mining activities (<code class="prettyprint">mining</code>)</a></li>
+<li><a href="https://wri-01.carto.com/tables/gfw_woodfiber/public/map">Wood fiber production (<code class="prettyprint">fiber</code>)</a></li>
+<li><a href="https://wri-01.carto.com/tables/osm_logging_roads/public/map">Forest logging activities (<code class="prettyprint">logging</code>)</a>.</li>
+</ul>
+
+<p>The returned geometries can be simplified using the parameter <code class="prettyprint">?simplify=&lt;value&gt;</code>. Where <code class="prettyprint">&lt;value&gt;</code> is given to the simplification algorithm- 0.005 usually works well.</p>
+
+<p><em>Note - each of the land use types actually represents an individual dataset, each with different geographical extents and temporal coverage, see the <a href="#overview-of-available-endpoints">dataset urls</a> for details</em>  </p>
+
+<h4 id="errors-for-getting-geostore-objects-by-land-use-type">Errors for getting geostore objects by land use type</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Geostore not found.</td>
+<td>A geostore for the specified <code class="prettyprint">&lt;name&gt;</code> and <code class="prettyprint">&lt;id&gt;</code> was not found.</td>
+</tr>
+</tbody></table>
+
+<h2 id="calculate-the-area-of-a-geostore-object">Calculate the area of a geostore object</h2>
+
+<p>If you have a GeoJSON geometry and you intend to know the area that your geometry occupies or what is the bounding box for your geometry, you can use the POST <code class="prettyprint">v2/geostore/area</code> endpoint to calculate the area of your geometry.</p>
+
+<blockquote>
+<p>Example request pattern</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v2/geostore/area <span class="se">\</span>
+  -d <span class="s1">'{"geojson": &lt;geojson&gt;}'</span>
+</code></pre>
+<blockquote>
+<p>Example URL request</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v2/geostore/area <span class="se">\</span>
+  -d <span class="s1">'{
+      "geojson":{
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [-0.1758,51.2894],
+                [8.4375,51.1793],
+                [6.8555,47.5172],
+                [-0.1758,51.2894]
+            ]
+        ]
+    }}'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geomArea"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"bbox"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="mf">-0.1758</span><span class="p">,</span><span class="w">
+                </span><span class="mf">47.5172</span><span class="p">,</span><span class="w">
+                </span><span class="mf">8.4375</span><span class="p">,</span><span class="w">
+                </span><span class="mf">51.2894</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"areaHa"</span><span class="p">:</span><span class="w"> </span><span class="mf">12797498.414088473</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h4 id="errors-for-calculating-the-area-of-a-geostore-object">Errors for calculating the area of a geostore object</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">geojson, esrijson or provider required.</code></td>
+<td>You need to provide the GeoJSON for the geometry you intend to calculate the area.</td>
+</tr>
+</tbody></table>
+
           <h1 id="tasks">Tasks</h1>
 
 <h2 id="what-is-a-task">What is a task?</h2>
@@ -9324,7 +9967,7 @@ be considered a &ldquo;only do it if you know what you are doing&rdquo; operatio
 
 <p>A <code class="prettyprint">403 Forbidden</code> error means that you are identified as a valid user, but you do not have the required permissions for the action you are trying to perform. Common scenarios where this happens are:
 - You do not have the required user <code class="prettyprint">ROLE</code> to carry out that operation.
-- You may be trying to operate on a resource that belongs to a different <code class="prettyprint">application</code> than the ones you are associated with.
+- You may be trying to operate on a resource that belongs to a different <code class="prettyprint">application</code> than the ones you are associated with. Read more about how the <code class="prettyprint">application</code> field works <a href="index-rw.html#applications">here</a>.
 - Certain resources have a concept of <code class="prettyprint">owner</code> with certain actions being exclusively available to that particular user.</p>
 
 <p>Check the specific documentation for the endpoint you are trying to use for more details on its behavior. Conditions that trigger a <code class="prettyprint">403 Forbidden</code> error will often vary beyond the ones listed above.</p>
