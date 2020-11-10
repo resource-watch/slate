@@ -200,14 +200,52 @@ curl -X GET https://api.resourcewatch.org/v1/collection \
         "name": "Collection name",
         "ownerId": "5dd7b92abf56ca0011875ae2",
         "application": "rw",
-        "resources": []
+        "resources": [{
+            "type": "dataset",
+            "id": "123456789"            
+        }]
       }
     }
   ]
 }
 ```
 
-By making a GET request to the `v1/collection` endpoint, you can obtain the collections of the logged user.
+By making a GET request to the `/v1/collection` endpoint, you can obtain the collections of the logged user.
+
+
+> To get all collections of the logged user, including the associated resources:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/collection \
+-H "Authorization: Bearer <your-token>"
+```
+
+> Example response:
+
+```json
+{
+  "data": [
+    {
+      "id": "5f56170c1fca55001ad51779",
+      "type": "collection",
+      "attributes": {
+        "name": "Collection name",
+        "ownerId": "5dd7b92abf56ca0011875ae2",
+        "application": "rw",
+        "resources": [{
+            "type": "dataset",
+            "id": "123456789",
+            "attributes": {
+                ...
+            }
+        }]
+      }
+    }
+  ]
+}
+```
+
+You can optionally add the `include=true` query parameter to load the associated resources.
 
 ## Get a collection by id
 
