@@ -636,13 +636,48 @@
         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="w">            
+        </span><span class="p">}]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>By making a GET request to the <code class="prettyprint">v1/collection</code> endpoint, you can obtain the collections of the logged user.</p>
+<p>By making a GET request to the <code class="prettyprint">/v1/collection</code> endpoint, you can obtain the collections of the logged user.</p>
+
+<blockquote>
+<p>To get all collections of the logged user, including the associated resources:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="err">...</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can optionally add the <code class="prettyprint">include=true</code> query parameter to load the associated resources.</p>
 
 <h2 id="get-a-collection-by-id">Get a collection by id</h2>
 
