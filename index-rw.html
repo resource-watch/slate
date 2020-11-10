@@ -826,6 +826,38 @@ TODO -->
 </span></code></pre>
 <p>You can optionally add the <code class="prettyprint">include=true</code> query parameter to load the associated resources.</p>
 
+<h3 id="pagination">Pagination</h3>
+
+<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, virtually all collections are listed at once, but this behavior should be considered deprecated, and your application should rely on reasonably sized pages instead - the default value may be changed soon. You can customize the pagination behavior using the following query parameters:  </p>
+
+<blockquote>
+<p>Custom pagination: load page 2 using 25 results per page</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25 <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">9999999</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page number</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
+
 <h2 id="get-a-collection-by-id">Get a collection by id</h2>
 
 <blockquote>
