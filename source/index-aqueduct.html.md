@@ -16,6 +16,10 @@ includes:
   - concept/query
   - concept/layer
   - concept/widget
+  - concept/metadata
+  - concept/geostore
+  - concept/area
+  - api/before_you_get_started
   - api/authentication
   - api/contact
   - api/collections
@@ -23,14 +27,26 @@ includes:
   - api/query
   - api/layer
   - api/widget
+  - api/jiminy
   - api/fields
+  - api/forms
   - api/metadata
   - api/vocabulary
   - api/geostore
+  - api/subscriptions
+  - api/favourites
+  - api/graph
+  - api/areas
+  - api/areas_v2
+  - api/webshot
+  - api/topic
+  - api/dashboard
   - api/tasks
+  - api/user_management
   - api/microservices
   - api/troubleshooting
   - errors
+  - attribution
 
 logo: logo-aqueduct.png
 
