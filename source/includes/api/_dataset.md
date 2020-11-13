@@ -1197,7 +1197,7 @@ To see the details (including the date) of the last operation performed on the d
 > Flush dataset's cache
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/0c630feb-8146-4fcc-a9be-be5adcb731c8/flush \
+curl -X POST https://api.resourcewatch.org/v1/dataset/0c630feb-8146-4fcc-a9be-be5adcb731c8/flush \
 -H "Authorization: Bearer <your-token>"
 ```
 
