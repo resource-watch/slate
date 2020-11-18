@@ -414,7 +414,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata' \
 -H "Authorization: Bearer <auth_token>" \
 -H "Content-Type: application/json" \
 -d '{
-  "application": <app>,
+  "application": <application>,
   "language": <language>,
   "name": "metadata name"
 }'
@@ -427,7 +427,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer
 -H "Authorization: Bearer <auth_token>" \
 -H "Content-Type: application/json" \
 -d '{
-  "application": <app>,
+  "application": <application>,
   "language": <language>,
   "name": "metadata name"
 }'
@@ -440,7 +440,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
 -H "Authorization: Bearer <auth_token>" \
 -H "Content-Type: application/json" \
 -d '{
-  "application": <app>,
+  "application": <application>,
   "language": <language>,
   "name": "metadata name"
 }'
@@ -498,7 +498,7 @@ Error code     | Error message  | Description
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
 -H "Content-Type: application/json"  -d \
  '{
-   "application": <app>,
+   "application": <application>,
    "language": <language>,
    "name": "updated metadata name"
   }'
@@ -510,7 +510,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<widget-id>/metadata \
 -H "Content-Type: application/json"  -d \
  '{
-   "application": <app>,
+   "application": <application>,
    "language": <language>,
    "name": "updated metadata name"
   }'
@@ -522,7 +522,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<widge
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata \
 -H "Content-Type: application/json"  -d \
  '{
-   "application": <app>,
+   "application": <application>,
    "language": <language>,
    "name": "updated metadata name"
   }'
@@ -583,43 +583,88 @@ To perform this operation, the following conditions must be met:
   - have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata)
 
 
-#### Errors for updating metadata
+### Errors for updating metadata
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
-401            | Unauthorized   | You need to be logged in to be able to update a metadata.
+401            | Unauthorized   | You need to be logged in to be able to update metadata.
 403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata).
-403            | Forbidden      | You are trying to update a metadata with one or more `application` values that are not associated with your user account. 
+403            | Forbidden      | You are trying to update metadata with an `application` value that is not associated with your user account. 
 404            | Metadata of resource <resource type>: <resource id> doesn't exist   | A metadata matching the provided resource data, language and application does not exist.
 
 
 ## Deleting metadata
 
-As for creation and updating, the endpoints for deleting metadata objects follow the `dataset/<dataset-id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, and you must provide valid values for the parameters `application` and `language`. If the object is correctly deleted a `200` response is returned. If the user is not authorized to delete metadata objects a `403` error is returned; see the required [credentials](#overview-of-available-endpoints). If the request is invalid a `400` error is returned; potentially with a more detailed error message.
 
-> Request pattern for deleting the metadata of a dataset by its id
-
-```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata?application=<app-id>&language=<language>
-```
-
-> Request pattern for deleting the metadata of a layer by its id
+> Deleting metadata for a given dataset
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata?application=<app-id>&language=<language>
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata?application=<application>&language=<language>
 ```
 
-> Request pattern for deleting the metadata of a widget by its id
+> Deleting metadata for a given layer
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata?application=<app-id>&language=<language>
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata?application=<application>&language=<language>
 ```
 
-> Example URL request
+> Deleting metadata for a given widget
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata?application=rw&language=en \
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata?application=<application>&language=<language>
 ```
+
+> Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "942b3f38-9504-4273-af51-0440170ffc86-dataset-942b3f38-9504-4273-af51-0440170ffc86-rw-en",
+      "type": "metadata",
+      "attributes": {
+        "dataset": "942b3f38-9504-4273-af51-0440170ffc86",
+        "application": "rw",
+        "resource": {
+          "type": "dataset",
+          "id": "942b3f38-9504-4273-af51-0440170ffc86"
+        },
+        "language": "en",
+        "name": "Cloud Computing Market - USA - 2016",
+        "source": "http://www.forbes.com/",
+        "info": {
+          "summary": "These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales).",
+          "author": "Louis Columbus",
+          "date": "MAR 13, 2016 @ 10:42 PM",
+          "link": "http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"
+        },
+        "createdAt": "2017-01-20T08:07:53.272Z",
+        "updatedAt": "2017-01-20T08:40:30.190Z",
+        "status": "published"
+      }
+    }
+  ]
+}
+```
+
+The metadata delete endpoint allows you to delete a single metadata at a time, provided you have the necessary permissions. Besides the details provided in the URL itself, you must also specify, as query parameters, both the `application` and `language` values of the metadata you're trying to delete. These fields will be used to pinpoint exactly which metadata entry will be deleted - remember that each resource may have multiple metadata associated with it, but only one per application-language pair.
+
+To perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the metadata that's being deleted
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata)
+
+### Errors for deleting metadata
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | Bad request    | Your request does not include the `application` or `language` query parameters.
+401            | Unauthorized   | You need to be logged in to be able to delete metadata.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata).
+403            | Forbidden      | You are trying to delete metadata with an `application` value that is not associated with your user account. 
+404            | Metadata of resource <resource type>: <resource id> doesn't exist   | A metadata matching the provided resource data, language and application does not exist.
 
   
 ## Metadata reference
