@@ -1,12 +1,5 @@
 # Metadata
 
-## TODO LIST
-
-+ check if a vocab is used for language, and application
-+ check how parameter `sort` works
-+ check if `type` filters in `/dataset/<dataset_id>/metadata`
-+ combine overview table; make description of CRUD per common endpoint?
-
 ## What is metadata?
 
 If you are new to the RW API, or want to learn more about the concept of a metadata, we strongly encourage you to read the [metadata concept](#metadata) documentation first. It gives you a brief and clear description of what a metadata is, and why it is useful.
@@ -58,7 +51,7 @@ Any user can retrieve metadata objects, however to create, update or delete and 
 
 ## Getting metadata
 
-There are 2 main ways to retrieve metadata objects from the RW API: using the "get all" endpoint (and optionally adding some filters), or loading metadata by their id (either a single element at a time, or multiple in one go) and resource type.
+There are 2 main ways to retrieve metadata objects from the RW API: using the "get all" endpoint (and optionally adding some filters), or loading metadata by their resource id (either a single element at a time, or multiple in one go) and type.
  
 Remembering that each resource [may have many metadata objects](#metadata-objects) associated with it. In general, you will usually want to use the filter parameters `application` and `language`, which may be one or many of valid RW API applications and languages.
  
@@ -126,7 +119,7 @@ For a detailed description of each field, check out the [Metadata reference](#me
 
 In the sections below, we’ll explore the optional parameters supported by this, which we strongly recommend you use.
 
-### Application and language filters
+#### Application and language filters
 
 > Getting a list of all metadata belonging to the RW application, written in either English or Spanish
 
@@ -137,7 +130,7 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw&languag
 
 You can filter by `application` and `language` of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.
 
-### Type filter
+#### Type filter
 
 > Getting a list of all metadata for widgets
 
@@ -149,7 +142,7 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?type=widget' \
 Using the `type` query parameter you can specify the type of the metadata resource to load. Expected values are `dataset`, `widget` or `layer`, and any other values will produce no results.
 
 
-### Limit
+#### Limit
 
 > Getting a list of up to 10 metadata
 
@@ -160,7 +153,7 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?limit=10' \
 
 Using the `limit` query parameter you can specify the maximum number of metadata to load in a single response.
 
-### Sorting
+#### Sorting
 
 > Sorting metadata
 
@@ -186,140 +179,28 @@ Multiple sorting criteria can be used, separating them by commas.
 
 You can also specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
-### Getting metadata by id
 
-> Request pattern for finding metadata providing an array of dataset ids
+### Getting metadata for a dataset, layer or widget
 
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/metadata/find-by-ids \
--H "Content-Type: application/json"  -d \
- '{
-   "ids": [<ids>]
-  }'
-```
-
-> Request pattern for finding metadata providing an array of layer ids
+> Getting metadata associated with a dataset
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/layer/metadata/find-by-ids \
--H "Content-Type: application/json"  -d \
- '{
-   "ids": [<ids>]
-  }'
-```
-
-> Request pattern for finding metadata providing an array of widget ids
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/layer/metadata/find-by-ids \
--H "Content-Type: application/json"  -d \
- '{
-   "ids": [<ids>]
-  }'
-```
-
-> Example URL request
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/metadata/find-by-ids \
--H "Content-Type: application/json"  -d \
- '{
-     "ids": "b000288d-7037-43ba-aa34-165eab549613, 942b3f38-9504-4273-af51-0440170ffc86"
-  }'
-```
-
-> Response
-
-```json
-{
-    "data": [
-        {
-            "id": "57a21d19aee6c90e0029deca",
-            "type": "metadata",
-            "attributes": {
-                "dataset": "b000288d-7037-43ba-aa34-165eab549613",
-                "application": "prep",
-                "resource": {
-                    "id": "b000288d-7037-43ba-aa34-165eab549613",
-                    "type": "dataset"
-                },
-                "language": "en",
-                "name": "Projected temperature change",
-                "description": "The Puget Sound region is projected to warm rapidly during the 21st century. Prior to mid-century, the projected increase in air temperatures is about the same for all greenhouse gas scenarios, a result of the fact that a certain amount of warming is already “locked in” due to past emissions. After about 2050, projected warming depends on the amount of greenhouse gases emitted globally in the coming decades. For the 2050s (2040-2069, relative to 1970-1999), annual average air temperature is projected to rise +4.2°F to +5.9°F, on average, for a low (RCP 4.5) and a high (RCP 8.5) greenhouse gas scenario. These indicators are derived from the Multivariate Adaptive Constructed Analogs (MACA) CMIP5 Future Climate Dataset from the University of Idaho. For more information about this analysis, please see http://cses.washington.edu/picea/mauger/ps-sok/ps-sok_sec12_builtenvironment_2015.pdf. For more information about the MACA CMIP5 Future Climate Dataset please see http://maca.northwestknowledge.net/index.php",
-                "source": "http://maca.northwestknowledge.net",
-                "citation": "Abatzoglou, J. T.,   Brown, T. J. 2012. A comparison of statistical downscaling methods suited for wildfire applications. International Journal of Climatology, 32(5), 772-780. doi: http://dx.doi.org/10.1002/joc.2312 ",
-                "license": "Public domain",
-                "info": {
-                    "organization": "Joe Casola, University of Washington",
-                    "license": "Public domain",
-                    "source": "http://maca.northwestknowledge.net",
-                    "citation": "Abatzoglou, J. T.,   Brown, T. J. 2012. A comparison of statistical downscaling methods suited for wildfire applications. International Journal of Climatology, 32(5), 772-780. doi: http://dx.doi.org/10.1002/joc.2312 ",
-                    "description": "The Puget Sound region is projected to warm rapidly during the 21st century. Prior to mid-century, the projected increase in air temperatures is about the same for all greenhouse gas scenarios, a result of the fact that a certain amount of warming is already “locked in” due to past emissions. After about 2050, projected warming depends on the amount of greenhouse gases emitted globally in the coming decades. For the 2050s (2040-2069, relative to 1970-1999), annual average air temperature is projected to rise +4.2°F to +5.9°F, on average, for a low (RCP 4.5) and a high (RCP 8.5) greenhouse gas scenario. These indicators are derived from the Multivariate Adaptive Constructed Analogs (MACA) CMIP5 Future Climate Dataset from the University of Idaho. For more information about this analysis, please see http://cses.washington.edu/picea/mauger/ps-sok/ps-sok_sec12_builtenvironment_2015.pdf. For more information about the MACA CMIP5 Future Climate Dataset please see http://maca.northwestknowledge.net/index.php",
-                    "short-description": "Projected temperature change in the Puget Sound Lowlands relative to average temperature between 1950-2005. Light colored lines in the background show the range of projections. All climate scenarios project warming for the Puget Sound region during the 21st century.",
-                    "subtitle": "",
-                    "title": "Projected temperature change"
-                },
-                "createdAt": "2016-12-13T10:02:28.337Z",
-                "updatedAt": "2016-12-13T10:03:02.445Z",
-                "status": "published"
-            }
-        },
-        {
-            "id": "5881c5593d81e10b00e6a599",
-            "type": "metadata",
-            "attributes": {
-                "dataset": "942b3f38-9504-4273-af51-0440170ffc86",
-                "application": "rw",
-                "resource": {
-                    "id": "942b3f38-9504-4273-af51-0440170ffc86",
-                    "type": "dataset"
-                },
-                "language": "en",
-                "name": "Cloud Computing Market - USA - 2016",
-                "source": "http://www.forbes.com/",
-                "info": {
-                    "link": "http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0",
-                    "date": "MAR 13, 2016 @ 10:42 PM",
-                    "author": "Louis Columbus",
-                    "summary": "These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales)."
-                },
-                "createdAt": "2017-01-20T08:07:53.272Z",
-                "updatedAt": "2017-01-20T08:40:30.190Z",
-                "status": "published"
-            }
-        }
-    ]
-}
-```
-
-### Getting metadata for a specific dataset, layer or widget
-
-> Request pattern for finding metadata associated with a dataset
-
-```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/metadata?application=<application>&language=<language>&type=<types>' \
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/metadata' \
 -H 'Content-Type: application/json'
 ```
 
-> Request pattern for finding metadata associated with a layer
+> Getting metadata associated with a layer
 
 ```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>/metadata?application=<application>&language=<language>' \
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>/metadata' \
 -H 'Content-Type: application/json'
 ```
 
-> Request pattern for finding metadata associated with a widget
+> Getting metadata associated with a widget
 
 ```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>//metadata?application=<application>&language=<language>' \
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/metadata' \
 -H 'Content-Type: application/json'
-```
-
-> Example URL request
-
-```shell
-curl -L -X GET 'http://api.resourcewatch.org/v1/dataset/f2fe7588-6d1b-400e-b79c-0c86bf1273ea/metadata?application=rw&language=en&type=datset' \
--H 'Content-Type: application/json' \
 ```
 
 > Example response
@@ -339,7 +220,7 @@ curl -L -X GET 'http://api.resourcewatch.org/v1/dataset/f2fe7588-6d1b-400e-b79c-
                 },
                 "language": "en",
                 "name": "Urban Population with Access to an Improved Water Source",
-                "description": "The Percentage of Urban Population with Access to an Improved Water Source is derived by the WHO/UNICEF Joint Monitoring Programme based on national censuses and nationally representative household surveys. The coverage rates for water and sanitation are based on information from service users on the facilities their households actually use rather than on information from service providers, which may include nonfunctioning systems. WHO/UNICEF define an improved drinking-water source as one that, by nature of its construction or through active intervention, is protected from outside contamination, in particular from contamination with fecal matter. Improved water sources include piped water into dwelling, plot, or yard; piped water into a neighbor's plot; public tap/standpipe; tube well/borehole; protected dug well; protected spring; and rainwater. These data are produced annually; for additional information, please see http://data.worldbank.org/indicator/SH.H2O.SAFE.UR.ZS.",
+                "description": "The Percentage of Urban Population with Access to an Improved Water Source is derived by ...",
                 "source": "UN WHO/WHO UNICEF JMP WSS",
                 "info": {
                     "data_download_link": "null",
@@ -348,10 +229,9 @@ curl -L -X GET 'http://api.resourcewatch.org/v1/dataset/f2fe7588-6d1b-400e-b79c-
                     "spatial_resolution": "Tabular: National",
                     "geographic_coverage": "Global",
                     "link_to_linense": "http://data.worldbank.org/summary-terms-of-use",
-                    "license": "Open: You are free to copy, distribute, adapt, display, or include the data in other products for commercial and noncommercial purposes at no cost subject to the following limitations: You must include attribution for the data you use in the manner indicated in the metadata included with the data. You must not claim or imply that the World Bank endorses your use of the data or use the World Bank’s logo(s) or trademark(s) in conjunction with such use.",
+                    "license": "Open: You are free to copy, distribute, adapt, display, or include ...",
                     "citation": "World Bank. 2015. \"World Development Indicators: Improved Water Source (% of Population with Access).\" Retrieved from http://data.worldbank.org/indicator/SH.H2O.SAFE.ZS. Accessed through Resource Watch on [date]. www.resourcewatch.org.",
-                    "cautions": "The data on access to an improved water source measure the percentage of the population with ready access to water for domestic purposes. Access to drinking water from an improved source does not ensure that the water is safe or adequate, as these characteristics are not tested at the time of survey. But improved drinking water technologies are more likely than those characterized as unimproved to provide safe drinking water and to prevent contact with human excreta. While information on access to an improved water source is widely used, it is extremely subjective, and such terms as \"safe,\" \"improved,\" \"adequate,\" and \"reasonable\" may have different meanings in different countries despite official WHO definitions. Even in high-income countries, treated water may not always be safe to drink. Access to an improved water source is equated with connection to a supply system; it does not take into account variations in the quality and cost (broadly defined) of the service.",
-                    "learn_more_link": "http://data.worldbank.org/indicator/SH.H2O.SAFE.ZS",
+                    "cautions": "The data on access to an improved water source measure the ...",
                     "source_organization_link": "null",
                     "source_organization": "United Nations World Health Organization (UN WHO)/World Health Organization and United Nations Children's Fund Joint Monitoring Programme for Water Supply and Sanitation (WHO UNICEF JMP WSS)",
                     "function": "This data set displays the percentage of urban population with access to an improved drinking water source in a dwelling or located within a convenient distance from the user's dwelling.",
@@ -382,6 +262,147 @@ curl -L -X GET 'http://api.resourcewatch.org/v1/dataset/f2fe7588-6d1b-400e-b79c-
     ]
 }
 ```
+
+These endpoints allow you to get metadata for a single dataset, widget or layer. By default, metadata for all languages and applications is returned, but you can use optional query parameters to filter that result.
+
+#### Application and language filters
+
+> Getting a list of all metadata for a given dataset, belonging to the RW application and written in either English or Spanish
+
+```shell
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/metadata?application=rw&language=en,es' \
+-H 'Content-Type: application/json' \
+```
+
+You can filter by `application` and `language` of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.
+
+#### Limit
+
+> Getting a list of all metadata for a given dataset, up to 10 results
+
+```shell
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/metadata?limit=10' \
+-H 'Content-Type: application/json' \
+```
+
+Using the `limit` query parameter you can specify the maximum number of metadata to load in a single response.
+
+
+### Getting metadata for multiple datasets, layers or widgets
+
+> Getting metadata associated with multiple datasets
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/metadata/find-by-ids \
+-H "Content-Type: application/json"  -d \
+ '{
+   "ids": [<dataset ids>]
+  }'
+```
+
+> Getting metadata associated with multiple widgets
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/layer/metadata/find-by-ids \
+-H "Content-Type: application/json"  -d \
+ '{
+   "ids": [<layer ids>]
+  }'
+```
+
+> Getting metadata associated with multiple widgets
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/find-by-ids \
+-H "Content-Type: application/json"  -d \
+ '{
+   "ids": [<widget ids>]
+  }'
+```
+
+
+> Response
+
+```json
+{
+    "data": [
+        {
+            "id": "595f836c0d9ed1000bc29a91",
+            "type": "metadata",
+            "attributes": {
+                "dataset": "f2fe7588-6d1b-400e-b79c-0c86bf1273ea",
+                "application": "rw",
+                "resource": {
+                    "id": "f2fe7588-6d1b-400e-b79c-0c86bf1273ea",
+                    "type": "dataset"
+                },
+                "language": "en",
+                "name": "Urban Population with Access to an Improved Water Source",
+                "description": "The Percentage of Urban Population with Access to an Improved Water Source is derived by ...",
+                "source": "UN WHO/WHO UNICEF JMP WSS",
+                "info": {
+                    "data_download_link": "null",
+                    "frequency_of_updates": "Annual",
+                    "date_of_content": "1990-present",
+                    "spatial_resolution": "Tabular: National",
+                    "geographic_coverage": "Global",
+                    "link_to_linense": "http://data.worldbank.org/summary-terms-of-use",
+                    "license": "Open: You are free to copy, distribute, adapt, display, or include ...",
+                    "citation": "World Bank. 2015. \"World Development Indicators: Improved Water Source (% of Population with Access).\" Retrieved from http://data.worldbank.org/indicator/SH.H2O.SAFE.ZS. Accessed through Resource Watch on [date]. www.resourcewatch.org.",
+                    "cautions": "The data on access to an improved water source measure the ...",
+                    "source_organization_link": "null",
+                    "source_organization": "United Nations World Health Organization (UN WHO)/World Health Organization and United Nations Children's Fund Joint Monitoring Programme for Water Supply and Sanitation (WHO UNICEF JMP WSS)",
+                    "function": "This data set displays the percentage of urban population with access to an improved drinking water source in a dwelling or located within a convenient distance from the user's dwelling.",
+                    "functions": "This data set displays the percentage of urban population with access to an improved drinking water source in a dwelling or located within a convenient distance from the user's dwelling.",
+                    "name": "Urban Population with Access to an Improved Water Source",
+                    "technical_title": "Percentage of Urban Population with Access to an Improved Water Source (WHO/UNICEF)"
+                },
+                "columns": {
+                    "year": {
+                        "description": "Measured year",
+                        "alias": "Year"
+                    },
+                    "value": {
+                        "alias": "Value"
+                    },
+                    "country": {
+                        "alias": "Country Name"
+                    },
+                    "iso": {
+                        "alias": "ISO-3 Country Code"
+                    }
+                },
+                "createdAt": "2017-07-07T12:49:48.721Z",
+                "updatedAt": "2017-08-28T14:30:17.701Z",
+                "status": "published"
+            }
+        }
+    ]
+}
+```
+
+
+This group of endpoints allows you to access metadata for multiple resources of the same type with a single request. The result will be a flat list of metadata elements, not grouped by their associated resource - it's up to your application to implement this logic if it needs it.
+
+#### Errors for getting metadata for multiple datasets, layers or widgets
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | Missing 'ids' from request body | The required `ids` field is missing in the request body.
+
+#### Application and language filters
+
+> Getting a list of all metadata for multiple widgets, belonging to the RW application and written in either English or Spanish
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/find-by-ids?application=rw&language=en,es \
+-H "Content-Type: application/json"  -d \
+ '{
+   "ids": [<widget ids>]
+  }'
+```
+
+You can filter by `application` and `language` of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.
 
 
 ## Create a metadata object
