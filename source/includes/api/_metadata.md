@@ -496,6 +496,7 @@ Error code     | Error message  | Description
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
+-H "Authorization: Bearer <auth_token>" \
 -H "Content-Type: application/json"  -d \
  '{
    "application": <application>,
@@ -508,6 +509,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<widget-id>/metadata \
+-H "Authorization: Bearer <auth_token>" \
 -H "Content-Type: application/json"  -d \
  '{
    "application": <application>,
@@ -520,6 +522,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<widge
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata \
+-H "Authorization: Bearer <auth_token>" \
 -H "Content-Type: application/json"  -d \
  '{
    "application": <application>,
@@ -593,25 +596,102 @@ Error code     | Error message  | Description
 404            | Metadata of resource <resource type>: <resource id> doesn't exist   | A metadata matching the provided resource data, language and application does not exist.
 
 
+## Cloning dataset metadata
+
+> Cloning metadata for a given dataset
+
+```shell
+curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata/clone' 
+-H 'Content-Type: application/json' \
+-H "Authorization: Bearer <auth_token>" -d \
+'{
+    "newDataset": "<targer dataset>",
+    "application": "<application>"
+}'
+```
+
+> Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "942b3f38-9504-4273-af51-0440170ffc86-dataset-942b3f38-9504-4273-af51-0440170ffc86-rw-en",
+      "type": "metadata",
+      "attributes": {
+        "dataset": "942b3f38-9504-4273-af51-0440170ffc86",
+        "application": "rw",
+        "resource": {
+          "type": "dataset",
+          "id": "942b3f38-9504-4273-af51-0440170ffc86"
+        },
+        "language": "en",
+        "name": "Cloud Computing Market - USA - 2016",
+        "source": "http://www.forbes.com/",
+        "info": {
+          "summary": "These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales).",
+          "author": "Louis Columbus",
+          "date": "MAR 13, 2016 @ 10:42 PM",
+          "link": "http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"
+        },
+        "createdAt": "2017-01-20T08:07:53.272Z",
+        "updatedAt": "2017-01-20T08:40:30.190Z",
+        "status": "published"
+      }
+    }
+  ]
+}
+```
+
+This endpoint allows you to clone all the existing metadata associated with a dataset, as new metadata associated with a different dataset. Note that this will not clone metadata for widgets or layers associated with the defined dataset; only dataset metadata will be cloned.
+
+When calling this endpoint, you must provide two body parameters:
+- `newDataset`: the id of the target dataset to which the cloned metadata will be associated.
+- `application`: an application to which your user account is associated. This is not used in the cloning logic.
+
+A successful cloning will return a list of all metadata created in this process.
+
+To perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the metadata that's being updated 
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata)
+
+### Errors for cloning metadata
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | - newDataset: newDataset can not be empty. -    | You need to specify the `newDataset` body parameter.
+400            | Metadata of resource dataset: <new dataset>, application: <application> and language: <language> already exists    | The target dataset already has metadata associated with it, and cloning the metadata from the source dataset would cause it to have more than one metadata per language and application.
+401            | Unauthorized   | You need to be logged in to be able to update metadata.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata).
+403            | Forbidden      | You are trying to clone metadata with an `application` value that is not associated with your user account. 
+404            | Metadata of resource <resource type>: <resource id> doesn't exist   | A metadata matching the provided resource data, language and application does not exist.
+
+
 ## Deleting metadata
 
 
 > Deleting metadata for a given dataset
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata?application=<application>&language=<language>
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata?application=<application>&language=<language> \
+-H "Authorization: Bearer <auth_token>" 
 ```
 
 > Deleting metadata for a given layer
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata?application=<application>&language=<language>
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata?application=<application>&language=<language> \
+-H "Authorization: Bearer <auth_token>" 
 ```
 
 > Deleting metadata for a given widget
 
 ```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata?application=<application>&language=<language>
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata?application=<application>&language=<language> \
+-H "Authorization: Bearer <auth_token>" 
 ```
 
 > Example response
