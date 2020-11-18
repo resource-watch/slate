@@ -12,7 +12,7 @@ They are particularly useful for allowing users to find relevant datasets, layer
 
 ***As such, if you really want people to be able to use your datasets, widgets or layers, it is crucial that it has metadata!***
 
-To find out more about accessing metadata objects already available on the RW API, check out the documentation on [getting metadata objects](#getting-metadata-objects). If you'd like to share your data with the world, you can also [create your own metadata objects](#create-metadata-objects) on the RW API, as well as [update](#update-metadata-objects) and [delete](#delete-metadata-objects) existing metadata objects.
+To find out more about accessing metadata objects already available on the RW API, check out the documentation on [getting metadata objects](#getting-metadata-objects). If you'd like to share your data with the world, you can also [create your own metadata](#creating-metadata) on the RW API, as well as [update](#updating-metadata) and [delete](#deleting-metadata) existing metadata objects.
 
 ## Metadata objects
 
@@ -508,7 +508,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
 > Updating metadata for a given layer
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<widget-id>/metadata \
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata \
 -H "Authorization: Bearer <auth_token>" \
 -H "Content-Type: application/json"  -d \
  '{
