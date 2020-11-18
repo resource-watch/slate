@@ -2,7 +2,7 @@
 
 ## What is metadata?
 
-If you are new to the RW API, or want to learn more about the concept of a metadata, we strongly encourage you to read the [metadata concept](#metadata) documentation first. It gives you a brief and clear description of what a metadata is, and why it is useful.
+If you are new to the RW API, or want to learn more about the concept of metadata, we strongly encourage you to read the [metadata concept](#metadata) documentation first. It gives you a brief and clear description of what metadata is, and why it is useful.
 
 Once you've read that section, you can come back here to learn more details about using the RW API Metadata feature, which aims to provide summary information about [Datasets](#dataset), [Layers](#layer), and [Widgets](#widget).
 
@@ -18,7 +18,7 @@ To find out more about accessing metadata objects already available on the RW AP
 
 RW API's [approach to metadata](#metadata) is designed to offer flexibility; both in terms of the information contained and languages. Hence, when working with metadata objects it is important to understand a few key concepts. 
 
-The first of which is that a metadata object contains information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
+The first of which is that metadata objects contains information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
 
 Another important concept to keep in mind is that each metadata object concerns a single `language` and `application`. If you want to provide translations of your metadata, or if you'd like it to tailor a resource's metadata to better fit different applications, you should create multiple metadata objects for the different combinations of application and language.
 
@@ -488,7 +488,7 @@ Error code     | Error message  | Description
 400            | `<field>`: `<field>` can not be empty | Your are missing a required field value.
 400            | `<field>`: empty or invalid `<field>` | The provided value for `<field>` is invalid. 
 401            | Unauthorized   | You are not authenticated.
-403            | Forbidden      | You are trying to create a metadata for an `application` value that is not associated with your user account. 
+403            | Forbidden      | You are trying to create metadata for an `application` value that is not associated with your user account. 
 
 ## Updating metadata
 
@@ -593,7 +593,7 @@ Error code     | Error message  | Description
 401            | Unauthorized   | You need to be logged in to be able to update metadata.
 403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata).
 403            | Forbidden      | You are trying to update metadata with an `application` value that is not associated with your user account. 
-404            | Metadata of resource <resource type>: <resource id> doesn't exist   | A metadata matching the provided resource data, language and application does not exist.
+404            | Metadata of resource <resource type>: <resource id> doesn't exist   | Metadata matching the provided resource data, language and application does not exist.
 
 
 ## Cloning dataset metadata
@@ -667,7 +667,7 @@ Error code     | Error message  | Description
 401            | Unauthorized   | You need to be logged in to be able to update metadata.
 403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata).
 403            | Forbidden      | You are trying to clone metadata with an `application` value that is not associated with your user account. 
-404            | Metadata of resource <resource type>: <resource id> doesn't exist   | A metadata matching the provided resource data, language and application does not exist.
+404            | Metadata of resource <resource type>: <resource id> doesn't exist   | Metadata matching the provided resource data, language and application does not exist.
 
 
 ## Deleting metadata
@@ -744,12 +744,12 @@ Error code     | Error message  | Description
 401            | Unauthorized   | You need to be logged in to be able to delete metadata.
 403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata).
 403            | Forbidden      | You are trying to delete metadata with an `application` value that is not associated with your user account. 
-404            | Metadata of resource <resource type>: <resource id> doesn't exist   | A metadata matching the provided resource data, language and application does not exist.
+404            | Metadata of resource <resource type>: <resource id> doesn't exist   | Metadata matching the provided resource data, language and application does not exist.
 
   
 ## Metadata reference
 
-This section gives you a complete view at the properties that are maintained as part of a metadata object. When interacting with a metadata object (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
+This section gives you a complete view at the properties that are maintained as part of metadata objects. When interacting with metadata objects (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
 
 You can find more details in the [source code](https://github.com/resource-watch/rw_metadata/blob/dev/app/src/models/metadata.model.js).
 
