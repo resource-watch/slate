@@ -23,7 +23,7 @@ To find out more about accessing metadata objects already available on the RW AP
 
 ## Metadata objects
 
-RW API's [approach to Metadata](#metadata) is designed to offer flexibility; both in terms of the information contained and languages. Hence, when working with metadata objects it is important to understand a few key concepts. 
+RW API's [approach to metadata](#metadata) is designed to offer flexibility; both in terms of the information contained and languages. Hence, when working with metadata objects it is important to understand a few key concepts. 
 
 The first of which is that a metadata object contains information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
 
@@ -35,11 +35,9 @@ When it comes to its internal structure, metadata objects have a balance of stru
 
 Last but not least, it's important to keep in mind that the behavior of metadata objects and endpoints aims to be, as much as possible, independent from the target resource it references. In the detailed endpoint documentation below we'll cover the different endpoints in depth, and highlight the differences in behavior when handling different resource types, but you can safely assume that, for most of it, behavior described for a type of resource will be the same for all 3 types.
 
-## Overview of available endpoints
+## Metadata endpoints overview
 
-As covered above, each metadata object directly concerns a single dataset, widget or layer. The endpoint structure mostly reflects that 
-
-Metadata objects are always associated with a dataset, and may also be associated with layer or widget. Hence, the endpoints for interacting with metadata objects are always sub-paths of `/dataset`, and may also refer their associated `/layer` or `/widget`.
+As covered above, each metadata object directly concerns a single dataset, widget or layer. The endpoint structure mostly reflects that, with each metadata action (getting, creating, modifying or deleting metadata) being available through 3 different endpoints, one for each type of resource. These endpoints will be documented as a single element, as they behave in exactly the same way, with the only difference between them being the actual endpoint URL. Any differences that may exist will be pointed out, but those will be rare. The only exceptions are the endpoints to load all metadata (which ignores resource type) and to clone a dataset's metadata, which doesn't have a widget or layer equivalent.
 
 Any user can retrieve metadata objects, however to create, update or delete and object the appropriate [authentication](#authentication) credentials are required:
 
@@ -57,131 +55,23 @@ Any user can retrieve metadata objects, however to create, update or delete and 
 | 401          | Unauthorized           | The token provided is not recognized or is invalid. |
 | 403          | Authorization failed.  | Your user account does not have an `ADMIN` or `MANAGER` role or belong to the same `application` group as the resource associated with the metadata object. |
 
-> Overview of endpoints
 
-| Method | Path                                | Description                                                                                                                       |
-|--------|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| POST   | `/v1/dataset/<dataset-id>/metadata`                      | [Create a dataset metadata object](#create-a-metadata-object) |
-| POST   | `/v1/dataset/<dataset-id>/layer/<layer-id>/metadata` | [Create a dataset layer metadata object](#create-a-metadata-object) |
-| POST   | `/v1/dataset/<dataset-id>/widget/<widget-id>/metadata` | [Create a dataset widget metadata object](#create-a-metadata-object) |
-| POST   | `/v1/dataset/<dataset-id>/metadata/clone`                      | [Clone a dataset metadata object](#create-a-metadata-object) |
-| GET    | `/v1/metadata`                                    | [Get all metadata objects](#getting-all-metadata-objects) |
-| POST   | `/v1/dataset/:dataset/metadata/find-by-ids` | [Get metadata objects by identifiers](#getting-metadata-objects-by-identifiers) |
-| POST   | `/v1/dataset/:dataset/layer/<layer_id>/metadata/find-by-ids`     | [Get metadata objects by identifiers](#getting-metadata-objects-by-identifiers) |
-| POST   | `/v1/dataset/:dataset/widget/<widget_id>/metadata/find-by-ids`   | [Get metadata objects by identifiers](#getting-metadata-objects) |
-| GET    | `/v1/dataset/:dataset/metadata`                                   | [Get metadata objects](#getting-metadata-objects) |
-| GET    | `/v1/dataset/:dataset/layer/<layer_id>/metadata` | [Get metadata objects](#getting-metadata-objects-by-identifiers) |
-| GET    | `/v1/dataset/:dataset/widget/<widget_id>/metadata` | [Get metadata objects](#getting-metadata-objects) |
-| PATCH  | `/v1/dataset/:dataset/metadata` | [Get metadata objects](#getting-metadata-objects) |
-| UPDATE   | `/v1/dataset/:dataset/layer/<layer_id>/metadata` | [Get metadata objects](#getting-metadata-objects-by-identifiers) |
-| UPDATE   | `/v1/dataset/:dataset/widget/<widget_id>/metadata` | [Get metadata objects](#getting-metadata-objects) |
+## Getting metadata
 
-## Create a metadata object
-
-To associate a metadata object with a dataset, and it's layers or widgets you need to provide your authorization token (`<auth_token>`) in the header, and POST a JSON object that must contain valid values for the fields `application` and `language` to the appropriate `/dataset/<dataset_id>` endpoint. If the object is correctly added to the entity a `200` response is returned, as well as the new metadata object. If the user is not authorized to create metadata objects a `403` error is returned; see the required [credentials](#overview-of-available-endpoints).
-
-> Example request pattern dataset
-
-```shell
-curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata' \
--H "Authorization: Bearer <auth_token>" \
--H "Content-Type: application/json" \
--d '{
-  "application": <app>,
-  "language": <language>
-}'
-```
-
-> Example request pattern dataset layer
-
-```shell
-curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata' \
--H "Authorization: Bearer <auth_token>" \
--H "Content-Type: application/json" \
--d '{
-  "application": <app>,
-  "language": <language>
-}'
-```
-
-> Example request pattern dataset widget
-
-```shell
-curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata' \
--H "Authorization: Bearer <auth_token>" \
--H "Content-Type: application/json" \
--d '{
-  "application": <app>,
-  "language": <language>
-}'
-```
-
-> Example dataset URL request
-
-```shell
-curl -X POST 'http://api.resourcewatch.org/v1/dataset/44c7fa02-391a-4ed7-8efc-5d832c567d57/metadata' \
--H "Authorization: Bearer <auth_token>" \
--H "Content-Type: application/json" \
--d '{
-  "application": "gfw",
-  "language": "es"
-}'
-```
-
-> Example response
-
-```json
-{
-    "data": [
-        {
-            "id": "5f99b9317fe3c8001be2f272",
-            "type": "metadata",
-            "attributes": {
-                "dataset": "44c7fa02-391a-4ed7-8efc-5d832c567d57",
-                "application": "gfw",
-                "resource": {
-                    "id": "44c7fa02-391a-4ed7-8efc-5d832c567d57",
-                    "type": "dataset"
-                },
-                "language": "es",
-                "createdAt": "2020-10-28T18:32:17.464Z",
-                "updatedAt": "2020-10-28T18:32:17.464Z",
-                "status": "published"
-            }
-        }
-    ]
-}
-```
-
-## Getting metadata objects
-
- There are various ways to retrieve metadata objects from the RW-API; such as using query parameters to select from all metadata objects on the API, using the appropriate dataset identifier (and its associated layers or widgets) or by using the specific metadata object identifiers.
+There are 2 main ways to retrieve metadata objects from the RW API: using the "get all" endpoint (and optionally adding some filters), or loading metadata by their id (either a single element at a time, or multiple in one go) and resource type.
  
- Remembering that each dataset (and it's layers and widgets) [may have none or many metadata objects](#metadata-objects) associated with it. In general, you will usually want to use the filter parameters `application` and `language`, which may be one or many (an array) of valid RW-API applications and languages.
+Remembering that each resource [may have many metadata objects](#metadata-objects) associated with it. In general, you will usually want to use the filter parameters `application` and `language`, which may be one or many of valid RW API applications and languages.
  
- For layers and widgets two endpoint styles are available; a long style where the widget or layer identifier is provided, and a shorter style where only the dataset id is used and the parameter `type` (one of `dataset`, `widget`, or `layer`) is set.
+### Getting all metadata
 
-Remembering that each dataset (and it's layers and widgets) [may have none or many metadata objects](#metadata-objects) associated with it, in general, you will usually want to use the filter parameters `application` and `language`, which may be one or many (an array) of valid RW-API applications and languages.
-
-For layers and widgets two endpoint styles are available; a long style where the widget or layer identifier is provided, and a shorter style where only the dataset id is used and the parameter `type` (one of `dataset`, `widget`, or `layer`) is set.
-
-To get specific metadata objects using their identifiers, a POST request with a JSON object that includes the the `ids` property is used. This can be either an array of identifiers or a string of comma-separated ids:
-
-- `{"ids": ["112313", "111123"]}`
-- `{"ids": "112313, 111123"}`
-
-In all cases, the valid response of all the metadata endpoints is always an array; even if no metadata objects are available. To limit the size of the response, the number of objects to return maybe provided using the parameter `limit`. Furthermore, to sort the response array you can use the parameter `sort`. An invalid requests returns a `400` error.
-
-### Getting all metadata objects
-
-> Example request pattern
+> Getting a list of all metadata
 
 ```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=<application>&language=<language>&type=<types>&limit=<limit>' \
--H 'Content-Type: application/json'
+curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw,gfw&language=en,es&type=dataset&limit=1' \
+-H 'Content-Type: application/json' \
 ```
 
-> Example URL request
+> Getting a list of all metadata with optional parameters
 
 ```shell
 curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw,gfw&language=en,es&type=dataset&limit=1' \
@@ -228,7 +118,75 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw,gfw&lan
 }
 ```
 
-### Getting metadata objects by identifiers
+This endpoint will allow you to get the list of the metadata available in the API, and it's the only endpoint that will allow you to load metadata for multiple resources at once.
+
+It's worth pointing out that, unlike other similar endpoints on the RW API, this endpoint does NOT have pagination by default. If you query it without any of the optional parameters, you will get a list of all metadata objects for all datasets, widgets and layers. This is strongly discouraged, and you should not rely on this behavior - when using this endpoint, you should aim to use a combination of parameters to narrow down your response pool. You should also expect a future update to this endpoint to introduce pagination on all responses, so try to keep this in mind when using this endpoint on your application.
+
+For a detailed description of each field, check out the [Metadata reference](#metadata-reference) section.
+
+In the sections below, we’ll explore the optional parameters supported by this, which we strongly recommend you use.
+
+### Application and language filters
+
+> Getting a list of all metadata belonging to the RW application, written in either English or Spanish
+
+```shell
+curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw&language=en,es' \
+-H 'Content-Type: application/json' \
+```
+
+You can filter by `application` and `language` of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.
+
+### Type filter
+
+> Getting a list of all metadata for widgets
+
+```shell
+curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?type=widget' \
+-H 'Content-Type: application/json' \
+```
+
+Using the `type` query parameter you can specify the type of the metadata resource to load. Expected values are `dataset`, `widget` or `layer`, and any other values will produce no results.
+
+
+### Limit
+
+> Getting a list of up to 10 metadata
+
+```shell
+curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?limit=10' \
+-H 'Content-Type: application/json' \
+```
+
+Using the `limit` query parameter you can specify the maximum number of metadata to load in a single response.
+
+### Sorting
+
+> Sorting metadata
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/metadata?sort=name
+```
+
+> Sorting metadata by multiple criteria
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/metadata?sort=name,description
+```
+
+> Sort by name descending, description ascending
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/metadata?sort=-name,+description
+```
+
+The API currently supports sorting by means of the `sort` query parameter. Sorting can be done using any field from the [metadata model](#metadata-reference). Sorting by nested fields is not supported at the moment.
+
+Multiple sorting criteria can be used, separating them by commas.
+
+You can also specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
+
+### Getting metadata by id
 
 > Request pattern for finding metadata providing an array of dataset ids
 
@@ -334,7 +292,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/metadata/find-by-ids \
 }
 ```
 
-### Getting metadata objects for a specific dataset, layer or widget
+### Getting metadata for a specific dataset, layer or widget
 
 > Request pattern for finding metadata associated with a dataset
 
@@ -425,9 +383,88 @@ curl -L -X GET 'http://api.resourcewatch.org/v1/dataset/f2fe7588-6d1b-400e-b79c-
 }
 ```
 
+
+## Create a metadata object
+
+To associate a metadata object with a dataset, and it's layers or widgets you need to provide your authorization token (`<auth_token>`) in the header, and POST a JSON object that must contain valid values for the fields `application` and `language` to the appropriate `/dataset/<dataset_id>` endpoint. If the object is correctly added to the entity a `200` response is returned, as well as the new metadata object. If the user is not authorized to create metadata objects a `403` error is returned; see the required [credentials](#overview-of-available-endpoints).
+
+> Example request pattern dataset
+
+```shell
+curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata' \
+-H "Authorization: Bearer <auth_token>" \
+-H "Content-Type: application/json" \
+-d '{
+  "application": <app>,
+  "language": <language>
+}'
+```
+
+> Example request pattern dataset layer
+
+```shell
+curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata' \
+-H "Authorization: Bearer <auth_token>" \
+-H "Content-Type: application/json" \
+-d '{
+  "application": <app>,
+  "language": <language>
+}'
+```
+
+> Example request pattern dataset widget
+
+```shell
+curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata' \
+-H "Authorization: Bearer <auth_token>" \
+-H "Content-Type: application/json" \
+-d '{
+  "application": <app>,
+  "language": <language>
+}'
+```
+
+> Example dataset URL request
+
+```shell
+curl -X POST 'http://api.resourcewatch.org/v1/dataset/44c7fa02-391a-4ed7-8efc-5d832c567d57/metadata' \
+-H "Authorization: Bearer <auth_token>" \
+-H "Content-Type: application/json" \
+-d '{
+  "application": "gfw",
+  "language": "es"
+}'
+```
+
+> Example response
+
+```json
+{
+    "data": [
+        {
+            "id": "5f99b9317fe3c8001be2f272",
+            "type": "metadata",
+            "attributes": {
+                "dataset": "44c7fa02-391a-4ed7-8efc-5d832c567d57",
+                "application": "gfw",
+                "resource": {
+                    "id": "44c7fa02-391a-4ed7-8efc-5d832c567d57",
+                    "type": "dataset"
+                },
+                "language": "es",
+                "createdAt": "2020-10-28T18:32:17.464Z",
+                "updatedAt": "2020-10-28T18:32:17.464Z",
+                "status": "published"
+            }
+        }
+    ]
+}
+```
+
+
 ## Updating a metadata object
 
-As for creation, the endpoints for updating metadata objects follow the `dataset/<dataset_id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, have the correct RW-API [credentials](#overview-of-available-endpoints), and PATCH a JSON object that must contain valid values for the fields `application` and `language`. If the object is correctly updated a `200` response is returned, as well as the updated metadata object. 
+As for creation, the endpoints for updating metadata objects follow the `dataset/<dataset_id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, have the correct RW API [credentials](#overview-of-available-endpoints), and PATCH a JSON object that must contain valid values for the fields `application` and `language`. If the object is correctly updated a `200` response is returned, as well as the updated metadata object. 
 
 > Error codes
 
@@ -561,7 +598,7 @@ application             | Array          | Yes                  |               
 resource.id             | String         | Yes                  |                            | Id of the resource associated with the metadata.                                                         
 resource.type           | String         | Yes                  |                            | Type of the resource associated with the metadata.                                                         
 userId                  | String         | Yes (autopopulated)  |                            | Id of the user who created the metadata. Set automatically on creation. Cannot be modified by users.
-language                | String         | Yes                  |                            | Language in which the metadata details are written.
+language                | String         | Yes                  |                            | Language in which the metadata details are written. While not enforced, we strongly recommend using 2 character language codes.
 name                    | String         | No                   |                            | Name of the metadata.
 description             | String         | No                   |                            | User defined description of the metadata.   
 status                  | String         | No                   | published                  | Publication status of the metadata. Defaults to `published`, can alternatively be set to `unpublished`.
