@@ -405,7 +405,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/f
 You can filter by `application` and `language` of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.
 
 
-## Create metadata
+## Creating metadata
 
 > Creating a new metadata for a given dataset
 
@@ -415,7 +415,8 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata' \
 -H "Content-Type: application/json" \
 -d '{
   "application": <app>,
-  "language": <language>
+  "language": <language>,
+  "name": "metadata name"
 }'
 ```
 
@@ -427,7 +428,8 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer
 -H "Content-Type: application/json" \
 -d '{
   "application": <app>,
-  "language": <language>
+  "language": <language>,
+  "name": "metadata name"
 }'
 ```
 
@@ -439,7 +441,8 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
 -H "Content-Type: application/json" \
 -d '{
   "application": <app>,
-  "language": <language>
+  "language": <language>,
+  "name": "metadata name"
 }'
 ```
 
@@ -470,7 +473,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
 
 This group of endpoints allows you to associate metadata with an existing dataset, layer or widget. To help make your resources easier to find, understand and reuse, we recommend creating the associated metadata right after you create your new dataset, layer or widget, but you can do it at any time if you want.
 
-As we covered before, the RW API implementation of metadata aims for flexibility, so the only hard requirements when creating a new metadata is that you specify the associate resource id and type, their corresponding dataset id, and the language and application of the metadata. Everything else is up to you to decide if you want to define or not, but the effectiveness of your metadata will increase if you provide more details about your resources.
+As we covered before, the RW API implementation of metadata aims for flexibility, so the only hard requirements when creating a new metadata is that you specify the associate resource id and type, their corresponding dataset id, and the language and application of the metadata. Everything else is up to you to decide if you want to define or not, but the effectiveness of your metadata will increase if you provide more details about your resources. You can learn more about the available fields in the [metadata reference](#metadata-reference) section. 
 
 If you want to create new metadata for your resources, you must have the necessary user account permissions. Specifically, you must:
 
@@ -487,63 +490,41 @@ Error code     | Error message  | Description
 401            | Unauthorized   | You are not authenticated.
 403            | Forbidden      | You are trying to create a metadata for an `application` value that is not associated with your user account. 
 
-## Updating a metadata object
+## Updating metadata
 
-As for creation, the endpoints for updating metadata objects follow the `dataset/<dataset-id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, have the correct RW API [credentials](#overview-of-available-endpoints), and PATCH a JSON object that must contain valid values for the fields `application` and `language`. If the object is correctly updated a `200` response is returned, as well as the updated metadata object. 
-
-> Error codes
-
-If the user is not authorized to update metadata objects a `403` error is returned; see the required [credentials](#overview-of-available-endpoints). If the request is invalid a `400` error is returned; potentially with a more detailed error message.
-
-> Request pattern for updating the metadata of a dataset by its id
+> Updating metadata for a given dataset
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata \
 -H "Content-Type: application/json"  -d \
  '{
    "application": <app>,
-   "language": <language>
+   "language": <language>,
+   "name": "updated metadata name"
   }'
 ```
 
-> Request pattern for updating the metadata of a layer by its id
+> Updating metadata for a given layer
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>metadata \
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<widget-id>/metadata \
 -H "Content-Type: application/json"  -d \
  '{
    "application": <app>,
-   "language": <language>
+   "language": <language>,
+   "name": "updated metadata name"
   }'
 ```
 
-> Request pattern for updating the metadata of a widget by its id
+> Updating metadata for a given widget
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>metadata \
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata \
 -H "Content-Type: application/json"  -d \
  '{
    "application": <app>,
-   "language": <language>
-  }'
-```
-
-> Example URL request
-
-```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata \
--H "Content-Type: application/json"  -d \
- '{
-   "application": "rw",
-   "language": "en",
-   "name": "Cloud Computing Market - USA - 2016",
-   "source": "http://www.forbes.com/",
-   "info": {
-       "summary": "These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales).",
-       "author": "Louis Columbus",
-       "date": "MAR 13, 2016 @ 10:42 PM",
-       "link": "http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"
-   }
+   "language": <language>,
+   "name": "updated metadata name"
   }'
 ```
 
@@ -580,7 +561,39 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0
 }
 ```
 
-## Deleting a metadata object
+
+To update an existing metadata, you need to issue a PATCH request to the endpoint that matches your resource type and id, specify the new values you want to use. You can update most of the fields listed in the [metadata reference](#metadata-reference) section, apart from:
+
+- `id`
+- `userId`
+- `createdAt` and `updatedAt`
+- `language` and `application`
+- `dataset`
+- `resource`
+
+One important detail is that you MUST specify, in your request body, both the `application` and `language` values of the metadata you're trying to update. These fields will not be used as new values, as you would expect, but are used to pinpoint exactly which metadata entry will be updated - remember that each resource may have multiple metadata associated with it, but only one per application-language pair.
+
+Also keep in mind that, when updating object type fields, your new value will overwrite the previous value for that field entirely - it's up to you to implement any sort of data merge logic you'd like to see happen.
+
+To perform this operation, the following conditions must be met:
+
+- the user must be logged in and belong to the same application as the metadata that's being updated 
+- the user must match one of the following:
+  - have role `ADMIN`
+  - have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata)
+
+
+#### Errors for updating metadata
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | You need to be logged in to be able to update a metadata.
+403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata).
+403            | Forbidden      | You are trying to update a metadata with one or more `application` values that are not associated with your user account. 
+404            | Metadata of resource <resource type>: <resource id> doesn't exist   | A metadata matching the provided resource data, language and application does not exist.
+
+
+## Deleting metadata
 
 As for creation and updating, the endpoints for deleting metadata objects follow the `dataset/<dataset-id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, and you must provide valid values for the parameters `application` and `language`. If the object is correctly deleted a `200` response is returned. If the user is not authorized to delete metadata objects a `403` error is returned; see the required [credentials](#overview-of-available-endpoints). If the request is invalid a `400` error is returned; potentially with a more detailed error message.
 
