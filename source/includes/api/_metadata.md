@@ -44,7 +44,7 @@ Any user can retrieve metadata objects, however to create, update or delete and 
 | Error code   | Error message          | Description |
 -------------- | ---------------------- | --------------
 | 400          | Bad request            | Query or body parameters are not valid. |
-| 400          | Bad request            | "Metadata of resource dataset: `<dataset_id>`, application: `<application>` and language: `<language>` already exists". |
+| 400          | Bad request            | "Metadata of resource dataset: `<dataset-id>`, application: `<application>` and language: `<language>` already exists". |
 | 401          | Unauthorized           | The token provided is not recognized or is invalid. |
 | 403          | Authorization failed.  | Your user account does not have an `ADMIN` or `MANAGER` role or belong to the same `application` group as the resource associated with the metadata object. |
 
@@ -185,21 +185,21 @@ You can also specify the sorting order by prepending the criteria with either `-
 > Getting metadata associated with a dataset
 
 ```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/metadata' \
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata' \
 -H 'Content-Type: application/json'
 ```
 
 > Getting metadata associated with a layer
 
 ```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>/metadata' \
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer_id>/metadata' \
 -H 'Content-Type: application/json'
 ```
 
 > Getting metadata associated with a widget
 
 ```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>/metadata' \
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget_id>/metadata' \
 -H 'Content-Type: application/json'
 ```
 
@@ -270,7 +270,7 @@ These endpoints allow you to get metadata for a single dataset, widget or layer.
 > Getting a list of all metadata for a given dataset, belonging to the RW application and written in either English or Spanish
 
 ```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/metadata?application=rw&language=en,es' \
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata?application=rw&language=en,es' \
 -H 'Content-Type: application/json' \
 ```
 
@@ -281,7 +281,7 @@ You can filter by `application` and `language` of the metadata by passing query 
 > Getting a list of all metadata for a given dataset, up to 10 results
 
 ```shell
-curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset_id>/metadata?limit=10' \
+curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata?limit=10' \
 -H 'Content-Type: application/json' \
 ```
 
@@ -405,11 +405,18 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/f
 You can filter by `application` and `language` of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.
 
 
-## Create a metadata object
+## Create metadata
 
-To associate a metadata object with a dataset, and it's layers or widgets you need to provide your authorization token (`<auth_token>`) in the header, and POST a JSON object that must contain valid values for the fields `application` and `language` to the appropriate `/dataset/<dataset_id>` endpoint. If the object is correctly added to the entity a `200` response is returned, as well as the new metadata object. If the user is not authorized to create metadata objects a `403` error is returned; see the required [credentials](#overview-of-available-endpoints).
+This group of endpoints allows you to associate metadata with an existing dataset, layer or widget. To help make your resources easier to find, understand and reuse, we recommend creating the associated metadata right after you create your new dataset, layer or widget, but you can do it at any time if you want.
 
-> Example request pattern dataset
+As we covered before, the RW API implementation of metadata aims for flexibility, so the only hard requirements when creating a new metadata is that you specify the associate resource id and type, their corresponding dataset id, and the language and application of the metadata. Everything else is up to you to decide if you want to define or not, but the effectiveness of your metadata will increase if you provide more details about your resources.
+
+If you want to create new metadata for your resources, you must have the necessary user account permissions. Specifically, you must:
+
+- the user must be logged in and belong to the same application as the metadata you're creating
+- the user must have role `ADMIN` or `MANAGER`
+
+> Creating a new metadata for a given dataset
 
 ```shell
 curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata' \
@@ -421,7 +428,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata' \
 }'
 ```
 
-> Example request pattern dataset layer
+> Creating a new metadata for a given layer
 
 ```shell
 curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/metadata' \
@@ -433,7 +440,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer
 }'
 ```
 
-> Example request pattern dataset widget
+> Creating a new metadata for a given widget
 
 ```shell
 curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/metadata' \
@@ -442,18 +449,6 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
 -d '{
   "application": <app>,
   "language": <language>
-}'
-```
-
-> Example dataset URL request
-
-```shell
-curl -X POST 'http://api.resourcewatch.org/v1/dataset/44c7fa02-391a-4ed7-8efc-5d832c567d57/metadata' \
--H "Authorization: Bearer <auth_token>" \
--H "Content-Type: application/json" \
--d '{
-  "application": "gfw",
-  "language": "es"
 }'
 ```
 
@@ -482,10 +477,18 @@ curl -X POST 'http://api.resourcewatch.org/v1/dataset/44c7fa02-391a-4ed7-8efc-5d
 }
 ```
 
+#### Errors for creating metadata
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | `<field>`: `<field>` can not be empty | Your are missing a required field value.
+400            | `<field>`: empty or invalid `<field>` | The provided value for `<field>` is invalid. 
+401            | Unauthorized   | You are not authenticated.
+403            | Forbidden      | You are trying to create a metadata for an `application` value that is not associated with your user account. 
 
 ## Updating a metadata object
 
-As for creation, the endpoints for updating metadata objects follow the `dataset/<dataset_id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, have the correct RW API [credentials](#overview-of-available-endpoints), and PATCH a JSON object that must contain valid values for the fields `application` and `language`. If the object is correctly updated a `200` response is returned, as well as the updated metadata object. 
+As for creation, the endpoints for updating metadata objects follow the `dataset/<dataset-id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, have the correct RW API [credentials](#overview-of-available-endpoints), and PATCH a JSON object that must contain valid values for the fields `application` and `language`. If the object is correctly updated a `200` response is returned, as well as the updated metadata object. 
 
 > Error codes
 
@@ -578,7 +581,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0
 
 ## Deleting a metadata object
 
-As for creation and updating, the endpoints for deleting metadata objects follow the `dataset/<dataset_id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, and you must provide valid values for the parameters `application` and `language`. If the object is correctly deleted a `200` response is returned. If the user is not authorized to delete metadata objects a `403` error is returned; see the required [credentials](#overview-of-available-endpoints). If the request is invalid a `400` error is returned; potentially with a more detailed error message.
+As for creation and updating, the endpoints for deleting metadata objects follow the `dataset/<dataset-id>`, `layer/<layer_id>`, and `widget/<widget_id>` style. You need to provide your authorization token (`<auth_token>`) in the header, and you must provide valid values for the parameters `application` and `language`. If the object is correctly deleted a `200` response is returned. If the user is not authorized to delete metadata objects a `403` error is returned; see the required [credentials](#overview-of-available-endpoints). If the request is invalid a `400` error is returned; potentially with a more detailed error message.
 
 > Request pattern for deleting the metadata of a dataset by its id
 

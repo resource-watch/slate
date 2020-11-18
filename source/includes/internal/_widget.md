@@ -5,7 +5,7 @@ This section describes some aspects of widget functionality that are only availa
 > Example PATCH request that sets all widget for the given dataset to the defined env:
 
 ```shell
-curl -X PATCH "https://api.resourcewatch.org/v1/widget/change-environment/<dataset_id>/<env>" \
+curl -X PATCH "https://api.resourcewatch.org/v1/widget/change-environment/<dataset-id>/<env>" \
 -H "Authorization: Bearer <microservice-token>" \
 -H "Content-Type: application/json"
 ```
@@ -46,7 +46,7 @@ Note that the `userId` provided in the clone request body will not be validated 
 > Example DELETE request that deletes all widgets for a dataset:
 
 ```shell
-curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget" \
+curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget" \
 -H "Authorization: Bearer <microservice-token>" \
 -H "Content-Type: application/json"
 ```
