@@ -407,15 +407,6 @@ You can filter by `application` and `language` of the metadata by passing query 
 
 ## Create metadata
 
-This group of endpoints allows you to associate metadata with an existing dataset, layer or widget. To help make your resources easier to find, understand and reuse, we recommend creating the associated metadata right after you create your new dataset, layer or widget, but you can do it at any time if you want.
-
-As we covered before, the RW API implementation of metadata aims for flexibility, so the only hard requirements when creating a new metadata is that you specify the associate resource id and type, their corresponding dataset id, and the language and application of the metadata. Everything else is up to you to decide if you want to define or not, but the effectiveness of your metadata will increase if you provide more details about your resources.
-
-If you want to create new metadata for your resources, you must have the necessary user account permissions. Specifically, you must:
-
-- the user must be logged in and belong to the same application as the metadata you're creating
-- the user must have role `ADMIN` or `MANAGER`
-
 > Creating a new metadata for a given dataset
 
 ```shell
@@ -476,6 +467,16 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
     ]
 }
 ```
+
+This group of endpoints allows you to associate metadata with an existing dataset, layer or widget. To help make your resources easier to find, understand and reuse, we recommend creating the associated metadata right after you create your new dataset, layer or widget, but you can do it at any time if you want.
+
+As we covered before, the RW API implementation of metadata aims for flexibility, so the only hard requirements when creating a new metadata is that you specify the associate resource id and type, their corresponding dataset id, and the language and application of the metadata. Everything else is up to you to decide if you want to define or not, but the effectiveness of your metadata will increase if you provide more details about your resources.
+
+If you want to create new metadata for your resources, you must have the necessary user account permissions. Specifically, you must:
+
+- the user must be logged in and belong to the same application as the metadata you're creating
+- the user must have role `ADMIN` or `MANAGER`
+
 
 #### Errors for creating metadata
 
