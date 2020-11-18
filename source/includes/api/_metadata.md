@@ -18,7 +18,7 @@ To find out more about accessing metadata objects already available on the RW AP
 
 RW API's [approach to metadata](#metadata) is designed to offer flexibility; both in terms of the information contained and languages. Hence, when working with metadata objects it is important to understand a few key concepts. 
 
-The first of which is that metadata objects contains information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
+The first of which is that metadata objects contain information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
 
 Another important concept to keep in mind is that each metadata object concerns a single combination of `language` and `application`. If you want to provide translations of your metadata, or if you'd like it to tailor a resource's metadata to better fit different applications, you should create multiple metadata objects for the different combinations of application and language.
 
