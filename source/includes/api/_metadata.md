@@ -12,7 +12,7 @@ They are particularly useful for allowing users to find relevant datasets, layer
 
 ***As such, if you really want people to be able to use your datasets, widgets or layers, it is crucial that it has metadata!***
 
-To find out more about accessing metadata objects already available on the RW API, check out the documentation on [getting metadata objects](#getting-metadata-objects). If you'd like to share your data with the world, you can also [create your own metadata](#creating-metadata) on the RW API, as well as [update](#updating-metadata) and [delete](#deleting-metadata) existing metadata objects.
+To find out more about accessing metadata objects already available on the RW API, check out the documentation on [getting metadata objects](#getting-metadata). If you'd like to share your data with the world, you can also [create your own metadata](#creating-metadata) on the RW API, as well as [update](#updating-metadata) and [delete](#deleting-metadata) existing metadata objects.
 
 ## Metadata objects
 
@@ -20,9 +20,9 @@ RW API's [approach to metadata](#metadata) is designed to offer flexibility; bot
 
 The first of which is that metadata objects contains information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
 
-Another important concept to keep in mind is that each metadata object concerns a single `language` and `application`. If you want to provide translations of your metadata, or if you'd like it to tailor a resource's metadata to better fit different applications, you should create multiple metadata objects for the different combinations of application and language.
+Another important concept to keep in mind is that each metadata object concerns a single combination of `language` and `application`. If you want to provide translations of your metadata, or if you'd like it to tailor a resource's metadata to better fit different applications, you should create multiple metadata objects for the different combinations of application and language.
 
-Building on top of the two concepts above, it's important to highlight that while each resource can have multiple metadata, it cannot have multiple metadata for the same language + application combination. For example, metadata about a tree cover dataset for the [Global Forest Watch](https://www.globalforestwatch.org/) application might be available in both English and Spanish (each a different metadata object), and these may be different compared to metadata objects in the same languages associated with [Resource Watch](https://resourcewatch.org/) application. This example would then represent a total of 4 different metadata objects, all associated with the same dataset.
+Building on top of the two concepts above, it's important to highlight that while each resource can have multiple metadata, it cannot have multiple metadata for the same combination of `language` and `application`. For example, metadata about a tree cover dataset for the [Global Forest Watch](https://www.globalforestwatch.org/) application might be available in both English and Spanish (each a different metadata object), and these may be different compared to metadata objects in the same languages associated with [Resource Watch](https://resourcewatch.org/) application. This example would then represent a total of 4 different metadata objects, all associated with the same dataset.
 
 When it comes to its internal structure, metadata objects have a balance of structured and free-format fields that promote a common base across all objects, while allowing different applications and use cases to have their own specific structure and details. You can learn more about the available fields in the [metadata reference](#metadata-reference) section.
 
@@ -646,6 +646,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/metadata/clo
 This endpoint allows you to clone all the existing metadata associated with a dataset, as new metadata associated with a different dataset. Note that this will not clone metadata for widgets or layers associated with the defined dataset; only dataset metadata will be cloned.
 
 When calling this endpoint, you must provide two body parameters:
+
 - `newDataset`: the id of the target dataset to which the cloned metadata will be associated.
 - `application`: an application to which your user account is associated. This is not used in the cloning logic.
 
