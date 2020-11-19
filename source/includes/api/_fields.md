@@ -6,7 +6,7 @@ Fields are the properties of a dataset your will find when querying its data, us
 
 Fields are part of a dataset, and are determined by the structure of data provided by the dataset creator. If you are uploading your own datasets to the RW API, you don't have to do anything else for your dataset to be available through the fields endpoints - there's no additional data you have to provide.
 
-The fields is targeted at users consuming datasets available on the RW API, particularly if you want to build a flexible and scalable application. The fields endpoints aim at giving you a consistent and uniform view of the structure of data hosted in different [dataset providers](#dataset-providers), that would otherwise be served in a heterogeneous structure.
+Fields are targeted at users consuming datasets available on the RW API, particularly if you want to build a flexible and scalable application. The fields endpoints aim at giving you a consistent and uniform view of the structure of data hosted in different [dataset providers](#dataset-providers), that would otherwise be served in a heterogeneous structure.
 
 ## How to get the dataset fields
 
@@ -57,7 +57,7 @@ While the aim of this endpoint is to provide an homogeneous view of data stored 
 
 > Example response for a Carto dataset
 
-```
+```json
 {
     "tableName": "gadm28_adm1",
     "fields": {
