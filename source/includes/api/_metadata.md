@@ -32,23 +32,6 @@ Last but not least, it's important to keep in mind that the behavior of metadata
 
 As covered above, each metadata object directly concerns a single dataset, widget or layer. The endpoint structure mostly reflects that, with each metadata action (getting, creating, modifying or deleting metadata) being available through 3 different endpoints, one for each type of resource. These endpoints will be documented as a single element, as they behave in exactly the same way, with the only difference between them being the actual endpoint URL. Any differences that may exist will be pointed out, but those will be rare. The only exceptions are the endpoints to load all metadata (which ignores resource type) and to clone a dataset's metadata, which doesn't have a widget or layer equivalent.
 
-Any user can retrieve metadata objects, however to create, update or delete and object the appropriate [authentication](#authentication) credentials are required:
-
-- You must be a user with role:
-    - `ADMIN`, or
-    - `MANAGER` and own the metadata resource you are trying to manage.
-- You must belong to the same `application` as the resource associated with the metadata object.
-
-> Overview of error messages
-
-| Error code   | Error message          | Description |
--------------- | ---------------------- | --------------
-| 400          | Bad request            | Query or body parameters are not valid. |
-| 400          | Bad request            | "Metadata of resource dataset: `<dataset-id>`, application: `<application>` and language: `<language>` already exists". |
-| 401          | Unauthorized           | The token provided is not recognized or is invalid. |
-| 403          | Authorization failed.  | Your user account does not have an `ADMIN` or `MANAGER` role or belong to the same `application` group as the resource associated with the metadata object. |
-
-
 ## Getting metadata
 
 There are 2 main ways to retrieve metadata objects from the RW API: using the "get all" endpoint (and optionally adding some filters), or loading metadata by their resource id (either a single element at a time, or multiple in one go) and type.
@@ -113,7 +96,7 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw,gfw&lan
 
 This endpoint will allow you to get the list of the metadata available in the API, and it's the only endpoint that will allow you to load metadata for multiple resources at once.
 
-It's worth pointing out that, unlike other similar endpoints on the RW API, this endpoint does NOT have pagination by default. If you query it without any of the optional parameters, you will get a list of all metadata objects for all datasets, widgets and layers. This is strongly discouraged, and you should not rely on this behavior - when using this endpoint, you should aim to use a combination of parameters to narrow down your response pool. You should also expect a future update to this endpoint to introduce pagination on all responses, so try to keep this in mind when using this endpoint on your application.
+It's worth pointing out that, unlike other similar endpoints on the RW API, this endpoint does NOT have pagination by default. If you query it without any of the optional parameters, you will get a list of all metadata objects for all datasets, widgets and layers. This is strongly discouraged, and **you should not rely on this behavior** - when using this endpoint, you should aim to use a combination of parameters to narrow down your response pool. You should also **expect a future update to this endpoint to introduce pagination** on all responses, so try to keep this in mind when using this endpoint on your application.
 
 For a detailed description of each field, check out the [Metadata reference](#metadata-reference) section.
 
