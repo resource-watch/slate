@@ -24,11 +24,11 @@ includes:
   - api/contact
   - api/collections
   - api/dataset
+  - api/fields
   - api/query
   - api/layer
   - api/widget
   - api/jiminy
-  - api/fields
   - api/forms
   - api/metadata
   - api/vocabulary
