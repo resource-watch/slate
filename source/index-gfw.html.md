@@ -21,12 +21,12 @@ includes:
   - api/authentication
   - api/contact
   - api/dataset
+  - api/fields
   - api/query
   - api/layer
   - api/widget
   - api/collections
   - api/jiminy
-  - api/fields
   - api/forms
   - api/metadata
   - api/vocabulary
