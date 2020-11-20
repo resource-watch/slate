@@ -546,477 +546,6 @@ TODO -->
         "text": "This is a test"
     }'</span>
 </code></pre>
-          <h1 id="collections">Collections</h1>
-
-<h2 id="what-is-a-collection">What is a collection?</h2>
-
-<p>A collection is a way of aggregating WRI API resources like datasets, layers and widgets. A collection can reference one or more resources of different types.</p>
-
-<p>Collection endpoints require authentication, and the collections are associated with the owner who initially created the collection.</p>
-
-<h2 id="collection-model-reference">Collection model reference</h2>
-
-<table><thead>
-<tr>
-<th>Field name</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>name</td>
-<td style="text-align: center">Name of collection.</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>ownerId</td>
-<td style="text-align: center">Id of the user owner of this collection.</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>application</td>
-<td style="text-align: center">The application this collection belongs to (defaults to <code class="prettyprint">&#39;rw&#39;</code>). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>resources</td>
-<td style="text-align: center">Array of resources in the collection.</td>
-<td style="text-align: right">Array of Objects</td>
-</tr>
-<tr>
-<td>&mdash; type</td>
-<td style="text-align: center">The type of resource.</td>
-<td style="text-align: right">String (dataset, layer, widget)</td>
-</tr>
-<tr>
-<td>&mdash; id</td>
-<td style="text-align: center">The id of the resource.</td>
-<td style="text-align: right">String</td>
-</tr>
-</tbody></table>
-
-<h2 id="create-a-collection">Create a collection</h2>
-
-<blockquote>
-<p>To create an empty collection, you can do a POST with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "name": "Collection name"
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<blockquote>
-<p>You can also add a resource in the body of the request when creating a new collection, with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "name": "Collection name",
-    "resources": [
-      {
-        "type": "dataset",
-        "id": "06c44f9a-aae7-401e-874c-de13b7764959"
-      }
-    ]
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06c44f9a-aae7-401e-874c-de13b7764959"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>To create a collection, you should send a POST request to the <code class="prettyprint">v1/collection</code> endpoint, providing an authentication token that identifies the user making the request. You also need to (or can) provide the following fields in the request body:</p>
-
-<table><thead>
-<tr>
-<th>Field name</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Required</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>name</td>
-<td style="text-align: center">Name of collection.</td>
-<td style="text-align: right">Yes</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>application</td>
-<td style="text-align: center">The application this collection belongs to (defaults to <code class="prettyprint">&#39;rw&#39;</code>). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
-<td style="text-align: right">No</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>resources</td>
-<td style="text-align: center">Array of resources in the collection.</td>
-<td style="text-align: right">No</td>
-<td style="text-align: right">Array of Objects</td>
-</tr>
-</tbody></table>
-
-<h2 id="update-a-collection">Update a collection</h2>
-
-<blockquote>
-<p>To update a collection, you should perform a PATCH request including the collection ID in the url. Here&rsquo;s an example:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/collection/:id <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "name": "New name"
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>You can update the name of a collection, you can send a PATCH request to the <code class="prettyprint">v1/collection/:id</code> endpoint, providing an authentication token that identifies the user making the request.</p>
-
-<p><strong>Keep in mind that you will only be able to update collections that are owned by your user.</strong></p>
-
-<h2 id="push-a-resource-to-a-collection">Push a resource to a collection</h2>
-
-<blockquote>
-<p>To add a resource to a collection, you have to do a POST with the following body:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection/:id/resource <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "type": "dataset",
-    "id": "06c44f9a-aae7-401e-874c-de13b7764959"
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06c44f9a-aae7-401e-874c-de13b7764959"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>You can do a POST request to the <code class="prettyprint">v1/collection/:id/resource</code> to push a new resource to an existing collection. You also need to define the following fields in the request body:</p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>type</td>
-<td style="text-align: center">Type of resource being added</td>
-<td style="text-align: right">Text (dataset, layer, widget)</td>
-</tr>
-<tr>
-<td>id</td>
-<td style="text-align: center">Id of the resource</td>
-<td style="text-align: right">Text</td>
-</tr>
-</tbody></table>
-
-<h2 id="get-collections-for-the-request-user">Get collections for the request user</h2>
-
-<blockquote>
-<p>To get all collections of the logged user, you have to do a GET request:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="w">            
-        </span><span class="p">}]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>By making a GET request to the <code class="prettyprint">/v1/collection</code> endpoint, you can obtain the collections of the logged user.</p>
-
-<blockquote>
-<p>To get all collections of the logged user, including the associated resources:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="err">...</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>You can optionally add the <code class="prettyprint">include=true</code> query parameter to load the associated resources.</p>
-
-<h3 id="pagination">Pagination</h3>
-
-<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, virtually all collections are listed at once, but this behavior should be considered deprecated, and your application should rely on reasonably sized pages instead - the default value may be changed soon. You can customize the pagination behavior using the following query parameters:  </p>
-
-<blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25 <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">9999999</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
-
-<h2 id="get-a-collection-by-id">Get a collection by id</h2>
-
-<blockquote>
-<p>To get the collection by id, you have to do a GET request:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection/:id <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint returns the collection with id of the param. If the collection belongs to other user or does not exist, the endpoint returns 400.</p>
-
-<h2 id="delete-a-collection">Delete a collection</h2>
-
-<blockquote>
-<p>To delete the collection by id, you have to do a DELETE request:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/collection/:id <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>In case of success, the deleted collection is returned in the response body:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint deletes the collection with id of the param. If the collection belongs to other user or does not exist, the endpoint returns 400.</p>
-
-<h2 id="delete-a-collection-resource">Delete a collection resource</h2>
-
-<blockquote>
-<p>To delete the resource you have to do a DELETE request:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/collection/:id/resource/:resourceType/:resourceId <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
-</code></pre>
-<blockquote>
-<p>In case of success, the updated collection is returned in the response body:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>Using this endpoint you can also delete a resource in a collection with the id, resource type and resource id of the param. If the collection belongs to other user or not exist, the endpoint returns 400.</p>
-
-<h2 id="finding-collections-by-ids">Finding collections by ids</h2>
-
-<blockquote>
-<p>To find collections by ids, you have to do a POST request:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "ids": ["5f56170c1fca55001ad51779"],
-    "userId": "5dd7b92abf56ca0011875ae2"
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<blockquote>
-<p>You can also filter the returned results by application:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection/find-by-ids?application<span class="o">=</span>gfw <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "ids": ["5f56170c1fca55001ad51779"],
-    "userId": "5dd7b92abf56ca0011875ae2"
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>You can find collections providing an array of ids by making a POST request to the <code class="prettyprint">v1/collection/find-by-ids</code> endpoint. You must provide in the body of the request the <code class="prettyprint">ids</code> of the collections you wish to fetch, as well as the id of the user (<code class="prettyprint">userId</code>) who owns these collections.</p>
-
-<p>You can filter the returned results by application by providing the <code class="prettyprint">application</code> query parameter.</p>
-
-<p><strong>Finding collections by id does not require authentication.</strong></p>
-
           <h1 id="dataset">Dataset</h1>
 
 <h2 id="what-is-a-dataset">What is a dataset?</h2>
@@ -7121,6 +6650,505 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 </tr>
 </tbody></table>
 
+          <h1 id="collections">Collections</h1>
+
+<h2 id="what-is-a-collection">What is a collection?</h2>
+
+<p>A collection is a way of aggregating WRI API resources like datasets, layers and widgets. A collection can reference one or more resources of different types.</p>
+
+<p>Collection endpoints require authentication, and the collections are associated with the owner who initially created the collection.</p>
+
+<h2 id="creating-a-collection">Creating a collection</h2>
+
+<blockquote>
+<p>To create an empty collection, you can do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "name": "Collection name"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>You can also add a resource in the body of the request when creating a new collection, with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "name": "Collection name",
+    "resources": [
+      {
+        "type": "dataset",
+        "id": "06c44f9a-aae7-401e-874c-de13b7764959"
+      }
+    ]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06c44f9a-aae7-401e-874c-de13b7764959"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>To create a collection, you should send a POST request to the <code class="prettyprint">/v1/collection</code> endpoint, providing an authentication token that identifies the user making the request. You also need to (or can) provide the following fields in the request body:</p>
+
+<table><thead>
+<tr>
+<th>Field name</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Required</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of collection.</td>
+<td style="text-align: right">Yes</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application this collection belongs to (defaults to <code class="prettyprint">&#39;rw&#39;</code>). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td style="text-align: right">No</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>resources</td>
+<td style="text-align: center">Array of resources in the collection.</td>
+<td style="text-align: right">No</td>
+<td style="text-align: right">Array of Objects</td>
+</tr>
+</tbody></table>
+
+<h2 id="updating-a-collection">Updating a collection</h2>
+
+<blockquote>
+<p>To update a collection, you should perform a PATCH request including the collection ID in the url. Here&rsquo;s an example:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/collection/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "name": "New name"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can update the name of a collection, you can send a PATCH request to the <code class="prettyprint">/v1/collection/:id</code> endpoint, providing an authentication token that identifies the user making the request.</p>
+
+<p><strong>Keep in mind that you will only be able to update collections that are owned by your user.</strong></p>
+
+<h2 id="adding-a-resource-to-an-existing-collection">Adding a resource to an existing collection</h2>
+
+<blockquote>
+<p>To add a resource to a collection, you have to do a POST with the following body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection/:id/resource <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "type": "dataset",
+    "id": "06c44f9a-aae7-401e-874c-de13b7764959"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"06c44f9a-aae7-401e-874c-de13b7764959"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can do a POST request to the <code class="prettyprint">/v1/collection/:id/resource</code> to push a new resource to an existing collection. You also need to define the following fields in the request body:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td style="text-align: center">Type of resource being added</td>
+<td style="text-align: right">Text (dataset, layer, widget)</td>
+</tr>
+<tr>
+<td>id</td>
+<td style="text-align: center">Id of the resource</td>
+<td style="text-align: right">Text</td>
+</tr>
+</tbody></table>
+
+<h2 id="getting-collections-for-the-request-user">Getting collections for the request user</h2>
+
+<blockquote>
+<p>To get all collections of the logged user, you have to do a GET request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="w">            
+        </span><span class="p">}]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>By making a GET request to the <code class="prettyprint">/v1/collection</code> endpoint, you can obtain the collections of the logged user.</p>
+
+<blockquote>
+<p>To get all collections of the logged user, including the associated resources:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="err">...</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can optionally add the <code class="prettyprint">include=true</code> query parameter to load the associated resources.</p>
+
+<h3 id="pagination">Pagination</h3>
+
+<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, virtually all collections are listed at once, but this behavior should be considered deprecated, and your application should rely on reasonably sized pages instead - the default value may be changed soon. You can customize the pagination behavior using the following query parameters:  </p>
+
+<blockquote>
+<p>Custom pagination: load page 2 using 25 results per page</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25 <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">9999999</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page number</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
+
+<h3 id="sorting">Sorting</h3>
+
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the collection.</p>
+
+<p>Sorting by nested fields is not supported at the moment.</p>
+
+<blockquote>
+<p>Sorting collections</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/collection?sort=name"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<blockquote>
+<p>Sorting collections by multiple criteria</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/collection?sort=name,application"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+
+<blockquote>
+<p>Explicit order of sorting</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/collection?sort=-name,+application"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<h2 id="get-a-collection-by-id">Get a collection by id</h2>
+
+<blockquote>
+<p>To get the collection by id, you have to do a GET request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint returns the collection with id of the param. If the collection belongs to other user or does not exist, the endpoint returns 400.</p>
+
+<h2 id="delete-a-collection">Delete a collection</h2>
+
+<blockquote>
+<p>To delete the collection by id, you have to do a DELETE request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/collection/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>In case of success, the deleted collection is returned in the response body:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint deletes the collection with id of the param. If the collection belongs to other user or does not exist, the endpoint returns 400.</p>
+
+<h2 id="delete-a-collection-resource">Delete a collection resource</h2>
+
+<blockquote>
+<p>To delete the resource you have to do a DELETE request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/collection/:id/resource/:resourceType/:resourceId <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>In case of success, the updated collection is returned in the response body:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Using this endpoint you can also delete a resource in a collection with the id, resource type and resource id of the param. If the collection belongs to other user or not exist, the endpoint returns 400.</p>
+
+<h2 id="finding-collections-by-ids">Finding collections by ids</h2>
+
+<blockquote>
+<p>To find collections by ids, you have to do a POST request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "ids": ["5f56170c1fca55001ad51779"],
+    "userId": "5dd7b92abf56ca0011875ae2"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f56170c1fca55001ad51779"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Collection name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ownerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dd7b92abf56ca0011875ae2"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>You can also filter the returned results by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/collection/find-by-ids?application<span class="o">=</span>gfw <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "ids": ["5f56170c1fca55001ad51779"],
+    "userId": "5dd7b92abf56ca0011875ae2"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>You can find collections providing an array of ids by making a POST request to the <code class="prettyprint">/v1/collection/find-by-ids</code> endpoint. You must provide in the body of the request the <code class="prettyprint">ids</code> of the collections you wish to fetch, as well as the id of the user (<code class="prettyprint">userId</code>) who owns these collections.</p>
+
+<p>You can filter the returned results by application by providing the <code class="prettyprint">application</code> query parameter.</p>
+
+<p><strong>Finding collections by id does not require authentication.</strong></p>
+
+<h2 id="collection-reference">Collection reference</h2>
+
+<table><thead>
+<tr>
+<th>Field name</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td style="text-align: center">Name of collection.</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>ownerId</td>
+<td style="text-align: center">Id of the user owner of this collection.</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>application</td>
+<td style="text-align: center">The application this collection belongs to (defaults to <code class="prettyprint">&#39;rw&#39;</code>). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td style="text-align: right">String</td>
+</tr>
+<tr>
+<td>resources</td>
+<td style="text-align: center">Array of resources in the collection.</td>
+<td style="text-align: right">Array of Objects</td>
+</tr>
+<tr>
+<td>&mdash; type</td>
+<td style="text-align: center">The type of resource.</td>
+<td style="text-align: right">String (dataset, layer, widget)</td>
+</tr>
+<tr>
+<td>&mdash; id</td>
+<td style="text-align: center">The id of the resource.</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
           <h1 id="jiminy">Jiminy</h1>
 
 <blockquote>
@@ -12211,7 +12239,7 @@ Given the following sets of concepts:</p>
 <p>Sorting by nested fields is not supported at the moment.</p>
 
 <blockquote>
-<p>Sorting layers</p>
+<p>Sorting areas</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v2/area?sort=name"</span>
 </code></pre>
