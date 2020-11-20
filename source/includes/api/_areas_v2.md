@@ -102,7 +102,7 @@ The API currently supports sorting by means of the `sort` parameter. Sorting can
 
 Sorting by nested fields is not supported at the moment.
 
-> Sorting layers
+> Sorting areas
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v2/area?sort=name"

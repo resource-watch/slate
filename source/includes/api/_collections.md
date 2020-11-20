@@ -6,18 +6,7 @@ A collection is a way of aggregating WRI API resources like datasets, layers and
 
 Collection endpoints require authentication, and the collections are associated with the owner who initially created the collection.
 
-## Collection model reference
-
-| Field name   | Description                                                     | Type
-| -------------|:--------------------------------------------------------------: | -----:
-| name         | Name of collection.                                             | String
-| ownerId      | Id of the user owner of this collection.                        | String
-| application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/index-rw.html#applications). | String
-| resources    | Array of resources in the collection.                           | Array of Objects
-| --- type     | The type of resource.                                           | String (dataset, layer, widget)
-| --- id       | The id of the resource.                                         | String
-
-## Create a collection
+## Creating a collection
 
 > To create an empty collection, you can do a POST with the following body:
 
@@ -90,7 +79,7 @@ curl -X POST https://api.resourcewatch.org/v1/collection \
 }
 ```
 
-To create a collection, you should send a POST request to the `v1/collection` endpoint, providing an authentication token that identifies the user making the request. You also need to (or can) provide the following fields in the request body:
+To create a collection, you should send a POST request to the `/v1/collection` endpoint, providing an authentication token that identifies the user making the request. You also need to (or can) provide the following fields in the request body:
 
 | Field name   | Description                                                     | Required | Type
 | -------------|:--------------------------------------------------------------: | -----:   | -----:
@@ -98,7 +87,7 @@ To create a collection, you should send a POST request to the `v1/collection` en
 | application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/index-rw.html#applications). | No       | String
 | resources    | Array of resources in the collection.                           | No       | Array of Objects
 
-## Update a collection
+## Updating a collection
 
 > To update a collection, you should perform a PATCH request including the collection ID in the url. Here's an example:
 
@@ -130,11 +119,11 @@ curl -X PATCH https://api.resourcewatch.org/v1/collection/:id \
 }
 ```
 
-You can update the name of a collection, you can send a PATCH request to the `v1/collection/:id` endpoint, providing an authentication token that identifies the user making the request.
+You can update the name of a collection, you can send a PATCH request to the `/v1/collection/:id` endpoint, providing an authentication token that identifies the user making the request.
 
 **Keep in mind that you will only be able to update collections that are owned by your user.**
 
-## Push a resource to a collection
+## Adding a resource to an existing collection
 
 > To add a resource to a collection, you have to do a POST with the following body:
 
@@ -172,14 +161,14 @@ curl -X POST https://api.resourcewatch.org/v1/collection/:id/resource \
 }
 ```
 
-You can do a POST request to the `v1/collection/:id/resource` to push a new resource to an existing collection. You also need to define the following fields in the request body:
+You can do a POST request to the `/v1/collection/:id/resource` to push a new resource to an existing collection. You also need to define the following fields in the request body:
 
 | Field             | Description                               | Type
 | ------------------|:-----------------------------------------:| -----:
 | type              | Type of resource being added              | Text (dataset, layer, widget)
 | id                | Id of the resource                        | Text
 
-## Get collections for the request user
+## Getting collections for the request user
 
 > To get all collections of the logged user, you have to do a GET request:
 
@@ -263,6 +252,37 @@ Field        |         Description          |   Type |   Default
 ------------ | :--------------------------: | -----: | ----------:
 page[size]   | The number elements per page.| Number | 9999999
 page[number] |       The page number        | Number | 1
+
+### Sorting
+
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the collection.
+
+Sorting by nested fields is not supported at the moment.
+
+> Sorting collections
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/collection?sort=name" \
+-H "Authorization: Bearer <your-token>"
+```
+
+Multiple sorting criteria can be used, separating them by commas.
+
+> Sorting collections by multiple criteria
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/collection?sort=name,application" \
+-H "Authorization: Bearer <your-token>"
+```
+
+You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
+
+> Explicit order of sorting
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/collection?sort=-name,+application" \
+-H "Authorization: Bearer <your-token>"
+```
 
 
 ## Get a collection by id
@@ -406,8 +426,20 @@ curl -X POST https://api.resourcewatch.org/v1/collection/find-by-ids?application
 }
 ```
 
-You can find collections providing an array of ids by making a POST request to the `v1/collection/find-by-ids` endpoint. You must provide in the body of the request the `ids` of the collections you wish to fetch, as well as the id of the user (`userId`) who owns these collections.
+You can find collections providing an array of ids by making a POST request to the `/v1/collection/find-by-ids` endpoint. You must provide in the body of the request the `ids` of the collections you wish to fetch, as well as the id of the user (`userId`) who owns these collections.
 
 You can filter the returned results by application by providing the `application` query parameter.
 
 **Finding collections by id does not require authentication.**
+
+
+## Collection reference
+
+| Field name   | Description                                                     | Type
+| -------------|:--------------------------------------------------------------: | -----:
+| name         | Name of collection.                                             | String
+| ownerId      | Id of the user owner of this collection.                        | String
+| application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/index-rw.html#applications). | String
+| resources    | Array of resources in the collection.                           | Array of Objects
+| --- type     | The type of resource.                                           | String (dataset, layer, widget)
+| --- id       | The id of the resource.                                         | String

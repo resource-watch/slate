@@ -22,11 +22,11 @@ includes:
   - api/before_you_get_started
   - api/authentication
   - api/contact
-  - api/collections
   - api/dataset
   - api/query
   - api/layer
   - api/widget
+  - api/collections
   - api/jiminy
   - api/fields
   - api/forms
