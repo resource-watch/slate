@@ -12128,9 +12128,34 @@ Given the following sets of concepts:</p>
 
 <h3 id="pagination">Pagination</h3>
 
-<p>Pagination is not applied when requesting all of the areas for the logged user, so all of the logged user&rsquo;s areas are returned in every call of the <code class="prettyprint">/v2/areas</code> endpoint.</p>
+<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. Currently, and by default, areas are listed in pages of 100 elements each, but this default value will be reduced to 10 in the future - we recommend building your applications with the future value in mind. You can customize this behavior, as well as specify which page to load, using the following query parameters:</p>
 
-<p><em>However, please keep in mind that we intend to add pagination to this endpoint in the future.</em></p>
+<blockquote>
+<p>Custom pagination: load page 2 using 25 results per page</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/area?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25
+</code></pre>
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page[size]</td>
+<td style="text-align: center">The number elements per page. Values above 100 are not officially supported.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">100 (will be reduced to 10 in the future)</td>
+</tr>
+<tr>
+<td>page[number]</td>
+<td style="text-align: center">The page number</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
 
 <h3 id="filters">Filters</h3>
 
@@ -12175,6 +12200,31 @@ Given the following sets of concepts:</p>
 </tr>
 </tbody></table>
 
+<h3 id="sorting">Sorting</h3>
+
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the area.</p>
+
+<p>Sorting by nested fields is not supported at the moment.</p>
+
+<blockquote>
+<p>Sorting layers</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v2/area?sort=name"</span>
+</code></pre>
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<blockquote>
+<p>Sorting layers by multiple criteria</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v2/area?sort=name,status"</span>
+</code></pre>
+<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+
+<blockquote>
+<p>Explicit order of sorting</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v2/area?sort=-name,+status"</span>
+</code></pre>
 <h3 id="errors-for-getting-user-areas">Errors for getting user areas</h3>
 
 <table><thead>
