@@ -65,9 +65,19 @@ The `/v2/areas` endpoint returns all the areas of interest associated with the u
 
 ### Pagination
 
-Pagination is not applied when requesting all of the areas for the logged user, so all of the logged user's areas are returned in every call of the `/v2/areas` endpoint.
+The RW API lists many of its resources as pages, as opposed to showing all results at once. Currently, and by default, areas are listed in pages of 100 elements each, but this default value will be reduced to 10 in the future - we recommend building your applications with the future value in mind. You can customize this behavior, as well as specify which page to load, using the following query parameters:
 
-*However, please keep in mind that we intend to add pagination to this endpoint in the future.*
+> Custom pagination: load page 2 using 25 results per page
+
+```shell
+curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25
+```
+
+Field        |         Description          |   Type |   Default
+------------ | :--------------------------: | -----: | ----------:
+page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 100 (will be reduced to 10 in the future)
+page[number] |       The page number        | Number | 1
+
 
 ### Filters
 
@@ -85,6 +95,34 @@ application | Filter results by the application associated with the areas.      
 status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
 all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
+
+### Sorting
+
+The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the area.
+
+Sorting by nested fields is not supported at the moment.
+
+> Sorting layers
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v2/area?sort=name"
+```
+
+Multiple sorting criteria can be used, separating them by commas.
+
+> Sorting layers by multiple criteria
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v2/area?sort=name,status"
+```
+
+You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
+
+> Explicit order of sorting
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v2/area?sort=-name,+status"
+```
 
 ### Errors for getting user areas
 
