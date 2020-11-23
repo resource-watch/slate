@@ -12759,7 +12759,9 @@ Given the following sets of concepts:</p>
 <p>Returns 204 No Content in case of success.</p>
 </blockquote>
 
-<p>Use this endpoint to delete an existing area. This endpoint requires authentication and, in order to DELETE an area, you need to be either the owner of the area or be an ADMIN user.</p>
+<p>Use this endpoint to delete an existing area. This endpoint requires authentication and, in order to DELETE an area, you need to be either the owner of the area or an ADMIN user.</p>
+
+<p>DELETing an area deletes the area with id provided and any associated subscription with the area being deleted (identified by the id stored in the <code class="prettyprint">subscriptionId</code> field). This is done transparently from the perspective of an API user, so no action is needed to trigger this behavior.</p>
 
 <h3 id="errors-for-deleting-an-area">Errors for deleting an area</h3>
 
@@ -12791,12 +12793,6 @@ Given the following sets of concepts:</p>
 <td>The area with id provided does not exist.</td>
 </tr>
 </tbody></table>
-
-<h3 id="implementation-details">Implementation details</h3>
-
-<p>DELETing an area deletes the area if it exists, and then if an associated subscription exists, it is also deleted.</p>
-
-<p>If the id of a subscription is provided, then that subscription is deleted.</p>
 
 <h2 id="update-areas-by-geostore">Update areas by geostore</h2>
 
