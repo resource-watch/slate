@@ -487,7 +487,9 @@ curl -X DELETE https://api.resourcewatch.org/v2/area/:id
 
 > Returns 204 No Content in case of success.
 
-Use this endpoint to delete an existing area. This endpoint requires authentication and, in order to DELETE an area, you need to be either the owner of the area or be an ADMIN user.
+Use this endpoint to delete an existing area. This endpoint requires authentication and, in order to DELETE an area, you need to be either the owner of the area or an ADMIN user.
+
+DELETing an area deletes the area with id provided and any associated subscription with the area being deleted (identified by the id stored in the `subscriptionId` field). This is done transparently from the perspective of an API user, so no action is needed to trigger this behavior.
 
 ### Errors for deleting an area
 
@@ -498,11 +500,6 @@ Error code     | Error message (example)       | Description
 403            | `Not authorized`              | You are trying to delete an area that is not owned by you and you are not an ADMIN user.
 404            | `Area not found`              | The area with id provided does not exist.
 
-### Implementation details
-
-DELETing an area deletes the area if it exists, and then if an associated subscription exists, it is also deleted.
-
-If the id of a subscription is provided, then that subscription is deleted.
 
 ## Update areas by geostore
 
