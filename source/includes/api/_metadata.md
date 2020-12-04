@@ -18,7 +18,7 @@ To find out more about accessing metadata objects already available on the RW AP
 
 RW API's [approach to metadata](#metadata) is designed to offer flexibility; both in terms of the information contained and languages. Hence, when working with metadata objects it is important to understand a few key concepts. 
 
-The first of which is that metadata objects contain information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
+The first of which is that metadata objects contain information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly (as widgets and layers themselves are associated with a dataset) references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
 
 Another important concept to keep in mind is that each metadata object concerns a single combination of `language` and `application`. If you want to provide translations of your metadata, or if you'd like it to tailor a resource's metadata to better fit different applications, you should create multiple metadata objects for the different combinations of application and language.
 
@@ -30,7 +30,7 @@ Last but not least, it's important to keep in mind that the behavior of metadata
 
 ## Metadata endpoints overview
 
-As covered above, each metadata object directly concerns a single dataset, widget or layer. The endpoint structure mostly reflects that, with each metadata action (getting, creating, modifying or deleting metadata) being available through 3 different endpoints, one for each type of resource. These endpoints will be documented as a single element, as they behave in exactly the same way, with the only difference between them being the actual endpoint URL. Any differences that may exist will be pointed out, but those will be rare. The only exceptions are the endpoints to load all metadata (which ignores resource type) and to clone a dataset's metadata, which doesn't have a widget or layer equivalent.
+As covered above, each metadata object directly concerns a single dataset, widget or layer. The endpoint structure mostly reflects that, with each metadata action (getting, creating, modifying or deleting metadata) being available through 3 different endpoints, one for each type of resource (for example, `/v1/dataset/<dataset-id>/metadata`, `/v1/dataset/<dataset-id>/layer/<layer_id>/metadata` and `/v1/dataset/<dataset-id>/widget/<widget_id>/metadata`). These endpoints will be documented as a single element, as they behave in exactly the same way, with the only difference between them being the actual endpoint URL. Any differences that may exist will be pointed out, but those will be rare. The only exceptions are the endpoints to load all metadata (which ignores resource type) and to clone a dataset's metadata, which doesn't have a widget or layer equivalent.
 
 ## Getting metadata
 
@@ -44,14 +44,14 @@ Remembering that each resource [may have many metadata objects](#metadata-object
 
 ```shell
 curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw,gfw&language=en,es&type=dataset&limit=1' \
--H 'Content-Type: application/json' \
+-H 'Content-Type: application/json'
 ```
 
 > Getting a list of all metadata with optional parameters
 
 ```shell
 curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw,gfw&language=en,es&type=dataset&limit=1' \
--H 'Content-Type: application/json' \
+-H 'Content-Type: application/json'
 ```
 
 > Example response
@@ -108,7 +108,7 @@ In the sections below, we’ll explore the optional parameters supported by this
 
 ```shell
 curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?application=rw&language=en,es' \
--H 'Content-Type: application/json' \
+-H 'Content-Type: application/json'
 ```
 
 You can filter by `application` and `language` of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.
@@ -119,7 +119,7 @@ You can filter by `application` and `language` of the metadata by passing query 
 
 ```shell
 curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?type=widget' \
--H 'Content-Type: application/json' \
+-H 'Content-Type: application/json'
 ```
 
 Using the `type` query parameter you can specify the type of the metadata resource to load. Expected values are `dataset`, `widget` or `layer`, and any other values will produce no results.
@@ -131,7 +131,7 @@ Using the `type` query parameter you can specify the type of the metadata resour
 
 ```shell
 curl -L -X GET 'https://api.resourcewatch.org/v1/metadata?limit=10' \
--H 'Content-Type: application/json' \
+-H 'Content-Type: application/json'
 ```
 
 Using the `limit` query parameter you can specify the maximum number of metadata to load in a single response.
@@ -367,12 +367,6 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/f
 
 This group of endpoints allows you to access metadata for multiple resources of the same type with a single request. The result will be a flat list of metadata elements, not grouped by their associated resource - it's up to your application to implement this logic if it needs it.
 
-#### Errors for getting metadata for multiple datasets, layers or widgets
-
-Error code     | Error message  | Description
--------------- | -------------- | --------------
-400            | Missing 'ids' from request body | The required `ids` field is missing in the request body.
-
 #### Application and language filters
 
 > Getting a list of all metadata for multiple widgets, belonging to the RW application and written in either English or Spanish
@@ -386,6 +380,12 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/f
 ```
 
 You can filter by `application` and `language` of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.
+
+#### Errors for getting metadata for multiple datasets, layers or widgets
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | Missing 'ids' from request body | The required `ids` field is missing in the request body.
 
 
 ## Creating metadata
@@ -456,7 +456,7 @@ curl -X POST 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
 
 This group of endpoints allows you to associate metadata with an existing dataset, layer or widget. To help make your resources easier to find, understand and reuse, we recommend creating the associated metadata right after you create your new dataset, layer or widget, but you can do it at any time if you want.
 
-As we covered before, the RW API implementation of metadata aims for flexibility, so the only hard requirements when creating a new metadata is that you specify the associate resource id and type, their corresponding dataset id, and the language and application of the metadata. Everything else is up to you to decide if you want to define or not, but the effectiveness of your metadata will increase if you provide more details about your resources. You can learn more about the available fields in the [metadata reference](#metadata-reference) section. 
+As we covered before, the RW API implementation of metadata aims for flexibility, so the only hard requirements when creating a new metadata is that you specify the associate resource id and type, their corresponding dataset id, and the language and application of the metadata (you should ensure that dataset id in the URL matches the dataset id of the resource you're creating metadata for). Everything else is up to you to decide if you want to define or not, but the effectiveness of your metadata will increase if you provide more details about your resources. You can learn more about the available fields in the [metadata reference](#metadata-reference) section. 
 
 If you want to create new metadata for your resources, you must have the necessary user account permissions. Specifically, you must:
 
