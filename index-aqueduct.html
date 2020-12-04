@@ -10396,10 +10396,10 @@ operations are only available to SUPERADMINS.</p>
 </tr>
 </tbody></table>
 
-<h4 id="subscribing-to-a-geostore">Subscribing to a geostore</h4>
+<h4 id="subscribing-to-a-rw-api-geostore">Subscribing to a RW API geostore</h4>
 
 <blockquote>
-<p>Creating a subscription providing the id of a geostore in the params field:</p>
+<p>Creating a subscription providing the id of a geostore obtained from the RW API in the params field:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
@@ -10429,7 +10429,45 @@ operations are only available to SUPERADMINS.</p>
 </thead><tbody>
 <tr>
 <td><code class="prettyprint">params.geostore</code></td>
-<td style="text-align: center">Id of the geostore to subscribe to.</td>
+<td style="text-align: center">Id of the RW API geostore to subscribe to.</td>
+<td style="text-align: right">String</td>
+</tr>
+</tbody></table>
+
+<h4 id="subscribing-to-a-gfw-data-api-geostore">Subscribing to a GFW Data API geostore</h4>
+
+<blockquote>
+<p>Creating a subscription providing the id of a geostore obtained from the GFW Data API in the params field:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/subscriptions"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "datasets": ["&lt;dataset-id&gt;"],
+    "params": {
+      "geostoreDataApi": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'</span>
+</code></pre>
+<p>A subscription can refer to a specific geostore that has been created using the GFW Data API. If this is the case, you should check the docs for the GFW Data API and create your geostore, then use its id in the <code class="prettyprint">params.geostoreDataApi</code> field of the request body when creating the subscription.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th style="text-align: center">Description</th>
+<th style="text-align: right">Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">params.geostoreDataApi</code></td>
+<td style="text-align: center">Id of the GFW Data API geostore to subscribe to.</td>
 <td style="text-align: right">String</td>
 </tr>
 </tbody></table>
@@ -12553,7 +12591,8 @@ Given the following sets of concepts:</p>
 <p>Keep in mind that you should provide one of the following when creating an area:</p>
 
 <ul>
-<li><code class="prettyprint">geostore</code> with the id of a geostore object if you are creating an area that references a geostore;</li>
+<li><code class="prettyprint">geostore</code> with the id of a geostore object obtained from <a href="index-rw.html#geostore16">RW API&rsquo;s Geostore service</a>, if you are creating an area that references a geostore;</li>
+<li><code class="prettyprint">geostoreDataApi</code> with the id of a geostore object obtained from the GFW Data API, as an alternative way to create an area that references a geostore;</li>
 <li><code class="prettyprint">wdpaid</code> with the id of a protected area if you are creating an area that references a protected area;</li>
 <li><code class="prettyprint">iso</code> object with a valid country/region/subregion if you are creating an area that references an admin country/region/subregion;</li>
 <li><code class="prettyprint">use</code> object with valid id and name of a land use concessioned area, if you are creating an area that references a land use area.</li>
@@ -12581,6 +12620,11 @@ Given the following sets of concepts:</p>
 <td>400</td>
 <td><code class="prettyprint">&lt;field&gt; is not valid.</code></td>
 <td>You provided an invalid field while creating the area.</td>
+</tr>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">geostore and geostoreDataApi are mutually exclusive, cannot provide both at the same time</code></td>
+<td>You are trying to provide <code class="prettyprint">geostore</code> and <code class="prettyprint">geostoreDataApi</code> at the same time, and only one of the fields can be provided.</td>
 </tr>
 <tr>
 <td>401</td>
@@ -12663,7 +12707,8 @@ Given the following sets of concepts:</p>
 <p>Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the <a href="#area-reference">Area reference</a> section. Keep in mind that you must provide one of the following when updating an area:</p>
 
 <ul>
-<li><code class="prettyprint">geostore</code> with the id of a geostore object if you are updating an area that references a geostore;</li>
+<li><code class="prettyprint">geostore</code> with the id of a geostore object obtained from <a href="index-rw.html#geostore16">RW API&rsquo;s Geostore service</a>, if you are updating an area that references a geostore;</li>
+<li><code class="prettyprint">geostoreDataApi</code> with the id of a geostore object obtained from the GFW Data API, as an alternative way to update an area that references a geostore;</li>
 <li><code class="prettyprint">wdpaid</code> with the id of a protected area if you are updating an area that references a protected area;</li>
 <li><code class="prettyprint">iso</code> object with a valid country/region/subregion if you are updating an area that references an admin country/region/subregion;</li>
 <li><code class="prettyprint">use</code> object with valid id and name of a land use concessioned area, if you are updating an area that references a land use area.</li>
@@ -12694,6 +12739,11 @@ Given the following sets of concepts:</p>
 <td>400</td>
 <td><code class="prettyprint">Id required</code></td>
 <td>No id was provided in the URL.</td>
+</tr>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">geostore and geostoreDataApi are mutually exclusive, cannot provide both at the same time</code></td>
+<td>You are trying to provide <code class="prettyprint">geostore</code> and <code class="prettyprint">geostoreDataApi</code> at the same time, and only one of the fields can be provided.</td>
 </tr>
 <tr>
 <td>401</td>
@@ -12950,7 +13000,14 @@ Given the following sets of concepts:</p>
 <td>String</td>
 <td>No</td>
 <td></td>
-<td>If this area references a geostore, the id of the geostore will be saved in this field.</td>
+<td>If this area references a geostore obtained from <a href="index-rw.html#geostore16">RW API&rsquo;s Geostore service</a>, the id of that geostore will be saved in this field.</td>
+</tr>
+<tr>
+<td>geostoreDataApi</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>If this area references a geostore obtained from the GFW Data API, the id of that geostore will be saved in this field.</td>
 </tr>
 <tr>
 <td>wdpaId</td>
