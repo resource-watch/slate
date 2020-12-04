@@ -419,9 +419,9 @@ Field                 | Description                                             
 --------------------- | :------------------------------------------------------------: | ----------------:
 `params.wdpaid`       | Id of the protected area in the WDPA                           | String
 
-#### Subscribing to a geostore
+#### Subscribing to a RW API geostore
 
-> Creating a subscription providing the id of a geostore in the params field:
+> Creating a subscription providing the id of a geostore obtained from the RW API in the params field:
 
 ```shell
 curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
@@ -446,7 +446,36 @@ A subscription can refer to a specific geostore that has been created using the 
 
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
-`params.geostore`     | Id of the geostore to subscribe to.                            | String
+`params.geostore`     | Id of the RW API geostore to subscribe to.                     | String
+
+#### Subscribing to a GFW Data API geostore
+
+> Creating a subscription providing the id of a geostore obtained from the GFW Data API in the params field:
+
+```shell
+curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"  -d \
+ '{
+    "datasets": ["<dataset-id>"],
+    "params": {
+      "geostoreDataApi": "35a6d982388ee5c4e141c2bceac3fb72"
+    },
+    "application": "gfw",
+    "language": "en",
+    "env": "production",
+    "resource": {
+      "type": "EMAIL",
+      "content": "email@address.com"
+    }
+  }'
+```
+
+A subscription can refer to a specific geostore that has been created using the GFW Data API. If this is the case, you should check the docs for the GFW Data API and create your geostore, then use its id in the `params.geostoreDataApi` field of the request body when creating the subscription.
+
+Field                 | Description                                                    | Type
+--------------------- | :------------------------------------------------------------: | ----------------:
+`params.geostoreDataApi` | Id of the GFW Data API geostore to subscribe to.            | String
 
 #### Subscribing to land use areas
 
