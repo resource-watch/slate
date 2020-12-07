@@ -95,7 +95,7 @@ This endpoint allows you to list existing layers and their properties. The resul
 > Return the layers associated with a dataset
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer"
 ```
 
 When handling layers, it's common to want to limit results to those layers associated with a given dataset. Besides the [filters](#filters132) covered below, there's an additional convenience endpoint to get the layers associated with a dataset, as shown in this example. 
@@ -537,14 +537,14 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?includes=user,vocabulary"
 > Getting a layer by id:
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer_id>"
 curl -X GET "https://api.resourcewatch.org/v1/layer/<layer_id>"
 ```
 
 > Getting a layer by slug:
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_slug>"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer_slug>"
 curl -X GET "https://api.resourcewatch.org/v1/layer/<layer_slug>"
 ```
 
@@ -619,7 +619,7 @@ You can load related `user` and `vocabulary` data in the same request. See [this
 
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer" \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer" \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <your-token>" \
 -d  \
@@ -702,7 +702,7 @@ Error code     | Error message  | Description
 > Example PATCH request that updates a layer's name:
 
 ```shell
-curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>" \
+curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json" -d \
 '{
@@ -737,7 +737,7 @@ Error code     | Error message  | Description
 > Example DELETE request that deletes a layer:
 
 ```shell
-curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer/<layer_id>" \
+curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```

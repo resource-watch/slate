@@ -74,7 +74,7 @@ This endpoint allows you to list existing widgets and their properties. The resu
 
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget"
 ```
 
 > Example response:
@@ -518,7 +518,7 @@ You can request multiple related entities in a single request using commas to se
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget/<widget_id>"
-curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>"
+curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget_id>"
 ```
 
 > Example response:
@@ -740,7 +740,7 @@ You can load related `user`, `vocabulary` and `metadata` data in the same reques
 > To create a widget, you need to provide at least the following details:
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget" \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -840,7 +840,7 @@ Error code     | Error message  | Description
 
 
 ```shell
-curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id_or_slug>" \
+curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget_id_or_slug>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -853,7 +853,7 @@ curl -X PATCH "https://api.resourcewatch.org/v1/widget/<widget_id_or_slug>" \
 -H "Content-Type: application/json"  -d \
  '{
     "name":"New Example Widget Name",
-    "dataset":"<dataset_id>
+    "dataset":"<dataset-id>
  }'
 ```
 
@@ -925,7 +925,7 @@ curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id_or_slug>/clone"
 ```
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id_or_slug>/clone" \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget_id_or_slug>/clone" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 ```
@@ -986,7 +986,7 @@ curl -X POST "https://api.resourcewatch.org/v1/widget/<widget_id_or_slug>/clone"
 ```
 
 ```shell
-curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id_or_slug>/clone" \
+curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget_id_or_slug>/clone" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"  -d \
  '{
@@ -1045,7 +1045,7 @@ Error code     | Error message  | Description
 > Example DELETE request that deletes a widget:
 
 ```shell
-curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/widget/<widget_id>" \
+curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget_id>" \
 -H "Authorization: Bearer <your-token>" \
 -H "Content-Type: application/json"
 

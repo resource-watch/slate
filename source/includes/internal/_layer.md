@@ -5,7 +5,7 @@
 > Example PATCH request that sets all layer for the given dataset to the defined env:
 
 ```shell
-curl -X PATCH "https://api.resourcewatch.org/v1/layer/change-environment/<dataset_id>/<env>" \
+curl -X PATCH "https://api.resourcewatch.org/v1/layer/change-environment/<dataset-id>/<env>" \
 -H "Authorization: Bearer <microservice-token>" \
 -H "Content-Type: application/json"
 ```
@@ -28,7 +28,7 @@ Error code     | Error message  | Description
 > Example DELETE request that deletes all layers for a dataset:
 
 ```shell
-curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset_id>/layer" \
+curl -X DELETE "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer" \
 -H "Authorization: Bearer <microservice-token>" \
 -H "Content-Type: application/json"
 ```
