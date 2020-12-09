@@ -304,7 +304,7 @@
 <blockquote>
 <p>Example PATCH request that sets all layer for the given dataset to the defined env:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/layer/change-environment/&lt;dataset_id&gt;/&lt;env&gt;"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/layer/change-environment/&lt;dataset-id&gt;/&lt;env&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
@@ -343,7 +343,7 @@
 <blockquote>
 <p>Example DELETE request that deletes all layers for a dataset:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>

@@ -315,7 +315,7 @@
 
 <p>Understanding the context of data, empowering users to find and make informed decisions about its suitability is another important goal of the Resource Watch API (RW API). For example, a user may be looking to answer questions like, <em>&ldquo;Does this dataset provide information about tree cover in my region?&rdquo;</em>, <em>&ldquo;What are the physical units?&rdquo;</em>, <em>&ldquo;How was this measured?&rdquo;</em>, and <em>&ldquo;How should I provide proper attribution to the data provider?&rdquo;</em>.</p>
 
-<p>Answers to these questions can be stored in a resource&rsquo;s <a href="https://guides.ucf.edu/metadata/intrometadata">metadata</a>. By definition, metadata is always associated with another entity. In the context of the RW API, a metadata object will always contain information about either a <a href="https://resource-watch.github.io/doc-api/index-rw.html#dataset">dataset</a>, a <a href="https://resource-watch.github.io/doc-api/index-rw.html#layer">layer</a> or a <a href="https://resource-watch.github.io/doc-api/index-rw.html#widget">widget</a>.</p>
+<p>Answers to these questions can be stored in a resource&rsquo;s <a href="https://guides.ucf.edu/metadata/intrometadata">metadata</a>. By definition, metadata is always associated with another entity. In the context of the RW API, metadata objects will always contain information about either a <a href="https://resource-watch.github.io/doc-api/index-rw.html#dataset">dataset</a>, a <a href="https://resource-watch.github.io/doc-api/index-rw.html#layer">layer</a> or a <a href="https://resource-watch.github.io/doc-api/index-rw.html#widget">widget</a>.</p>
 
 <p>Content-wise, the RW API aims to provide a good balance between structure and flexibility with its metadata service, providing a group of common fields you&rsquo;ll find on all metadata elements, as well as giving API users the tools to create metadata that meets the individual needs of their applications. Through a mix of both types of fields, these are some of the recommended information you should aim to provide when specifying the metadata for one of your resources:</p>
 
@@ -331,7 +331,7 @@
 
 <p>As we&rsquo;ll see in further details when covering the metadata endpoints, a RW API metadata object has a few structured but optional fields to capture some of the general details described above, while also allowing you to specify your own custom fields for ease of extension and flexibility, should you want to provide additional levels of detail about your resources. It will also give you the tools to only specify a subset of the suggested elements above, should you decide to use that approach.</p>
 
-<p>Besides being associated with a single RW API resource (dataset, widget, or layer), a metadata element and must also identify the language in which it&rsquo;s written, as well as the <a href="https://resource-watch.github.io/doc-api/index-rw.html#applications">application</a> it&rsquo;s associated with. This allows a single resource, say a dataset, to have its metadata translated into different languages, and be adjusted to meet the needs of different applications. We&rsquo;ll go into further details on these when we cover the metadata endpoints in their dedicated section.</p>
+<p>Besides being associated with a single RW API resource (dataset, widget, or layer), metadata objects must also identify the language in which they are written, as well as the <a href="https://resource-watch.github.io/doc-api/index-rw.html#applications">application</a> they are associated with. This allows a single resource, say a dataset, to have its metadata translated into different languages, and be adjusted to meet the needs of different applications. We&rsquo;ll go into further details on these when we cover the metadata endpoints in their dedicated section.</p>
 
           <h2 id="geostore">Geostore</h2>
 
@@ -4346,7 +4346,7 @@ curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/:dataset
 <blockquote>
 <p>Return the layers associated with a dataset</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer"</span>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer"</span>
 </code></pre>
 <p>When handling layers, it&rsquo;s common to want to limit results to those layers associated with a given dataset. Besides the <a href="#filters132">filters</a> covered below, there&rsquo;s an additional convenience endpoint to get the layers associated with a dataset, as shown in this example. </p>
 
@@ -4777,13 +4777,13 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 <blockquote>
 <p>Getting a layer by id:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt;"</span>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer_id&gt;"</span>
 curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_id&gt;"</span>
 </code></pre>
 <blockquote>
 <p>Getting a layer by slug:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer/&lt;layer_slug&gt;"</span>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer_slug&gt;"</span>
 curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_slug&gt;"</span>
 </code></pre>
 <blockquote>
@@ -4854,7 +4854,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 <blockquote>
 <p>To create a layer, you need to provide at least the following details:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -d  <span class="se">\</span>
@@ -4968,7 +4968,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 <blockquote>
 <p>Example PATCH request that updates a layer&rsquo;s name:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt;"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer_id&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
 <span class="s1">'{
@@ -5037,7 +5037,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 <blockquote>
 <p>Example DELETE request that deletes a layer:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/layer/&lt;layer_id&gt;"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer_id&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
@@ -5375,7 +5375,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 <blockquote>
 <p>Return the widgets associated with a dataset</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget"</span>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget"</span>
 </code></pre>
 <blockquote>
 <p>Example response:</p>
@@ -5807,7 +5807,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 <p>Getting a widget by id:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;widget_id&gt;"</span>
-curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;"</span>
+curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id&gt;"</span>
 </code></pre>
 <blockquote>
 <p>Example response:</p>
@@ -6022,7 +6022,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;datas
 <blockquote>
 <p>To create a widget, you need to provide at least the following details:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -6145,7 +6145,7 @@ curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/widget"</span> <
 <blockquote>
 <p>To update a widget, you have to do one of the following PATCH requests:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id_or_slug&gt;"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id_or_slug&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -6158,7 +6158,7 @@ curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;widg
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
     "name":"New Example Widget Name",
-    "dataset":"&lt;dataset_id&gt;
+    "dataset":"&lt;dataset-id&gt;
  }'</span>
 </code></pre>
 <blockquote>
@@ -6259,7 +6259,7 @@ curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;widg
 <pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;widget_id_or_slug&gt;/clone"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id_or_slug&gt;/clone"</span> <span class="se">\</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id_or_slug&gt;/clone"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
@@ -6322,7 +6322,7 @@ curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;widg
    "name": "name for the cloned widget",
    "description": "description of the cloned widget"
 }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id_or_slug&gt;/clone"</span> <span class="se">\</span>
+</code></pre><pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id_or_slug&gt;/clone"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
@@ -6395,7 +6395,7 @@ curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;widg
 <blockquote>
 <p>Example DELETE request that deletes a widget:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset_id&gt;/widget/&lt;widget_id&gt;"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>
 
@@ -7495,313 +7495,522 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 
           <h1 id="metadata">Metadata</h1>
 
-<h2 id="metadata-definition">Metadata definition</h2>
+<h2 id="what-is-metadata">What is metadata?</h2>
 
-<p>Metadata is data concerning another resource available on this API. It only exists when associated with another resource - currently supported resource types are datasets, widgets or layers. Note that, although there might be several metadata per resource, each resource will have - at most - one metadata element per <code class="prettyprint">application</code> and <code class="prettyprint">language</code> pair. As such, the <code class="prettyprint">application</code> and <code class="prettyprint">language</code> attributes are required and it is mandatory to include them in when creating/updating metadata.</p>
+<p>If you are new to the RW API, or want to learn more about the concept of metadata, we strongly encourage you to read the <a href="#metadata">metadata concept</a> documentation first. It gives you a brief and clear description of what metadata is, and why it is useful.</p>
 
-<p>Some fields are important to identify the entity properly; others are just optional and give extra information about it.</p>
+<p>Once you&rsquo;ve read that section, you can come back here to learn more details about using the RW API Metadata feature, which aims to provide summary information about <a href="#dataset">Datasets</a>, <a href="#layer">Layers</a>, and <a href="#widget">Widgets</a>.</p>
 
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>application</td>
-<td style="text-align: center">The metadata application. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>language</td>
-<td style="text-align: center">The metadata language</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>dataset</td>
-<td style="text-align: center">The associated dataset id to the metadata</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>resource</td>
-<td style="text-align: center">The resource associated to the metadata</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>&ndash; id</td>
-<td style="text-align: center">Resource id</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>&ndash; type</td>
-<td style="text-align: center">Resource type</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>name</td>
-<td style="text-align: center">The metadata name</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>description</td>
-<td style="text-align: center">The metadata description</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>source</td>
-<td style="text-align: center">The metadata source</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>citation</td>
-<td style="text-align: center">The metadata citation</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>license</td>
-<td style="text-align: center">The metadata license type</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>info</td>
-<td style="text-align: center">Some info about the metadata</td>
-<td style="text-align: right">Object</td>
-</tr>
-<tr>
-<td>units</td>
-<td style="text-align: center">Measurement units</td>
-<td style="text-align: right">Object</td>
-</tr>
-</tbody></table>
+<p><a href="#metadata-objects">Metadata objects</a> describe things like the name, spatial and temporal coverage, usage rights, and contact information of datasets as well as their associated layers and widgets, uploaded by <a href="https://www.wri.org/">WRI</a>, its partner organizations, or by API users like you.</p>
 
-<h2 id="creating-a-metadata-object">Creating a metadata object</h2>
+<p>They are particularly useful for allowing users to find relevant datasets, layers and widgets, understand their context, and for providing useful extra information, such as descriptions, licensing, and citations.</p>
 
-<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
-to dictates which of 3 endpoints you should use when creating a new metadata entity.</p>
+<p><strong><em>As such, if you really want people to be able to use your datasets, widgets or layers, it is crucial that it has metadata!</em></strong></p>
 
-<p>In all scenarios, you must be authenticated to be able to create a metadata entity, and meet the following requirements:</p>
+<p>To find out more about accessing metadata objects already available on the RW API, check out the documentation on <a href="#getting-metadata">getting metadata objects</a>. If you&rsquo;d like to share your data with the world, you can also <a href="#creating-metadata">create your own metadata</a> on the RW API, as well as <a href="#updating-metadata">update</a> and <a href="#deleting-metadata">delete</a> existing metadata objects.</p>
 
-<ul>
-<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
-<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
-</ul>
+<h2 id="metadata-objects">Metadata objects</h2>
 
-<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
+<p>RW API&rsquo;s <a href="#metadata">approach to metadata</a> is designed to offer flexibility; both in terms of the information contained and languages. Hence, when working with metadata objects it is important to understand a few key concepts. </p>
 
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Required/Optional</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>application</td>
-<td style="text-align: center">required</td>
-</tr>
-<tr>
-<td>language</td>
-<td style="text-align: center">required</td>
-</tr>
-<tr>
-<td>dataset</td>
-<td style="text-align: center">required</td>
-</tr>
-<tr>
-<td>name</td>
-<td style="text-align: center">optional</td>
-</tr>
-<tr>
-<td>description</td>
-<td style="text-align: center">optional</td>
-</tr>
-<tr>
-<td>source</td>
-<td style="text-align: center">optional</td>
-</tr>
-<tr>
-<td>citation</td>
-<td style="text-align: center">optional</td>
-</tr>
-<tr>
-<td>license</td>
-<td style="text-align: center">optional</td>
-</tr>
-<tr>
-<td>info</td>
-<td style="text-align: center">optional</td>
-</tr>
-<tr>
-<td>units</td>
-<td style="text-align: center">optional</td>
-</tr>
-</tbody></table>
+<p>The first of which is that metadata objects contain information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single <code class="prettyprint">resource</code>, identified by its <code class="prettyprint">type</code> and <code class="prettyprint">id</code>. As this <code class="prettyprint">type</code> + <code class="prettyprint">id</code> pair directly or indirectly (as widgets and layers themselves are associated with a dataset) references a dataset, and for convenience, each metadata object also has the dataset identifier to which it&rsquo;s associated.</p>
 
-<aside class="notice">
-Please, be sure that the request is properly authenticated and the current user has permission to the resource.
-If you don&rsquo;t know how to do this, please go to the <a href="#authentication">Authentication section</a>
-</aside>
+<p>Another important concept to keep in mind is that each metadata object concerns a single combination of <code class="prettyprint">language</code> and <code class="prettyprint">application</code>. If you want to provide translations of your metadata, or if you&rsquo;d like it to tailor a resource&rsquo;s metadata to better fit different applications, you should create multiple metadata objects for the different combinations of application and language.</p>
+
+<p>Building on top of the two concepts above, it&rsquo;s important to highlight that while each resource can have multiple metadata, it cannot have multiple metadata for the same combination of <code class="prettyprint">language</code> and <code class="prettyprint">application</code>. For example, metadata about a tree cover dataset for the <a href="https://www.globalforestwatch.org/">Global Forest Watch</a> application might be available in both English and Spanish (each a different metadata object), and these may be different compared to metadata objects in the same languages associated with <a href="https://resourcewatch.org/">Resource Watch</a> application. This example would then represent a total of 4 different metadata objects, all associated with the same dataset.</p>
+
+<p>When it comes to its internal structure, metadata objects have a balance of structured and free-format fields that promote a common base across all objects, while allowing different applications and use cases to have their own specific structure and details. You can learn more about the available fields in the <a href="#metadata-reference">metadata reference</a> section.</p>
+
+<p>Last but not least, it&rsquo;s important to keep in mind that the behavior of metadata objects and endpoints aims to be, as much as possible, independent from the target resource it references. In the detailed endpoint documentation below we&rsquo;ll cover the different endpoints in depth, and highlight the differences in behavior when handling different resource types, but you can safely assume that, for most of it, behavior described for a type of resource will be the same for all 3 types.</p>
+
+<h2 id="metadata-endpoints-overview">Metadata endpoints overview</h2>
+
+<p>As covered above, each metadata object directly concerns a single dataset, widget or layer. The endpoint structure mostly reflects that, with each metadata action (getting, creating, modifying or deleting metadata) being available through 3 different endpoints, one for each type of resource (for example, <code class="prettyprint">/v1/dataset/&lt;dataset-id&gt;/metadata</code>, <code class="prettyprint">/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer_id&gt;/metadata</code> and <code class="prettyprint">/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id&gt;/metadata</code>). These endpoints will be documented as a single element, as they behave in exactly the same way, with the only difference between them being the actual endpoint URL. Any differences that may exist will be pointed out, but those will be rare. The only exceptions are the endpoints to load all metadata (which ignores resource type) and to clone a dataset&rsquo;s metadata, which doesn&rsquo;t have a widget or layer equivalent.</p>
+
+<h2 id="getting-metadata">Getting metadata</h2>
+
+<p>There are 2 main ways to retrieve metadata objects from the RW API: using the &ldquo;get all&rdquo; endpoint (and optionally adding some filters), or loading metadata by their resource id (either a single element at a time, or multiple in one go) and type.</p>
+
+<p>Remembering that each resource <a href="#metadata-objects">may have many metadata objects</a> associated with it. In general, you will usually want to use the filter parameters <code class="prettyprint">application</code> and <code class="prettyprint">language</code>, which may be one or many of valid RW API applications and languages.</p>
+
+<h3 id="getting-all-metadata">Getting all metadata</h3>
 
 <blockquote>
-<p>Create metadata for a dataset</p>
+<p>Getting a list of all metadata</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/metadata?application=rw,gfw&amp;language=en,es&amp;type=dataset&amp;limit=1'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Getting a list of all metadata with optional parameters</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/metadata?application=rw,gfw&amp;language=en,es&amp;type=dataset&amp;limit=1'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57cfffd6129c3c100054c383"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0ffe5ad6-c920-421b-b69c-bc8893155df4"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0ffe5ad6-c920-421b-b69c-bc8893155df4"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"citation"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"citation"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"short-description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-12-13T10:02:28.337Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-12-13T10:03:02.445Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint will allow you to get the list of the metadata available in the API, and it&rsquo;s the only endpoint that will allow you to load metadata for multiple resources at once.</p>
+
+<p>It&rsquo;s worth pointing out that, unlike other similar endpoints on the RW API, this endpoint does NOT have pagination by default. If you query it without any of the optional parameters, you will get a list of all metadata objects for all datasets, widgets and layers. This is strongly discouraged, and <strong>you should not rely on this behavior</strong> - when using this endpoint, you should aim to use a combination of parameters to narrow down your response pool. You should also <strong>expect a future update to this endpoint to introduce pagination</strong> on all responses, so try to keep this in mind when using this endpoint on your application.</p>
+
+<p>For a detailed description of each field, check out the <a href="#metadata-reference">Metadata reference</a> section.</p>
+
+<p>In the sections below, we’ll explore the optional parameters supported by this, which we strongly recommend you use.</p>
+
+<h4 id="application-and-language-filters">Application and language filters</h4>
+
+<blockquote>
+<p>Getting a list of all metadata belonging to the RW application, written in either English or Spanish</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/metadata?application=rw&amp;language=en,es'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<p>You can filter by <code class="prettyprint">application</code> and <code class="prettyprint">language</code> of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.</p>
+
+<h4 id="type-filter">Type filter</h4>
+
+<blockquote>
+<p>Getting a list of all metadata for widgets</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/metadata?type=widget'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<p>Using the <code class="prettyprint">type</code> query parameter you can specify the type of the metadata resource to load. Expected values are <code class="prettyprint">dataset</code>, <code class="prettyprint">widget</code> or <code class="prettyprint">layer</code>, and any other values will produce no results.</p>
+
+<h4 id="limit">Limit</h4>
+
+<blockquote>
+<p>Getting a list of up to 10 metadata</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/metadata?limit=10'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<p>Using the <code class="prettyprint">limit</code> query parameter you can specify the maximum number of metadata to load in a single response.</p>
+
+<h4 id="sorting">Sorting</h4>
+
+<blockquote>
+<p>Sorting metadata</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?sort<span class="o">=</span>name
+</code></pre>
+<blockquote>
+<p>Sorting metadata by multiple criteria</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?sort<span class="o">=</span>name,description
+</code></pre>
+<blockquote>
+<p>Sort by name descending, description ascending</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?sort<span class="o">=</span>-name,+description
+</code></pre>
+<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> query parameter. Sorting can be done using any field from the <a href="#metadata-reference">metadata model</a>. Sorting by nested fields is not supported at the moment.</p>
+
+<p>Multiple sorting criteria can be used, separating them by commas.</p>
+
+<p>You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+
+<h3 id="getting-metadata-for-a-dataset-layer-or-widget">Getting metadata for a dataset, layer or widget</h3>
+
+<blockquote>
+<p>Getting metadata associated with a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Getting metadata associated with a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer_id&gt;/metadata'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Getting metadata associated with a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id&gt;/metadata'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"595f836c0d9ed1000bc29a91"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f2fe7588-6d1b-400e-b79c-0c86bf1273ea"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f2fe7588-6d1b-400e-b79c-0c86bf1273ea"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Urban Population with Access to an Improved Water Source"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Percentage of Urban Population with Access to an Improved Water Source is derived by ..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UN WHO/WHO UNICEF JMP WSS"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"data_download_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"null"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"frequency_of_updates"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Annual"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"date_of_content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1990-present"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"spatial_resolution"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tabular: National"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"geographic_coverage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Global"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"link_to_linense"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://data.worldbank.org/summary-terms-of-use"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Open: You are free to copy, distribute, adapt, display, or include ..."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"citation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"World Bank. 2015. </span><span class="se">\"</span><span class="s2">World Development Indicators: Improved Water Source (% of Population with Access).</span><span class="se">\"</span><span class="s2"> Retrieved from http://data.worldbank.org/indicator/SH.H2O.SAFE.ZS. Accessed through Resource Watch on [date]. www.resourcewatch.org."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"cautions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The data on access to an improved water source measure the ..."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"source_organization_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"null"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"source_organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"United Nations World Health Organization (UN WHO)/World Health Organization and United Nations Children's Fund Joint Monitoring Programme for Water Supply and Sanitation (WHO UNICEF JMP WSS)"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"function"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This data set displays the percentage of urban population with access to an improved drinking water source in a dwelling or located within a convenient distance from the user's dwelling."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"functions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This data set displays the percentage of urban population with access to an improved drinking water source in a dwelling or located within a convenient distance from the user's dwelling."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Urban Population with Access to an Improved Water Source"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"technical_title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Percentage of Urban Population with Access to an Improved Water Source (WHO/UNICEF)"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Measured year"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Year"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Value"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Country Name"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO-3 Country Code"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-07-07T12:49:48.721Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-08-28T14:30:17.701Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>These endpoints allow you to get metadata for a single dataset, widget or layer. By default, metadata for all languages and applications is returned, but you can use optional query parameters to filter that result.</p>
+
+<h4 id="application-and-language-filters">Application and language filters</h4>
+
+<blockquote>
+<p>Getting a list of all metadata for a given dataset, belonging to the RW application and written in either English or Spanish</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata?application=rw&amp;language=en,es'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+</code></pre>
+<p>You can filter by <code class="prettyprint">application</code> and <code class="prettyprint">language</code> of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.</p>
+
+<h4 id="limit">Limit</h4>
+
+<blockquote>
+<p>Getting a list of all metadata for a given dataset, up to 10 results</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata?limit=10'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+</code></pre>
+<p>Using the <code class="prettyprint">limit</code> query parameter you can specify the maximum number of metadata to load in a single response.</p>
+
+<h3 id="getting-metadata-for-multiple-datasets-layers-or-widgets">Getting metadata for multiple datasets, layers or widgets</h3>
+
+<blockquote>
+<p>Getting metadata associated with multiple datasets</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/metadata/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
+   "ids": [&lt;dataset ids&gt;]
   }'</span>
 </code></pre>
 <blockquote>
-<p>Create metadata for a widget</p>
+<p>Getting metadata associated with multiple widgets</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/layer/metadata/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
+   "ids": [&lt;layer ids&gt;]
   }'</span>
 </code></pre>
 <blockquote>
-<p>Create metadata for a layer</p>
+<p>Getting metadata associated with multiple widgets</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/find-by-ids <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Real example</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "application": "rw",
-   "language": "en"
+   "ids": [&lt;widget ids&gt;]
   }'</span>
 </code></pre>
 <blockquote>
 <p>Response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86-dataset-942b3f38-9504-4273-af51-0440170ffc86-rw-en"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:07:53.272Z"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:07:53.272Z"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"595f836c0d9ed1000bc29a91"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f2fe7588-6d1b-400e-b79c-0c86bf1273ea"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f2fe7588-6d1b-400e-b79c-0c86bf1273ea"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Urban Population with Access to an Improved Water Source"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Percentage of Urban Population with Access to an Improved Water Source is derived by ..."</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UN WHO/WHO UNICEF JMP WSS"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"data_download_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"null"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"frequency_of_updates"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Annual"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"date_of_content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1990-present"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"spatial_resolution"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tabular: National"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"geographic_coverage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Global"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"link_to_linense"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://data.worldbank.org/summary-terms-of-use"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Open: You are free to copy, distribute, adapt, display, or include ..."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"citation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"World Bank. 2015. </span><span class="se">\"</span><span class="s2">World Development Indicators: Improved Water Source (% of Population with Access).</span><span class="se">\"</span><span class="s2"> Retrieved from http://data.worldbank.org/indicator/SH.H2O.SAFE.ZS. Accessed through Resource Watch on [date]. www.resourcewatch.org."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"cautions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The data on access to an improved water source measure the ..."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"source_organization_link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"null"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"source_organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"United Nations World Health Organization (UN WHO)/World Health Organization and United Nations Children's Fund Joint Monitoring Programme for Water Supply and Sanitation (WHO UNICEF JMP WSS)"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"function"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This data set displays the percentage of urban population with access to an improved drinking water source in a dwelling or located within a convenient distance from the user's dwelling."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"functions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This data set displays the percentage of urban population with access to an improved drinking water source in a dwelling or located within a convenient distance from the user's dwelling."</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Urban Population with Access to an Improved Water Source"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"technical_title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Percentage of Urban Population with Access to an Improved Water Source (WHO/UNICEF)"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"columns"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Measured year"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Year"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Value"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Country Name"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"alias"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO-3 Country Code"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-07-07T12:49:48.721Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-08-28T14:30:17.701Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="getting-metadata">Getting metadata</h2>
+<p>This group of endpoints allows you to access metadata for multiple resources of the same type with a single request. The result will be a flat list of metadata elements, not grouped by their associated resource - it&rsquo;s up to your application to implement this logic if it needs it.</p>
 
-<p>application filter:
-<code class="prettyprint">
-application: gfw, gfw-climate, prep, rw, forest-atlas (select one or some of them)
-</code></p>
+<h4 id="application-and-language-filters">Application and language filters</h4>
 
-<p>language filter:
-<code class="prettyprint">
-language: select between available languages (select one or some of them)
-</code></p>
+<blockquote>
+<p>Getting a list of all metadata for multiple widgets, belonging to the RW application and written in either English or Spanish</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/find-by-ids?application<span class="o">=</span>rw&amp;language<span class="o">=</span>en,es <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;widget ids&gt;]
+  }'</span>
+</code></pre>
+<p>You can filter by <code class="prettyprint">application</code> and <code class="prettyprint">language</code> of the metadata by passing query arguments with the same name in your call to this endpoint. You can filter by multiple values at the same time, separating them using using commas.</p>
 
-<p>limit filter:
-<code class="prettyprint">
-limit: the desired number
-</code></p>
+<h4 id="errors-for-getting-metadata-for-multiple-datasets-layers-or-widgets">Errors for getting metadata for multiple datasets, layers or widgets</h4>
 
-<p>Custom param for /metadata endpoint:
-<code class="prettyprint">
-type: [dataset, widget, layer]
-</code></p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Missing &lsquo;ids&rsquo; from request body</td>
+<td>The required <code class="prettyprint">ids</code> field is missing in the request body.</td>
+</tr>
+</tbody></table>
+
+<h2 id="creating-metadata">Creating metadata</h2>
+
+<blockquote>
+<p>Creating a new metadata for a given dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata'</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{
+  "application": &lt;application&gt;,
+  "language": &lt;language&gt;,
+  "name": "metadata name"
+}'</span>
 </code></pre>
 <blockquote>
-<p>Real example</p>
+<p>Creating a new metadata for a given layer</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata
+<pre class="highlight shell"><code>curl -X POST <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata'</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{
+  "application": &lt;application&gt;,
+  "language": &lt;language&gt;,
+  "name": "metadata name"
+}'</span>
 </code></pre>
-<h2 id="updating-a-metadata">Updating a metadata</h2>
+<blockquote>
+<p>Creating a new metadata for a given widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata'</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{
+  "application": &lt;application&gt;,
+  "language": &lt;language&gt;,
+  "name": "metadata name"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5f99b9317fe3c8001be2f272"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"44c7fa02-391a-4ed7-8efc-5d832c567d57"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"44c7fa02-391a-4ed7-8efc-5d832c567d57"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"es"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-10-28T18:32:17.464Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-10-28T18:32:17.464Z"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This group of endpoints allows you to associate metadata with an existing dataset, layer or widget. To help make your resources easier to find, understand and reuse, we recommend creating the associated metadata right after you create your new dataset, layer or widget, but you can do it at any time if you want.</p>
 
-<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
-to dictates which of 3 endpoints you should use when updating a metadata entity.</p>
+<p>As we covered before, the RW API implementation of metadata aims for flexibility, so the only hard requirements when creating a new metadata is that you specify the associate resource id and type, their corresponding dataset id, and the language and application of the metadata (you should ensure that dataset id in the URL matches the dataset id of the resource you&rsquo;re creating metadata for). Everything else is up to you to decide if you want to define or not, but the effectiveness of your metadata will increase if you provide more details about your resources. You can learn more about the available fields in the <a href="#metadata-reference">metadata reference</a> section. </p>
 
-<p>In all scenarios, you must be authenticated to be able to update a metadata entity, and meet the following requirements:</p>
+<p>If you want to create new metadata for your resources, you must have the necessary user account permissions. Specifically, you must:</p>
 
 <ul>
-<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
-<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
+<li>the user must be logged in and belong to the same application as the metadata you&rsquo;re creating</li>
+<li>the user must have role <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code></li>
 </ul>
 
-<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
+<h4 id="errors-for-creating-metadata">Errors for creating metadata</h4>
 
-<p>When updating a metadata, you must always specify both <code class="prettyprint">language</code> and <code class="prettyprint">application</code>, those will be used to determine which metadata entity will be updated.</p>
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">&lt;field&gt;</code>: <code class="prettyprint">&lt;field&gt;</code> can not be empty</td>
+<td>Your are missing a required field value.</td>
+</tr>
+<tr>
+<td>400</td>
+<td><code class="prettyprint">&lt;field&gt;</code>: empty or invalid <code class="prettyprint">&lt;field&gt;</code></td>
+<td>The provided value for <code class="prettyprint">&lt;field&gt;</code> is invalid.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to create metadata for an <code class="prettyprint">application</code> value that is not associated with your user account.</td>
+</tr>
+</tbody></table>
+
+<h2 id="updating-metadata">Updating metadata</h2>
 
 <blockquote>
-<p>Update metadata for a dataset</p>
+<p>Updating metadata for a given dataset</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
+   "application": &lt;application&gt;,
+   "language": &lt;language&gt;,
+   "name": "updated metadata name"
   }'</span>
 </code></pre>
 <blockquote>
-<p>Update metadata for a widget</p>
+<p>Updating metadata for a given layer</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;metadata <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
+   "application": &lt;application&gt;,
+   "language": &lt;language&gt;,
+   "name": "updated metadata name"
   }'</span>
 </code></pre>
 <blockquote>
-<p>Update metadata for a layer</p>
+<p>Updating metadata for a given widget</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;metadata <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "application": &lt;app&gt;,
-   "language": &lt;language&gt;
+   "application": &lt;application&gt;,
+   "language": &lt;language&gt;,
+   "name": "updated metadata name"
   }'</span>
 </code></pre>
 <blockquote>
-<p>Real example</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "application": "rw",
-   "language": "en",
-   "name": "Cloud Computing Market - USA - 2016",
-   "source": "http://www.forbes.com/",
-   "info": {
-       "summary": "These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales).",
-       "author": "Louis Columbus",
-       "date": "MAR 13, 2016 @ 10:42 PM",
-       "link": "http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"
-   }
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Response</p>
+<p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -7832,160 +8041,82 @@ to dictates which of 3 endpoints you should use when updating a metadata entity.
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="deleting-a-metadata">Deleting a metadata</h2>
-
-<p>As previously discussed, a metadata entity is always associated with either a dataset, a widget or a layer resource, and the type of resource it is associated
-to dictates which of 3 endpoints you should use when deleting a metadata entity.</p>
-
-<p>In all scenarios, you must be authenticated to be able to delete a metadata entity, and meet the following requirements:</p>
+<p>To update an existing metadata, you need to issue a PATCH request to the endpoint that matches your resource type and id, specify the new values you want to use. You can update most of the fields listed in the <a href="#metadata-reference">metadata reference</a> section, apart from:</p>
 
 <ul>
-<li>Have the <code class="prettyprint">ADMIN</code> or <code class="prettyprint">MANAGER</code> role.</li>
-<li>Belong to the same <code class="prettyprint">application</code> as the metadata being created. </li>
+<li><code class="prettyprint">id</code></li>
+<li><code class="prettyprint">userId</code></li>
+<li><code class="prettyprint">createdAt</code> and <code class="prettyprint">updatedAt</code></li>
+<li><code class="prettyprint">language</code> and <code class="prettyprint">application</code></li>
+<li><code class="prettyprint">dataset</code></li>
+<li><code class="prettyprint">resource</code></li>
 </ul>
 
-<p>Any of these conditions are not met, the API will generate a 403 <code class="prettyprint">Forbidden</code> error message.</p>
+<p>One important detail is that you MUST specify, in your request body, both the <code class="prettyprint">application</code> and <code class="prettyprint">language</code> values of the metadata you&rsquo;re trying to update. These fields will not be used as new values, as you would expect, but are used to pinpoint exactly which metadata entry will be updated - remember that each resource may have multiple metadata associated with it, but only one per application-language pair.</p>
 
-<p>When deleting a metadata, you must always specify both <code class="prettyprint">language</code> and <code class="prettyprint">application</code>, those will be used to determine which metadata entity will be deleted.</p>
+<p>Also keep in mind that, when updating object type fields, your new value will overwrite the previous value for that field entirely - it&rsquo;s up to you to implement any sort of data merge logic you&rsquo;d like to see happen.</p>
 
-<blockquote>
-<p>Delete metadata for a dataset</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
-</code></pre>
-<blockquote>
-<p>Delete metadata for a widget</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
-
-</code></pre>
-<blockquote>
-<p>Delete metadata for a layer</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata?application<span class="o">=</span>&lt;app-id&gt;&amp;language<span class="o">=</span>&lt;language&gt;
-</code></pre>
-<blockquote>
-<p>Real example</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/metadata?application<span class="o">=</span>rw&amp;language<span class="o">=</span>en <span class="se">\</span>
-</code></pre>
-<h2 id="getting-all">Getting all</h2>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata
-</code></pre>
-<blockquote>
-<p>Real examples</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?type<span class="o">=</span>dataset
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?type<span class="o">=</span>widget
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?application<span class="o">=</span>rw&amp;language<span class="o">=</span>es,en&amp;limit<span class="o">=</span>20
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?application<span class="o">=</span>rw,gfw&amp;language<span class="o">=</span>en&amp;type<span class="o">=</span>dataset
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?language<span class="o">=</span>en
-</code></pre>
-<h2 id="finding-metadata-by-ids">Finding metadata by ids</h2>
-
-<p>The <code class="prettyprint">ids</code> property is required in the body of the request. It can be either an array of ids or a string of comma-separated ids:</p>
+<p>To perform this operation, the following conditions must be met:</p>
 
 <ul>
-<li><code class="prettyprint">{&quot;ids&quot;: [&quot;112313&quot;, &quot;111123&quot;]}</code></li>
-<li><code class="prettyprint">{&quot;ids&quot;: &quot;112313, 111123&quot;}</code></li>
+<li>the user must be logged in and belong to the same application as the metadata that&rsquo;s being updated </li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata)</li>
+</ul></li>
 </ul>
 
-<h3 id="filters">Filters</h3>
-
-<p>The metadata list provided by the endpoint can be filtered with the following attributes:</p>
+<h3 id="errors-for-updating-metadata">Errors for updating metadata</h3>
 
 <table><thead>
 <tr>
-<th>Filter</th>
+<th>Error code</th>
+<th>Error message</th>
 <th>Description</th>
-<th>Accepted values</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>application</td>
-<td>Application associated with the metadata entity. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
-<td>any valid text</td>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to update metadata.</td>
 </tr>
 <tr>
-<td>language</td>
-<td>Language of the metadata entity</td>
-<td>any valid text</td>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata).</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to update metadata with an <code class="prettyprint">application</code> value that is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Metadata of resource <resource type>: <resource id> doesn&rsquo;t exist</td>
+<td>Metadata matching the provided resource data, language and application does not exist.</td>
 </tr>
 </tbody></table>
 
+<h2 id="cloning-dataset-metadata">Cloning dataset metadata</h2>
+
 <blockquote>
-<p>Finding metadata by ids for a dataset</p>
+<p>Cloning metadata for a given dataset</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/metadata/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "ids": [&lt;ids&gt;]
-  }'</span>
+<pre class="highlight shell"><code>curl -X POST <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata/clone'</span> 
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> -d <span class="se">\</span>
+<span class="s1">'{
+    "newDataset": "&lt;targer dataset&gt;",
+    "application": "&lt;application&gt;"
+}'</span>
 </code></pre>
 <blockquote>
-<p>Finding metadata by ids for a widget</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/widget/metadata/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "ids": [&lt;ids&gt;]
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Finding metadata by ids for a layer</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:dataset/layer/metadata/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "ids": [&lt;ids&gt;]
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Real example</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/metadata/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-     "ids": "b000288d-7037-43ba-aa34-165eab549613, 942b3f38-9504-4273-af51-0440170ffc86"
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Response</p>
+<p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b000288d-7037-43ba-aa34-165eab549613-dataset-b000288d-7037-43ba-aa34-165eab549613-prep-en"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b000288d-7037-43ba-aa34-165eab549613"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prep"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b000288d-7037-43ba-aa34-165eab549613"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Projected temperature change"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Puget Sound region is projected to warm rapidly during the 21st century. Prior to mid-century, the projected increase in air temperatures is about the same for all greenhouse gas scenarios, a result of the fact that a certain amount of warming is already “locked in” due to past emissions. After about 2050, projected warming depends on the amount of greenhouse gases emitted globally in the coming decades. For the 2050s (2040-2069, relative to 1970-1999), annual average air temperature is projected to rise +4.2°F to +5.9°F, on average, for a low (RCP 4.5) and a high (RCP 8.5) greenhouse gas scenario. These indicators are derived from the Multivariate Adaptive Constructed Analogs (MACA) CMIP5 Future Climate Dataset from the University of Idaho. For more information about this analysis, please see http://cses.washington.edu/picea/mauger/ps-sok/ps-sok_sec12_builtenvironment_2015.pdf. For more information about the MACA CMIP5 Future Climate Dataset please see http://maca.northwestknowledge.net/index.php"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://maca.northwestknowledge.net"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"citation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Abatzoglou, J. T.,   Brown, T. J. 2012. A comparison of statistical downscaling methods suited for wildfire applications. International Journal of Climatology, 32(5), 772-780. doi: http://dx.doi.org/10.1002/joc.2312 "</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Public domain"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"organization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Casola, University of Washington"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"license"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Public domain"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://maca.northwestknowledge.net"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"citation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Abatzoglou, J. T.,   Brown, T. J. 2012. A comparison of statistical downscaling methods suited for wildfire applications. International Journal of Climatology, 32(5), 772-780. doi: http://dx.doi.org/10.1002/joc.2312 "</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Puget Sound region is projected to warm rapidly during the 21st century. Prior to mid-century, the projected increase in air temperatures is about the same for all greenhouse gas scenarios, a result of the fact that a certain amount of warming is already “locked in” due to past emissions. After about 2050, projected warming depends on the amount of greenhouse gases emitted globally in the coming decades. For the 2050s (2040-2069, relative to 1970-1999), annual average air temperature is projected to rise +4.2°F to +5.9°F, on average, for a low (RCP 4.5) and a high (RCP 8.5) greenhouse gas scenario. These indicators are derived from the Multivariate Adaptive Constructed Analogs (MACA) CMIP5 Future Climate Dataset from the University of Idaho. For more information about this analysis, please see http://cses.washington.edu/picea/mauger/ps-sok/ps-sok_sec12_builtenvironment_2015.pdf. For more information about the MACA CMIP5 Future Climate Dataset please see http://maca.northwestknowledge.net/index.php"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"short-description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Projected temperature change in the Puget Sound Lowlands relative to average temperature between 1950-2005. Light colored lines in the background show the range of projections. All climate scenarios project warming for the Puget Sound region during the 21st century."</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Projected temperature change"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-12-13T10:02:28.337Z"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-12-13T10:03:02.445Z"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86-dataset-942b3f38-9504-4273-af51-0440170ffc86-rw-en"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
@@ -8000,10 +8131,10 @@ to dictates which of 3 endpoints you should use when deleting a metadata entity.
         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cloud Computing Market - USA - 2016"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MAR 13, 2016 @ 10:42 PM"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales)."</span><span class="p">,</span><span class="w">
           </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Louis Columbus"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales)."</span><span class="w">
+          </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MAR 13, 2016 @ 10:42 PM"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"</span><span class="w">
         </span><span class="p">},</span><span class="w">
         </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:07:53.272Z"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:40:30.190Z"</span><span class="p">,</span><span class="w">
@@ -8013,6 +8144,322 @@ to dictates which of 3 endpoints you should use when deleting a metadata entity.
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>This endpoint allows you to clone all the existing metadata associated with a dataset, as new metadata associated with a different dataset. Note that this will not clone metadata for widgets or layers associated with the defined dataset; only dataset metadata will be cloned.</p>
+
+<p>When calling this endpoint, you must provide two body parameters:</p>
+
+<ul>
+<li><code class="prettyprint">newDataset</code>: the id of the target dataset to which the cloned metadata will be associated.</li>
+<li><code class="prettyprint">application</code>: an application to which your user account is associated. This is not used in the cloning logic.</li>
+</ul>
+
+<p>A successful cloning will return a list of all metadata created in this process.</p>
+
+<p>To perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the metadata that&rsquo;s being updated </li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata)</li>
+</ul></li>
+</ul>
+
+<h3 id="errors-for-cloning-metadata">Errors for cloning metadata</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>- newDataset: newDataset can not be empty. -</td>
+<td>You need to specify the <code class="prettyprint">newDataset</code> body parameter.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Metadata of resource dataset: <new dataset>, application: <application> and language: <language> already exists</td>
+<td>The target dataset already has metadata associated with it, and cloning the metadata from the source dataset would cause it to have more than one metadata per language and application.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to update metadata.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata).</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to clone metadata with an <code class="prettyprint">application</code> value that is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Metadata of resource <resource type>: <resource id> doesn&rsquo;t exist</td>
+<td>Metadata matching the provided resource data, language and application does not exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-metadata">Deleting metadata</h2>
+
+<blockquote>
+<p>Deleting metadata for a given dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/metadata?application<span class="o">=</span>&lt;application&gt;&amp;language<span class="o">=</span>&lt;language&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> 
+</code></pre>
+<blockquote>
+<p>Deleting metadata for a given layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/metadata?application<span class="o">=</span>&lt;application&gt;&amp;language<span class="o">=</span>&lt;language&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> 
+</code></pre>
+<blockquote>
+<p>Deleting metadata for a given widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/metadata?application<span class="o">=</span>&lt;application&gt;&amp;language<span class="o">=</span>&lt;language&gt; <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;auth_token&gt;"</span> 
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86-dataset-942b3f38-9504-4273-af51-0440170ffc86-rw-en"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"metadata"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cloud Computing Market - USA - 2016"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"These and many other insights are from the latest series of cloud computing forecasts and market estimates produced by IDC, Gartner, Microsoft and other research consultancies. Amazon’s decision to break out AWS revenues and report them starting in Q1 FY2015 is proving to be a useful benchmark for tracking global cloud growth.  In their latest quarterly results released on January 28, Amazon reported that AWS generated $7.88B in revenues and attained a segment operating income of $1.863B. Please see page 8 of the announcement for AWS financials.  For Q4, AWS achieved a 28.5% operating margin (% of AWS net sales)."</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Louis Columbus"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MAR 13, 2016 @ 10:42 PM"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"link"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.forbes.com/sites/louiscolumbus/2016/03/13/roundup-of-cloud-computing-forecasts-and-market-estimates-2016/#5875cf0074b0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:07:53.272Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-20T08:40:30.190Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"published"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>The metadata delete endpoint allows you to delete a single metadata at a time, provided you have the necessary permissions. Besides the details provided in the URL itself, you must also specify, as query parameters, both the <code class="prettyprint">application</code> and <code class="prettyprint">language</code> values of the metadata you&rsquo;re trying to delete. These fields will be used to pinpoint exactly which metadata entry will be deleted - remember that each resource may have multiple metadata associated with it, but only one per application-language pair.</p>
+
+<p>To perform this operation, the following conditions must be met:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the metadata that&rsquo;s being deleted</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata)</li>
+</ul></li>
+</ul>
+
+<h3 id="errors-for-deleting-metadata">Errors for deleting metadata</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad request</td>
+<td>Your request does not include the <code class="prettyprint">application</code> or <code class="prettyprint">language</code> query parameters.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You need to be logged in to be able to delete metadata.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You need to either have the <code class="prettyprint">ADMIN</code> role, or have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata).</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to delete metadata with an <code class="prettyprint">application</code> value that is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Metadata of resource <resource type>: <resource id> doesn&rsquo;t exist</td>
+<td>Metadata matching the provided resource data, language and application does not exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="metadata-reference">Metadata reference</h2>
+
+<p>This section gives you a complete view at the properties that are maintained as part of metadata objects. When interacting with metadata objects (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the <code class="prettyprint">id</code> is nested inside an <code class="prettyprint">attributes</code> object).</p>
+
+<p>You can find more details in the <a href="https://github.com/resource-watch/rw_metadata/blob/dev/app/src/models/metadata.model.js">source code</a>.</p>
+
+<table><thead>
+<tr>
+<th>Field name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>Yes (autogenerated)</td>
+<td></td>
+<td>Unique Id of the metadata. Auto generated on creation. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>Id of the dataset to which the metadata object corresponds. Set on metadata creation, cannot be modified.</td>
+</tr>
+<tr>
+<td>application</td>
+<td>Array</td>
+<td>Yes</td>
+<td></td>
+<td>Applications associated with this metadata. Read more about this field <a href="index-rw.html#applications">here</a>.</td>
+</tr>
+<tr>
+<td>resource.id</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>Id of the resource associated with the metadata.</td>
+</tr>
+<tr>
+<td>resource.type</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>Type of the resource associated with the metadata.</td>
+</tr>
+<tr>
+<td>userId</td>
+<td>String</td>
+<td>Yes (autopopulated)</td>
+<td></td>
+<td>Id of the user who created the metadata. Set automatically on creation. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>language</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>Language in which the metadata details are written. While not enforced, we strongly recommend using 2 character language codes.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>Name of the metadata.</td>
+</tr>
+<tr>
+<td>description</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>User defined description of the metadata.</td>
+</tr>
+<tr>
+<td>status</td>
+<td>String</td>
+<td>No</td>
+<td>published</td>
+<td>Publication status of the metadata. Defaults to <code class="prettyprint">published</code>, can alternatively be set to <code class="prettyprint">unpublished</code>.</td>
+</tr>
+<tr>
+<td>source</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>Source information about the associated resource</td>
+</tr>
+<tr>
+<td>citation</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>Citation information about the associated resource</td>
+</tr>
+<tr>
+<td>license</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>License named used for the associated resource</td>
+</tr>
+<tr>
+<td>units</td>
+<td>Object</td>
+<td>No</td>
+<td></td>
+<td>Free-form object mapping each of the associated resource&rsquo;s fields to a unit</td>
+</tr>
+<tr>
+<td>info</td>
+<td>Object</td>
+<td>No</td>
+<td></td>
+<td>Free-form object for custom information about the associated resource</td>
+</tr>
+<tr>
+<td>columns</td>
+<td>Object</td>
+<td>No</td>
+<td></td>
+<td>Free-form object mapping each of the associated resource&rsquo;s fields to a free-form object containing more details.</td>
+</tr>
+<tr>
+<td>applicationProperties</td>
+<td>Object</td>
+<td>No</td>
+<td></td>
+<td>Free-form object containing application-specific information about the associated resource</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td>Date</td>
+<td>No (autogenerated)</td>
+<td><current date></td>
+<td>Automatically maintained date of when the metadata was created. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>updatedAt</td>
+<td>Date</td>
+<td>No (autogenerated)</td>
+<td><current date></td>
+<td>Automatically maintained date of when the metadata was last updated. Cannot be modified by users.</td>
+</tr>
+</tbody></table>
+
           <h1 id="vocabulary-and-tags">Vocabulary (and Tags)</h1>
 
 <h2 id="resource-definition">Resource definition</h2>
