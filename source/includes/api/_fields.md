@@ -115,6 +115,8 @@ Carto datasets provide a `type` for each field, as well as additional details, d
 
 Other, more complex, field types, like `geometry` types, include additional details for their respective types. As before, this is related with the underlying Carto implementation tools, and not actively maintained or supported by the RW API.
 
+For more information about the different types that can be found in Carto datasets please refer to [PostgreSQL's documentation on Data Types](https://www.postgresql.org/docs/11/datatype.html) or [PostGIS's documentation](https://postgis.net/docs/index.html). 
+
 ### ArcGIS feature layer
 
 > Example response for a ArcGIS dataset
@@ -158,6 +160,8 @@ Other, more complex, field types, like `geometry` types, include additional deta
 ```
 
 ArcGIS uses its own type naming convention, as you see reflected in the included example. The RW API passes that information as-is to you. As different ArcGIS datasets rely on different ArcGIS server instances and versions, you may encounter variations in the types you'll find, depending on how ArcGIS evolves these types over type.
+
+For more information about the different types that can be found in ArcGIS datasets please refer to [ArcGIS's field data types documentation](https://desktop.arcgis.com/en/arcmap/latest/manage-data/geodatabases/arcgis-field-data-types.htm).
 
 ### Google Earth Engine
 
