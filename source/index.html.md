@@ -19,8 +19,7 @@ includes:
   - concept/metadata
   - concept/geostore
   - concept/area
-  - api/before_you_get_started
-  - api/authentication
+  - api/api_overview
   - api/contact
   - api/dataset
   - api/query
