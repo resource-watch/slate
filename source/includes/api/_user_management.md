@@ -22,13 +22,11 @@ Besides authentication, user accounts are also used for authorization. Authoriza
 
 `id` is a unique identifier of your account. Certain actions may be limited to specific users, typically in the context of a given resource being associated directly with a specific user `id`.
 
-`role` can be one of 3 values: `USER`, `MANAGER` and `ADMIN`. While not required nor enforced, typically they are used hierarchically in that order, from least to most permissive. A common pattern you'll find on some services is: `USER` accounts can only create new resources, `MANAGER` accounts can create new resources, and edit or delete resources created by them, while `ADMIN` accounts can do all of the above even for resources created by other users.
+`role` can be one of 3 values: `USER`, `MANAGER` and `ADMIN` and it is usually used for role-based access control - read more about this field in the [User roles concept documentation](/index-rw.html#user-roles).
 
-`application` is a list of keys meant to identify the different client applications that are built using the RW API. It's present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping `application` value.
+`application` is a list of keys meant to identify the different client applications that are built using the RW API. It's present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping `application` value. You can find out more about how the `application` field works [here](/index-rw.html#applications).
 
 Keep in mind that it's up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.
-
-You can find out more about how the `application` field works [here](/index-rw.html#applications).
 
 ## User management and applications 
 
