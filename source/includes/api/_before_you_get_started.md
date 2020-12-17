@@ -124,19 +124,19 @@ Changing role of users is restricted to `ADMIN` users, so if you intend to upgra
 
 ## Sorting
 
-> Example of sorting by a single condition:
+> Example request sorting by a single condition:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name
 ```
 
-> Example of sorting by multiple conditions:
+> Example request sorting by multiple conditions:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name,description
 ```
 
-> Example of sorting by multiple conditions, descending and ascending:
+> Example request sorting by multiple conditions, descending and ascending:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
@@ -147,6 +147,42 @@ As a rule of thumb, you can sort RW API resources using the `sort` query paramet
 Multiple sorting criteria can be used, separating them by commas. You can also specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
 Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.
+
+## Filtering
+
+> Example request filtering using a single condition:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?name=viirs
+```
+
+> Example request filtering using multiple conditions:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
+```
+
+> Example request filtering by an array field using the `,` OR multi-value separator:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?application=rw,gfw
+```
+
+> Example request filtering by an array field using the `@` AND multi-value separator:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?application=rw@gfw
+```
+
+Like in the case of sorting, most RW API resources allow filtering the returned results of list endpoints using query parameters. As a rule of thumb, you can use the API resource's fields as query parameter filters, as shown in the examples on the side. You can also combine different query parameters into a complex `and` logic filter.
+
+String type fields support and expect a regex value, unless detailed otherwise on documentation for each API resource. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).
+
+Array fields (like the `application` field present in some of the API resources - read more about the [application field](/index-rw.html#applications)) support more complex types of filtering. In such cases, you can use `,` as an `or` multi-value separator, or `@` as a multi-value, exact match separator.
+
+Object fields expect a boolean value when filtering, where `true` matches a non-empty object and `false` matches an empty object. Support for filtering by nested object fields varies for different API resource, so be sure to check the documentation of the API endpoint for more detailed information.
+
+Again, as in the case of sorting, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the filtering mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on filtering and the available fields to use as query parameter filters.
 
 <!-- ## Authentication
 
