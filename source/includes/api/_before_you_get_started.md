@@ -122,6 +122,32 @@ Keep in mind that it’s up to each individual RW API service (dataset, widget, 
 
 Changing role of users is restricted to `ADMIN` users, so if you intend to upgrade your user role to a `MANAGER` or `ADMIN` role, please get in touch with one of the `ADMIN` users and request the change. If you are already an `ADMIN` user and you intend to change the role of another user, you can do so using the [`PATCH /users/:id` endpoint](/index-rw.html#update-another-user-39-s-account-details).
 
+## Sorting
+
+> Example of sorting by a single condition:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name
+```
+
+> Example of sorting by multiple conditions:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=name,description
+```
+
+> Example of sorting by multiple conditions, descending and ascending:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
+```
+
+As a rule of thumb, you can sort RW API resources using the `sort` query parameter. Usually, sorting can be performed using any field from the resource schema, so be sure to check each resource's model reference to find which fields can be used for sorting. In some cases, you also have the possibility of sorting by fields that are not present in the resource model (e.g., when fetching datasets, you can sort by `user.name` and `user.role` to sort datasets by the name or role of the owner of the dataset) - check each resource's documentation to find out which additional sorting criteria you have available. Sorting by nested fields is not supported at the moment.
+
+Multiple sorting criteria can be used, separating them by commas. You can also specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
+
+Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.
+
 <!-- ## Authentication
 
 TODO
