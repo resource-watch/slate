@@ -264,7 +264,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?env=staging"
 curl -X GET "https://api.resourcewatch.org/v1/widget?app=rw@prep"
 ```
 
-The widget list endpoints provide a wide range of filters that you can use to tailor your widget listing. The great majority of the widget fields you'll find on the [widget reference](#widget-reference) section can be used as filters when listing widgets, with the following exceptions:
+The widget list endpoint provides a wide range of filters that you can use to tailor your widget listing. Filtering widgets adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you'll be able to use the great majority of the widget fields you'll find on the [widget reference](#widget-reference), with the following exceptions:
 
 - `id`
 - `userName`
@@ -274,12 +274,6 @@ Additionally, you can use the following filters:
 
 - `collection`: filters by a [collection](#collections) id. Requires being authenticated.
 - `favourite`: if any value is defined for this query param, only the widgets set by the user as [favorites](#favorites) will be returned. Requires being authenticated.
-
-Multiple parameters can be combined into a complex `and` logic filter. Depending on the type of the field you're filtering by, the following behavior is available:
-
-- String type fields support both regular expressions and partial matches.
-- Array type fields support `,` as `OR` and `@` as `AND` separators for multiple values.
-- Object type fields will match the whole object, not just its parts.
 
 ### Sorting
 

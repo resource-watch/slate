@@ -148,6 +148,15 @@ Object fields expect a boolean value when filtering, where `true` matches a non-
 
 Again, as in the case of sorting, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the filtering mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on filtering and the available fields to use as query parameter filters.
 
+### Which services support this type of filtering?
+
+The following endpoints adhere to the Filtering conventions defined above:
+
+* [Get all datasets endpoint](/index-rw.html#getting-all-datasets)
+* [Get all layers endpoint](/index-rw.html#getting-all-layers)
+* [Get all widgets endpoint](/index-rw.html#getting-all-widgets)
+* [Get all users endpoint](/index-rw.html#getting-all-users)
+
 <!-- ## Authentication
 
 TODO

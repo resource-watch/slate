@@ -122,10 +122,9 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
 curl -X GET https://api.resourcewatch.org/v1/dataset?vocabulary[legacy]=umd
 ```
 
-The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you'll find in a dataset itself (which you can learn more about in the [Dataset reference](#dataset-reference) section), while others are convenience filters for things like user role or favourites. These parameters can be combined into a complex `and` logic query.
+The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you'll find in a dataset itself (which you can learn more about in the [Dataset reference](#dataset-reference) section), while others are convenience filters for things like user role or favourites.
 
-Here's the comprehensive list of filters supported by datasets:
- 
+Filtering datasets adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you can use the following fields as filters supported by the dataset list endpoint:
 
 Filter         | Description                                                                  | Type        | Expected values
 -------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------
@@ -182,14 +181,6 @@ user.role      | Filter results by the role of the owner of the dataset. If the 
 vocabulary[name]| Filter returned datasets by vocabulary tags. Does not support regexes.       | String      | any valid text
 collection     | Filter returned datasets collection id. Does not support regexes.            | String      | any valid text
 favourite      | Filter by favourited datasets. See [this section](#favorites) for more info. Does not support regexes. | String      | any valid text
-
-
-Please keep in mind the following:
-
-- String types support and expect a regex value, unless detailed otherwise on the `Description` field. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).
-- Array types support multiple values. Use `,` as an `or` multi-value separator, or `@` as a multi-value, exact match separator.
-- Object types expect a boolean value, where `true` matches a non-empty object, and `false` matches an empty object.
-
 
 ### Sorting
 

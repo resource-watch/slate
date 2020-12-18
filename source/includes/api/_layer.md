@@ -315,7 +315,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?env=staging"
 curl -X GET "https://api.resourcewatch.org/v1/layer?app=rw"
 ```
 
-The layer list endpoints provide a wide range of filters that you can use to tailor your layer listing. The great majority of the layer fields you'll find on the [layer reference](#layer-reference) section can be used as filters when listing layers, with the following exceptions:
+The layer list endpoint provides a wide range of filters that you can use to tailor your layer listing. Filtering layers adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you will be able to use the great majority of the layer fields you'll find on the [layer reference](#layer-reference) section, with the following exceptions:
 
 - `id`
 - `userName`
@@ -326,13 +326,6 @@ Additionally, you can use the following filters:
 
 - `collection`: filters by a [collection](#collections) id. Requires being authenticated.
 - `favourite`: if defined, only the layers set by the user as [favorites](#favorites) will be returned. Requires being authenticated.
-
-
-Multiple parameters can be combined into a complex `and` logic filter. Depending on the type of the field you're filtering by, the following behavior is available:
- 
-- String type fields support both regular expressions and partial matches.
-- Array type fields support `,` as `OR` and `@` as `AND` separators for multiple values.
-
 
 ### Sorting
 
