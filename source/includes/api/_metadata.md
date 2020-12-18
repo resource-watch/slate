@@ -560,10 +560,7 @@ Also keep in mind that, when updating object type fields, your new value will ov
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the metadata that's being updated 
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata)
-
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 ### Errors for updating metadata
 
@@ -634,9 +631,7 @@ A successful cloning will return a list of all metadata created in this process.
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the metadata that's being updated 
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata)
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 ### Errors for cloning metadata
 
@@ -712,9 +707,7 @@ The metadata delete endpoint allows you to delete a single metadata at a time, p
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the metadata that's being deleted
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the metadata owner (through the `userId` field of the metadata)
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 ### Errors for deleting metadata
 

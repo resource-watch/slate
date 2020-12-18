@@ -433,7 +433,7 @@ So you are ready to create your first dataset on the RW API? Great, welcome aboa
 Before creating a dataset, there are a few things you must know and do:
 
 - In order to be able to create a dataset, you need to be [authenticated](#authentication).
-- Depending on your user account's role, you may have permission to create a dataset but not delete it afterwards.
+- Depending on your user account's role, you may have permission to create a dataset but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 - All data uploaded to the RW API will be publicly visible and available to other users. 
 
 The first thing to consider when creating a dataset is where your data currently is - this will determine the [Dataset provider](#dataset-providers) you will need to use and, with it, a set of things you need to take into account - we'll cover each provider in detail shortly. When building your request to the RW API to create your dataset, you will need to take into account both the general details that follow, plus the details for the `provider` you are using. Be sure to review both sections when creating your datasets, to avoid any pitfalls.
@@ -851,9 +851,7 @@ When passing new values for Object type fields, the new value will fully overwri
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the dataset
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 Use this endpoint when:
 
@@ -920,9 +918,8 @@ In order to perform these operation, the following conditions must be met:
 
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
-- the user must be logged in and match one of the following:
-  - have role `ADMIN` and belong to the same application as the dataset
-  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must have at least one overlapping application with the ones associated with the dataset.
 
 While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.
 
@@ -998,9 +995,8 @@ In order to perform this operation, the following conditions must be met:
 
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
-- the user must be logged in and match one of the following:
-  - have role `ADMIN` and belong to the same application as the dataset
-  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must have at least one overlapping application with the ones associated with the dataset.
 
 Here's a more detailed description of the request's body fields:
 
@@ -1056,10 +1052,7 @@ This endpoint allows you to create a new, json based dataset, from the result of
 In order to perform this operation, the following conditions must be met:
 
 - the user must belong to the applications specified in the request body.
-- the user must be logged in and match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
-
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 The request requires two fields to be present:
 
@@ -1113,10 +1106,7 @@ In order to delete a dataset, the following conditions must be met:
 
 - the dataset's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the dataset
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
-
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 > Example request for deleting a dataset
 
@@ -1199,10 +1189,7 @@ Flushes the cache for the specified dataset. Take into account that only the dat
 In order to flush a dataset's cache, the following conditions must be met:
 
 - the user must be logged in.
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
-  
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).  
   
 #### Errors for flushing a dataset's cache
 

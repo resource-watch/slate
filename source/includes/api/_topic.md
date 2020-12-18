@@ -212,9 +212,7 @@ curl -X POST https://api.resourcewatch.org/v1/topics \
 In order to perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the topic
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the topic's owner (through the `user-id` field of the topic)
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
   
 When updating the `application` field of a topic, a user cannot add values not associated with their user account.
 

@@ -317,7 +317,7 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
 }
 ```
 
-When creating a dashboard, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Any role can create a dashboard.
+When creating a dashboard, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Additionally, keep in mind that this endpoint implements role-based access control in accordance with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 Supported fields:
 
@@ -397,10 +397,8 @@ curl -X PATCH https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
 
 In order to perform this operation, the following conditions must be met:
 
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 - the user must be logged in and belong to the same application as the dashboard
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
 
 When updating the `application` field of a dashboard, a user cannot add values not associated with their user account.
 
@@ -416,10 +414,8 @@ curl -X DELETE https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> 
 
 In order to perform this operation, the following conditions must be met:
 
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 - the user must be logged in and belong to the same application as the dashboard
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the dashboard's owner (through the `user-id` field of the dashboard)
 
 ## Clone dashboard
 

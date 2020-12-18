@@ -658,7 +658,7 @@ In this section we'll guide you through the process of creating a layer in the R
 Before creating a layer, there are a few things you must know and do:
 
 - In order to be able to create a layer, you need to be [authenticated](#authentication).
-- Depending on your user account's role, you may have permission to create a layer but not delete it afterwards.
+- Depending on your user account's role, you may have permission to create a layer but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 - The layers you create on the RW API will be publicly visible and available to other users.
 
 Creating a layer is done using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [layer reference](#layer-reference) section, but the minimum field list you must specify for all layers is:
@@ -704,9 +704,7 @@ Unless specified otherwise in their description, all the fields present in the [
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the layer
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the layer's owner (through the `userId` field of the layer)
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 #### Errors for updating a layer
 
@@ -771,10 +769,7 @@ In order to delete a layer, the following conditions must be met:
 
 - the layer's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the layer.
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the layer's owner (through the `userId` field of the layer)
-
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 #### Errors for deleting a layer
 
