@@ -106,8 +106,6 @@ page[number] |       The page number        | Number | 1
 
 ### Sorting
 
-#### Basics of sorting
-
 > Sorting areas
 
 ```shell
@@ -126,12 +124,7 @@ curl -X GET https://api.resourcewatch.org/v1/area?sort=name,createdAt
 curl -X GET https://api.resourcewatch.org/v1/area?sort=-name,+createdAt
 ```
 
-The API currently supports sorting by means of the `sort` query parameter. Sorting can be done using most fields from the area model. Sorting by nested fields is not supported at the moment.
-
-Multiple sorting criteria can be used, separating them by commas.
-
-You can also specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
-
+The Areas service currently supports sorting using the `sort` query parameter. Sorting areas adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding.
 
 ## Create area
 

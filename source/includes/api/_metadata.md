@@ -156,11 +156,7 @@ curl -X GET https://api.resourcewatch.org/v1/metadata?sort=name,description
 curl -X GET https://api.resourcewatch.org/v1/metadata?sort=-name,+description
 ```
 
-The API currently supports sorting by means of the `sort` query parameter. Sorting can be done using any field from the [metadata model](#metadata-reference). Sorting by nested fields is not supported at the moment.
-
-Multiple sorting criteria can be used, separating them by commas.
-
-You can also specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
+The Metadata service currently supports sorting using the `sort` query parameter. Sorting metadata adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Metadata reference](#metadata-reference) section for a detailed description of the fields you can use when sorting.
 
 
 ### Getting metadata for a dataset, layer or widget

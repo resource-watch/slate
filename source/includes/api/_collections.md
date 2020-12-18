@@ -255,18 +255,12 @@ page[number] |       The page number        | Number | 1
 
 ### Sorting
 
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the collection.
-
-Sorting by nested fields is not supported at the moment.
-
 > Sorting collections
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/collection?sort=name" \
 -H "Authorization: Bearer <your-token>"
 ```
-
-Multiple sorting criteria can be used, separating them by commas.
 
 > Sorting collections by multiple criteria
 
@@ -275,8 +269,6 @@ curl -X GET "https://api.resourcewatch.org/v1/collection?sort=name,application" 
 -H "Authorization: Bearer <your-token>"
 ```
 
-You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
-
 > Explicit order of sorting
 
 ```shell
@@ -284,6 +276,7 @@ curl -X GET "https://api.resourcewatch.org/v1/collection?sort=-name,+application
 -H "Authorization: Bearer <your-token>"
 ```
 
+The Collections service currently supports sorting using the `sort` query parameter. Sorting collections adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Collection reference](/index-rw.html#collection-reference) section for a detailed description of the fields you can use when sorting.
 
 ## Get a collection by id
 

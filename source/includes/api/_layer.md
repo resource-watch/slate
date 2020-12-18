@@ -329,25 +329,17 @@ Additionally, you can use the following filters:
 
 ### Sorting
 
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the layer, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
-
-Sorting by nested fields is not supported at the moment.
-
 > Sorting layers
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/layer?sort=name"
 ```
 
-Multiple sorting criteria can be used, separating them by commas.
-
 > Sorting layers by multiple criteria
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/layer?sort=name,slug"
 ```
-
-You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
 > Explicit order of sorting
 
@@ -360,6 +352,8 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?sort=-name,+slug"
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/layer?sort=user.role"
 ```
+
+The Layer service currently supports sorting using the `sort` query parameter. Sorting layer adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Layer reference](#layer-reference) section for a detailed description of the fields you can use when sorting. In addition to all layer model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the layer. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 ### Include entities associated with the layers
 

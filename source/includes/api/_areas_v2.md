@@ -98,17 +98,11 @@ all         | Return all the areas instead of just the areas associated with use
 
 ### Sorting
 
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the area.
-
-Sorting by nested fields is not supported at the moment.
-
 > Sorting areas
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v2/area?sort=name"
 ```
-
-Multiple sorting criteria can be used, separating them by commas.
 
 > Sorting layers by multiple criteria
 
@@ -116,13 +110,13 @@ Multiple sorting criteria can be used, separating them by commas.
 curl -X GET "https://api.resourcewatch.org/v2/area?sort=name,status"
 ```
 
-You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
-
 > Explicit order of sorting
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v2/area?sort=-name,+status"
 ```
+
+The Areas v2 service currently supports sorting using the `sort` query parameter. Sorting v2 areas adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Area reference](#area-reference) section for a detailed description of the fields you can use when sorting.
 
 ### Errors for getting user areas
 

@@ -112,6 +112,19 @@ Multiple sorting criteria can be used, separating them by commas. You can also s
 
 Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.
 
+### Which services support this type of sorting?
+
+The following endpoints adhere to the Sorting conventions defined above:
+
+* [Get v2 areas endpoint](/index-rw.html#getting-all-user-areas)
+* [Get areas endpoint](/index-rw.html#get-user-areas)
+* [Get collections endpoint](/index-rw.html#getting-collections-for-the-request-user)
+* [Get dashboards endpoint](/index-rw.html#getting-all-dashboards)
+* [Get datasets endpoint](/index-rw.html#getting-all-datasets)
+* [Get layers endpoint](/index-rw.html#getting-all-layers)
+* [Get metadata endpoint](/index-rw.html#getting-all-metadata)
+* [Get widgets endpoint](/index-rw.html#getting-all-widgets)
+
 ## Filtering
 
 > Example request filtering using a single condition:
