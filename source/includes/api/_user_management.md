@@ -536,10 +536,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user?role=ADMIN&app=gfw,rw"
 }
 ```
 
-The users list provides a set of parameters that you can use to tailor your users listing. These parameters can be combined into a complex `and` logic query.
-
-Here's the comprehensive list of filters supported by the users list endpoint:
- 
+The users list provides a set of parameters that you can use to tailor your users listing. Please note that filtering users adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. in addition to these conventions, you can use the following fields as filters supported by the users list endpoint:
 
 Filter         | Description                                                                  | Type        | Expected values
 -------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------
@@ -548,9 +545,6 @@ email          | Filter returned users by their email address. Keep in mind that
 provider       | Filter returned users by their provider.                                     | String      | `local`, `google`, `twitter`, `facebook` or `apple`
 role           | Filter returned users by their role.                                         | String      | `USER`, `MANAGER` or `ADMIN`
 app            | Filter returned users by their app. Multiple values can be passed, separated by commas, in which case any user associated with at least one of the applications will be returned. Pass `all` to show users for all apps. | String      | any valid text
-
-
-Please keep in mind that all filter values except `app` support and expect a regex value. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).
 
 ### Get the current user
 
