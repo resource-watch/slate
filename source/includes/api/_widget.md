@@ -277,26 +277,17 @@ Additionally, you can use the following filters:
 
 ### Sorting
 
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the widget, as well as `user.name` and `user.role` (sorting by user data is restricted to `ADMIN` users).
-
-Sorting by nested fields is not supported at the moment.
-
 > Sorting widgets
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?sort=name"
 ```
 
-Multiple sorting criteria can be used, separating them by commas.
-
-
 > Sorting widgets by multiple criteria
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?sort=name,slug"
 ```
-
-You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
 
 > Explicit order of sorting
 
@@ -309,6 +300,8 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?sort=-name,+slug"
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?sort=user.role"
 ```
+
+The Widget service currently supports sorting using the `sort` query parameter. Sorting widgets adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Widget reference](#widget-reference) section for a detailed description of the fields you can use when sorting. In addition to all widget model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the widget. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 ### Include entities associated with the widgets
 

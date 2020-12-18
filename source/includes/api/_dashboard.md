@@ -133,13 +133,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=-name,+slug
 curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=user.role
 ```
 
-Multiple sorting criteria can be used, separating them by commas.
-
-You can specify the sorting order by prepending the criteria with either `-` for descending order or `+` for ascending order. By default, ascending order is assumed.
-
-The API currently supports sorting by means of the `sort` parameter. Sorting can be done using any field from the dashboard, as well as `user.name` and `user.role` (sorting by user data is restricted to ADMIN users).
-
-Sorting by nested fields is not supported at the moment.
+The Dashboards service currently supports sorting using the `sort` query parameter. Sorting dashboards adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. In addition to all dashboard model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dashboard. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 ### Include related entities
 
