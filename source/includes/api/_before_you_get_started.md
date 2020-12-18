@@ -83,9 +83,9 @@ It's worth pointing out that endpoints that retrieve a resource by id typically 
 
 RW API users have a role associated with it, defined in the `role` field of each user. You can check your own role by consulting your user information using the [`GET /users/me` endpoint](/index-rw.html#get-the-current-user) or getting a JWT token and decoding its information. The `role` of the user is defined as a string, and it can take one of the following values:
 
-* `"USER"`
-* `"MANAGER"`
-* `"ADMIN"`
+* `USER`
+* `MANAGER`
+* `ADMIN`
 
 ### Role-based access control
 
@@ -108,6 +108,16 @@ Keep in mind that it’s up to each individual RW API service (dataset, widget, 
 ### How to change the role of an user
 
 Changing role of users is restricted to `ADMIN` users, so if you intend to upgrade your user role to a `MANAGER` or `ADMIN` role, please get in touch with one of the `ADMIN` users and request the change. If you are already an `ADMIN` user and you intend to change the role of another user, you can do so using the [`PATCH /users/:id` endpoint](/index-rw.html#update-another-user-39-s-account-details).
+
+### Which services comply with these guidelines
+
+The following endpoints adhere to the Sorting conventions defined above:
+
+* [Dashboards](/index-rw.html#dashboard)
+* [Datasets](/index-rw.html#dataset6)
+* [Layers](/index-rw.html#layer8)
+* [Metadata](/index-rw.html#metadata14)
+* [Widgets](/index-rw.html#widget9)
 
 ## Sorting
 
@@ -135,7 +145,7 @@ Multiple sorting criteria can be used, separating them by commas. You can also s
 
 Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.
 
-### Which services support this type of sorting?
+### Which services comply with these guidelines
 
 The following endpoints adhere to the Sorting conventions defined above:
 
@@ -184,7 +194,7 @@ Object fields expect a boolean value when filtering, where `true` matches a non-
 
 Again, as in the case of sorting, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the filtering mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on filtering and the available fields to use as query parameter filters.
 
-### Which services support this type of filtering?
+### Which services comply with these guidelines
 
 The following endpoints adhere to the Filtering conventions defined above:
 

@@ -785,7 +785,7 @@ In this section we'll guide you through the process of creating a widget in the 
 Before creating a widget, there are a few things you must know and do:
 
 - In order to be able to create a widget, you need to be [authenticated](#authentication).
-- Depending on your user account's role, you may have permission to create a widget but not delete it afterwards.
+- Depending on your user account's role, you may have permission to create a widget but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 - The widgets you create on the RW API will be publicly visible and available to other users.
 
 Creating a widget is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [widget reference](#widget-reference) section, but the minimum field list you must specify for all widgets is:
@@ -1082,11 +1082,7 @@ In order to delete a widget, the following conditions must be met:
 
 - the widget's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the widget.
-- the user must match one of the following:
-  - have role `ADMIN`
-  - have role `MANAGER` and be the widget's owner (through the `userId` field of the widget)
-
-
+- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
 
 ## Widget reference
 
