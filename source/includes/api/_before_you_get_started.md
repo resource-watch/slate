@@ -58,47 +58,7 @@ Below you can find a list of RW API resources that use the `application` field:
 
 ## User roles
 
-> Calling the GET /users/me endpoint providing your JWT token
-
-```shell
-curl -X GET "https://api.resourcewatch.org/auth/user/me"
--H "Content-Type: application/json"  -d \
--H "Authorization: Bearer <your-token>" \
-```
-
-> Response including the role field:
-
-```json
-{
-    "_id": "5dbadb0adf24534d1ad05dfb",
-    "email": "test.user@example.com",
-    "role": "USER",
-    "provider": "local",
-    "extraUserData": {
-        "apps": ["rw"]
-    },
-    "createdAt": "2019-10-31T13:00:58.191Z",
-    "updatedAt": "2019-10-31T13:00:58.191Z"
-}
-```
-
-> Example of decoded JWT token information (using jwt.io):
-
-```json
-{
-  "_id": "5dbadb0adf24534d1ad05dfb",
-  "email": "test.user@example.com",
-  "role": "USER",
-  "provider": "local",
-  "extraUserData": {
-    "apps": ["rw"]
-  },
-  "createdAt": 1597230329945,
-  "iat": 1597230329
-}
-```
-
-RW API users have a role associated with it, defined in the `role` field of each user. You can check your own role by consulting your user information using the `GET /users/me` endpoint or getting a JWT token and decoding its information. The `role` of the user is defined as a string, and it can take one of the following values:
+RW API users have a role associated with it, defined in the `role` field of each user. You can check your own role by consulting your user information using the [`GET /users/me` endpoint](/index-rw.html#get-the-current-user) or getting a JWT token and decoding its information. The `role` of the user is defined as a string, and it can take one of the following values:
 
 * `"USER"`
 * `"MANAGER"`
@@ -112,7 +72,11 @@ RW API users have a role associated with it, defined in the `role` field of each
 USER (least privileges) < MANAGER < ADMIN (most privileges)
 ```
 
-The role field is usually used across the RW API for controlling access to API resources. A common pattern you’ll find on some services is: `USER` accounts can only create new resources, `MANAGER` accounts can create new resources, and edit or delete resources created by them, while `ADMIN` accounts can do all of the above even for resources created by other users. While not required nor enforced, typically user roles are used hierarchically, being `USER` the role with the least privileges, and `ADMIN` the one with most privileges.
+The role field is usually used across the RW API for controlling access to API resources. While not required nor enforced, typically user roles are used hierarchically, being `USER` the role with the least privileges, and `ADMIN` the one with most privileges. A common pattern you’ll find on some services is: 
+
+* `USER` accounts can read (usually all data or just data owned by the user, depending on any privacy or security concerns in the service in question), but only create new resources; 
+* `MANAGER` accounts can perform all of the `USER` actions, complemented with editing or deleting resources owned by them;
+* `ADMIN` accounts can do all of the above even for resources created by other users.
 
 Role-based access control is usually conjugated with the list of applications associated with the user: typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping application value. Read more about the application field and which services use it in the [Applications concept documentation](/index-rw.html#applications).
 
