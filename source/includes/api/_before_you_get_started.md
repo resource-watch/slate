@@ -88,7 +88,7 @@ Changing role of users is restricted to `ADMIN` users, so if you intend to upgra
 
 ### Which services comply with these guidelines
 
-The following endpoints adhere to the Sorting conventions defined above:
+The following endpoints adhere to the user role conventions defined above:
 
 * [Dashboards](/index-rw.html#dashboard)
 * [Datasets](/index-rw.html#dataset6)
