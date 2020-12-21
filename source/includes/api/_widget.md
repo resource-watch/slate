@@ -1120,7 +1120,7 @@ sourceUrl               | String         | No                   |               
 authors                 | String         | No                   |                            | Author or authors of the data displayed on the widget, as it's meant to be displayed to the end user.
 queryUrl                | String         | No                   |                            | URL of the RW API query or external URL containing the data displayed on the widget
 thumbnailUrl            | String         | No                   |                            | URL of a example thumbnail of the rendered widget.
-env                     | String         | Yes                  | production                 | Environment to which the widget belongs.
+env                     | String         | Yes                  | production                 | Environment to which the widget belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).
 widgetConfig            | Object         | No                   |                            | Schema-less object meant to host widget behavior configuration.
 application             | Array          | Yes                  |                            | Applications associated with this widget. Read more about this field [here](/index-rw.html#applications).
 layerId                 | String         | No                   |                            | Id of the layer to which the widget corresponds.  

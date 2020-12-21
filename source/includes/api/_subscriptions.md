@@ -172,7 +172,7 @@ The `v1/subscriptions` endpoint supports the following optional query parameters
 Field       |  Description                                             | Type   | Default value
 ----------- | :------------------------------------------------------: | -----: | ---------------:
 application | Application to which the subscription is associated. Read more about this field [here](/index-rw.html#applications). | String | 'gfw'
-env         | The environment to which the subscription is associated. | String | 'production'
+env         | The environment to which the subscription is associated. Read more about this field in the [Environments concept section](/index-rw.html#environments). | String | 'production'
 
 **Deprecation notice:** the default value for the `application` filter (currently, `gfw`) will be removed and the `application` filter will then have no default value. We recommend reviewing your application to ensure you set and load the correct `application` explicitly.
 
@@ -865,6 +865,6 @@ params           | Object  | No                  | `{}`                | Determi
 userId           | String  | Yes                 | (auto-populated)    | Id of the user who owns the subscription. Set automatically on creation. Cannot be modified by users.
 language         | String  | No                  | `'en'`              | The language for this subscription. Useful for customizing email notifications according to the language of the subscription. Possible values include `'en'`, `'es'`, `'fr'`, `'pt'` or `'zh'`.
 application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription. Read more about this field [here](/index-rw.html#applications).
-env              | String  | Yes                 | `'production'`      | Environment to which the subscription belongs.
+env              | String  | Yes                 | `'production'`      | Environment to which the subscription belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).
 createdAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was created. Cannot be modified by users.
 updatedAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was last updated. Cannot be modified by users.
