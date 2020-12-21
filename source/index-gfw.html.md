@@ -17,6 +17,7 @@ includes:
   - concept/layer
   - concept/widget
   - concept/metadata
+  - concept/vocabulary
   - concept/geostore
   - concept/area
   - api/before_you_get_started
