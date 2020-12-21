@@ -46,15 +46,15 @@ Below you can find a list of RW API resources that use the `application` field:
 * [Areas v2](/index-rw.html#areas-v2)
 * [Collections](/index-rw.html#collections)
 * [Dashboards](/index-rw.html#dashboard)
-* [Dataset](/index-rw.html#dataset7)
+* [Dataset](/index-rw.html#dataset6)
 * [Graph](/index-rw.html#graph)
-* [Layer](/index-rw.html#layer9)
+* [Layer](/index-rw.html#layer8)
 * [Metadata](/index-rw.html#metadata14)
 * [Subscriptions](/index-rw.html#subscriptions)
 * [Topics](/index-rw.html#topic)
 * [Users](/index-rw.html#user-management)
 * [Vocabulary](/index-rw.html#vocabulary-and-tags)
-* [Widgets](/index-rw.html#widget10)
+* [Widgets](/index-rw.html#widget9)
 
 ## Environments
 
@@ -71,6 +71,13 @@ Resources that use `environment` can also be updated with a new `environment` va
 
 It's worth pointing out that endpoints that retrieve a resource by id typically don't filter by `environment` - mostly only listing endpoints have different behavior depending on the requested `environment` value. Also worth noting is that this behavior may differ from resource to resource, and you should always refer to each endpoint's documentation for more details.
 
+### Which services comply with these guidelines
+
+* [Dataset](/index-rw.html#dataset6)
+* [Graph](/index-rw.html#graph)
+* [Layer](/index-rw.html#layer8)
+* [Subscriptions](/index-rw.html#subscriptions)
+* [Widgets](/index-rw.html#widget9)
 
 <!-- ## Authentication
 

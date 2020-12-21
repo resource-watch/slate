@@ -821,7 +821,7 @@ userId                  | String         | Yes (autopopulated)  |               
 default                 | Boolean        | No                   | false                      | If the layer should be used as the dataset's default layer.
 protected               | Boolean        | Yes                  | false                      | If the layer is protected. A protected layer cannot be deleted.               
 published               | Boolean        | Yes                  | true                       | If the layer is published or not.                                               
-env                     | String         | Yes                  | production                 | Environment to which the layer belongs.
+env                     | String         | Yes                  | production                 | Environment to which the layer belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).
 applicationConfig       | Object         | No                   |                            | Schema-less object meant to host application-specific data or behavior configuration.
 layerConfig             | Object         | No                   |                            | Schema-less object meant to define layer specific data, like source of data, styling and animation settings.
 legendConfig            | Object         | No                   |                            | Schema-less object meant to define how a layer legend should be represented visually.

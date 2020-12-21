@@ -272,7 +272,7 @@ Parameter        |               Description               |    Type |          
 ------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
 published         |   Include only published datasets            |    Boolean |                                        true/false |      No
 app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
-env  |   Include only datasets with at least one of the specified environments | Text | One or more values from ['production', 'preproduction'] |       No
+env  |   Include only datasets with at least one of the specified environments - read more about this field in the [Environments concept section](/index-rw.html#environments). | Text | One or more values from ['production', 'preproduction'] |       No
 limit | Maximum number of datasets returned by the endpoint | Integer | A positive integer (3 by default) | No
 
 ### Example
@@ -348,7 +348,7 @@ Parameter        |               Description               |    Type |          
 ------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
 published         |   Include only published datasets            |    Boolean |                                        true/false |      No
 app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
-env  |   Include only datasets with at least one of the specified environments | Text | One or more values from ['production', 'preproduction'] |       No
+env  |   Include only datasets with at least one of the specified environments - read more about this field in the [Environments concept section](/index-rw.html#environments). | Text | One or more values from ['production', 'preproduction'] |       No
 limit | Maximum number of datasets returned by the endpoint | Integer | A positive integer (3 by default) | No
 
 ### Example
@@ -446,7 +446,7 @@ Parameter        |               Description               |    Type |          
 ------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
 published         |   Include only published datasets            |    Boolean |                                        true/false |      No
 app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
-env  |   Include only datasets with at least one of the specified environments | Text | One or more values from ['production', 'preproduction'] |       No
+env  |   Include only datasets with at least one of the specified environments - read more about this field in the [Environments concept section](/index-rw.html#environments). | Text | One or more values from ['production', 'preproduction'] |       No
 page[size] | Maximum number of results returned by the endpoint | Number | No
 
 ### Example

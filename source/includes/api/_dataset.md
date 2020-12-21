@@ -148,7 +148,7 @@ overwrite      | If the data can be overwritten (only for being able to make dat
 errorMessage   | If this dataset is in `error` state, this field may contain additional details about the error. | String      | any valid text
 mainDateField  |                                                                              | String      | any valid text
 published      | If the dataset is published or not.                                          | Boolean     | `true`or `false`
-env            | Environment to which the dataset belongs. Multiple values can be combined using `,` as a separator. Does not support regexes. | String      | any valid text. Defaults to `production`. 
+env            | Environment to which the dataset belongs. Multiple values can be combined using `,` as a separator. Does not support regexes. Read more about this field in the [Environments concept section](/index-rw.html#environments). | String      | any valid text. Defaults to `production`. 
 geoInfo        | If it contains interceptable geographical info                               | Boolean     | `true`or `false`
 protected      | If the dataset is protected.                                                 | Boolean     | `true`or `false`
 taskId         | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets | String      | any valid text
@@ -1284,7 +1284,7 @@ overwrite               | Boolean        | No                   | false         
 errorMessage            | String         | No                   | null                       | If this dataset is in `error` state, this field may contain additional details about the error. 
 mainDateField           | String         | No                   | null                       |                                                                                
 published               | Boolean        | Yes                  | true                       | If the dataset is published or not.                                               
-env                     | String         | Yes                  | production                 | Environment to which the dataset belongs.                                    
+env                     | String         | Yes                  | production                 | Environment to which the dataset belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).                                    
 geoInfo                 | Boolean        | Yes                  | false                      | If it contains interceptable geographical info                                    
 protected               | Boolean        | Yes                  | false                      | If the dataset is protected. A protected dataset cannot be deleted.               
 taskId                  | String         | No                   | null                       | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets      
