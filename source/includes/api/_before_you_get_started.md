@@ -184,7 +184,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?application=rw,gfw
 curl -X GET https://api.resourcewatch.org/v1/dataset?application=rw@gfw
 ```
 
-Like in the case of sorting, most RW API resources allow filtering the returned results of list endpoints using query parameters. As a rule of thumb, you can use the API resource's fields as query parameter filters, as shown in the examples on the side. You can also combine different query parameters into a complex `and` logic filter.
+Like in the case of sorting, most RW API resources allow filtering the returned results of list endpoints using query parameters. As a rule of thumb, you can use the API resource's fields as query parameter filters, as shown in the examples on the side. You can also combine different query parameters into a complex `and` logic filter. Note that you can achieve a logical `or` by passing a regular expression with two disjoint options, like this: `?name=<substr_a>|<substr_b>`.
 
 For string type fields, the filter you pass will be interpreted as a regular expression, _not_ as a simple substring filter. This gives you greater flexibility in your search capabilities. However, it means that, if you intend to search by substring, you must escape any regex special characters in the string.
 
