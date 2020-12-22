@@ -10,7 +10,7 @@ Like in our example, a RW API tag is a simple word or a concept, that is used to
 
 Now that you have your tags in place, your music collection is starting to feel a lot more organized. You notice you can quickly group similar songs, and create playlists like "pop songs" or "95s punk", and you can even use tags to find songs that match your current mood, that you didn't remember you had in your collection. Tags are really powerful to discover resources you didn't know existed - whether it's "pop" songs, "deforestation" datasets, or "social inequality" layers. 
 
-RW API tags are shared by all users, meaning any user can discover your resources if they search by the tags you assigned to them. Similarly, you can use tags to discover resources created and tagged by other users, so id adds discoverability value both ways.
+RW API tags are shared by all users, meaning any user can discover your resources if they search by the tags you assigned to them. Similarly, you can use tags to discover resources created and tagged by other users, so it adds discoverability value both ways.
 
 However, this simple tag mechanism has a few downsides, so you can't simply add individual tags to RW API resources. You need to use vocabularies.
 
