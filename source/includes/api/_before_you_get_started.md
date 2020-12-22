@@ -186,7 +186,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?application=rw@gfw
 
 Like in the case of sorting, most RW API resources allow filtering the returned results of list endpoints using query parameters. As a rule of thumb, you can use the API resource's fields as query parameter filters, as shown in the examples on the side. You can also combine different query parameters into a complex `and` logic filter.
 
-String type fields support and expect a regex value, unless detailed otherwise on documentation for each API resource. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).
+For string type fields, the filter you pass will be interpreted as a regular expression, _not_ as a simple substring filter. This gives you greater flexibility in your search capabilities. However, it means that, if you intend to search by substring, you must escape any regex special characters in the string.
 
 Array fields (like the `application` field present in some of the API resources - read more about the [application field](/index-rw.html#applications)) support more complex types of filtering. In such cases, you can use `,` as an `or` multi-value separator, or `@` as a multi-value, exact match separator.
 
