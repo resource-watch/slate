@@ -10,8 +10,7 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - about_these_docs
-  - concept/intro
+  - concept/overview
   - concept/dataset
   - concept/query
   - concept/layer
@@ -19,7 +18,6 @@ includes:
   - concept/metadata
   - concept/geostore
   - concept/area
-  - api/before_you_get_started
   - api/authentication
   - api/contact
   - api/dataset
@@ -52,10 +50,6 @@ logo: logo-rw.png
 
 search: true
 ---
-
-# Introduction
-
-Welcome to the Resource Watch API Documentation
 
 <aside class="notice">
   All use of the Resource Watch API is governed by the Resource Watch <a href="https://resourcewatch.org/terms-of-service" target="_blank">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements" target="_blank">API Attribution Requirements</a>.

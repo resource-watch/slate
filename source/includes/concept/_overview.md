@@ -1,14 +1,31 @@
-# Before you get started
+# RW API Overview
+
+Welcome to the Resource Watch API Documentation. In the sections below, you'll find all the information you need to get started using the RW API.
+
+## About these docs
+
+This documentation page aims to cover the Resource Watch API functionality and details. In it, you'll find a top-level description of the services it provides, as well as a breakdown of the different endpoints, their functionality, parameters and output. The goal is to give you the tools to create powerful applications and data products.
+
+The RW API is [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) and [JSON](https://en.wikipedia.org/wiki/JSON) based, and these docs assume you are familiar with both technologies. Besides endpoint descriptions, the documentation will include example code snippets that use [cURL](https://en.wikipedia.org/wiki/CURL) to illustrate how you would use each endpoint. Knowing the basics of cURL will help you better understand those examples. 
+
+For readability, URLs and query parameters may be displayed without escaping/encoding, but be sure to encode your URLs before issuing a request to the API, or it may produce undesired results. If you are using the RW API to build your own application, there's probably a library out there that does this for you automatically.
+
+In these examples, you'll also find references to a `Authorization: Bearer <your-token>` HTTP header. You can find more details about tokens in the [authentication](#authentication) section, which you should read before you get started.   
+
+Last but not least, the RW API and its docs are made by humans, who will occasionally make mistakes. If you find something that you think is incorrect, could be improved, if you want to contribute yourself, or just want to say "thank you", you can reach us through [the RW API documentation Github project page](https://github.com/resource-watch/doc-api).
+
+
+## Before you get started
 
 This section covers a list of topics you should be familiar with before using the API. The concepts described in this section span across multiple API endpoints and are fundamental for a better understanding of how to interact with the RW API.
 
-## Applications
+### Applications
 
 As you might come across while reading these docs, different applications and websites rely on the RW API as the principal source for their data. While navigating through the catalog of available datasets, you will find some datasets used by the [Resource Watch website](https://resourcewatch.org/), others used by [Global Forest Watch](https://www.globalforestwatch.org/). In many cases, applications even share the same datasets!
 
 To ensure the correct separation of content across the different applications that use the RW API, you will come across a field named `application` in many of the API's resources (such as datasets, layers, widgets, and others). Using this field, the RW API allows users to namespace every single resource, so that it's associated only with the applications that use it.
 
-### Existing applications
+#### Existing applications
 
 Currently, the following applications are using the API as the principal source for their data:
 
@@ -20,7 +37,7 @@ Currently, the following applications are using the API as the principal source 
 
 If you would like to see your application added to the list of applications supported by the RW API, please contact us.
 
-### Best practices for the application field
+#### Best practices for the application field
 
 > Fetching datasets for the Resource Watch application
 
@@ -40,6 +57,8 @@ As a rule of thumb, the `application` field is an array of strings, required whe
 
 [RW API users](/index-rw.html#user-management) also use the `application` field and can be associated with multiple applications. In this case, the `application` field is used to determine which applications a user manages (access management). As you'll be able to understand from reading [General notes on RW API users](#general-notes-on-rw-api-users), each user's `application` values are used to determine if a given user can administrate an RW API resource. Typically, to manipulate said RW API resource, that resource, and the user account, must have at least one overlapping value in the `application` field.
 
+#### Which services comply with these guidelines
+
 Below you can find a list of RW API resources that use the `application` field:
 
 * [Areas v1](/index-rw.html#areas)
@@ -56,7 +75,7 @@ Below you can find a list of RW API resources that use the `application` field:
 * [Vocabulary](/index-rw.html#vocabulary-and-tags)
 * [Widgets](/index-rw.html#widget9)
 
-## Environments
+### Environments
 
 Certain RW API resources, like datasets, layers, or widgets, use the concept of `environment` (also called `env`) as a way to help you manage your data's lifecycle. The main goal of `environments` is to give you an easy way to separate data that is ready to be used in production-grade interactions from data that is still being improved on.
 
@@ -71,7 +90,7 @@ Resources that use `environment` can also be updated with a new `environment` va
 
 It's worth pointing out that endpoints that retrieve a resource by id typically don't filter by `environment` - mostly only listing endpoints have different behavior depending on the requested `environment` value. Also worth noting is that this behavior may differ from resource to resource, and you should always refer to each endpoint's documentation for more details.
 
-### Which services comply with these guidelines
+#### Which services comply with these guidelines
 
 * [Dataset](/index-rw.html#dataset6)
 * [Graph](/index-rw.html#graph)
@@ -79,7 +98,7 @@ It's worth pointing out that endpoints that retrieve a resource by id typically 
 * [Subscriptions](/index-rw.html#subscriptions)
 * [Widgets](/index-rw.html#widget9)
 
-## User roles
+### User roles
 
 RW API users have a role associated with it, defined in the `role` field of each user. You can check your own role by consulting your user information using the [`GET /users/me` endpoint](/index-rw.html#get-the-current-user) or getting a JWT token and decoding its information. The `role` of the user is defined as a string, and it can take one of the following values:
 
@@ -87,7 +106,7 @@ RW API users have a role associated with it, defined in the `role` field of each
 * `MANAGER`
 * `ADMIN`
 
-### Role-based access control
+#### Role-based access control
 
 > Typical hierarchy for roles:
 
@@ -105,11 +124,11 @@ Role-based access control is usually conjugated with the list of applications as
 
 Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.
 
-### How to change the role of an user
+#### How to change the role of an user
 
 Changing role of users is restricted to `ADMIN` users, so if you intend to upgrade your user role to a `MANAGER` or `ADMIN` role, please get in touch with one of the `ADMIN` users and request the change. If you are already an `ADMIN` user and you intend to change the role of another user, you can do so using the [`PATCH /users/:id` endpoint](/index-rw.html#update-another-user-39-s-account-details).
 
-### Which services comply with these guidelines
+#### Which services comply with these guidelines
 
 The following endpoints adhere to the user role conventions defined above:
 
@@ -119,7 +138,7 @@ The following endpoints adhere to the user role conventions defined above:
 * [Metadata](/index-rw.html#metadata14)
 * [Widgets](/index-rw.html#widget9)
 
-## Sorting
+### Sorting
 
 > Example request sorting by a single condition:
 
@@ -145,7 +164,7 @@ Multiple sorting criteria can be used, separating them by commas. You can also s
 
 Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.
 
-### Which services comply with these guidelines
+#### Which services comply with these guidelines
 
 The following endpoints adhere to the Sorting conventions defined above:
 
@@ -158,7 +177,7 @@ The following endpoints adhere to the Sorting conventions defined above:
 * [Get metadata endpoint](/index-rw.html#getting-all-metadata)
 * [Get widgets endpoint](/index-rw.html#getting-all-widgets)
 
-## Filtering
+### Filtering
 
 > Example request filtering using a single condition:
 
@@ -194,7 +213,7 @@ Object fields expect a boolean value when filtering, where `true` matches a non-
 
 Again, as in the case of sorting, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the filtering mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on filtering and the available fields to use as query parameter filters.
 
-### Which services comply with these guidelines
+#### Which services comply with these guidelines
 
 The following endpoints adhere to the Filtering conventions defined above:
 
@@ -203,15 +222,4 @@ The following endpoints adhere to the Filtering conventions defined above:
 * [Get all widgets endpoint](/index-rw.html#getting-all-widgets)
 * [Get all users endpoint](/index-rw.html#getting-all-users)
 
-<!-- ## Authentication
-
-TODO
-
-## Roles
-
-TODO
-
-
-## Caching
-
-TODO -->
+# Concepts

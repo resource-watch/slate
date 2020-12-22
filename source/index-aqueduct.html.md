@@ -10,8 +10,7 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - about_these_docs
-  - concept/intro
+  - concept/overview
   - concept/dataset
   - concept/query
   - concept/layer
@@ -19,7 +18,6 @@ includes:
   - concept/metadata
   - concept/geostore
   - concept/area
-  - api/before_you_get_started
   - api/authentication
   - api/contact
   - api/dataset
@@ -52,7 +50,3 @@ logo: logo-aqueduct.png
 
 search: true
 ---
-
-# Introduction
-
-Welcome to the Aqueduct API Documentation
