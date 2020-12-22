@@ -118,11 +118,12 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="introduction">Introduction</h1>
+        
+          <h1 id="rw-api-overview">RW API Overview</h1>
 
-<p>Welcome to the Aqueduct API Documentation</p>
+<p>Welcome to the Resource Watch API Documentation. In the sections below, you&rsquo;ll find all the information you need to get started using the RW API.</p>
 
-          <h1 id="about-these-docs">About these docs</h1>
+<h2 id="about-these-docs">About these docs</h2>
 
 <p>This documentation page aims to cover the Resource Watch API functionality and details. In it, you&rsquo;ll find a top-level description of the services it provides, as well as a breakdown of the different endpoints, their functionality, parameters and output. The goal is to give you the tools to create powerful applications and data products.</p>
 
@@ -134,7 +135,222 @@
 
 <p>Last but not least, the RW API and its docs are made by humans, who will occasionally make mistakes. If you find something that you think is incorrect, could be improved, if you want to contribute yourself, or just want to say &ldquo;thank you&rdquo;, you can reach us through <a href="https://github.com/resource-watch/doc-api">the RW API documentation Github project page</a>.</p>
 
-          <h1 id="concepts">Concepts</h1>
+<h2 id="before-you-get-started">Before you get started</h2>
+
+<p>This section covers a list of topics you should be familiar with before using the API. The concepts described in this section span across multiple API endpoints and are fundamental for a better understanding of how to interact with the RW API.</p>
+
+<h3 id="applications">Applications</h3>
+
+<p>As you might come across while reading these docs, different applications and websites rely on the RW API as the principal source for their data. While navigating through the catalog of available datasets, you will find some datasets used by the <a href="https://resourcewatch.org/">Resource Watch website</a>, others used by <a href="https://www.globalforestwatch.org/">Global Forest Watch</a>. In many cases, applications even share the same datasets!</p>
+
+<p>To ensure the correct separation of content across the different applications that use the RW API, you will come across a field named <code class="prettyprint">application</code> in many of the API&rsquo;s resources (such as datasets, layers, widgets, and others). Using this field, the RW API allows users to namespace every single resource, so that it&rsquo;s associated only with the applications that use it.</p>
+
+<h4 id="existing-applications">Existing applications</h4>
+
+<p>Currently, the following applications are using the API as the principal source for their data:</p>
+
+<ul>
+<li>the <a href="https://resourcewatch.org/">Resource Watch website</a>, where the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">rw</code>;</li>
+<li>the <a href="https://www.globalforestwatch.org/">Global Forest Watch website</a>, where the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">gfw</code>;</li>
+<li>the <a href="https://prepdata.org/">Partnership for Resilience and Preparedness website</a>, where the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">prep</code>;</li>
+<li>the <a href="https://www.wri.org/our-work/project/forest-atlases">Forest Atlases websites</a> for different countries of the world also rely on the RW API - in the case of these websites, the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">forest-atlas</code>;</li>
+<li>the <a href="https://forestwatcher.globalforestwatch.org/">Forest Watcher mobile application</a>, where the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">fw</code>;</li>
+</ul>
+
+<p>If you would like to see your application added to the list of applications supported by the RW API, please contact us.</p>
+
+<h3 id="best-practices-for-the-application-field">Best practices for the application field</h3>
+
+<blockquote>
+<p>Fetching datasets for the Resource Watch application</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw
+</code></pre>
+<blockquote>
+<p>Fetching datasets for the Global Forest Watch application</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>gfw
+</code></pre>
+<p>This section describes some best practices when using the <code class="prettyprint">application</code> field. Please keep in mind that, since it is up to each RW API service to implement how this field is used, there might be some differences in the usage of this field between RW API services. Refer to each RW API resource or endpoint&rsquo;s documentation for more details on each specific case.</p>
+
+<p>As a rule of thumb, the <code class="prettyprint">application</code> field is an array of strings, required when creating an RW API resource that uses it. You can edit the <code class="prettyprint">application</code> values by editing the RW API resource you are managing. You can then use the <code class="prettyprint">application</code> field as a query parameter filter to filter content specific to the given application (check some examples of the usage of the <code class="prettyprint">application</code> field when fetching RW API datasets on the side).</p>
+
+<p><a href="index-rw.html#user-management">RW API users</a> also use the <code class="prettyprint">application</code> field and can be associated with multiple applications. In this case, the <code class="prettyprint">application</code> field is used to determine which applications a user manages (access management). As you&rsquo;ll be able to understand from reading <a href="#general-notes-on-rw-api-users">General notes on RW API users</a>, each user&rsquo;s <code class="prettyprint">application</code> values are used to determine if a given user can administrate an RW API resource. Typically, to manipulate said RW API resource, that resource, and the user account, must have at least one overlapping value in the <code class="prettyprint">application</code> field.</p>
+
+<h4 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h4>
+
+<p>Below you can find a list of RW API resources that use the <code class="prettyprint">application</code> field:</p>
+
+<ul>
+<li><a href="index-rw.html#areas">Areas v1</a></li>
+<li><a href="index-rw.html#areas-v2">Areas v2</a></li>
+<li><a href="index-rw.html#collections">Collections</a></li>
+<li><a href="index-rw.html#dashboard">Dashboards</a></li>
+<li><a href="index-rw.html#dataset6">Dataset</a></li>
+<li><a href="index-rw.html#graph">Graph</a></li>
+<li><a href="index-rw.html#layer8">Layer</a></li>
+<li><a href="index-rw.html#metadata14">Metadata</a></li>
+<li><a href="index-rw.html#subscriptions">Subscriptions</a></li>
+<li><a href="index-rw.html#topic">Topics</a></li>
+<li><a href="index-rw.html#user-management">Users</a></li>
+<li><a href="index-rw.html#vocabulary-and-tags">Vocabulary</a></li>
+<li><a href="index-rw.html#widget9">Widgets</a></li>
+</ul>
+
+<h3 id="environments">Environments</h3>
+
+<p>Certain RW API resources, like datasets, layers, or widgets, use the concept of <code class="prettyprint">environment</code> (also called <code class="prettyprint">env</code>) as a way to help you manage your data&rsquo;s lifecycle. The main goal of <code class="prettyprint">environments</code> is to give you an easy way to separate data that is ready to be used in production-grade interactions from data that is still being improved on.</p>
+
+<p>When you create a new resource, like a dataset, it&rsquo;s given the <code class="prettyprint">production</code> env value by default. Similarly, if you list datasets, there&rsquo;s an implicit default filter that only returns datasets whose <code class="prettyprint">env</code> value is <code class="prettyprint">production</code>. This illustrates two key concepts of <code class="prettyprint">environments</code>:</p>
+
+<ul>
+<li>By default, when you create data on the RW API, it assumes it&rsquo;s in a production-ready state.</li>
+<li>By default, when you list resources from the RW API, it assumes you want only to see production-ready data.</li>
+</ul>
+
+<p>However, you may want to modify this behavior. For example, let&rsquo;s say you want to create a new widget on the RW API and experiment with different configuration options without displaying it publicly. To achieve this, you can set a different <code class="prettyprint">environment</code> on your widget - for example, <code class="prettyprint">test</code>. Or you may want to deploy a staging version of your application that also relies on the same RW API but displays a different set of resources. You can set those resources to use the <code class="prettyprint">staging</code> environment and have your application load only that environment, or load both <code class="prettyprint">production</code> and <code class="prettyprint">staging</code> resources simultaneously. Keep in mind that <code class="prettyprint">production</code> is the only &ldquo;special&rdquo; value for the <code class="prettyprint">environment</code> field. Apart from it, the <code class="prettyprint">environment</code> can take any value you want, without having any undesired side-effects.</p>
+
+<p>Resources that use <code class="prettyprint">environment</code> can also be updated with a new <code class="prettyprint">environment</code> value, so you can use it to control how your data is displayed. Refer to the documentation of each resource to learn how you can achieve this.</p>
+
+<p>It&rsquo;s worth pointing out that endpoints that retrieve a resource by id typically don&rsquo;t filter by <code class="prettyprint">environment</code> - mostly only listing endpoints have different behavior depending on the requested <code class="prettyprint">environment</code> value. Also worth noting is that this behavior may differ from resource to resource, and you should always refer to each endpoint&rsquo;s documentation for more details.</p>
+
+<h4 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h4>
+
+<ul>
+<li><a href="index-rw.html#dataset6">Dataset</a></li>
+<li><a href="index-rw.html#graph">Graph</a></li>
+<li><a href="index-rw.html#layer8">Layer</a></li>
+<li><a href="index-rw.html#subscriptions">Subscriptions</a></li>
+<li><a href="index-rw.html#widget9">Widgets</a></li>
+</ul>
+
+<h3 id="user-roles">User roles</h3>
+
+<p>RW API users have a role associated with it, defined in the <code class="prettyprint">role</code> field of each user. You can check your own role by consulting your user information using the <a href="index-rw.html#get-the-current-user"><code class="prettyprint">GET /users/me</code> endpoint</a> or getting a JWT token and decoding its information. The <code class="prettyprint">role</code> of the user is defined as a string, and it can take one of the following values:</p>
+
+<ul>
+<li><code class="prettyprint">USER</code></li>
+<li><code class="prettyprint">MANAGER</code></li>
+<li><code class="prettyprint">ADMIN</code></li>
+</ul>
+
+<h4 id="role-based-access-control">Role-based access control</h4>
+
+<blockquote>
+<p>Typical hierarchy for roles:</p>
+</blockquote>
+<pre class="highlight plaintext"><code>USER (least privileges) &lt; MANAGER &lt; ADMIN (most privileges)
+</code></pre>
+<p>The role field is usually used across the RW API for controlling access to API resources. While not required nor enforced, typically user roles are used hierarchically, being <code class="prettyprint">USER</code> the role with the least privileges, and <code class="prettyprint">ADMIN</code> the one with most privileges. A common pattern you’ll find on some services is: </p>
+
+<ul>
+<li><code class="prettyprint">USER</code> accounts can read (usually all data or just data owned by the user, depending on any privacy or security concerns in the service in question), but only create new resources; </li>
+<li><code class="prettyprint">MANAGER</code> accounts can perform all of the <code class="prettyprint">USER</code> actions, complemented with editing or deleting resources owned by them;</li>
+<li><code class="prettyprint">ADMIN</code> accounts can do all of the above even for resources created by other users.</li>
+</ul>
+
+<p>Role-based access control is usually conjugated with the list of applications associated with the user: typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping application value. Read more about the application field and which services use it in the <a href="index-rw.html#applications">Applications concept documentation</a>.</p>
+
+<p>Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.</p>
+
+<h4 id="how-to-change-the-role-of-an-user">How to change the role of an user</h4>
+
+<p>Changing role of users is restricted to <code class="prettyprint">ADMIN</code> users, so if you intend to upgrade your user role to a <code class="prettyprint">MANAGER</code> or <code class="prettyprint">ADMIN</code> role, please get in touch with one of the <code class="prettyprint">ADMIN</code> users and request the change. If you are already an <code class="prettyprint">ADMIN</code> user and you intend to change the role of another user, you can do so using the <a href="index-rw.html#update-another-user-39-s-account-details"><code class="prettyprint">PATCH /users/:id</code> endpoint</a>.</p>
+
+<h4 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h4>
+
+<p>The following endpoints adhere to the user role conventions defined above:</p>
+
+<ul>
+<li><a href="index-rw.html#dashboard">Dashboards</a></li>
+<li><a href="index-rw.html#dataset6">Datasets</a></li>
+<li><a href="index-rw.html#layer8">Layers</a></li>
+<li><a href="index-rw.html#metadata14">Metadata</a></li>
+<li><a href="index-rw.html#widget9">Widgets</a></li>
+</ul>
+
+<h3 id="sorting">Sorting</h3>
+
+<blockquote>
+<p>Example request sorting by a single condition:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name
+</code></pre>
+<blockquote>
+<p>Example request sorting by multiple conditions:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name,description
+</code></pre>
+<blockquote>
+<p>Example request sorting by multiple conditions, descending and ascending:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-name,+description
+</code></pre>
+<p>As a rule of thumb, you can sort RW API resources using the <code class="prettyprint">sort</code> query parameter. Usually, sorting can be performed using any field from the resource schema, so be sure to check each resource&rsquo;s model reference to find which fields can be used for sorting. Sorting by nested model fields is not generally supported, but may be implemented for particular resources. In some exceptional cases, you also have the possibility of sorting by fields that are not present in the resource model (e.g., when fetching datasets, you can sort by <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> to sort datasets by the name or role of the owner of the dataset) - be sure to check each resource&rsquo;s documentation to find out which additional sorting criteria you have available.</p>
+
+<p>Multiple sorting criteria can be used, separating them by commas. You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+
+<p>Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.</p>
+
+<h4 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h4>
+
+<p>The following endpoints adhere to the Sorting conventions defined above:</p>
+
+<ul>
+<li><a href="index-rw.html#getting-all-user-areas">Get v2 areas endpoint</a></li>
+<li><a href="index-rw.html#get-user-areas">Get areas endpoint</a></li>
+<li><a href="index-rw.html#getting-collections-for-the-request-user">Get collections endpoint</a></li>
+<li><a href="index-rw.html#getting-all-dashboards">Get dashboards endpoint</a></li>
+<li><a href="index-rw.html#getting-all-datasets">Get datasets endpoint</a></li>
+<li><a href="index-rw.html#getting-all-layers">Get layers endpoint</a></li>
+<li><a href="index-rw.html#getting-all-metadata">Get metadata endpoint</a></li>
+<li><a href="index-rw.html#getting-all-widgets">Get widgets endpoint</a></li>
+</ul>
+
+<h3 id="filtering">Filtering</h3>
+
+<blockquote>
+<p>Example request filtering using a single condition:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>viirs
+</code></pre>
+<blockquote>
+<p>Example request filtering using multiple conditions:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>birds&amp;provider<span class="o">=</span>cartodb
+</code></pre>
+<blockquote>
+<p>Example request filtering by an array field using the <code class="prettyprint">,</code> OR multi-value separator:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw,gfw
+</code></pre>
+<blockquote>
+<p>Example request filtering by an array field using the <code class="prettyprint">@</code> AND multi-value separator:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw@gfw
+</code></pre>
+<p>Like in the case of sorting, most RW API resources allow filtering the returned results of list endpoints using query parameters. As a rule of thumb, you can use the API resource&rsquo;s fields as query parameter filters, as shown in the examples on the side. You can also combine different query parameters into a complex <code class="prettyprint">and</code> logic filter. Note that you can achieve a logical <code class="prettyprint">or</code> by passing a regular expression with two disjoint options, like this: <code class="prettyprint">?name=&lt;substr_a&gt;|&lt;substr_b&gt;</code>.</p>
+
+<p>For string type fields, the filter you pass will be interpreted as a regular expression, <em>not</em> as a simple substring filter. This gives you greater flexibility in your search capabilities. However, it means that, if you intend to search by substring, you must escape any regex special characters in the string.</p>
+
+<p>Array fields (like the <code class="prettyprint">application</code> field present in some of the API resources - read more about the <a href="index-rw.html#applications">application field</a>) support more complex types of filtering. In such cases, you can use <code class="prettyprint">,</code> as an <code class="prettyprint">or</code> multi-value separator, or <code class="prettyprint">@</code> as a multi-value, exact match separator.</p>
+
+<p>Object fields expect a boolean value when filtering, where <code class="prettyprint">true</code> matches a non-empty object and <code class="prettyprint">false</code> matches an empty object. Support for filtering by nested object fields varies for different API resource, so be sure to check the documentation of the API endpoint for more detailed information.</p>
+
+<p>Again, as in the case of sorting, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the filtering mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on filtering and the available fields to use as query parameter filters.</p>
+
+<h4 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h4>
+
+<p>The following endpoints adhere to the Filtering conventions defined above:</p>
+
+<ul>
+<li><a href="index-rw.html#getting-all-datasets">Get all datasets endpoint</a></li>
+<li><a href="index-rw.html#getting-all-layers">Get all layers endpoint</a></li>
+<li><a href="index-rw.html#getting-all-widgets">Get all widgets endpoint</a></li>
+<li><a href="index-rw.html#getting-all-users">Get all users endpoint</a></li>
+</ul>
+
+<h1 id="concepts">Concepts</h1>
 
           <h2 id="dataset">Dataset</h2>
 
@@ -395,232 +611,6 @@
 </ul>
 
 <p>Read more on how to create areas using the different methods in the <a href="index-rw.html#creating-an-area">Areas v2 endpoints</a> section.</p>
-
-          <h1 id="before-you-get-started">Before you get started</h1>
-
-<p>This section covers a list of topics you should be familiar with before using the API. The concepts described in this section span across multiple API endpoints and are fundamental for a better understanding of how to interact with the RW API.</p>
-
-<h2 id="applications">Applications</h2>
-
-<p>As you might come across while reading these docs, different applications and websites rely on the RW API as the principal source for their data. While navigating through the catalog of available datasets, you will find some datasets used by the <a href="https://resourcewatch.org/">Resource Watch website</a>, others used by <a href="https://www.globalforestwatch.org/">Global Forest Watch</a>. In many cases, applications even share the same datasets!</p>
-
-<p>To ensure the correct separation of content across the different applications that use the RW API, you will come across a field named <code class="prettyprint">application</code> in many of the API&rsquo;s resources (such as datasets, layers, widgets, and others). Using this field, the RW API allows users to namespace every single resource, so that it&rsquo;s associated only with the applications that use it.</p>
-
-<h3 id="existing-applications">Existing applications</h3>
-
-<p>Currently, the following applications are using the API as the principal source for their data:</p>
-
-<ul>
-<li>the <a href="https://resourcewatch.org/">Resource Watch website</a>, where the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">rw</code>;</li>
-<li>the <a href="https://www.globalforestwatch.org/">Global Forest Watch website</a>, where the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">gfw</code>;</li>
-<li>the <a href="https://prepdata.org/">Partnership for Resilience and Preparedness website</a>, where the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">prep</code>;</li>
-<li>the <a href="https://www.wri.org/our-work/project/forest-atlases">Forest Atlases websites</a> for different countries of the world also rely on the RW API - in the case of these websites, the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">forest-atlas</code>;</li>
-<li>the <a href="https://forestwatcher.globalforestwatch.org/">Forest Watcher mobile application</a>, where the <code class="prettyprint">application</code> field takes the value <code class="prettyprint">fw</code>;</li>
-</ul>
-
-<p>If you would like to see your application added to the list of applications supported by the RW API, please contact us.</p>
-
-<h3 id="best-practices-for-the-application-field">Best practices for the application field</h3>
-
-<blockquote>
-<p>Fetching datasets for the Resource Watch application</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw
-</code></pre>
-<blockquote>
-<p>Fetching datasets for the Global Forest Watch application</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>gfw
-</code></pre>
-<p>This section describes some best practices when using the <code class="prettyprint">application</code> field. Please keep in mind that, since it is up to each RW API service to implement how this field is used, there might be some differences in the usage of this field between RW API services. Refer to each RW API resource or endpoint&rsquo;s documentation for more details on each specific case.</p>
-
-<p>As a rule of thumb, the <code class="prettyprint">application</code> field is an array of strings, required when creating an RW API resource that uses it. You can edit the <code class="prettyprint">application</code> values by editing the RW API resource you are managing. You can then use the <code class="prettyprint">application</code> field as a query parameter filter to filter content specific to the given application (check some examples of the usage of the <code class="prettyprint">application</code> field when fetching RW API datasets on the side).</p>
-
-<p><a href="index-rw.html#user-management">RW API users</a> also use the <code class="prettyprint">application</code> field and can be associated with multiple applications. In this case, the <code class="prettyprint">application</code> field is used to determine which applications a user manages (access management). As you&rsquo;ll be able to understand from reading <a href="#general-notes-on-rw-api-users">General notes on RW API users</a>, each user&rsquo;s <code class="prettyprint">application</code> values are used to determine if a given user can administrate an RW API resource. Typically, to manipulate said RW API resource, that resource, and the user account, must have at least one overlapping value in the <code class="prettyprint">application</code> field.</p>
-
-<p>Below you can find a list of RW API resources that use the <code class="prettyprint">application</code> field:</p>
-
-<ul>
-<li><a href="index-rw.html#areas">Areas v1</a></li>
-<li><a href="index-rw.html#areas-v2">Areas v2</a></li>
-<li><a href="index-rw.html#collections">Collections</a></li>
-<li><a href="index-rw.html#dashboard">Dashboards</a></li>
-<li><a href="index-rw.html#dataset6">Dataset</a></li>
-<li><a href="index-rw.html#graph">Graph</a></li>
-<li><a href="index-rw.html#layer8">Layer</a></li>
-<li><a href="index-rw.html#metadata14">Metadata</a></li>
-<li><a href="index-rw.html#subscriptions">Subscriptions</a></li>
-<li><a href="index-rw.html#topic">Topics</a></li>
-<li><a href="index-rw.html#user-management">Users</a></li>
-<li><a href="index-rw.html#vocabulary-and-tags">Vocabulary</a></li>
-<li><a href="index-rw.html#widget9">Widgets</a></li>
-</ul>
-
-<h2 id="environments">Environments</h2>
-
-<p>Certain RW API resources, like datasets, layers, or widgets, use the concept of <code class="prettyprint">environment</code> (also called <code class="prettyprint">env</code>) as a way to help you manage your data&rsquo;s lifecycle. The main goal of <code class="prettyprint">environments</code> is to give you an easy way to separate data that is ready to be used in production-grade interactions from data that is still being improved on.</p>
-
-<p>When you create a new resource, like a dataset, it&rsquo;s given the <code class="prettyprint">production</code> env value by default. Similarly, if you list datasets, there&rsquo;s an implicit default filter that only returns datasets whose <code class="prettyprint">env</code> value is <code class="prettyprint">production</code>. This illustrates two key concepts of <code class="prettyprint">environments</code>:</p>
-
-<ul>
-<li>By default, when you create data on the RW API, it assumes it&rsquo;s in a production-ready state.</li>
-<li>By default, when you list resources from the RW API, it assumes you want only to see production-ready data.</li>
-</ul>
-
-<p>However, you may want to modify this behavior. For example, let&rsquo;s say you want to create a new widget on the RW API and experiment with different configuration options without displaying it publicly. To achieve this, you can set a different <code class="prettyprint">environment</code> on your widget - for example, <code class="prettyprint">test</code>. Or you may want to deploy a staging version of your application that also relies on the same RW API but displays a different set of resources. You can set those resources to use the <code class="prettyprint">staging</code> environment and have your application load only that environment, or load both <code class="prettyprint">production</code> and <code class="prettyprint">staging</code> resources simultaneously. Keep in mind that <code class="prettyprint">production</code> is the only &ldquo;special&rdquo; value for the <code class="prettyprint">environment</code> field. Apart from it, the <code class="prettyprint">environment</code> can take any value you want, without having any undesired side-effects.</p>
-
-<p>Resources that use <code class="prettyprint">environment</code> can also be updated with a new <code class="prettyprint">environment</code> value, so you can use it to control how your data is displayed. Refer to the documentation of each resource to learn how you can achieve this.</p>
-
-<p>It&rsquo;s worth pointing out that endpoints that retrieve a resource by id typically don&rsquo;t filter by <code class="prettyprint">environment</code> - mostly only listing endpoints have different behavior depending on the requested <code class="prettyprint">environment</code> value. Also worth noting is that this behavior may differ from resource to resource, and you should always refer to each endpoint&rsquo;s documentation for more details.</p>
-
-<h3 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h3>
-
-<ul>
-<li><a href="index-rw.html#dataset6">Dataset</a></li>
-<li><a href="index-rw.html#graph">Graph</a></li>
-<li><a href="index-rw.html#layer8">Layer</a></li>
-<li><a href="index-rw.html#subscriptions">Subscriptions</a></li>
-<li><a href="index-rw.html#widget9">Widgets</a></li>
-</ul>
-
-<h2 id="user-roles">User roles</h2>
-
-<p>RW API users have a role associated with it, defined in the <code class="prettyprint">role</code> field of each user. You can check your own role by consulting your user information using the <a href="index-rw.html#get-the-current-user"><code class="prettyprint">GET /users/me</code> endpoint</a> or getting a JWT token and decoding its information. The <code class="prettyprint">role</code> of the user is defined as a string, and it can take one of the following values:</p>
-
-<ul>
-<li><code class="prettyprint">USER</code></li>
-<li><code class="prettyprint">MANAGER</code></li>
-<li><code class="prettyprint">ADMIN</code></li>
-</ul>
-
-<h3 id="role-based-access-control">Role-based access control</h3>
-
-<blockquote>
-<p>Typical hierarchy for roles:</p>
-</blockquote>
-<pre class="highlight plaintext"><code>USER (least privileges) &lt; MANAGER &lt; ADMIN (most privileges)
-</code></pre>
-<p>The role field is usually used across the RW API for controlling access to API resources. While not required nor enforced, typically user roles are used hierarchically, being <code class="prettyprint">USER</code> the role with the least privileges, and <code class="prettyprint">ADMIN</code> the one with most privileges. A common pattern you’ll find on some services is: </p>
-
-<ul>
-<li><code class="prettyprint">USER</code> accounts can read (usually all data or just data owned by the user, depending on any privacy or security concerns in the service in question), but only create new resources; </li>
-<li><code class="prettyprint">MANAGER</code> accounts can perform all of the <code class="prettyprint">USER</code> actions, complemented with editing or deleting resources owned by them;</li>
-<li><code class="prettyprint">ADMIN</code> accounts can do all of the above even for resources created by other users.</li>
-</ul>
-
-<p>Role-based access control is usually conjugated with the list of applications associated with the user: typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping application value. Read more about the application field and which services use it in the <a href="index-rw.html#applications">Applications concept documentation</a>.</p>
-
-<p>Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.</p>
-
-<h3 id="how-to-change-the-role-of-an-user">How to change the role of an user</h3>
-
-<p>Changing role of users is restricted to <code class="prettyprint">ADMIN</code> users, so if you intend to upgrade your user role to a <code class="prettyprint">MANAGER</code> or <code class="prettyprint">ADMIN</code> role, please get in touch with one of the <code class="prettyprint">ADMIN</code> users and request the change. If you are already an <code class="prettyprint">ADMIN</code> user and you intend to change the role of another user, you can do so using the <a href="index-rw.html#update-another-user-39-s-account-details"><code class="prettyprint">PATCH /users/:id</code> endpoint</a>.</p>
-
-<h3 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h3>
-
-<p>The following endpoints adhere to the user role conventions defined above:</p>
-
-<ul>
-<li><a href="index-rw.html#dashboard">Dashboards</a></li>
-<li><a href="index-rw.html#dataset6">Datasets</a></li>
-<li><a href="index-rw.html#layer8">Layers</a></li>
-<li><a href="index-rw.html#metadata14">Metadata</a></li>
-<li><a href="index-rw.html#widget9">Widgets</a></li>
-</ul>
-
-<h2 id="sorting">Sorting</h2>
-
-<blockquote>
-<p>Example request sorting by a single condition:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name
-</code></pre>
-<blockquote>
-<p>Example request sorting by multiple conditions:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name,description
-</code></pre>
-<blockquote>
-<p>Example request sorting by multiple conditions, descending and ascending:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-name,+description
-</code></pre>
-<p>As a rule of thumb, you can sort RW API resources using the <code class="prettyprint">sort</code> query parameter. Usually, sorting can be performed using any field from the resource schema, so be sure to check each resource&rsquo;s model reference to find which fields can be used for sorting. Sorting by nested model fields is not generally supported, but may be implemented for particular resources. In some exceptional cases, you also have the possibility of sorting by fields that are not present in the resource model (e.g., when fetching datasets, you can sort by <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> to sort datasets by the name or role of the owner of the dataset) - be sure to check each resource&rsquo;s documentation to find out which additional sorting criteria you have available.</p>
-
-<p>Multiple sorting criteria can be used, separating them by commas. You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
-
-<p>Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.</p>
-
-<h3 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h3>
-
-<p>The following endpoints adhere to the Sorting conventions defined above:</p>
-
-<ul>
-<li><a href="index-rw.html#getting-all-user-areas">Get v2 areas endpoint</a></li>
-<li><a href="index-rw.html#get-user-areas">Get areas endpoint</a></li>
-<li><a href="index-rw.html#getting-collections-for-the-request-user">Get collections endpoint</a></li>
-<li><a href="index-rw.html#getting-all-dashboards">Get dashboards endpoint</a></li>
-<li><a href="index-rw.html#getting-all-datasets">Get datasets endpoint</a></li>
-<li><a href="index-rw.html#getting-all-layers">Get layers endpoint</a></li>
-<li><a href="index-rw.html#getting-all-metadata">Get metadata endpoint</a></li>
-<li><a href="index-rw.html#getting-all-widgets">Get widgets endpoint</a></li>
-</ul>
-
-<h2 id="filtering">Filtering</h2>
-
-<blockquote>
-<p>Example request filtering using a single condition:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>viirs
-</code></pre>
-<blockquote>
-<p>Example request filtering using multiple conditions:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>birds&amp;provider<span class="o">=</span>cartodb
-</code></pre>
-<blockquote>
-<p>Example request filtering by an array field using the <code class="prettyprint">,</code> OR multi-value separator:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw,gfw
-</code></pre>
-<blockquote>
-<p>Example request filtering by an array field using the <code class="prettyprint">@</code> AND multi-value separator:</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw@gfw
-</code></pre>
-<p>Like in the case of sorting, most RW API resources allow filtering the returned results of list endpoints using query parameters. As a rule of thumb, you can use the API resource&rsquo;s fields as query parameter filters, as shown in the examples on the side. You can also combine different query parameters into a complex <code class="prettyprint">and</code> logic filter. Note that you can achieve a logical <code class="prettyprint">or</code> by passing a regular expression with two disjoint options, like this: <code class="prettyprint">?name=&lt;substr_a&gt;|&lt;substr_b&gt;</code>.</p>
-
-<p>For string type fields, the filter you pass will be interpreted as a regular expression, <em>not</em> as a simple substring filter. This gives you greater flexibility in your search capabilities. However, it means that, if you intend to search by substring, you must escape any regex special characters in the string.</p>
-
-<p>Array fields (like the <code class="prettyprint">application</code> field present in some of the API resources - read more about the <a href="index-rw.html#applications">application field</a>) support more complex types of filtering. In such cases, you can use <code class="prettyprint">,</code> as an <code class="prettyprint">or</code> multi-value separator, or <code class="prettyprint">@</code> as a multi-value, exact match separator.</p>
-
-<p>Object fields expect a boolean value when filtering, where <code class="prettyprint">true</code> matches a non-empty object and <code class="prettyprint">false</code> matches an empty object. Support for filtering by nested object fields varies for different API resource, so be sure to check the documentation of the API endpoint for more detailed information.</p>
-
-<p>Again, as in the case of sorting, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the filtering mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on filtering and the available fields to use as query parameter filters.</p>
-
-<h3 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h3>
-
-<p>The following endpoints adhere to the Filtering conventions defined above:</p>
-
-<ul>
-<li><a href="index-rw.html#getting-all-datasets">Get all datasets endpoint</a></li>
-<li><a href="index-rw.html#getting-all-layers">Get all layers endpoint</a></li>
-<li><a href="index-rw.html#getting-all-widgets">Get all widgets endpoint</a></li>
-<li><a href="index-rw.html#getting-all-users">Get all users endpoint</a></li>
-</ul>
-
-<!-- ## Authentication
-
-TODO
-
-## Roles
-
-TODO
-
-
-## Caching
-
-TODO -->
 
           <h1 id="authentication">Authentication</h1>
 
