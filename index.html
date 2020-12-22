@@ -445,15 +445,168 @@
 <li><a href="index-rw.html#areas-v2">Areas v2</a></li>
 <li><a href="index-rw.html#collections">Collections</a></li>
 <li><a href="index-rw.html#dashboard">Dashboards</a></li>
-<li><a href="index-rw.html#dataset7">Dataset</a></li>
+<li><a href="index-rw.html#dataset6">Dataset</a></li>
 <li><a href="index-rw.html#graph">Graph</a></li>
-<li><a href="index-rw.html#layer9">Layer</a></li>
+<li><a href="index-rw.html#layer8">Layer</a></li>
 <li><a href="index-rw.html#metadata14">Metadata</a></li>
 <li><a href="index-rw.html#subscriptions">Subscriptions</a></li>
 <li><a href="index-rw.html#topic">Topics</a></li>
 <li><a href="index-rw.html#user-management">Users</a></li>
 <li><a href="index-rw.html#vocabulary-and-tags">Vocabulary</a></li>
-<li><a href="index-rw.html#widget10">Widgets</a></li>
+<li><a href="index-rw.html#widget9">Widgets</a></li>
+</ul>
+
+<h2 id="environments">Environments</h2>
+
+<p>Certain RW API resources, like datasets, layers, or widgets, use the concept of <code class="prettyprint">environment</code> (also called <code class="prettyprint">env</code>) as a way to help you manage your data&rsquo;s lifecycle. The main goal of <code class="prettyprint">environments</code> is to give you an easy way to separate data that is ready to be used in production-grade interactions from data that is still being improved on.</p>
+
+<p>When you create a new resource, like a dataset, it&rsquo;s given the <code class="prettyprint">production</code> env value by default. Similarly, if you list datasets, there&rsquo;s an implicit default filter that only returns datasets whose <code class="prettyprint">env</code> value is <code class="prettyprint">production</code>. This illustrates two key concepts of <code class="prettyprint">environments</code>:</p>
+
+<ul>
+<li>By default, when you create data on the RW API, it assumes it&rsquo;s in a production-ready state.</li>
+<li>By default, when you list resources from the RW API, it assumes you want only to see production-ready data.</li>
+</ul>
+
+<p>However, you may want to modify this behavior. For example, let&rsquo;s say you want to create a new widget on the RW API and experiment with different configuration options without displaying it publicly. To achieve this, you can set a different <code class="prettyprint">environment</code> on your widget - for example, <code class="prettyprint">test</code>. Or you may want to deploy a staging version of your application that also relies on the same RW API but displays a different set of resources. You can set those resources to use the <code class="prettyprint">staging</code> environment and have your application load only that environment, or load both <code class="prettyprint">production</code> and <code class="prettyprint">staging</code> resources simultaneously. Keep in mind that <code class="prettyprint">production</code> is the only &ldquo;special&rdquo; value for the <code class="prettyprint">environment</code> field. Apart from it, the <code class="prettyprint">environment</code> can take any value you want, without having any undesired side-effects.</p>
+
+<p>Resources that use <code class="prettyprint">environment</code> can also be updated with a new <code class="prettyprint">environment</code> value, so you can use it to control how your data is displayed. Refer to the documentation of each resource to learn how you can achieve this.</p>
+
+<p>It&rsquo;s worth pointing out that endpoints that retrieve a resource by id typically don&rsquo;t filter by <code class="prettyprint">environment</code> - mostly only listing endpoints have different behavior depending on the requested <code class="prettyprint">environment</code> value. Also worth noting is that this behavior may differ from resource to resource, and you should always refer to each endpoint&rsquo;s documentation for more details.</p>
+
+<h3 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h3>
+
+<ul>
+<li><a href="index-rw.html#dataset6">Dataset</a></li>
+<li><a href="index-rw.html#graph">Graph</a></li>
+<li><a href="index-rw.html#layer8">Layer</a></li>
+<li><a href="index-rw.html#subscriptions">Subscriptions</a></li>
+<li><a href="index-rw.html#widget9">Widgets</a></li>
+</ul>
+
+<h2 id="user-roles">User roles</h2>
+
+<p>RW API users have a role associated with it, defined in the <code class="prettyprint">role</code> field of each user. You can check your own role by consulting your user information using the <a href="index-rw.html#get-the-current-user"><code class="prettyprint">GET /users/me</code> endpoint</a> or getting a JWT token and decoding its information. The <code class="prettyprint">role</code> of the user is defined as a string, and it can take one of the following values:</p>
+
+<ul>
+<li><code class="prettyprint">USER</code></li>
+<li><code class="prettyprint">MANAGER</code></li>
+<li><code class="prettyprint">ADMIN</code></li>
+</ul>
+
+<h3 id="role-based-access-control">Role-based access control</h3>
+
+<blockquote>
+<p>Typical hierarchy for roles:</p>
+</blockquote>
+<pre class="highlight plaintext"><code>USER (least privileges) &lt; MANAGER &lt; ADMIN (most privileges)
+</code></pre>
+<p>The role field is usually used across the RW API for controlling access to API resources. While not required nor enforced, typically user roles are used hierarchically, being <code class="prettyprint">USER</code> the role with the least privileges, and <code class="prettyprint">ADMIN</code> the one with most privileges. A common pattern you’ll find on some services is: </p>
+
+<ul>
+<li><code class="prettyprint">USER</code> accounts can read (usually all data or just data owned by the user, depending on any privacy or security concerns in the service in question), but only create new resources; </li>
+<li><code class="prettyprint">MANAGER</code> accounts can perform all of the <code class="prettyprint">USER</code> actions, complemented with editing or deleting resources owned by them;</li>
+<li><code class="prettyprint">ADMIN</code> accounts can do all of the above even for resources created by other users.</li>
+</ul>
+
+<p>Role-based access control is usually conjugated with the list of applications associated with the user: typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping application value. Read more about the application field and which services use it in the <a href="index-rw.html#applications">Applications concept documentation</a>.</p>
+
+<p>Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.</p>
+
+<h3 id="how-to-change-the-role-of-an-user">How to change the role of an user</h3>
+
+<p>Changing role of users is restricted to <code class="prettyprint">ADMIN</code> users, so if you intend to upgrade your user role to a <code class="prettyprint">MANAGER</code> or <code class="prettyprint">ADMIN</code> role, please get in touch with one of the <code class="prettyprint">ADMIN</code> users and request the change. If you are already an <code class="prettyprint">ADMIN</code> user and you intend to change the role of another user, you can do so using the <a href="index-rw.html#update-another-user-39-s-account-details"><code class="prettyprint">PATCH /users/:id</code> endpoint</a>.</p>
+
+<h3 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h3>
+
+<p>The following endpoints adhere to the user role conventions defined above:</p>
+
+<ul>
+<li><a href="index-rw.html#dashboard">Dashboards</a></li>
+<li><a href="index-rw.html#dataset6">Datasets</a></li>
+<li><a href="index-rw.html#layer8">Layers</a></li>
+<li><a href="index-rw.html#metadata14">Metadata</a></li>
+<li><a href="index-rw.html#widget9">Widgets</a></li>
+</ul>
+
+<h2 id="sorting">Sorting</h2>
+
+<blockquote>
+<p>Example request sorting by a single condition:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name
+</code></pre>
+<blockquote>
+<p>Example request sorting by multiple conditions:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name,description
+</code></pre>
+<blockquote>
+<p>Example request sorting by multiple conditions, descending and ascending:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>-name,+description
+</code></pre>
+<p>As a rule of thumb, you can sort RW API resources using the <code class="prettyprint">sort</code> query parameter. Usually, sorting can be performed using any field from the resource schema, so be sure to check each resource&rsquo;s model reference to find which fields can be used for sorting. Sorting by nested model fields is not generally supported, but may be implemented for particular resources. In some exceptional cases, you also have the possibility of sorting by fields that are not present in the resource model (e.g., when fetching datasets, you can sort by <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> to sort datasets by the name or role of the owner of the dataset) - be sure to check each resource&rsquo;s documentation to find out which additional sorting criteria you have available.</p>
+
+<p>Multiple sorting criteria can be used, separating them by commas. You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+
+<p>Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.</p>
+
+<h3 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h3>
+
+<p>The following endpoints adhere to the Sorting conventions defined above:</p>
+
+<ul>
+<li><a href="index-rw.html#getting-all-user-areas">Get v2 areas endpoint</a></li>
+<li><a href="index-rw.html#get-user-areas">Get areas endpoint</a></li>
+<li><a href="index-rw.html#getting-collections-for-the-request-user">Get collections endpoint</a></li>
+<li><a href="index-rw.html#getting-all-dashboards">Get dashboards endpoint</a></li>
+<li><a href="index-rw.html#getting-all-datasets">Get datasets endpoint</a></li>
+<li><a href="index-rw.html#getting-all-layers">Get layers endpoint</a></li>
+<li><a href="index-rw.html#getting-all-metadata">Get metadata endpoint</a></li>
+<li><a href="index-rw.html#getting-all-widgets">Get widgets endpoint</a></li>
+</ul>
+
+<h2 id="filtering">Filtering</h2>
+
+<blockquote>
+<p>Example request filtering using a single condition:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>viirs
+</code></pre>
+<blockquote>
+<p>Example request filtering using multiple conditions:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>birds&amp;provider<span class="o">=</span>cartodb
+</code></pre>
+<blockquote>
+<p>Example request filtering by an array field using the <code class="prettyprint">,</code> OR multi-value separator:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw,gfw
+</code></pre>
+<blockquote>
+<p>Example request filtering by an array field using the <code class="prettyprint">@</code> AND multi-value separator:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw@gfw
+</code></pre>
+<p>Like in the case of sorting, most RW API resources allow filtering the returned results of list endpoints using query parameters. As a rule of thumb, you can use the API resource&rsquo;s fields as query parameter filters, as shown in the examples on the side. You can also combine different query parameters into a complex <code class="prettyprint">and</code> logic filter. Note that you can achieve a logical <code class="prettyprint">or</code> by passing a regular expression with two disjoint options, like this: <code class="prettyprint">?name=&lt;substr_a&gt;|&lt;substr_b&gt;</code>.</p>
+
+<p>For string type fields, the filter you pass will be interpreted as a regular expression, <em>not</em> as a simple substring filter. This gives you greater flexibility in your search capabilities. However, it means that, if you intend to search by substring, you must escape any regex special characters in the string.</p>
+
+<p>Array fields (like the <code class="prettyprint">application</code> field present in some of the API resources - read more about the <a href="index-rw.html#applications">application field</a>) support more complex types of filtering. In such cases, you can use <code class="prettyprint">,</code> as an <code class="prettyprint">or</code> multi-value separator, or <code class="prettyprint">@</code> as a multi-value, exact match separator.</p>
+
+<p>Object fields expect a boolean value when filtering, where <code class="prettyprint">true</code> matches a non-empty object and <code class="prettyprint">false</code> matches an empty object. Support for filtering by nested object fields varies for different API resource, so be sure to check the documentation of the API endpoint for more detailed information.</p>
+
+<p>Again, as in the case of sorting, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the filtering mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on filtering and the available fields to use as query parameter filters.</p>
+
+<h3 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h3>
+
+<p>The following endpoints adhere to the Filtering conventions defined above:</p>
+
+<ul>
+<li><a href="index-rw.html#getting-all-datasets">Get all datasets endpoint</a></li>
+<li><a href="index-rw.html#getting-all-layers">Get all layers endpoint</a></li>
+<li><a href="index-rw.html#getting-all-widgets">Get all widgets endpoint</a></li>
+<li><a href="index-rw.html#getting-all-users">Get all users endpoint</a></li>
 </ul>
 
 <!-- ## Authentication
@@ -464,9 +617,6 @@ TODO
 
 TODO
 
-## Environments
-
-TODO
 
 ## Caching
 
@@ -677,9 +827,9 @@ TODO -->
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?vocabulary[legacy]<span class="o">=</span>umd
 </code></pre>
-<p>The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you&rsquo;ll find in a dataset itself (which you can learn more about in the <a href="#dataset-reference">Dataset reference</a> section), while others are convenience filters for things like user role or favourites. These parameters can be combined into a complex <code class="prettyprint">and</code> logic query.</p>
+<p>The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you&rsquo;ll find in a dataset itself (which you can learn more about in the <a href="#dataset-reference">Dataset reference</a> section), while others are convenience filters for things like user role or favourites.</p>
 
-<p>Here&rsquo;s the comprehensive list of filters supported by datasets:</p>
+<p>Filtering datasets adheres to the conventions defined in the <a href="index-rw.html#filtering">Filter guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. In addition to these conventions, you can use the following fields as filters supported by the dataset list endpoint:</p>
 
 <table><thead>
 <tr>
@@ -805,7 +955,7 @@ TODO -->
 </tr>
 <tr>
 <td>env</td>
-<td>Environment to which the dataset belongs. Multiple values can be combined using <code class="prettyprint">,</code> as a separator. Does not support regexes.</td>
+<td>Environment to which the dataset belongs. Multiple values can be combined using <code class="prettyprint">,</code> as a separator. Does not support regexes. Read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 <td>String</td>
 <td>any valid text. Defaults to <code class="prettyprint">production</code>.</td>
 </tr>
@@ -1009,14 +1159,6 @@ TODO -->
 </tr>
 </tbody></table>
 
-<p>Please keep in mind the following:</p>
-
-<ul>
-<li>String types support and expect a regex value, unless detailed otherwise on the <code class="prettyprint">Description</code> field. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).</li>
-<li>Array types support multiple values. Use <code class="prettyprint">,</code> as an <code class="prettyprint">or</code> multi-value separator, or <code class="prettyprint">@</code> as a multi-value, exact match separator.</li>
-<li>Object types expect a boolean value, where <code class="prettyprint">true</code> matches a non-empty object, and <code class="prettyprint">false</code> matches an empty object.</li>
-</ul>
-
 <h3 id="sorting">Sorting</h3>
 
 <h4 id="basics-of-sorting">Basics of sorting</h4>
@@ -1041,11 +1183,7 @@ TODO -->
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>user.role
 </code></pre>
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> query parameter. Sorting can be done using any field from the <a href="#dataset-reference">dataset model</a>, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users). Sorting by nested fields is not supported at the moment.</p>
-
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
-<p>You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+<p>The Dataset service currently supports sorting using the <code class="prettyprint">sort</code> query parameter. Sorting dataset adheres to the conventions defined in the <a href="index-rw.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="#dataset-reference">Dataset reference</a> section for a detailed description of the fields you can use when sorting. In addition to all dataset model fields, you can sort the returned results by the name (using <code class="prettyprint">user.name</code>) or role (using <code class="prettyprint">user.role</code>) of the user owner of the dataset. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
 
 <h4 id="special-sorting-criteria">Special sorting criteria</h4>
 
@@ -1263,7 +1401,7 @@ TODO -->
 
 <ul>
 <li>In order to be able to create a dataset, you need to be <a href="#authentication">authenticated</a>.</li>
-<li>Depending on your user account&rsquo;s role, you may have permission to create a dataset but not delete it afterwards.</li>
+<li>Depending on your user account&rsquo;s role, you may have permission to create a dataset but not delete it afterwards - read more about this in <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 <li>All data uploaded to the RW API will be publicly visible and available to other users. </li>
 </ul>
 
@@ -1897,12 +2035,7 @@ Also important to keep in mind is the fact that this endpoint does not perform v
 
 <ul>
 <li>the user must be logged in and belong to the same application as the dataset</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <p>Use this endpoint when:</p>
@@ -1990,12 +2123,8 @@ Also important to keep in mind is the fact that this endpoint does not perform v
 <ul>
 <li>the dataset&rsquo;s <code class="prettyprint">overwrite</code> property must be set to <code class="prettyprint">true</code>.</li>
 <li>the dataset&rsquo;s <code class="prettyprint">status</code> property must be set to <code class="prettyprint">saved</code>.</li>
-<li>the user must be logged in and match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset</li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
+<li>the user must have at least one overlapping application with the ones associated with the dataset.</li>
 </ul>
 
 <p>While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.</p>
@@ -2136,12 +2265,8 @@ There are no requirements regarding similarity of the data structure between exi
 <ul>
 <li>the dataset&rsquo;s <code class="prettyprint">overwrite</code> property must be set to <code class="prettyprint">true</code>.</li>
 <li>the dataset&rsquo;s <code class="prettyprint">status</code> property must be set to <code class="prettyprint">saved</code>.</li>
-<li>the user must be logged in and match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code> and belong to the same application as the dataset</li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
+<li>the user must have at least one overlapping application with the ones associated with the dataset.</li>
 </ul>
 
 <p>Here&rsquo;s a more detailed description of the request&rsquo;s body fields:</p>
@@ -2261,12 +2386,7 @@ There are no requirements regarding similarity of the data structure between exi
 
 <ul>
 <li>the user must belong to the applications specified in the request body.</li>
-<li>the user must be logged in and match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <p>The request requires two fields to be present:</p>
@@ -2357,12 +2477,7 @@ There are no requirements regarding similarity of the data structure between exi
 <ul>
 <li>the dataset&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.</li>
 <li>the user must be logged in and belong to the same application as the dataset</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <blockquote>
@@ -2469,12 +2584,7 @@ If you have the <code class="prettyprint">ADMIN</code> role, you can use the <co
 
 <ul>
 <li>the user must be logged in.</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.<br></li>
 </ul>
 
 <h4 id="errors-for-flushing-a-dataset-39-s-cache">Errors for flushing a dataset&rsquo;s cache</h4>
@@ -2711,7 +2821,7 @@ If you have the <code class="prettyprint">ADMIN</code> role, you can use the <co
 <td>String</td>
 <td>Yes</td>
 <td>production</td>
-<td>Environment to which the dataset belongs.</td>
+<td>Environment to which the dataset belongs. Read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 </tr>
 <tr>
 <td>geoInfo</td>
@@ -4564,7 +4674,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer?app=rw"</span>
 </code></pre>
-<p>The layer list endpoints provide a wide range of filters that you can use to tailor your layer listing. The great majority of the layer fields you&rsquo;ll find on the <a href="#layer-reference">layer reference</a> section can be used as filters when listing layers, with the following exceptions:</p>
+<p>The layer list endpoint provides a wide range of filters that you can use to tailor your layer listing. Filtering layers adheres to the conventions defined in the <a href="index-rw.html#filtering">Filter guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. In addition to these conventions, you will be able to use the great majority of the layer fields you&rsquo;ll find on the <a href="#layer-reference">layer reference</a> section, with the following exceptions:</p>
 
 <ul>
 <li><code class="prettyprint">id</code></li>
@@ -4580,33 +4690,18 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 <li><code class="prettyprint">favourite</code>: if defined, only the layers set by the user as <a href="#favorites">favorites</a> will be returned. Requires being authenticated.</li>
 </ul>
 
-<p>Multiple parameters can be combined into a complex <code class="prettyprint">and</code> logic filter. Depending on the type of the field you&rsquo;re filtering by, the following behavior is available:</p>
-
-<ul>
-<li>String type fields support both regular expressions and partial matches.</li>
-<li>Array type fields support <code class="prettyprint">,</code> as <code class="prettyprint">OR</code> and <code class="prettyprint">@</code> as <code class="prettyprint">AND</code> separators for multiple values.</li>
-</ul>
-
 <h3 id="sorting">Sorting</h3>
-
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the layer, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users).</p>
-
-<p>Sorting by nested fields is not supported at the moment.</p>
 
 <blockquote>
 <p>Sorting layers</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer?sort=name"</span>
 </code></pre>
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
 <blockquote>
 <p>Sorting layers by multiple criteria</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer?sort=name,slug"</span>
 </code></pre>
-<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
-
 <blockquote>
 <p>Explicit order of sorting</p>
 </blockquote>
@@ -4617,6 +4712,8 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer?sort=user.role"</span>
 </code></pre>
+<p>The Layer service currently supports sorting using the <code class="prettyprint">sort</code> query parameter. Sorting layer adheres to the conventions defined in the <a href="index-rw.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="#layer-reference">Layer reference</a> section for a detailed description of the fields you can use when sorting. In addition to all layer model fields, you can sort the returned results by the name (using <code class="prettyprint">user.name</code>) or role (using <code class="prettyprint">user.role</code>) of the user owner of the layer. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
+
 <h3 id="include-entities-associated-with-the-layers">Include entities associated with the layers</h3>
 
 <p>When fetching layers, you can request additional entities to be loaded. The following entities are available:</p>
@@ -4900,7 +4997,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 
 <ul>
 <li>In order to be able to create a layer, you need to be <a href="#authentication">authenticated</a>.</li>
-<li>Depending on your user account&rsquo;s role, you may have permission to create a layer but not delete it afterwards.</li>
+<li>Depending on your user account&rsquo;s role, you may have permission to create a layer but not delete it afterwards - read more about this in <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 <li>The layers you create on the RW API will be publicly visible and available to other users.</li>
 </ul>
 
@@ -4979,12 +5076,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 
 <ul>
 <li>the user must be logged in and belong to the same application as the layer</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the layer&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the layer)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <h4 id="errors-for-updating-a-layer">Errors for updating a layer</h4>
@@ -5078,12 +5170,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 <ul>
 <li>the layer&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.</li>
 <li>the user must be logged in and belong to the same application as the layer.</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the layer&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the layer)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <h4 id="errors-for-deleting-a-layer">Errors for deleting a layer</h4>
@@ -5233,7 +5320,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 <td>String</td>
 <td>Yes</td>
 <td>production</td>
-<td>Environment to which the layer belongs.</td>
+<td>Environment to which the layer belongs. Read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 </tr>
 <tr>
 <td>applicationConfig</td>
@@ -5566,7 +5653,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/widget?app=rw@prep"</span>
 </code></pre>
-<p>The widget list endpoints provide a wide range of filters that you can use to tailor your widget listing. The great majority of the widget fields you&rsquo;ll find on the <a href="#widget-reference">widget reference</a> section can be used as filters when listing widgets, with the following exceptions:</p>
+<p>The widget list endpoint provides a wide range of filters that you can use to tailor your widget listing. Filtering widgets adheres to the conventions defined in the <a href="index-rw.html#filtering">Filter guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. In addition to these conventions, you&rsquo;ll be able to use the great majority of the widget fields you&rsquo;ll find on the <a href="#widget-reference">widget reference</a>, with the following exceptions:</p>
 
 <ul>
 <li><code class="prettyprint">id</code></li>
@@ -5581,34 +5668,18 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 <li><code class="prettyprint">favourite</code>: if any value is defined for this query param, only the widgets set by the user as <a href="#favorites">favorites</a> will be returned. Requires being authenticated.</li>
 </ul>
 
-<p>Multiple parameters can be combined into a complex <code class="prettyprint">and</code> logic filter. Depending on the type of the field you&rsquo;re filtering by, the following behavior is available:</p>
-
-<ul>
-<li>String type fields support both regular expressions and partial matches.</li>
-<li>Array type fields support <code class="prettyprint">,</code> as <code class="prettyprint">OR</code> and <code class="prettyprint">@</code> as <code class="prettyprint">AND</code> separators for multiple values.</li>
-<li>Object type fields will match the whole object, not just its parts.</li>
-</ul>
-
 <h3 id="sorting">Sorting</h3>
-
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the widget, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to <code class="prettyprint">ADMIN</code> users).</p>
-
-<p>Sorting by nested fields is not supported at the moment.</p>
 
 <blockquote>
 <p>Sorting widgets</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/widget?sort=name"</span>
 </code></pre>
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
 <blockquote>
 <p>Sorting widgets by multiple criteria</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/widget?sort=name,slug"</span>
 </code></pre>
-<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
-
 <blockquote>
 <p>Explicit order of sorting</p>
 </blockquote>
@@ -5619,6 +5690,8 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/widget?sort=user.role"</span>
 </code></pre>
+<p>The Widget service currently supports sorting using the <code class="prettyprint">sort</code> query parameter. Sorting widgets adheres to the conventions defined in the <a href="index-rw.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="#widget-reference">Widget reference</a> section for a detailed description of the fields you can use when sorting. In addition to all widget model fields, you can sort the returned results by the name (using <code class="prettyprint">user.name</code>) or role (using <code class="prettyprint">user.role</code>) of the user owner of the widget. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
+
 <h3 id="include-entities-associated-with-the-widgets">Include entities associated with the widgets</h3>
 
 <p>When loading widget data, you can optionally pass an <code class="prettyprint">includes</code> query argument to load additional data.</p>
@@ -6075,7 +6148,7 @@ curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/widget"</span> <
 
 <ul>
 <li>In order to be able to create a widget, you need to be <a href="#authentication">authenticated</a>.</li>
-<li>Depending on your user account&rsquo;s role, you may have permission to create a widget but not delete it afterwards.</li>
+<li>Depending on your user account&rsquo;s role, you may have permission to create a widget but not delete it afterwards - read more about this in <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 <li>The widgets you create on the RW API will be publicly visible and available to other users.</li>
 </ul>
 
@@ -6439,12 +6512,7 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 <ul>
 <li>the widget&rsquo;s <code class="prettyprint">protected</code> property must be set to <code class="prettyprint">false</code>.</li>
 <li>the user must be logged in and belong to the same application as the widget.</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the widget&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the widget)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <h2 id="widget-reference">Widget reference</h2>
@@ -6544,7 +6612,7 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 <td>String</td>
 <td>Yes</td>
 <td>production</td>
-<td>Environment to which the widget belongs.</td>
+<td>Environment to which the widget belongs. Read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 </tr>
 <tr>
 <td>widgetConfig</td>
@@ -6941,32 +7009,26 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 
 <h3 id="sorting">Sorting</h3>
 
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the collection.</p>
-
-<p>Sorting by nested fields is not supported at the moment.</p>
-
 <blockquote>
 <p>Sorting collections</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/collection?sort=name"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
 <blockquote>
 <p>Sorting collections by multiple criteria</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/collection?sort=name,application"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
-
 <blockquote>
 <p>Explicit order of sorting</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/collection?sort=-name,+application"</span> <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
+<p>The Collections service currently supports sorting using the <code class="prettyprint">sort</code> query parameter. Sorting collections adheres to the conventions defined in the <a href="index-rw.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="index-rw.html#collection-reference">Collection reference</a> section for a detailed description of the fields you can use when sorting.</p>
+
 <h2 id="get-a-collection-by-id">Get a collection by id</h2>
 
 <blockquote>
@@ -7637,11 +7699,7 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/metadata?sort<span class="o">=</span>-name,+description
 </code></pre>
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> query parameter. Sorting can be done using any field from the <a href="#metadata-reference">metadata model</a>. Sorting by nested fields is not supported at the moment.</p>
-
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
-<p>You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+<p>The Metadata service currently supports sorting using the <code class="prettyprint">sort</code> query parameter. Sorting metadata adheres to the conventions defined in the <a href="index-rw.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="#metadata-reference">Metadata reference</a> section for a detailed description of the fields you can use when sorting.</p>
 
 <h3 id="getting-metadata-for-a-dataset-layer-or-widget">Getting metadata for a dataset, layer or widget</h3>
 
@@ -8056,12 +8114,7 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 
 <ul>
 <li>the user must be logged in and belong to the same application as the metadata that&rsquo;s being updated </li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <h3 id="errors-for-updating-metadata">Errors for updating metadata</h3>
@@ -8155,12 +8208,7 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 
 <ul>
 <li>the user must be logged in and belong to the same application as the metadata that&rsquo;s being updated </li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <h3 id="errors-for-cloning-metadata">Errors for cloning metadata</h3>
@@ -8262,12 +8310,7 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 
 <ul>
 <li>the user must be logged in and belong to the same application as the metadata that&rsquo;s being deleted</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the metadata owner (through the <code class="prettyprint">userId</code> field of the metadata)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <h3 id="errors-for-deleting-metadata">Errors for deleting metadata</h3>
@@ -10512,7 +10555,7 @@ operations are only available to SUPERADMINS.</p>
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">The environment to which the subscription is associated.</td>
+<td style="text-align: center">The environment to which the subscription is associated. Read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 <td style="text-align: right">String</td>
 <td style="text-align: right">&#39;production&rsquo;</td>
 </tr>
@@ -11519,7 +11562,7 @@ operations are only available to SUPERADMINS.</p>
 <td>String</td>
 <td>Yes</td>
 <td><code class="prettyprint">&#39;production&#39;</code></td>
-<td>Environment to which the subscription belongs.</td>
+<td>Environment to which the subscription belongs. Read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 </tr>
 <tr>
 <td>createdAt</td>
@@ -11942,7 +11985,7 @@ Remember — All favorite endpoints need to be authenticated.
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">Include only datasets with at least one of the specified environments</td>
+<td style="text-align: center">Include only datasets with at least one of the specified environments - read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">One or more values from [&#39;production&rsquo;, &#39;preproduction&rsquo;]</td>
 <td style="text-align: right">No</td>
@@ -12041,7 +12084,7 @@ Remember — All favorite endpoints need to be authenticated.
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">Include only datasets with at least one of the specified environments</td>
+<td style="text-align: center">Include only datasets with at least one of the specified environments - read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">One or more values from [&#39;production&rsquo;, &#39;preproduction&rsquo;]</td>
 <td style="text-align: right">No</td>
@@ -12164,7 +12207,7 @@ Given the following sets of concepts:</p>
 </tr>
 <tr>
 <td>env</td>
-<td style="text-align: center">Include only datasets with at least one of the specified environments</td>
+<td style="text-align: center">Include only datasets with at least one of the specified environments - read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
 <td style="text-align: right">Text</td>
 <td style="text-align: right">One or more values from [&#39;production&rsquo;, &#39;preproduction&rsquo;]</td>
 <td style="text-align: right">No</td>
@@ -12433,8 +12476,6 @@ Given the following sets of concepts:</p>
 
 <h3 id="sorting">Sorting</h3>
 
-<h4 id="basics-of-sorting">Basics of sorting</h4>
-
 <blockquote>
 <p>Sorting areas</p>
 </blockquote>
@@ -12450,11 +12491,7 @@ Given the following sets of concepts:</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area?sort<span class="o">=</span>-name,+createdAt
 </code></pre>
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> query parameter. Sorting can be done using most fields from the area model. Sorting by nested fields is not supported at the moment.</p>
-
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
-<p>You can also specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
+<p>The Areas service currently supports sorting using the <code class="prettyprint">sort</code> query parameter. Sorting areas adheres to the conventions defined in the <a href="index-rw.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding.</p>
 
 <h2 id="create-area">Create area</h2>
 
@@ -12715,29 +12752,23 @@ Given the following sets of concepts:</p>
 
 <h3 id="sorting">Sorting</h3>
 
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the area.</p>
-
-<p>Sorting by nested fields is not supported at the moment.</p>
-
 <blockquote>
 <p>Sorting areas</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v2/area?sort=name"</span>
 </code></pre>
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
 <blockquote>
 <p>Sorting layers by multiple criteria</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v2/area?sort=name,status"</span>
 </code></pre>
-<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
-
 <blockquote>
 <p>Explicit order of sorting</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v2/area?sort=-name,+status"</span>
 </code></pre>
+<p>The Areas v2 service currently supports sorting using the <code class="prettyprint">sort</code> query parameter. Sorting v2 areas adheres to the conventions defined in the <a href="index-rw.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="#area-reference">Area reference</a> section for a detailed description of the fields you can use when sorting.</p>
+
 <h3 id="errors-for-getting-user-areas">Errors for getting user areas</h3>
 
 <table><thead>
@@ -13957,12 +13988,7 @@ curl -X GET https://api.resourcewatch.org/v1/topic?filter[user]<span class="o">=
 
 <ul>
 <li>the user must be logged in and belong to the same application as the topic</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the topic&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the topic)</li>
-</ul></li>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 </ul>
 
 <p>When updating the <code class="prettyprint">application</code> field of a topic, a user cannot add values not associated with their user account.</p>
@@ -14213,13 +14239,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>user.role
 </code></pre>
-<p>Multiple sorting criteria can be used, separating them by commas.</p>
-
-<p>You can specify the sorting order by prepending the criteria with either <code class="prettyprint">-</code> for descending order or <code class="prettyprint">+</code> for ascending order. By default, ascending order is assumed.</p>
-
-<p>The API currently supports sorting by means of the <code class="prettyprint">sort</code> parameter. Sorting can be done using any field from the dashboard, as well as <code class="prettyprint">user.name</code> and <code class="prettyprint">user.role</code> (sorting by user data is restricted to ADMIN users).</p>
-
-<p>Sorting by nested fields is not supported at the moment.</p>
+<p>The Dashboards service currently supports sorting using the <code class="prettyprint">sort</code> query parameter. Sorting dashboards adheres to the conventions defined in the <a href="index-rw.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. In addition to all dashboard model fields, you can sort the returned results by the name (using <code class="prettyprint">user.name</code>) or role (using <code class="prettyprint">user.role</code>) of the user owner of the dashboard. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
 
 <h3 id="include-related-entities">Include related entities</h3>
 
@@ -14397,7 +14417,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>When creating a dashboard, the <code class="prettyprint">application</code> field should be present and cannot contain any values that are not associated with the creating user&rsquo;s account. If an <code class="prettyprint">application</code> value is not provided, <code class="prettyprint">[&quot;rw&quot;]</code> is used by default, and the process will fail if the user account does not belong to it. Any role can create a dashboard.</p>
+<p>When creating a dashboard, the <code class="prettyprint">application</code> field should be present and cannot contain any values that are not associated with the creating user&rsquo;s account. If an <code class="prettyprint">application</code> value is not provided, <code class="prettyprint">[&quot;rw&quot;]</code> is used by default, and the process will fail if the user account does not belong to it. Additionally, keep in mind that this endpoint implements role-based access control in accordance with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</p>
 
 <p>Supported fields:</p>
 
@@ -14542,13 +14562,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <p>In order to perform this operation, the following conditions must be met:</p>
 
 <ul>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 <li>the user must be logged in and belong to the same application as the dashboard</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dashboard&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the dashboard)</li>
-</ul></li>
 </ul>
 
 <p>When updating the <code class="prettyprint">application</code> field of a dashboard, a user cannot add values not associated with their user account.</p>
@@ -14565,13 +14580,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <p>In order to perform this operation, the following conditions must be met:</p>
 
 <ul>
+<li>the user must comply with <a href="index-rw.html#role-based-access-control">the RW API role-based access control guidelines</a>.</li>
 <li>the user must be logged in and belong to the same application as the dashboard</li>
-<li>the user must match one of the following:
-
-<ul>
-<li>have role <code class="prettyprint">ADMIN</code></li>
-<li>have role <code class="prettyprint">MANAGER</code> and be the dashboard&rsquo;s owner (through the <code class="prettyprint">user-id</code> field of the dashboard)</li>
-</ul></li>
 </ul>
 
 <h2 id="clone-dashboard">Clone dashboard</h2>
@@ -15041,13 +15051,11 @@ If you are accessing these endpoints from a browser, it will typically generate 
 
 <p><code class="prettyprint">id</code> is a unique identifier of your account. Certain actions may be limited to specific users, typically in the context of a given resource being associated directly with a specific user <code class="prettyprint">id</code>.</p>
 
-<p><code class="prettyprint">role</code> can be one of 3 values: <code class="prettyprint">USER</code>, <code class="prettyprint">MANAGER</code> and <code class="prettyprint">ADMIN</code>. While not required nor enforced, typically they are used hierarchically in that order, from least to most permissive. A common pattern you&rsquo;ll find on some services is: <code class="prettyprint">USER</code> accounts can only create new resources, <code class="prettyprint">MANAGER</code> accounts can create new resources, and edit or delete resources created by them, while <code class="prettyprint">ADMIN</code> accounts can do all of the above even for resources created by other users.</p>
+<p><code class="prettyprint">role</code> can be one of 3 values: <code class="prettyprint">USER</code>, <code class="prettyprint">MANAGER</code> and <code class="prettyprint">ADMIN</code> and it is usually used for role-based access control - read more about this field in the <a href="index-rw.html#user-roles">User roles concept documentation</a>.</p>
 
-<p><code class="prettyprint">application</code> is a list of keys meant to identify the different client applications that are built using the RW API. It&rsquo;s present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping <code class="prettyprint">application</code> value.</p>
+<p><code class="prettyprint">application</code> is a list of keys meant to identify the different client applications that are built using the RW API. It&rsquo;s present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping <code class="prettyprint">application</code> value. You can find out more about how the <code class="prettyprint">application</code> field works <a href="index-rw.html#applications">here</a>.</p>
 
 <p>Keep in mind that it&rsquo;s up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.</p>
-
-<p>You can find out more about how the <code class="prettyprint">application</code> field works <a href="index-rw.html#applications">here</a>.</p>
 
 <h2 id="user-management-and-applications">User management and applications</h2>
 
@@ -15643,9 +15651,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
      </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>The users list provides a set of parameters that you can use to tailor your users listing. These parameters can be combined into a complex <code class="prettyprint">and</code> logic query.</p>
-
-<p>Here&rsquo;s the comprehensive list of filters supported by the users list endpoint:</p>
+<p>The users list provides a set of parameters that you can use to tailor your users listing. Please note that filtering users adheres to the conventions defined in the <a href="index-rw.html#filtering">Filter guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. in addition to these conventions, you can use the following fields as filters supported by the users list endpoint:</p>
 
 <table><thead>
 <tr>
@@ -15686,8 +15692,6 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <td>any valid text</td>
 </tr>
 </tbody></table>
-
-<p>Please keep in mind that all filter values except <code class="prettyprint">app</code> support and expect a regex value. Although typically they will match exact strings, you may have to escape certain characters (PCRE v8.42 spec).</p>
 
 <h3 id="get-the-current-user">Get the current user</h3>
 
