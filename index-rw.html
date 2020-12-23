@@ -2951,6 +2951,473 @@ If you have the <code class="prettyprint">ADMIN</code> role, you can use the <co
 </tr>
 </tbody></table>
 
+          <h1 id="fields">Fields</h1>
+
+<h2 id="what-are-fields">What are fields?</h2>
+
+<p>Fields are the properties of a dataset your will find when querying its data, use when filtering data through <a href="#query">queries</a>, or visualise when rendering a <a href="#layer">layer</a> or a <a href="#widget">widget</a>. </p>
+
+<p>Fields are part of a dataset, and are determined by the structure of data provided by the dataset creator. Each field also includes information about its data type, derived automatically by the dataset provider (check out the specifics of each provider in the sections below). If you are uploading your own datasets to the RW API, you don&rsquo;t have to do anything else for your dataset to be available through the fields endpoints - there&rsquo;s no additional data you have to provide. Keep in mind the endpoints described in the sections below are <strong>read-only</strong> - if you want to change your dataset&rsquo;s fields, you need to upload the dataset&rsquo;s data again.</p>
+
+<p>Fields are targeted at users consuming datasets available on the RW API, particularly if you want to build a flexible and scalable application. The fields endpoints aim at giving you a consistent and uniform view of the structure of data hosted in different <a href="#dataset-providers">dataset providers</a>, that would otherwise be served in a heterogeneous structure.</p>
+
+<h2 id="how-to-get-the-dataset-fields">How to get the dataset fields</h2>
+
+<blockquote>
+<p>Querying the fields of a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/fields/&lt;dataset-id&gt;
+</code></pre>
+<blockquote>
+<p>Response example</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.cait_2_0_country_ghg_emissions_toplow2011"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cartodb_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"the_geom"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"the_geom_webmercator"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"z"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Once the dataset has been created and its status is set to <code class="prettyprint">saved</code>, you will be able to use this endpoint to get details about a its fields. The resulting response contains two root fields</p>
+
+<ul>
+<li><code class="prettyprint">tableName</code>: a string containing the table name, as stored in the dataset object. The value and function of this field will depend on the dataset&rsquo;s provider, and you can refer to the <a href="#dataset">dataset</a> documentation for more details about this.</li>
+<li><code class="prettyprint">fields</code>: a key-value pair of field names and their respective details. </li>
+</ul>
+
+<p>While the aim of this endpoint is to provide an homogeneous view of data stored in different systems, you will still encounter slight variations in data, depending on the underlying type of the dataset you&rsquo;re querying. The example response on the right illustrates the typical basic response structure: <code class="prettyprint">tableName</code> with a string value, and a <code class="prettyprint">fields</code> map that matches each field&rsquo;s name to a <code class="prettyprint">type</code>. You&rsquo;ll find this structure throughout all responses, but you may also find additional details for each field, and the data types may vary in name. In the next sections we&rsquo;ll cover some of the specifics for each dataset type.</p>
+
+<h3 id="carto">Carto</h3>
+
+<blockquote>
+<p>Example response for a Carto dataset</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gadm28_adm1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cartodb_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pgtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int4"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"the_geom"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"wkbtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unknown"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dims"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"srid"</span><span class="p">:</span><span class="w"> </span><span class="mi">4326</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"the_geom_webmercator"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"wkbtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unknown"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dims"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"srid"</span><span class="p">:</span><span class="w"> </span><span class="mi">3857</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"objectid"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pgtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int8"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pgtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"centroid"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pgtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"area_ha"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pgtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"float8"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"topojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pgtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"the_geom_simple"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"wkbtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unknown"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"dims"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"srid"</span><span class="p">:</span><span class="w"> </span><span class="mi">4326</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"geojson"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"pgtype"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Carto datasets provide a <code class="prettyprint">type</code> for each field, as well as additional details, depending on the field type. Most fields will have a <code class="prettyprint">pgtype</code> field, which will identify a sub-type of sorts - for example, <code class="prettyprint">type</code> number is matched with different <code class="prettyprint">pgtype</code> values in this example. This is related with the underling Carto implementation, that uses PostgreSQL, PostGIS and its own software stack. We recommend relying on the <code class="prettyprint">type</code> as much as possible.</p>
+
+<p>Other, more complex, field types, like <code class="prettyprint">geometry</code> types, include additional details for their respective types. As before, this is related with the underlying Carto implementation tools, and not actively maintained or supported by the RW API.</p>
+
+<p>For more information about the different types that can be found in Carto datasets please refer to <a href="https://www.postgresql.org/docs/11/datatype.html">PostgreSQL&rsquo;s documentation on Data Types</a> or <a href="https://postgis.net/docs/index.html">PostGIS&rsquo;s documentation</a>. </p>
+
+<h3 id="arcgis-feature-layer">ArcGIS feature layer</h3>
+
+<blockquote>
+<p>Example response for a ArcGIS dataset</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"conservationMapServer3"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"objectid"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeOID"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"tcl_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeString"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"tcl_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeSmallInteger"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"area_ha"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeInteger"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"tx2_tcl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeSmallInteger"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"gfwid"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeString"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"globalid"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeGlobalID"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"shape"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeGeometry"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"shape_Length"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeDouble"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"shape_Area"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"esriFieldTypeDouble"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>ArcGIS uses its own type naming convention, as you see reflected in the included example. The RW API passes that information as-is to you. As different ArcGIS datasets rely on different ArcGIS server instances and versions, you may encounter variations in the types you&rsquo;ll find, depending on how ArcGIS evolves these types over type.</p>
+
+<p>For more information about the different types that can be found in ArcGIS datasets please refer to <a href="https://desktop.arcgis.com/en/arcmap/latest/manage-data/geodatabases/arcgis-field-data-types.htm">ArcGIS&rsquo;s field data types documentation</a>.</p>
+
+<h3 id="google-earth-engine">Google Earth Engine</h3>
+
+<blockquote>
+<p>Example response for a Google Earth Engine dataset</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"bands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"dataType"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"precision"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INT"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"range"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"max"</span><span class="p">:</span><span class="w"> </span><span class="mi">2147483647</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"min"</span><span class="p">:</span><span class="w"> </span><span class="mi">-2147483648</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"grid"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"affineTransform"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"scaleX"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00833333376795053</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"scaleY"</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.00833333376795053</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"translateX"</span><span class="p">:</span><span class="w"> </span><span class="mf">-180.0000000000001</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"translateY"</span><span class="p">:</span><span class="w"> </span><span class="mf">90.00000782310963</span><span class="w">
+                        </span><span class="p">},</span><span class="w">
+                        </span><span class="s2">"crsCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EPSG:4326"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dimensions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                            </span><span class="s2">"height"</span><span class="p">:</span><span class="w"> </span><span class="mi">18000</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"width"</span><span class="p">:</span><span class="w"> </span><span class="mi">43200</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"pyramidingPolicy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEAN"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="s2">"geometry"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">[</span><span class="w">
+                        </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"-Infinity"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"-Infinity"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"Infinity"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"-Infinity"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"Infinity"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"Infinity"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"-Infinity"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"Infinity"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"-Infinity"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"-Infinity"</span><span class="w">
+                        </span><span class="p">]</span><span class="w">
+                    </span><span class="p">]</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Polygon"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"users/resourcewatch/cli_030_global_aridity"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"projects/earthengine-legacy/assets/users/resourcewatch/cli_030_global_aridity"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Image:cli_030 _global_aridity"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"sizeBytes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"413389345"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Image:cli_030 _global_aridity"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IMAGE"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-10-06T18:58:39.646890Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"users/resourcewatch/cli_030_global_aridity"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Google Earth Engine (GEE) is perhaps the biggest outlier when it comes to fields data. Because it relies on raster data, rather than tabular data, the data structure you&rsquo;ll find in a GEE dataset is very different, as you can see in the example on the side.</p>
+
+<p>The response consists of loading the details for a single image, with the most meaningful information being the <code class="prettyprint">properties</code> (of an image) and <code class="prettyprint">bands</code> (of said image). Those will be the fields you&rsquo;ll be able to retrieve when using the query endpoints.</p>
+
+<h3 id="nex-gddp">NEX-GDDP</h3>
+
+<blockquote>
+<p>Example response for a NEX-GDDP dataset</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"tasavg"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"uom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10^0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"tasavg_q25"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"uom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10^0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"tasavg_q75"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"uom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10^0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tasavg/rcp45_30_y"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>NEX-GDDP datasets have an additional <code class="prettyprint">uom</code> (unit of measure) field on some field types, but otherwise has no other info besides the basic details.</p>
+
+<h3 id="bigquery">BigQuery</h3>
+
+<blockquote>
+<p>Example response for a BigQuery dataset</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[bigquery-public-data:ghcn_m.ghcnm_tmin]"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INTEGER"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"REQUIRED"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"11 digit identifier, digits 1-3=Country Code, digits 4-8 represent the WMO id if the station is a WMO station. It is a WMO station if digits 9-11=</span><span class="se">\"</span><span class="s2">000</span><span class="se">\"</span><span class="s2">."</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"year"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INTEGER"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NULLABLE"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4 digit year of the station record."</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"element"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NULLABLE"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"element type, monthly mean temperature=</span><span class="se">\"</span><span class="s2">TAVG</span><span class="se">\"</span><span class="s2"> monthly maximum temperature=</span><span class="se">\"</span><span class="s2">TMAX</span><span class="se">\"</span><span class="s2"> monthly minimum temperature=</span><span class="se">\"</span><span class="s2">TMIN</span><span class="se">\"</span><span class="s2">"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INTEGER"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NULLABLE"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monthly value (MISSING=-9999).  Temperature values are in hundredths of a degree Celsius, but are expressed as whole integers (e.g. divide by 100.0 to get whole degrees Celsius)."</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qcflag3"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NULLABLE"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"quality control flag, seven possibilities within quality controlled unadjusted (qcu) dataset, and 2 possibilities within the quality controlled adjusted (qca) dataset."</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qcflag12"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NULLABLE"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"quality control flag, seven possibilities within quality controlled unadjusted (qcu) dataset, and 2 possibilities within the quality controlled adjusted (qca) dataset."</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dsflag12"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STRING"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NULLABLE"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data source flag for monthly value, 21 possibilities"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>BigQuery has a slight variation on the core structure returned by the fields endpoint for other dataset types. Instead of <code class="prettyprint">fields</code> having a key-value map, it has an array of objects, each describing a field. Each of these objects has a <code class="prettyprint">name</code> and <code class="prettyprint">type</code> property, identifying a field and its type, as well as a <code class="prettyprint">mode</code> and <code class="prettyprint">description</code>, respectively indicating if the field is nullable or required, and providing a human-friendly description of the field&rsquo;s content or purpose.</p>
+
+<h3 id="loca">Loca</h3>
+
+<blockquote>
+<p>Example response for a Loca dataset</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"xs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"uom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10^0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"xs_q25"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"uom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10^0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"xs_q75"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"uom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10^0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"loca_xs/rcp85_30_y"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Loca datasets have an additional <code class="prettyprint">uom</code> (unit of measure) field on some field types, but otherwise has no other info besides the basic details.</p>
+
+<h3 id="document-based-dataset-types-csv-tsv-json-and-xml">Document-based dataset types (csv, tsv, json and xml)</h3>
+
+<blockquote>
+<p>Example response for a document-based dataset</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"index_1c9a1e4f455b4c03ac88dd2242a2e4b1_1602065490373"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cartodb_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"long"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"commodity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"ignore_above"</span><span class="p">:</span><span class="w"> </span><span class="mi">256</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"data_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"ignore_above"</span><span class="p">:</span><span class="w"> </span><span class="mi">256</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"gcm_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"ignore_above"</span><span class="p">:</span><span class="w"> </span><span class="mi">256</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"impactparameter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"ignore_above"</span><span class="p">:</span><span class="w"> </span><span class="mi">256</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"ignore_above"</span><span class="p">:</span><span class="w"> </span><span class="mi">256</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"ignore_above"</span><span class="p">:</span><span class="w"> </span><span class="mi">256</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"scenario"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"keyword"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"ignore_above"</span><span class="p">:</span><span class="w"> </span><span class="mi">256</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"float"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"year"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"long"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Document based datasets from the 4 different types of sources (json, xml, csv and tsv) all share a common internal storage engine, based on Elasticsearch. So, when querying for fields of a document-based dataset, you&rsquo;ll find information matching the field mechanism used by Elasticsearch. This is particularly evident on text fields, where the <code class="prettyprint">keyword</code> information is present. During most uses cases, we don&rsquo;t anticipate this information being needed, as relying on the <code class="prettyprint">type</code> value should cover the majority of your needs.</p>
+
+<h3 id="dataset-types-not-supported-by-the-fields-endpoint">Dataset types not supported by the fields endpoint</h3>
+
+<p>The following dataset types have not been integrated with the fields endpoint, so you will get a 404 response when querying for their fields:</p>
+
+<ul>
+<li><code class="prettyprint">wms</code></li>
+<li><code class="prettyprint">rasdaman</code></li>
+<li><code class="prettyprint">vector</code></li>
+</ul>
+
+<h3 id="errors-for-getting-a-dataset-fields">Errors for getting a dataset fields</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Endpoint not found</td>
+<td>You are querying for fields of a dataset which type is not integrated with the fields endpoint</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset not found</td>
+<td>A dataset with the provided id does not exist.</td>
+</tr>
+</tbody></table>
+
           <h1 id="query">Query</h1>
 
 <p>In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query. If you are new to the RW API, or want to learn more about the concept of a querying datasets, we strongly encourage you to read the <a href="#query">query concept</a> documentation first. It gives you a brief and clear description of what a query is, and what it is useful for.</p>
@@ -7424,98 +7891,6 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 </tr>
 </tbody></table>
 
-          <h1 id="fields">Fields</h1>
-
-<h2 id="what-are-fields">What are fields?</h2>
-
-<p>Fields can be defined as the dataset properties. These fields are automatically generated when a dataset is created.</p>
-
-<h2 id="how-to-get-the-dataset-fields">How to get the dataset fields</h2>
-
-<p>Once the dataset is properly created and saved, it is possible to access to its fields as well as getting some information about them.</p>
-
-<p>To do that, it is necessary to use of the following endpoint:</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/fields/&lt;dataset-id&gt;
-</code></pre>
-<blockquote>
-<p>Real example</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/fields/1170030b-9725-4bfe-8fb4-1b0eb81020d2
-</code></pre>
-<blockquote>
-<p>Response</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.cait_2_0_country_ghg_emissions_toplow2011"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"cartodb_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"the_geom"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"the_geom_webmercator"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"geometry"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"z"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h3 id="rasdaman">Rasdaman</h3>
-
-<p>The structure of datacubes needs a more verbose field specification. The fields endpoint for rasdaman-backed datasets includes information on the spatial reference system, nodata values, axes, units, and bands. It looks like so:</p>
-
-<blockquote>
-<p>Example</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -i  -XGET <span class="s1">'http://api.resourcewatch.org/v1/fields/491ae6fe-6767-44d1-b5c3-c7b8b384bb7a'</span>
-</code></pre>
-<blockquote>
-<p>Response</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"coverageId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nightlights"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"srs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"srsDimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"srs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"crs/EPSG/0/4326"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"axisLabels"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Lat Long"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uomLabels"</span><span class="p">:</span><span class="w"> </span><span class="s2">"degree degree"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"undefined"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"swe:nilValues"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"swe:NilValues"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"swe:nilValue"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"$t"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-              </span><span class="s2">"$t"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"swe:uom"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10^0"</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"coverageBounds"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"upperCorner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"89.999999999966665 180.000000000189335"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"lowerCorner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-89.999999999961335 -179.999999999666665"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
           <h1 id="forms">Forms</h1>
 
 <p>This section details the endpoints provided by the GFW Forms API service.</p>
