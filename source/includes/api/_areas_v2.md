@@ -65,19 +65,15 @@ The `/v2/areas` endpoint returns all the areas of interest associated with the u
 
 ### Pagination
 
-The RW API lists many of its resources as pages, as opposed to showing all results at once. Currently, and by default, areas are listed in pages of 100 elements each, but this default value will be reduced to 10 in the future - we recommend building your applications with the future value in mind. You can customize this behavior, as well as specify which page to load, using the following query parameters:
-
-> Custom pagination: load page 2 using 25 results per page
+> Example request to load page 2 using 25 results per page
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25
 ```
 
-Field        |         Description          |   Type |   Default
------------- | :--------------------------: | -----: | ----------:
-page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 100 (will be reduced to 10 in the future)
-page[number] |       The page number        | Number | 1
+The Areas v2 service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
 
+In the specific case of the Areas v2 service, the default value for the `page[size]` query parameter is 100, instead of 10. However, this default value will be reduced to 10 in future releases, so (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.
 
 ### Filters
 
@@ -188,18 +184,13 @@ For a detailed description of each field, check out the [Area reference](#area-r
 
 ### Pagination
 
-> Custom pagination: load page 2 using 25 results per page
+> Example request to load page 2 using 25 results per page
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25&all=true
 ```
 
-Due to performance and memory management issues, when viewing all areas (using the `/v2/areas` endpoint with the `all=true` query parameter), the returned result is paginated. You can customize this behavior using the following query parameters:
-
-Field       |             Description                                                                                                                          | Type    | Example    |
------------ | :----------------------------------------------------------------------------------------------------------------------------------------------: | ------: | ---------: |
-page[number]| The number of the page to fetch. Only taken into account when using the `all=true` filter.                                                       | Number  | 1          |
-page[size]  | The size of the page to fetch. Only taken into account when using the `all=true` filter. Maximum value is 100.                                   | Number  | 10         |
+The Areas v2 service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
 
 ### Filters
 

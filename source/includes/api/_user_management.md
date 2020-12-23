@@ -470,7 +470,7 @@ Error code     | Error message  | Description
 
 #### Pagination
 
-> Custom pagination: load page 2 using 25 results per page
+> Example request to load page 2 using 25 results per page
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/auth/user?page[number]=2&page[size]=25"
@@ -478,13 +478,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user?page[number]=2&page[size]=2
 -H "Authorization: Bearer <your-token>" \
 ```
 
-By default, users are listed in pages of 10 results each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
-
-Field        |         Description          |   Type |   Default
------------- | :--------------------------: | -----: | ----------:
-page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 10
-page[number] |       The page number        | Number | 1
-
+The Users service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your users list.
 
 #### Filters
 

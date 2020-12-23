@@ -152,11 +152,13 @@ curl -X GET https://api.resourcewatch.org/v1/doc-importer/task
 
 ### Pagination
 
-Field        |         Description          |   Type|   Default value
------------- | :--------------------------: | -----:| -----:
-page[size]   | The number elements per page. The maximum allowed value is 100 | Number|   10
-page[number] |       The page number        | Number|   1
+> Example request to load page 2 using 25 results per page
 
+```shell
+curl -X GET https://api.resourcewatch.org/v1/doc-importer/task?page[number]=2&page[size]=25
+```
+
+The Tasks service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your tasks list.
 
 ### Filter params
 

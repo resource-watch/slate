@@ -236,22 +236,18 @@ curl -X GET https://api.resourcewatch.org/v1/collection \
 
 You can optionally add the `include=true` query parameter to load the associated resources.
 
-
 ### Pagination
 
-The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, virtually all collections are listed at once, but this behavior should be considered deprecated, and your application should rely on reasonably sized pages instead - the default value may be changed soon. You can customize the pagination behavior using the following query parameters:  
-
-> Custom pagination: load page 2 using 25 results per page
+> Example request to load page 2 using 25 results per page
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/collection?page[number]=2&page[size]=25 \
 -H "Authorization: Bearer <your-token>"
 ```
 
-Field        |         Description          |   Type |   Default
------------- | :--------------------------: | -----: | ----------:
-page[size]   | The number elements per page.| Number | 9999999
-page[number] |       The page number        | Number | 1
+The Collections service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your collections list.
+
+In the specific case of the Collections service, the default value for the `page[size]` query parameter is 9999999, instead of 10. However (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.
 
 ### Sorting
 

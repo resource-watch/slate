@@ -318,7 +318,6 @@ The following endpoints adhere to the pagination conventions defined above:
 * [Dashboards service](/index-rw.html#dashboard)
 * [Datasets service](/index-rw.html#dataset4)
 * [Layers service](/index-rw.html#layer6)
-* [Metadata service](/index-rw.html#metadata12)
 * [Tasks service](/index-rw.html#tasks)
 * [Users service](/index-rw.html#user-management)
 * [Widgets service](/index-rw.html#widget7)

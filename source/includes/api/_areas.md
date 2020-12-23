@@ -89,20 +89,15 @@ application  |        Application. Read more about this field [here](/index-rw.h
 
 ### Pagination
 
-
-The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, and for compatibility reasons, areas are listed in pages of 1000 elements each, but we recommend that you use the options below to set the page size to a much smaller number. You can customize this behavior using the following query parameters:
-
-> Custom pagination: load page 2 using 25 results per page
+> Example request to load page 2 using 25 results per page
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/area?page[number]=2&page[size]=25
 ```
 
-Field        |         Description          |   Type |   Default
------------- | :--------------------------: | -----: | ----------:
-page[size]   | The number elements per page. | Number | 1000
-page[number] |       The page number        | Number | 1
+The Areas service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
 
+In the specific case of the Areas service, the default value for the `page[size]` query parameter is 1000 for backwards compatibility reasons, instead of 10. However (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.
 
 ### Sorting
 

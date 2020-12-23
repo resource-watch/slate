@@ -217,18 +217,13 @@ Please note that, unlike [getting all widgets](#getting-all-widgets) or [getting
 
 ### Pagination
 
-By default, widgets are listed in pages of 10 widgets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  
-
-> Custom pagination: load page 2 using 25 results per page
+> Example request to load page 2 using 25 results per page
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?page[number]=2&page[size]=25"
 ```
 
-Field        |         Description          |   Type |   Default
------------- | :--------------------------: | -----: | ----------:
-page[size]   | The number elements per page. Values above 100 are not officially supported. | Number | 10
-page[number] |       The page number        | Number | 1
+The Widgets service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your widgets list.
 
 ### Filters
 
