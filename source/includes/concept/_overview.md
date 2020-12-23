@@ -222,4 +222,46 @@ The following endpoints adhere to the Filtering conventions defined above:
 * [Get all widgets endpoint](/index-rw.html#getting-all-widgets)
 * [Get all users endpoint](/index-rw.html#getting-all-users)
 
+### Pagination
+
+> Example request where default pagination is applied, returning one page of 10 elements (1st - 10th elements):
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset
+```
+
+> Example request fetching the 3rd page of 10 elements (21st - 30th elements):
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=3
+```
+
+> Example request fetching the 5th page of 20 elements (81st - 100th elements):
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=5&page[size]=20
+```
+
+Many times, when you're calling RW API's list endpoints, there will be a lot of results to return. Without pagination, a simple search could return thousands or even millions of elements, causing extraneous network traffic. For that reason, many services list their resources as pages, to make sure that not only responses are easier to handle, but also that services are scalable.
+
+Paged results have a built-in default limit of 10 elements, but we recommend you always explicitly set the limit parameter to ensure you know how many results per page you'll get. The pagination strategy used across the RW API relies on two query parameters:
+
+Field          | Description                   |   Type |   Default
+-------------- | ----------------------------- | -----: | ----------:
+`page[size]`   | The number elements per page. | Number | 10
+`page[number]` | The page number.              | Number | 1
+
+Note that values above 100 for the `page[size]` query parameter are not officially supported. Also, pagination requires an implied ordering - by default, the item’s unique identifier is used, but you can use any other model field to sort the returned results.
+
+Once again, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the pagination strategy. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on how to correctly paginate your list requests.
+
+#### Which services comply with these guidelines
+
+The following endpoints adhere to the Filtering conventions defined above:
+
+* [Get all datasets endpoint](/index-rw.html#getting-all-datasets)
+* [Get all layers endpoint](/index-rw.html#getting-all-layers)
+* [Get all widgets endpoint](/index-rw.html#getting-all-widgets)
+* [Get all users endpoint](/index-rw.html#getting-all-users)
+
 # Concepts
