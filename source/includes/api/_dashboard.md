@@ -96,16 +96,13 @@ author-title   | Filter dashboards by the title of the author of the dashboard. 
 
 ### Pagination
 
-> Example request using query string parameters for paging the result:
+> Example request to load page 2 using 25 results per page
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]=15&page[number]=2
+curl -X GET https://api.resourcewatch.org/v1/dashboard?page[number]=2&page[size]=25
 ```
 
-Field        |         Description          |   Type|   Default value
------------- | :--------------------------: | -----:| -----:
-page[size]   | The number elements per page. The maximum allowed value is 100 | Number|   10
-page[number] |       The page number        | Number|   1
+The Dashboards service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your dashboards list.
 
 ### Sorting
 
