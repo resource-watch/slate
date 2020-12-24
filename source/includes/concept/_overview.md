@@ -19,6 +19,31 @@ Last but not least, the RW API and its docs are made by humans, who will occasio
 
 This section covers a list of topics you should be familiar with before using the API. The concepts described in this section span across multiple API endpoints and are fundamental for a better understanding of how to interact with the RW API.
 
+### Caching
+
+Some services in the RW API rely on caching as a way to improve the performance and efficiency of their endpoints. By relying on caching mechanisms, services can serve pre-computed responses for commonly requested endpoints, reducing the need to perform the computations needed to serve the same request several times. Caching also has the added benefits of improving performance and reducing service load, which leads to better scalability overall.
+
+The RW API has a system-wide HTTP cache that you may use to cache your requests. This cache is based on [Fastly](https://www.fastly.com/), so please refer to its documentation if you are looking for a specific detail on its behavior. HTTP caching is opt-in, meaning that by default no caching mechanism is applied to any request -  if you'd like your endpoints to benefit from caching, you need to explicitly implement it.
+
+#### RW API caching considerations
+
+For most common use cases, you just need to keep in mind the following:
+
+* The default cache TTL is 3 days.
+* Only responses with successful response codes such as 200, 203, 204 or 30X are taken into consideration when caching.
+* Authorization endpoint responses are **never** cached.
+* Each service can use the `cache` response header to tag a cache entry: [example here](https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L396).
+* Each service can use the `uncache` header to purge cache entries matching a given tag, set using the method exemplified above: [example here](https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L462).
+
+#### Which services rely on caching
+
+* [Dataset](/index-rw.html#dataset7)
+* [Layer](/index-rw.html#layer9)
+* [Metadata](/index-rw.html#metadata14)
+* [Vocabulary](/index-rw.html#vocabulary-and-tags)
+* [Widgets](/index-rw.html#widget10)
+* [Query](/index-rw.html#query7) and [Fields](/index-rw.html#fields) also use cache, but with a TTL of 2 days
+
 ### Applications
 
 As you might come across while reading these docs, different applications and websites rely on the RW API as the principal source for their data. While navigating through the catalog of available datasets, you will find some datasets used by the [Resource Watch website](https://resourcewatch.org/), others used by [Global Forest Watch](https://www.globalforestwatch.org/). In many cases, applications even share the same datasets!
