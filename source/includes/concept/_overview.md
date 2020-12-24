@@ -21,19 +21,11 @@ This section covers a list of topics you should be familiar with before using th
 
 ### Caching
 
-Some services in the RW API rely on caching as a way to improve the performance and efficiency of their endpoints. By relying on caching mechanisms, services can serve pre-computed responses for commonly requested endpoints, reducing the need to perform the computations needed to serve the same request several times. Caching also has the added benefits of improving performance and reducing service load, which leads to better scalability overall.
+HTTP caching is a technique that stores a copy of a given resource and serves it back when requested. When a cache has a requested resource in its store (also called a _cache hit_), it intercepts the request and returns its copy instead of re-computing from the originating server. If the request is not yet stored in cache (also called _cache miss_), it is forwarded to the server responsible for handling it, the response is computed and stored in cache to serve future requests. This achieves several goals: it eases the load of the server that doesn’t need to serve all requests itself, and it improves performance by taking less time to transmit the resource back. You can read more about HTTP caching in the [Mozilla Developer Network docs on HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
 
-The RW API has a system-wide HTTP cache that you may use to cache your requests. This cache is based on [Fastly](https://www.fastly.com/), so please refer to its documentation if you are looking for a specific detail on its behavior. HTTP caching is opt-in, meaning that by default no caching mechanism is applied to any request -  if you'd like your endpoints to benefit from caching, you need to explicitly implement it.
+The RW API has a system-wide HTTP cache that you may use to cache your requests. Keep in mind that, in the context of the RW API, not all endpoints have caching enabled for them. You'll find a list below with the services which rely on caching in the RW API. If, as a developer, you'd like your endpoints to benefit from caching, you need to explicitly implement it. Please refer to the [developer docs on HTTP caching](/developer.html#http-caching) for more details on how to implement caching for your API resources.
 
-#### RW API caching considerations
-
-For most common use cases, you just need to keep in mind the following:
-
-* The default cache TTL is 3 days.
-* Only responses with successful response codes such as 200, 203, 204 or 30X are taken into consideration when caching.
-* Authorization endpoint responses are **never** cached.
-* Each service can use the `cache` response header to tag a cache entry: [example here](https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L396).
-* Each service can use the `uncache` header to purge cache entries matching a given tag, set using the method exemplified above: [example here](https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L462).
+The default cache time to live (TTL) applied to the responses stored in the RW API's cache is 3 days, but specific endpoints may specify a different expiration time for their responses. For the purposes of caching, only responses of GET requests with successful response codes (such as 200, 203, 204 or 302) are considered for caching. Also, for security reasons, authentication, authorization or user related information is never stored in cache. This is also the case for authenticated GET responses.
 
 #### Which services rely on caching
 
