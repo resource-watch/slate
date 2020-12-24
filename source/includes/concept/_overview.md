@@ -242,16 +242,16 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=3
 curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=5&page[size]=20
 ```
 
-Many times, when you're calling RW API's list endpoints, there will be a lot of results to return. Without pagination, a simple search could return hundreds or even thousands of elements, causing extraneous network traffic. For that reason, many services list their resources as pages, to make sure that not only responses are easier to handle, but also that services are scalable. Paged results have a built-in default limit of 10 elements, but we recommend you always explicitly set the limit parameter to ensure you know how many results per page you'll get. 
+Many times, when you're calling RW API's list endpoints, there will be a lot of results to return. Without pagination, a simple search could return hundreds or even thousands of elements, causing extraneous network traffic. For that reason, many services list their resources as pages, to make sure that not only responses are easier to handle, but also that services are scalable. Most paginated results have a built-in default limit of 10 elements, but we recommend you always explicitly set the limit parameter to ensure you know how many results per page you'll get. 
 
 The pagination strategy used across the RW API relies on two query parameters:
 
-Field          | Description                   |   Type |   Default
--------------- | ----------------------------- | -----: | ----------:
-`page[size]`   | The number elements per page. | Number | 10
-`page[number]` | The page number.              | Number | 1
+Field          | Description                                                                      | Type   | Default
+-------------- | -------------------------------------------------------------------------------- | -----: | --------:
+`page[size]`   | The number elements per page. **Values above 100 are not officially supported.** | Number | 10
+`page[number]` | The page number.                                                                 | Number | 1
 
-Note that values above 100 for the `page[size]` query parameter are not officially supported. Also, pagination requires an implied ordering - by default, the item’s unique identifier is used, but you can use any other model field to sort the returned results.
+Keep in mind that, to work predictably, **you must always specify sorting criteria when fetching paginated results**. If sorting criteria is not provided, the overall order of the elements might change between requests. Pagination will still work, but the actual content of the pages might show missing and/or duplicate elements. Refer to the [general sorting guidelines](/index-rw.html#sorting) and the sorting section for the RW API resource you're loading for details on sorting options available for that resource type.
 
 Once again, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the pagination strategy. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on how to correctly paginate your list requests.
 
