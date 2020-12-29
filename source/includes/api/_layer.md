@@ -1049,6 +1049,24 @@ Error code     | Error message           | Description
 500            | Team retrieval Failed.  | An error occurred while fetching the information about the team with id provided.
 500            | Layer update failed.    | An error occurred while saving the updated information of the contextual layer.
 
+### Getting loss layer tiles
+
+> Example request to fetch loss layer tiles:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/v1/contextual-layer/loss-layer/:startYear/:endYear/:z/:x/:y.png"
+```
+
+Use this endpoint to retrieve PNG image corresponding to the loss layer tiles for the `(x,y,z)` tuple (where `x` represents latitude, `y` longitude and `z` the zoom level) for loss layers for the interval of years from `startYear` to `endYear`.
+
+If successful, this endpoint returns a PNG file of the loss layer tile.
+
+#### Errors for deleting a layer
+
+Error code     | Error message           | Description
+-------------- | ----------------------- | ---------------------------------------------------------------------------------
+404            | Tile not found          | No tile was found for the parameters provided.
+
 ### Contextual layer reference
 
 This section gives you a complete view at the properties that are maintained as part of a contextual layer. When interacting with a contextual layer (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the `id` is nested inside an `attributes` object).
