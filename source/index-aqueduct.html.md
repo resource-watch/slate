@@ -18,6 +18,7 @@ includes:
   - concept/metadata
   - concept/geostore
   - concept/area
+  - concept/graph
   - api/authentication
   - api/contact
   - api/dataset
