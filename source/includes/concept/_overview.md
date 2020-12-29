@@ -21,11 +21,78 @@ This section covers a list of topics you should be familiar with before using th
 
 ### Caching
 
-HTTP caching is a technique that stores a copy of a given resource and serves it back when requested. When a cache has a requested resource in its store (also called a _cache hit_), it intercepts the request and returns its copy instead of re-computing from the originating server. If the request is not yet stored in cache (also called _cache miss_), it is forwarded to the server responsible for handling it, the response is computed and stored in cache to serve future requests. This achieves several goals: it eases the load of the server that doesn’t need to serve all requests itself, and it improves performance by taking less time to transmit the resource back. You can read more about HTTP caching in the [Mozilla Developer Network docs on HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
+HTTP caching is a technique that stores a copy of a given resource and serves it back when requested. When a cache has a requested resource in its store (also called a _cache hit_), it intercepts the request and returns its copy instead of re-computing it from the originating server. If the request is not yet stored in cache (also called _cache miss_), it is forwarded to the server responsible for handling it, the response is computed and stored in cache to serve future requests. This achieves several goals: it eases the load of the server that doesn’t need to serve all requests itself, and it improves performance by taking less time to transmit the resource back. You can read more about HTTP caching in the [Mozilla Developer Network docs on HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching).
 
 The RW API has a system-wide HTTP cache that you may be used to cache your requests. Keep in mind that, in the context of the RW API, not all endpoints have caching enabled for them. You'll find a list below with the services which rely on caching in the RW API. If, as a developer, you'd like your endpoints to benefit from caching, you need to explicitly implement it. Please refer to the [developer docs on HTTP caching](/developer.html#http-caching) for more details on how to implement caching for your API resources.
 
-The default cache time to live (TTL) applied to the responses stored in the RW API's cache is 3 days, but specific endpoints may specify a different expiration time for their responses. For the purposes of caching, only responses of GET requests with successful response codes (such as 200, 203, 204 or 302) are considered for caching. Also, for security reasons, authentication, authorization or user related information is never stored in cache. This is also the case for authenticated GET responses.
+The default cache time to live (TTL) applied to the responses stored in the RW API's cache is 3 days, but specific endpoints may specify a different expiration time for their responses. For the purposes of caching, only responses of GET requests with successful response codes (such as 200, 203, 204, or 302) are considered for caching. Also, for security reasons, authentication, authorization, or user related information is never stored in cache. This is also the case for authenticated GET responses.
+
+Keep in mind that, besides the RW API cache, there might be other caches between your application and the RW API servers. These caches might be public or private, but they are an additional caching layer that is not controlled by the RW API. **The information detailed below applies only to the RW API cache.**
+
+#### How to detect a cached response
+
+> Example cURL command with detailed header information:
+
+```shell
+curl -svo /dev/null https://api.resourcewatch.org/v1/dataset
+```
+
+> Example response of the command above including a MISS `x-cache` header:
+
+```shell
+< HTTP/2 200 
+< content-type: application/json; charset=utf-8
+< server: nginx
+< cache: dataset
+< x-response-time: 37 ms
+< accept-ranges: bytes
+< date: Tue, 29 Dec 2020 15:44:18 GMT
+< via: 1.1 varnish
+< age: 0
+< x-served-by: cache-mad22045-MAD
+< x-cache: MISS
+< x-cache-hits: 0
+< x-timer: S1609256659.546595,VS0,VE426
+< vary: Origin, Accept-Encoding
+< content-length: 11555
+```
+
+> Example response of the command above including a HIT `x-cache` header:
+
+```shell
+< HTTP/2 200 
+< content-type: application/json; charset=utf-8
+< server: nginx
+< cache: dataset
+< x-response-time: 37 ms
+< accept-ranges: bytes
+< date: Tue, 29 Dec 2020 15:44:26 GMT
+< via: 1.1 varnish
+< age: 7
+< x-served-by: cache-mad22039-MAD
+< x-cache: HIT
+< x-cache-hits: 1
+< x-timer: S1609256666.390657,VS0,VE0
+< vary: Origin, Accept-Encoding
+< content-length: 11555
+```
+
+One of the most important things you should know about caching is how to detect if you are receiving a cached response or not. To do this, you should inspect the headers of RW API's responses, looking for a `x-cache` header. If it does not contain this header, it was not cached by the RW API system-wide cache. If it contains the `x-cache` header, it will have one of two values:
+
+* `MISS`, which means the resource you're trying to GET was not found in cache, and so a fresh response was served;
+* `HIT`, which means the resource you're trying to GET was found in cache and the cached response was served.
+
+You can read more about this and other cache-related headers used by the RW API in [this link](https://docs.fastly.com/en/guides/understanding-cache-hit-and-miss-headers-with-shielded-services).
+
+**Keep in mind the disclaimer described in the last paragraph of the section above: other HTTP caches might be present between your application and the RW API servers which can modify these headers.**
+
+#### Forcing a fresh response from a cached resource
+
+Forcing a fresh response from a cached resource (also known as *cache invalidation*) is not officially supported by the RW API.
+
+However, as a rule of thumb, services that rely on cache store their cached responses on GET requests. Since most resources can be created, updated, or deleted, cached responses might quickly become outdated. To prevent this, services invalidate their cached versions every time an associated resource is created, updated, or deleted. This way, the cache gets repopulated with a fresh and updated copy of the response on succeeding GET requests. Knowing this, if you want to invalidate a cached response, triggering an update request for the resource you are trying to invalidate is a quick shortcut for achieving your goal. *Always remember you are interacting with live data - whatever changes you send in the update request, they will be applied to the resource.*
+
+However, this process might differ from service to service (for instance, the query service does not support create, update, or delete requests). Always refer to the service's documentation or source code for more details on how cache works for each particular service. Also, keep in mind the process described above will invalidate RW API's cached versions, but it does not have any action in caches that might be between your application and the RW API servers.
 
 #### Which services rely on caching
 
