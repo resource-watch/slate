@@ -665,6 +665,8 @@ The RW API has a system-wide HTTP cache that you may use to cache your requests,
 - Your microservice can use the `cache` response header to tag a cache entry. This, in itself, has no functional impact. Example [here](https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L396).
 - Your microservice can use the `uncache` header to purge cache entries matching a given tag, as set in the previous point. Example [here](https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L462).
 
+These headers are then intercepted by the Control Tower [Fastly integration plugin](https://github.com/resource-watch/control-tower/blob/dev/app/src/plugins/fastly-cache.js) which uses the Fastly API (through an integration nodejs library) to carry out the corresponding actions.
+
 ## Logging
 
 An important part of microservice operation is logging events as it processes requests. Many errors are only triggered during staging and production server execution, and without proper logging, there isn't a way to identify how it can be reproduced, so it can then be fixed.
