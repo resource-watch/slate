@@ -12,7 +12,7 @@ Now that you have your tags in place, your music collection is starting to feel 
 
 RW API tags are shared by all users, meaning any user can discover your resources if they search by the tags you assigned to them. Similarly, you can use tags to discover resources created and tagged by other users, so it adds discoverability value both ways.
 
-However, this simple tag mechanism has a few downsides, so you can't simply add individual tags to RW API resources. You need to use vocabularies.
+However, in order to reach their full potential, tags need to be combined with another concept: vocabularies.
 
 
 ### Vocabulary
