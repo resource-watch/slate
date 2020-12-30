@@ -2,6 +2,262 @@
 
 The following graph endpoints are available
 
+## List concepts
+
+Returns a list including all the concepts present in the graph
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
+```
+
+### Query example
+
+```json
+{
+  "data": [
+    {
+      "id": "europe",
+      "label": "Europe",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ],
+      "numberOfDatasetsTagged": 0
+    },
+    {
+      "id": "damage",
+      "label": "Damage",
+      "synonyms": [
+        "destruction"
+      ],
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ],
+      "numberOfDatasetsTagged": 2
+    },
+    {
+      "id": "guernsey",
+      "label": "Guernsey",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ],
+      "numberOfDatasetsTagged": 0
+    }
+  ]
+}
+```
+
+## Get inferred concepts
+
+This endpoint returns the set of concepts that are inferred from the set passed as a parameter
+
+### Parameters
+
+Parameter        |               Description               |    Type |                                          Values | Required
+------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
+concepts         |           List of concepts            |    Text |                                        Any Text, values separated by commas |      Yes
+
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=<concept_list>
+```
+
+### Example
+
+Concepts inferred from the set: ['spain', 'raster']
+
+```url
+https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=spain,raster
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "location",
+      "label": "Location",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    },
+    {
+      "id": "eu",
+      "label": "EU",
+      "synonyms": [
+        "European Union"
+      ],
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ]
+    },
+    {
+      "id": "raster",
+      "label": "Raster",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "DATA_TYPE"
+      ]
+    },
+    {
+      "id": "oecd",
+      "label": "OECD",
+      "synonyms": [
+        "Organisation for Economic Co-operation and Development"
+      ],
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ]
+    },
+    {
+      "id": "schengen_area",
+      "label": "Schengen Area",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ]
+    },
+    {
+      "id": "country",
+      "label": "Country",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ]
+    },
+    {
+      "id": "continent",
+      "label": "Continent",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ]
+    },
+    {
+      "id": "global",
+      "label": "Global",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ]
+    },
+    {
+      "id": "general",
+      "label": "General",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    },
+    {
+      "id": "spain",
+      "label": "Spain",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ]
+    },
+    {
+      "id": "dataset",
+      "label": "Dataset",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "DATA_TYPE"
+      ]
+    },
+    {
+      "id": "europe",
+      "label": "Europe",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "GEOGRAPHY"
+      ]
+    }
+  ]
+}
+```
+
+## Concepts' ancestors
+
+This endpoint returns the ancestors from the list of concepts provided
+
+### Parameters
+
+Parameter        |               Description               |    Type |                                          Values | Required
+------------ | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
+concepts         |           List of concepts            |    Text |                                        Any Text, values separated by commas |      Yes
+
+```shell
+https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=<concept_list>
+```
+
+### Example
+
+Ancestors of the concepts from the set: ['forest_cover', 'landslide']
+
+```url
+https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=forest_cover,landslide
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "indicator",
+      "label": "Indicator",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    },
+    {
+      "id": "forest",
+      "label": "Forest",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    },
+    {
+      "id": "natural_disaster",
+      "label": "Natural disaster",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    },
+    {
+      "id": "natural_phenomena",
+      "label": "Natural phenomena",
+      "synonyms": "",
+      "labels": [
+        "CONCEPT",
+        "TOPIC"
+      ]
+    }
+  ]
+}
+```
+
 ## Similar datasets
 
 Returns a set of datasets that are similar to the dataset provider sorted by their degree of similarity.
@@ -325,322 +581,3 @@ curl -X POST https://api.resourcewatch.org/v1/graph/dataset/<dataset-id>/visited
 -H "Authorization: Bearer <your-token>"
 ```
 
-
-
-
-
-
-
-
-
-## List graph concepts
-
-> Request to list graph concepts:
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
-```
-
-> Example response:
-
-```json
-{
-    "data": [
-        {
-            "id": "society",
-            "label": "Society",
-            "synonyms": ["People"],
-            "labels": ["CONCEPT", "TOPIC"],
-            "numberOfDatasetsTagged": 1,
-            "datasets": ["4458eb12-8572-45d1-bf07-d5a3ee097021"]
-        },
-    ]
-}
-```
-
-This endpoint returns the list of concepts available in the graph. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
-
-Please keep in mind this endpoint **does not return a paginated list** - instead, it returns all the concepts available in the graph, no matter how many they are. You should avoid using this specific endpoint since it might harm the performance of your application, should the graph increase significantly in size.
-
-## List graph concepts for a dataset
-
-> Request to list graph concepts for a dataset:
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:dataset
-```
-
-> Example response:
-
-```json
-{
-    "data": [
-        {
-            "id": "4458eb12-8572-45d1-bf07-d5a3ee097021",
-            "type": "graph",
-            "attributes": {
-                "iso": "",
-                "synonyms": ["Habitat"],
-                "id": "habitat",
-                "label": "Habitats",
-                "default_parent": "ecosystem"
-            }
-        },
-        {
-            "id": "4458eb12-8572-45d1-bf07-d5a3ee097021",
-            "type": "graph",
-            "attributes": {
-                "iso": "",
-                "synonyms": "",
-                "id": "species",
-                "label": "Species",
-                "default_parent": "biodiversity"
-            }
-        }
-    ]
-}
-```
-
-This endpoint returns the list of relationships between the dataset with id provided in the URL path and graph concepts. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](#graph-relationship-reference) for details on each of the fields of the returned response.
-
-If the dataset id provided is not valid or not found, the response returned with contain an empty list in the `data` index.
-
-## List graph concepts for multiple datasets
-
-> Request to list graph concepts for multiple datasets:
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/graph/find-by-ids \
--H "Content-Type: application/json" \
--d \
-'{
-    "ids": [
-        "37d04efc-0ab2-4499-a891-54dca1013c74",
-        "0448c79d-0ee0-42ff-9331-aeee70cef301"
-    ]
-}'
-```
-
-> Example response:
-
-```json
-{
-    "data": [
-        {
-            "type": "concept",
-            "attributes": {
-                "dataset": "37d04efc-0ab2-4499-a891-54dca1013c74",
-                "iso": "",
-                "synonyms": "",
-                "id": "sanitation",
-                "label": "Sanitation",
-                "default_parent": "health"
-            }
-        },
-        {
-            "type": "concept",
-            "attributes": {
-                "dataset": "37d04efc-0ab2-4499-a891-54dca1013c74",
-                "iso": "",
-                "synonyms": ["city", "urban"],
-                "id": "urban",
-                "label": "Cities",
-                "default_parent": "settlements"
-            }
-        }
-    ]
-}
-```
-
-This endpoint returns the list of relationships between the datasets with ids provided in the body of the POST request. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](#graph-relationship-reference) for details on each of the fields of the returned response.
-
-### Errors for listing concepts for multiple datasets
-
-Error code | Error message | Description
----------- | ------------- | ---------------------------------
-400        | Bad Request   | The `ids` provided in the body of the request are not correctly formatted.
-
-## Infer concepts from other concepts
-
-> GET request to infer concepts related with the concepts passed as query parameters:
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=society,urban \
--H "Content-Type: application/json"
-```
-
-> POST request to infer concepts related with the concepts passed in the request body:
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/graph/query/concepts-inferred \
--H "Content-Type: application/json" \
--d \
-'{ "concepts": ["society", "urban"] }'
-```
-
-> Example response:
-
-```json
-{
-    "data": [
-        {
-            "id": "society",
-            "label": "Society",
-            "synonyms": ["People"],
-            "labels": ["CONCEPT", "TOPIC"]
-        },
-        {
-            "id": "urban",
-            "label": "Cities",
-            "synonyms": ["city", "urban"],
-            "labels": ["CONCEPT", "TOPIC"]
-        },
-    ]
-}
-```
-
-This endpoint lets API users discover concepts which have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
-
-If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
-
-### Errors for listing concepts for multiple datasets
-
-Error code | Error message | Description
----------- | ------------- | ---------------------------------
-400        | Concepts are required. | A list of concepts was not provided.
-
-<!-- ## Get ancestor concepts -- TODO: endpoint not working!!
-
-> GET request to get ancestor concepts for the concepts passed as query parameters:
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=society,urban \
--H "Content-Type: application/json"
-```
-
-> POST request to get ancestor concepts for the concepts passed in the request body:
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/graph/query/concepts-ancestors \
--H "Content-Type: application/json" \
--d \
-'{ "concepts": ["society", "urban"] }'
-```
-
-> Example response:
-
-```json
-{
-    "data": [
-        {
-            "id": "society",
-            "label": "Society",
-            "synonyms": ["People"],
-            "labels": ["CONCEPT", "TOPIC"]
-        },
-        {
-            "id": "urban",
-            "label": "Cities",
-            "synonyms": ["city", "urban"],
-            "labels": ["CONCEPT", "TOPIC"]
-        },
-    ]
-}
-```
-
-This endpoint lets API users discover concepts which have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
-
-If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
-
-### Errors for listing concepts for multiple datasets
-
-Error code | Error message | Description
----------- | ------------- | ---------------------------------
-400        | Concepts are required. | A list of concepts was not provided. -->
-
-## Other endpoints
-
-router.get('/query/similar-dataset', GraphRouter.querySimilarDatasets);
-router.get('/query/similar-dataset-including-descendent', GraphRouter.querySimilarDatasetsIncludingDescendent);
-router.get('/query/similar-dataset/:dataset', GraphRouter.querySimilarDatasets);
-router.get('/query/similar-dataset-including-descendent/:dataset', GraphRouter.querySimilarDatasetsIncludingDescendent);
-router.get('/query/search-datasets', GraphRouter.querySearchDatasets);
-router.get('/query/search-datasets-ids', GraphRouter.querySearchDatasetsIds);
-router.get('/query/most-liked-datasets', GraphRouter.mostLikedDatasets);
-router.post('/query/search-datasets', GraphRouter.querySearchDatasets);
-router.get('/query/most-viewed', GraphRouter.queryMostViewed);
-router.get('/query/most-viewed-by-user', GraphRouter.queryMostViewedByUser);
-router.get('/query/search-by-label-synonyms', GraphRouter.querySearchByLabelSynonymons);
-
-router.post('/dataset/:id', isAuthorized, GraphRouter.createDataset);
-router.post('/dataset/:id/visited', GraphRouter.visitedDataset);
-router.post('/widget/:idDataset/:idWidget', isAuthorized, checkExistsDataset, GraphRouter.createWidgetNodeAndRelation);
-router.post('/layer/:idDataset/:idLayer', isAuthorized, checkExistsDataset, GraphRouter.createLayerNodeAndRelation);
-router.post('/metadata/:resourceType/:idResource/:idMetadata', isAuthorized, checkExistsResource, GraphRouter.createMetadataNodeAndRelation);
-router.post('/:resourceType/:idResource/associate', isAuthorized, checkExistsResource, GraphRouter.associateResource);
-router.put('/:resourceType/:idResource/associate', isAuthorized, checkExistsResource, GraphRouter.updateResource);
-router.delete('/:resourceType/:idResource/associate', isAuthorized, checkExistsResource, GraphRouter.disassociateResource);
-router.post('/favourite/:resourceType/:idResource/:userId', isAuthorized, checkExistsResource, GraphRouter.createFavouriteRelationWithResource);
-
-router.delete('/favourite/:resourceType/:idResource/:userId', isAuthorized, checkExistsResource, GraphRouter.deleteFavouriteRelationWithResource);
-router.delete('/dataset/:id', isAuthorized, GraphRouter.deleteDataset);
-router.delete('/widget/:id', isAuthorized, GraphRouter.deleteWidgetNodeAndRelation);
-router.delete('/layer/:id', isAuthorized, GraphRouter.deleteLayerNodeAndRelation);
-router.delete('/metadata/:id', isAuthorized, GraphRouter.deleteMetadata);
-
-## Graph concept reference
-
-> Example concept entity structure:
-
-```json
-{
-  "id": "society",
-  "label": "Society",
-  "synonyms": ["People"],
-  "labels": ["CONCEPT", "TOPIC"],
-  "numberOfDatasetsTagged": 1,
-  "datasets": ["4458eb12-8572-45d1-bf07-d5a3ee097021"]
-}
-```
-
-This section describes the attributes that are present on a graph concept entity:
-
-Field name               | Type           | Description                                                                  
------------------------- | -------------- | ---------------------------------------------------------------------------- 
-`id`                     | String         | The concept unique identifier.
-`label`                  | String         | A readable version of the concept identifier.
-`synonyms`               | String | Array | The list of synonyms for this concept (or an empty string, if no synonyms exist).
-`labels`                 | Array          | The list of identifiers for the type of this graph node.
-`numberOfDatasetsTagged` | Number         | The number of datasets that are currently tagged with this concept.
-`datasets`               | Array          | The list of dataset ids that are currently tagged with this concept.
-
-## Graph relationship reference
-
-> Example relationship entity structure:
-
-```json
-{
-  "id": "4458eb12-8572-45d1-bf07-d5a3ee097021",
-  "type": "graph",
-  "attributes": {
-    "iso": "",
-    "synonyms": ["Habitat"],
-    "id": "habitat",
-    "label": "Habitats",
-    "default_parent": "ecosystem"
-  }
-}
-```
-
-This section describes the attributes that are present on a graph relationship entity:
-
-Field name                  | Type           | Description                                                                  
---------------------------- | -------------- | ---------------------------------------------------------------------------- 
-`id`                        | String         | The id of the relationship (usually the dataset id, if finding concepts related to a dataset).
-`type`                      | String         | Always set to "graph".
-`attributes.iso`            | String         | TODO: ???
-`attributes.synonyms`       | Array          | A list of synonyms for this concept.
-`attributes.id`             | String         | The concept unique identifier.
-`attributes.id`             | String         | The concept unique identifier.
-`attributes.label`          | String         | A readable version of the concept identifier.
-`attributes.default_parent` | String         | The id of the parent concept, if existing. (TODO: explain hierarchy)
