@@ -1544,6 +1544,8 @@ This section is completely implementation specific and opinionated, and does not
 <li>Your microservice can use the <code class="prettyprint">uncache</code> header to purge cache entries matching a given tag, as set in the previous point. Example <a href="https://github.com/resource-watch/dataset/blob/47ad8b9509b97803d7f484549908e72ecaa98467/app/src/routes/api/v1/dataset.router.js#L462">here</a>.</li>
 </ul>
 
+<p>These headers are then intercepted by the Control Tower <a href="https://github.com/resource-watch/control-tower/blob/dev/app/src/plugins/fastly-cache.js">Fastly integration plugin</a> which uses the Fastly API (through an integration nodejs library) to carry out the corresponding actions.</p>
+
 <h2 id="logging">Logging</h2>
 
 <p>An important part of microservice operation is logging events as it processes requests. Many errors are only triggered during staging and production server execution, and without proper logging, there isn&rsquo;t a way to identify how it can be reproduced, so it can then be fixed.</p>

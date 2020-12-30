@@ -139,6 +139,102 @@
 
 <p>This section covers a list of topics you should be familiar with before using the API. The concepts described in this section span across multiple API endpoints and are fundamental for a better understanding of how to interact with the RW API.</p>
 
+<h3 id="caching">Caching</h3>
+
+<p>HTTP caching is a technique that stores a copy of a given resource and serves it back when requested. When a cache has a requested resource in its store (also called a <em>cache hit</em>), it intercepts the request and returns its copy instead of re-computing it from the originating server. If the request is not yet stored in cache (also called <em>cache miss</em>), it is forwarded to the server responsible for handling it, the response is computed and stored in cache to serve future requests. This achieves several goals: it eases the load of the server that doesn’t need to serve all requests itself, and it improves performance by taking less time to transmit the resource back. You can read more about HTTP caching in the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching">Mozilla Developer Network docs on HTTP caching</a>.</p>
+
+<p>The RW API has a server-side, system-wide HTTP cache that may be used to cache your requests. Keep in mind that, in the context of the RW API, not all endpoints have caching enabled for them. You&rsquo;ll find a list below with the services which rely on caching in the RW API. If, as a developer, you&rsquo;d like your endpoints to benefit from caching, you need to explicitly implement it. Please refer to the <a href="developer.html#http-caching">developer docs on HTTP caching</a> for more details on how to implement caching for your API resources.</p>
+
+<p>The default cache time to live (TTL) applied to the responses stored in the RW API&rsquo;s cache is 3 days, but specific endpoints may specify a different expiration time for their responses. For the purposes of caching, only responses of GET requests with successful response codes (such as 200, 203, 204, or 302) are considered for caching. Also, for security reasons, authentication, authorization, or user related information contained in the HTTP request headers is never stored in cache. This is also the case for authenticated GET responses.</p>
+
+<h4 id="3rd-party-http-caching">3rd party HTTP caching</h4>
+
+<p>Keep in mind that, besides the RW API cache, there might be other HTTP caches between your application and the RW API servers. These caches might be public (ie. your ISP&rsquo;s cache, or your local network&rsquo;s) or private (your browser&rsquo;s cache), and one or many may exist between you and the RW API infrastructure (which includes the RW API cache described here). The information detailed below describes the behavior of the RW API cache only, and illustrates how you, as a RW API user, would perceive it, were there no other caches at play. However, that may not always be true, and you may experience different behavior caused by these other caches. If you suspect this may be the case, you should:</p>
+
+<ul>
+<li>Disable any local cache you may have (for example, if you are using a browser to issue requests, you may need to explicitly disable the browser&rsquo;s built-in cache).</li>
+<li>Use HTTPS to bypass public HTTP caches.</li>
+</ul>
+
+<h4 id="https-and-caching">HTTPS and caching</h4>
+
+<p>As you may or may not know, HTTPS - the secure variant of HTTP protocol - establishes a secure, encrypted connection between client (you) and server (the RW API). This architecture means that traditional public HTTP caches cannot be used, and are thus bypassed. However, the RW API HTTP cache operates within the RW API infrastructure, meaning it will still be used to cache and serve responses, even if you use an HTTPS connection.</p>
+
+<h4 id="how-to-detect-a-cached-response">How to detect a cached response</h4>
+
+<blockquote>
+<p>Example cURL command with detailed header information:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -svo /dev/null https://api.resourcewatch.org/v1/dataset
+</code></pre>
+<blockquote>
+<p>Example response of the command above including a MISS <code class="prettyprint">x-cache</code> header:</p>
+</blockquote>
+<pre class="highlight shell"><code>&lt; HTTP/2 200 
+&lt; content-type: application/json; <span class="nv">charset</span><span class="o">=</span>utf-8
+&lt; server: nginx
+&lt; cache: dataset
+&lt; x-response-time: 37 ms
+&lt; accept-ranges: bytes
+&lt; date: Tue, 29 Dec 2020 15:44:18 GMT
+&lt; via: 1.1 varnish
+&lt; age: 0
+&lt; x-served-by: cache-mad22045-MAD
+&lt; x-cache: MISS
+&lt; x-cache-hits: 0
+&lt; x-timer: S1609256659.546595,VS0,VE426
+&lt; vary: Origin, Accept-Encoding
+&lt; content-length: 11555
+</code></pre>
+<blockquote>
+<p>Example response of the command above including a HIT <code class="prettyprint">x-cache</code> header:</p>
+</blockquote>
+<pre class="highlight shell"><code>&lt; HTTP/2 200 
+&lt; content-type: application/json; <span class="nv">charset</span><span class="o">=</span>utf-8
+&lt; server: nginx
+&lt; cache: dataset
+&lt; x-response-time: 37 ms
+&lt; accept-ranges: bytes
+&lt; date: Tue, 29 Dec 2020 15:44:26 GMT
+&lt; via: 1.1 varnish
+&lt; age: 7
+&lt; x-served-by: cache-mad22039-MAD
+&lt; x-cache: HIT
+&lt; x-cache-hits: 1
+&lt; x-timer: S1609256666.390657,VS0,VE0
+&lt; vary: Origin, Accept-Encoding
+&lt; content-length: 11555
+</code></pre>
+<p>One of the most important things you should know about caching is how to detect if you are receiving a cached response or not. To do this, you should inspect the headers of RW API&rsquo;s responses, looking for a <code class="prettyprint">x-cache</code> header. If it does not contain this header, it was not cached by the RW API system-wide cache. If it contains the <code class="prettyprint">x-cache</code> header, it will have one of two values:</p>
+
+<ul>
+<li><code class="prettyprint">MISS</code>, which means the resource you&rsquo;re trying to GET was not found in cache, and so a fresh response was served;</li>
+<li><code class="prettyprint">HIT</code>, which means the resource you&rsquo;re trying to GET was found in cache and the cached response was served.</li>
+</ul>
+
+<p>You can read more about this and other cache-related headers used by the RW API in <a href="https://docs.fastly.com/en/guides/understanding-cache-hit-and-miss-headers-with-shielded-services">this link</a>.</p>
+
+<p><strong>Keep in mind that <a href="#3rd-party-http-caching">3rd party caches</a> might be present between your application and the RW API servers which can modify these headers.</strong></p>
+
+<h4 id="cache-invalidation">Cache invalidation</h4>
+
+<p>One of the common hassles of caching is cache invalidation - how to tell a caching tool that a certain response it has stored is no longer valid, and needs to be recomputed.</p>
+
+<p>The RW API handles this internally and automatically for you. It has a built-in system that is able to invalidate specific cached responses, following a request that affects the output of said responses. This mechanism is rather complex, but you, as the RW API user don&rsquo;t really need to worry about it - you just need to be aware that the RW API cache will be invalidated automatically, so that you always get the correct, up to date information for your requests, even if they had been previously cached.</p>
+
+<p><strong>Keep in mind that <a href="#3rd-party-http-caching">3rd party caches</a> might be present between your application and the RW API servers, and their content may not be invalidated immediately.</strong></p>
+
+<h4 id="which-services-rely-on-caching">Which services rely on caching</h4>
+
+<ul>
+<li><a href="index-rw.html#dataset7">Dataset</a></li>
+<li><a href="index-rw.html#layer9">Layer</a></li>
+<li><a href="index-rw.html#metadata14">Metadata</a></li>
+<li><a href="index-rw.html#vocabulary-and-tags">Vocabulary</a></li>
+<li><a href="index-rw.html#widget10">Widgets</a></li>
+<li><a href="index-rw.html#query7">Query</a> and <a href="index-rw.html#fields">Fields</a> also use cache, but with a TTL of 2 days</li>
+</ul>
+
 <h3 id="applications">Applications</h3>
 
 <p>As you might come across while reading these docs, different applications and websites rely on the RW API as the principal source for their data. While navigating through the catalog of available datasets, you will find some datasets used by the <a href="https://resourcewatch.org/">Resource Watch website</a>, others used by <a href="https://www.globalforestwatch.org/">Global Forest Watch</a>. In many cases, applications even share the same datasets!</p>
@@ -348,6 +444,128 @@
 <li><a href="index-rw.html#getting-all-layers">Get all layers endpoint</a></li>
 <li><a href="index-rw.html#getting-all-widgets">Get all widgets endpoint</a></li>
 <li><a href="index-rw.html#getting-all-users">Get all users endpoint</a></li>
+</ul>
+
+<h3 id="pagination">Pagination</h3>
+
+<blockquote>
+<p>Example request where default pagination is applied, returning one page of 10 elements (1st - 10th elements):</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset
+</code></pre>
+<blockquote>
+<p>Example request fetching the 3rd page of 10 elements (21st - 30th elements):</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]<span class="o">=</span>3
+</code></pre>
+<blockquote>
+<p>Example request fetching the 5th page of 20 elements (81st - 100th elements):</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]<span class="o">=</span>5&amp;page[size]<span class="o">=</span>20
+</code></pre>
+<p>Many times, when you&rsquo;re calling RW API&rsquo;s list endpoints, there will be a lot of results to return. Without pagination, a simple search could return hundreds or even thousands of elements, causing extraneous network traffic. For that reason, many services list their resources as pages, to make sure that not only responses are easier to handle, but also that services are scalable. Most paginated results have a built-in default limit of 10 elements, but we recommend you always explicitly set the limit parameter to ensure you know how many results per page you&rsquo;ll get. </p>
+
+<p>The pagination strategy used across the RW API relies on two query parameters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">page[size]</code></td>
+<td>The number elements per page. <strong>Values above 100 are not officially supported.</strong></td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">10</td>
+</tr>
+<tr>
+<td><code class="prettyprint">page[number]</code></td>
+<td>The page number.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
+
+<p>Keep in mind that, to work predictably, <strong>you must always specify sorting criteria when fetching paginated results</strong>. If sorting criteria is not provided, the overall order of the elements might change between requests. Pagination will still work, but the actual content of the pages might show missing and/or duplicate elements. Refer to the <a href="index-rw.html#sorting">general sorting guidelines</a> and the sorting section for the RW API resource you&rsquo;re loading for details on sorting options available for that resource type.</p>
+
+<p>Once again, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the pagination strategy. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on how to correctly paginate your list requests.</p>
+
+<h4 id="structure-of-a-paginated-response">Structure of a paginated response</h4>
+
+<blockquote>
+<p>Example request where default pagination is applied:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset
+</code></pre>
+<blockquote>
+<p>Example paginated response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=99&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"prev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=2&amp;page[size]=10"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"total-pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">99</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"total-items"</span><span class="p">:</span><span class="w"> </span><span class="mi">990</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Paginated responses return a JSON object containing 3 data structures:</p>
+
+<ul>
+<li><code class="prettyprint">data</code> is an array containing the actual list of elements which results from applying the pagination criteria specified in the <code class="prettyprint">page[number]</code> and <code class="prettyprint">page[size]</code> query parameters;</li>
+<li><code class="prettyprint">links</code> is a helper object that provides shortcut URLs for commonly used pages, using the same criteria applied in the initial request:
+
+<ul>
+<li><code class="prettyprint">self</code> contains the URL for the current page;</li>
+<li><code class="prettyprint">first</code> contains the URL for the first page;</li>
+<li><code class="prettyprint">last</code> contains the URL for the last page;</li>
+<li><code class="prettyprint">prev</code> contains the URL for the previous page;</li>
+<li><code class="prettyprint">next</code> contains the URL for the next page;</li>
+</ul></li>
+<li><code class="prettyprint">meta</code> is an object containing information about the total amount of elements in the resource you are listing:
+
+<ul>
+<li><code class="prettyprint">size</code> reflects the value used in the <code class="prettyprint">page[size]</code> query parameter (or the default size of 10 if not provided);</li>
+<li><code class="prettyprint">total-pages</code> contains the total number of pages, assuming the page size specified in the <code class="prettyprint">page[size]</code> query parameter;</li>
+<li><code class="prettyprint">total-items</code> contains the total number of items;</li>
+</ul></li>
+</ul>
+
+<h4 id="which-services-comply-with-these-guidelines">Which services comply with these guidelines</h4>
+
+<p>The following endpoints adhere to the pagination conventions defined above:</p>
+
+<ul>
+<li><a href="index-rw.html#areas">Areas service</a></li>
+<li><a href="index-rw.html#areas-v2">Areas v2 service</a></li>
+<li><a href="index-rw.html#collections">Collections service</a></li>
+<li><a href="index-rw.html#dashboard">Dashboards service</a></li>
+<li><a href="index-rw.html#dataset4">Datasets service</a></li>
+<li><a href="index-rw.html#layer6">Layers service</a></li>
+<li><a href="index-rw.html#tasks">Tasks service</a></li>
+<li><a href="index-rw.html#user-management">Users service</a></li>
+<li><a href="index-rw.html#widget7">Widgets service</a></li>
 </ul>
 
 <h1 id="concepts">Concepts</h1>
@@ -760,34 +978,12 @@
 </span></code></pre>
 <h3 id="pagination">Pagination</h3>
 
-<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, datasets are listed in pages of 10 datasets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  </p>
-
 <blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25
 </code></pre>
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page. Values above 100 are not officially supported.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">10</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<p>The Dataset service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your datasets list.</p>
 
 <h3 id="search">Search</h3>
 
@@ -5074,34 +5270,12 @@ curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/:dataset
 
 <h3 id="pagination">Pagination</h3>
 
-<p>By default, layers are listed in pages of 10 layers each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  </p>
-
 <blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer?page[number]=2&amp;page[size]=25"</span>
 </code></pre>
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page. Values above 100 are not officially supported.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">10</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<p>The Layers service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your layers list.</p>
 
 <h3 id="filters">Filters</h3>
 
@@ -6053,34 +6227,12 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 
 <h3 id="pagination">Pagination</h3>
 
-<p>By default, widgets are listed in pages of 10 widgets each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  </p>
-
 <blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/widget?page[number]=2&amp;page[size]=25"</span>
 </code></pre>
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page. Values above 100 are not officially supported.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">10</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<p>The Widgets service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your widgets list.</p>
 
 <h3 id="filters">Filters</h3>
 
@@ -7434,35 +7586,15 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 
 <h3 id="pagination">Pagination</h3>
 
-<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, virtually all collections are listed at once, but this behavior should be considered deprecated, and your application should rely on reasonably sized pages instead - the default value may be changed soon. You can customize the pagination behavior using the following query parameters:  </p>
-
 <blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/collection?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25 <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
 </code></pre>
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">9999999</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<p>The Collections service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your collections list.</p>
+
+<p>In the specific case of the Collections service, the default value for the <code class="prettyprint">page[size]</code> query parameter is 9999999, instead of 10. However (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.</p>
 
 <h3 id="sorting">Sorting</h3>
 
@@ -12810,34 +12942,14 @@ Given the following sets of concepts:</p>
 
 <h3 id="pagination">Pagination</h3>
 
-<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. By default, and for compatibility reasons, areas are listed in pages of 1000 elements each, but we recommend that you use the options below to set the page size to a much smaller number. You can customize this behavior using the following query parameters:</p>
-
 <blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25
 </code></pre>
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1000</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<p>The Areas service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your areas list.</p>
+
+<p>In the specific case of the Areas service, the default value for the <code class="prettyprint">page[size]</code> query parameter is 1000 for backwards compatibility reasons, instead of 10. However (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.</p>
 
 <h3 id="sorting">Sorting</h3>
 
@@ -13043,34 +13155,14 @@ Given the following sets of concepts:</p>
 
 <h3 id="pagination">Pagination</h3>
 
-<p>The RW API lists many of its resources as pages, as opposed to showing all results at once. Currently, and by default, areas are listed in pages of 100 elements each, but this default value will be reduced to 10 in the future - we recommend building your applications with the future value in mind. You can customize this behavior, as well as specify which page to load, using the following query parameters:</p>
-
 <blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/area?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25
 </code></pre>
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page. Values above 100 are not officially supported.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">100 (will be reduced to 10 in the future)</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<p>The Areas v2 service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your areas list.</p>
+
+<p>In the specific case of the Areas v2 service, the default value for the <code class="prettyprint">page[size]</code> query parameter is 100, instead of 10. However, this default value will be reduced to 10 in future releases, so (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.</p>
 
 <h3 id="filters">Filters</h3>
 
@@ -13213,33 +13305,11 @@ Given the following sets of concepts:</p>
 <h3 id="pagination">Pagination</h3>
 
 <blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v2/area?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25&amp;all<span class="o">=</span><span class="nb">true</span>
 </code></pre>
-<p>Due to performance and memory management issues, when viewing all areas (using the <code class="prettyprint">/v2/areas</code> endpoint with the <code class="prettyprint">all=true</code> query parameter), the returned result is paginated. You can customize this behavior using the following query parameters:</p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Example</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The number of the page to fetch. Only taken into account when using the <code class="prettyprint">all=true</code> filter.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The size of the page to fetch. Only taken into account when using the <code class="prettyprint">all=true</code> filter. Maximum value is 100.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">10</td>
-</tr>
-</tbody></table>
+<p>The Areas v2 service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your areas list.</p>
 
 <h3 id="filters">Filters</h3>
 
@@ -14556,31 +14626,11 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <h3 id="pagination">Pagination</h3>
 
 <blockquote>
-<p>Example request using query string parameters for paging the result:</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?page[size]<span class="o">=</span>15&amp;page[number]<span class="o">=</span>2
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dashboard?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25
 </code></pre>
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default value</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page. The maximum allowed value is 100</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">10</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<p>The Dashboards service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your dashboards list.</p>
 
 <h3 id="sorting">Sorting</h3>
 
@@ -15224,27 +15274,12 @@ At its core, a task represents a single package that contains:</p>
 </span></code></pre>
 <h3 id="pagination">Pagination</h3>
 
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default value</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page. The maximum allowed value is 100</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">10</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<blockquote>
+<p>Example request to load page 2 using 25 results per page</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/doc-importer/task?page[number]<span class="o">=</span>2&amp;page[size]<span class="o">=</span>25
+</code></pre>
+<p>The Tasks service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your tasks list.</p>
 
 <h3 id="filter-params">Filter params</h3>
 
@@ -15939,35 +15974,13 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <h4 id="pagination">Pagination</h4>
 
 <blockquote>
-<p>Custom pagination: load page 2 using 25 results per page</p>
+<p>Example request to load page 2 using 25 results per page</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=2&amp;page[size]=25"</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre>
-<p>By default, users are listed in pages of 10 results each, and the first page is loaded. However, you can customize this behavior using the following query parameters:  </p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Default</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">The number elements per page. Values above 100 are not officially supported.</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">10</td>
-</tr>
-<tr>
-<td>page[number]</td>
-<td style="text-align: center">The page number</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">1</td>
-</tr>
-</tbody></table>
+<p>The Users service adheres to the conventions defined in the <a href="index-rw.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your users list.</p>
 
 <h4 id="filters">Filters</h4>
 
