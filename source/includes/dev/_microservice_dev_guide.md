@@ -107,7 +107,7 @@ To set up Control Tower, follow these same instructions, as the process is the s
 
 Due to a recent infrastructure migration, some `README` files may mention old dependencies that have since been replaced with newer equivalents. Here are the old dependencies you may find, and their newer equivalent:
 
-- Elasticsearch 5: it has seen been replaced by AWS Elasticsearch Service (based on Elasticsearch 7), which is based on [Open Distro for Elasticsearch](https://opendistro.github.io/for-elasticsearch/).
+- Elasticsearch 5: it has been replaced by AWS Elasticsearch Service (based on Elasticsearch 7), which is based on [Open Distro for Elasticsearch](https://opendistro.github.io/for-elasticsearch/).
 
 #### Configuration
 
