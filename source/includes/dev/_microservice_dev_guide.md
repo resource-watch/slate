@@ -851,12 +851,15 @@ In a nutshell, this Jenkinsfile will:
 - Build a docker image using the Docker file contained in your microservice.
 - Uses the included docker compose configuration to run your tests. If the tests fail, the process is aborted at this stage
 - Push the generated docker image to [dockerhub](https://hub.docker.com/)
-- Depending on the git branch, the following actions will take place:
-  - If deploying from the `develop` branch, it will push the docker image to the staging kubernetes cluster 
-  - If deploying from the `master` branch, you will get a confirmation input. If you confirm, it will push the docker image to the production kubernetes cluster 
+- Depending on the git branch and the Jenkinsfile content, some of the following actions may take place:
+  - If deploying from the `dev` branch, it will push the docker image to the dev kubernetes cluster 
+  - If deploying from the `develop` or `staging` branches, it will push the docker image to the staging kubernetes cluster 
+  - If deploying from the `master` or `production` branches branch, you will get a confirmation input. If you confirm, it will push the docker image to the production kubernetes cluster 
   - Any other branches are ignored.
   
-At the beginning of each deploy process, you will also see an confirmation input that, if accepted, will redeploy the kubernetes configuration contained in the microservice code repository to the respective kubernetes cluster: `develop` branch to the staging cluster, `master` branch to the production cluster.
+**A note on branches**: an old branching scheme you may still find on some microservices relied on `master` + `develop` branches, but it's gradually being replaced by a scheme that uses `dev`, `staging` and `production`. All repos use one scheme or the other, but not both simultaneously, and the Jenkinsfile will reflect that.
+  
+At the beginning of each deploy process, you may also see an confirmation input that, if accepted, will redeploy the kubernetes configuration contained in the microservice code repository to the respective kubernetes cluster: `develop` branch to the staging cluster, `master` branch to the production cluster.
 
 One thing worth noting is that the docker images generated using this method are publicly available on dockerhub. Be careful not to store any sensitive data in them, as it will be available to anyone.
 
