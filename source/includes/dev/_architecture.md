@@ -42,4 +42,4 @@ We'll go into more details about these processes in the next sections
 
 Control Tower matches each incoming external request to a microservice, by comparing its URI and request method. It then generates a new HTTP request to that microservice and will wait for a response to it - which is used as a response to the original external request.
 
-Microservices can make requests to each other via Control Tower. They  also have unrestricted access to the public internet, so 3rd party services can be accessed as they normally would be. The API infrastructure also has other resources, like databases (MongoDB, ElasticSearch, Postgres) or publish-subscribe queues (RabbitMQ), which can be accessed. We'll cover those in more details in a separate section.
+Microservices can make requests to each other via Control Tower. They also have unrestricted access to the public internet, so 3rd party services can be accessed as they normally would be. The API infrastructure also has other resources, like databases (MongoDB, ElasticSearch, Postgres) or publish-subscribe queues (RabbitMQ), which can be accessed. We'll cover those in more details in a separate section.

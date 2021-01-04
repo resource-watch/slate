@@ -704,7 +704,7 @@ When creating a document-based dataset, the RW API will start a complex process 
 
 #### Using the legend fields to define field types
 
-By default, when creating a document based dataset, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch [dynamic mapping API](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping).
+By default, when creating a document based dataset, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch [dynamic mapping API](https://www.elastic.co/guide/en/elasticsearch/reference/7.7/mapping.html#_dynamic_mapping).
 However, in some scenarios, it may be desirable to specify some or all of these mappings manually, to match each field type to its Elasticsearch equivalent.
 
 When defining manual mappings, you don't need to map every single field. When processing the data, if a field is found for which there isn't a manual mapping, Elasticsearch will fallback to its dynamic mapping algorithm to try and guess that field's type. This API only supports a single explicit mapping per field, meaning you cannot declare a given field as both `text` and `keyword` for example.
@@ -721,7 +721,7 @@ date     |  Name of columns with date values (ISO Format)  |
 country   | Name of columns with country values (ISO3 code)  |
 region   | Name of columns with region values (ISO3 code)  |
  | |
-nested   | [Nested objects](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/nested.html) need to be explicitly identified in order to be indexed.  |
+nested   | [Nested objects](https://www.elastic.co/guide/en/elasticsearch/reference/7.7/nested.html) need to be explicitly identified in order to be indexed.  |
  | |
 integer  | In beta, not fully supported |
 short    | In beta, not fully supported |
@@ -735,7 +735,7 @@ binary   | In beta, not fully supported |
 text     | In beta, not fully supported |
 keyword  | In beta, not fully supported |
 
-For more details on the characteristics of each of the basic data types, refer to the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_field_datatypes).
+For more details on the characteristics of each of the basic data types, refer to the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/7.7/mapping.html#field-datatypes).
 
 #### Uploading a dataset file
 
