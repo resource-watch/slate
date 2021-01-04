@@ -90,7 +90,7 @@ yarn
 Windows users: If after running <code>yarn</code> you get an error where <code>gyp</code> cannot find Visual Studio, the solution <i>should</i> be as easy as running <code>yarn global add windows-build-tools</code> from an admin command prompt.
 </aside>
  
-The microservice's `README` may specify additional dependencies you need to install. [MongoDB](https://www.mongodb.com/), for example, is a common dependency of many RW API microservices, with applications like [Postgres](https://www.postgresql.org/), [Redis](https://redis.io/), [RabbitMQ](https://www.rabbitmq.com/) or [Elasticsearch](https://www.elastic.co/home) also being required on certain microservices. If a version number is not identified on the `README.md` file, the `docker-compose-test.yml` file may help. `image: mongo:3.4` means this microservice depends on MongoDB v3.4.
+The microservice's `README` may specify additional dependencies you need to install. [MongoDB](https://www.mongodb.com/), for example, is a common dependency of many RW API microservices, with applications like [Postgres](https://www.postgresql.org/), [Redis](https://redis.io/), [RabbitMQ](https://www.rabbitmq.com/) or [Open Distro for Elasticsearch](https://opendistro.github.io/for-elasticsearch/) also being required on certain microservices. If a version number is not identified on the `README.md` file, the `docker-compose-test.yml` file may help. `image: mongo:3.4` means this microservice depends on MongoDB v3.4.
 
 Besides these dependencies, microservices may also depend on the Control Tower gateway, and other microservices: 
 
@@ -102,6 +102,12 @@ Besides these dependencies, microservices may also depend on the Control Tower g
 If your endpoint does not rely on other microservices, and you don't rely on or can spoof the user data provided by Control Tower, you can set the `CT_REGISTER_MODE` environment variable to a value other than `auto` to disable the automatic registration on startup, thus removing the dependency on Control Tower. However, this is not recommended, as using Control Tower will have your development environment resemble the production setup, thus potentially highlighting any issues you may otherwise miss.
 
 To set up Control Tower, follow these same instructions, as the process is the same as for any nodejs microservice.
+
+**A note on dependencies**
+
+Due to a recent infrastructure migration, some `README` files may mention old dependencies that have since been replaced with newer equivalents. Here are the old dependencies you may find, and their newer equivalent:
+
+- Elasticsearch 5: it has seen been replaced by AWS Elasticsearch Service (based on Elasticsearch 7), which is based on [Open Distro for Elasticsearch](https://opendistro.github.io/for-elasticsearch/).
 
 #### Configuration
 
@@ -631,9 +637,9 @@ Use [Postgres](https://www.postgresql.org/) if your application needs a relation
 
 To see an example of how to use Postgres on a real-world microservice, check out the [Resource watch manager microservice](https://github.com/resource-watch/resource-watch-manager/) (written in Ruby on Rails).
 
-### Elasticsearch v5.5
+### AWS Elasticsearch Service v7.7
 
-Use [Elasticsearch](https://www.elastic.co/) for search optimization or heterogeneous data storage with quick access. The current setup also includes [a 3rd party plugin for SQL support on ES 5](https://github.com/NLPchina/elasticsearch-sql).
+Use [AWS Elasticsearch Service](https://aws.amazon.com/elasticsearch-service/) (powered by [Open Distro for Elasticsearch](https://opendistro.github.io/for-elasticsearch/)) for search optimization or heterogeneous data storage with quick access.
 
 To see an example of how to use Elasticsearch on a real-world microservice, check out the [Document dataset adapter microservice](https://github.com/resource-watch/document-adapter/).
 
