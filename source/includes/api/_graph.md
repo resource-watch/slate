@@ -2,94 +2,6 @@
 
 The following graph endpoints are available
 
-## Get most liked datasets
-
-This endpoint returns the list of the most liked datasets in descending order.
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
-```
-
-> Response:
-
-```json
-{
-	"data": [
-		{
-			"id": "e2971008-029f-441b-97cd-ee0555728182",
-			"count": {
-				"low": 2,
-				"high": 0
-			}
-		},
-		{
-			"id": "f6bb99af-541a-4d41-9e47-cc36cb479d4b",
-			"count": {
-				"low": 2,
-				"high": 0
-			}
-		},
-		{
-			"id": "223b936e-06b8-4970-abd9-4f123904d95d",
-			"count": {
-				"low": 2,
-				"high": 0
-			}
-		},
-		{
-			"id": "0b9f0100-ce5b-430f-ad8f-3363efa05481",
-			"count": {
-				"low": 2,
-				"high": 0
-			}
-		}
-	]
-}
-```
-
-## Get most viewed datasets list
-
-This endpoint returns the list of the most viewed datasets in descending order of total views.
-
-### Parameters
-
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-limit         |           Maximum number of results            |    Number |                                        Any positive number |      No
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed
-```
-
-> Response:
-
-```json
-{
-  "data": [
-    {
-      "dataset": "0087944f-871c-44bc-b4d9-cd5acfc27023",
-      "views": 172
-    },
-    {
-      "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
-      "views": 68
-    },
-    {
-      "dataset": "01b0b8cf-6638-4a9b-9896-d919d0656a64",
-      "views": 5
-    },
-    {
-      "dataset": "01ae2fd7-b818-429f-a27e-a36c8def971a",
-      "views": 2
-    },
-    {
-      "dataset": "00b5c224-8a78-41c4-89a6-8299dec8609e",
-      "views": 0
-    }
-  ]
-}
-```
-
 ## Update view counter for dataset and user
 
 Updates the total view counter for the corresponding dataset. If the request is authenticated, it will also increment the counter of number of times the user has viewed the dataset. 
@@ -598,11 +510,174 @@ Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
 application  | Applications associated to this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
 
-### Errors for searching datasets by concepts
+### Errors for searching datasets by concepts and their synonyms
 
 Error code | Error message | Description
 ---------- | ------------- | ---------------------------------
 400        | Search query param required | You must provide the search query parameter.
+
+## Most liked datasets
+
+> GET request to find out which are the most liked datasets:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets \
+-H "Content-Type: application/json"
+```
+
+> Example response:
+
+```json
+{
+  "data": [
+    {
+      "id": "c36c3108-2581-4b68-852a-c929fc758001",
+      "count": {
+        "low": 6,
+        "high": 0
+      }
+    },
+    {
+      "id": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
+      "count": {
+        "low": 5,
+        "high": 0
+      }
+    }
+  ]
+}
+```
+
+This endpoint returns a list of dataset sorted by the number of times these datasets were marked as favorite by users. The returned list is sorted descending, from the datasets with higher favorite count to the ones with lower count.
+
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `id` property, and the number of times the dataset was marked as favorite by a user in the `count.low` property.
+
+### Filters
+
+> Filtering most liked datasets datasets by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets?application=gfw
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+
+## Most viewed datasets
+
+> GET request to find out which are the most viewed datasets:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed \
+-H "Content-Type: application/json"
+```
+
+> Example response:
+
+```json
+{
+  "data": [
+    {
+      "dataset": "0087944f-871c-44bc-b4d9-cd5acfc27023",
+      "views": 76
+    },
+    {
+      "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
+      "views": 39
+    }
+  ]
+}
+```
+
+This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by users. The returned list is sorted descending, from the datasets with higher view count to the ones with lower count.
+
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property, and the number of times the dataset was viewed in the `views` property.
+
+Note that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the increment view endpoint - TODO reference here
+
+### Filters
+
+> Filtering most viewed datasets by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed?application=gfw
+```
+
+> Limiting the number of returned results:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed?limit=3
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
+
+## Most viewed datasets by user
+
+> GET request to find out which are the most viewed datasets for the user with token provided:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+> Example response:
+
+```json
+{
+  "data": [
+    {
+      "dataset": "0087944f-871c-44bc-b4d9-cd5acfc27023",
+      "views": 76
+    },
+    {
+      "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
+      "views": 39
+    }
+  ]
+}
+```
+
+This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by the user of the token provided in the request headers. The returned list is sorted descending, from the datasets with higher view count to the ones with lower count.
+
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property, and the number of times the dataset was viewed in the `views` property.
+
+As in the case of the `most-viewed` endpoint, please keep in mind that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the increment view endpoint - TODO reference here
+
+### Filters
+
+> Filtering most viewed datasets by the token user by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed-by-user?application=gfw
+```
+
+> Limiting the number of returned results:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed-by-user?limit=3
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
+
+### Errors for getting most viewed datasets by user
+
+Error code | Error message | Description
+---------- | ------------- | ---------------------------------
+401        | Unauthorized  | You must provide your API user's token in the response headers.
 
 ## Graph concept reference
 
