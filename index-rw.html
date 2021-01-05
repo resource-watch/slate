@@ -1991,7 +1991,7 @@
 
 <h4 id="using-the-legend-fields-to-define-field-types">Using the legend fields to define field types</h4>
 
-<p>By default, when creating a document based dataset, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_dynamic_mapping">dynamic mapping API</a>.
+<p>By default, when creating a document based dataset, the data is ingested by the API and the field types are automatically determined by the underlying Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.7/mapping.html#_dynamic_mapping">dynamic mapping API</a>.
 However, in some scenarios, it may be desirable to specify some or all of these mappings manually, to match each field type to its Elasticsearch equivalent.</p>
 
 <p>When defining manual mappings, you don&rsquo;t need to map every single field. When processing the data, if a field is found for which there isn&rsquo;t a manual mapping, Elasticsearch will fallback to its dynamic mapping algorithm to try and guess that field&rsquo;s type. This API only supports a single explicit mapping per field, meaning you cannot declare a given field as both <code class="prettyprint">text</code> and <code class="prettyprint">keyword</code> for example.</p>
@@ -2032,7 +2032,7 @@ However, in some scenarios, it may be desirable to specify some or all of these 
 </tr>
 <tr>
 <td>nested</td>
-<td style="text-align: center"><a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/nested.html">Nested objects</a> need to be explicitly identified in order to be indexed.</td>
+<td style="text-align: center"><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.7/nested.html">Nested objects</a> need to be explicitly identified in order to be indexed.</td>
 </tr>
 <tr>
 <td></td>
@@ -2084,7 +2084,7 @@ However, in some scenarios, it may be desirable to specify some or all of these 
 </tr>
 </tbody></table>
 
-<p>For more details on the characteristics of each of the basic data types, refer to the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.5/mapping.html#_field_datatypes">Elasticsearch documentation</a>.</p>
+<p>For more details on the characteristics of each of the basic data types, refer to the <a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.7/mapping.html#field-datatypes">Elasticsearch documentation</a>.</p>
 
 <h4 id="uploading-a-dataset-file">Uploading a dataset file</h4>
 
@@ -4947,7 +4947,7 @@ curl -i -X GET <span class="s1">'https://api.resourcewatch.org/v1/query/:dataset
 <li>The usage of scalar functions on nested fields in <code class="prettyprint">ORDER BY</code> or <code class="prettyprint">WHERE</code> clauses is limited. For instance, the following statement is <strong>not</strong> supported: <code class="prettyprint">ORDER BY YEAR(dep.start_date)</code>.</li>
 </ul>
 
-<p>You can read more about the limitations of using SQL with document-based datasets <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html">here</a>.</p>
+<p>You can read more about the limitations of using SQL with document-based datasets <a href="https://opendistro.github.io/for-elasticsearch-docs/docs/sql/">here</a>.</p>
 
 <h3 id="rasdaman-datasets">Rasdaman datasets</h3>
 

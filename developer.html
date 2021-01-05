@@ -183,7 +183,7 @@
 
 <p>Control Tower matches each incoming external request to a microservice, by comparing its URI and request method. It then generates a new HTTP request to that microservice and will wait for a response to it - which is used as a response to the original external request.</p>
 
-<p>Microservices can make requests to each other via Control Tower. They  also have unrestricted access to the public internet, so 3rd party services can be accessed as they normally would be. The API infrastructure also has other resources, like databases (MongoDB, ElasticSearch, Postgres) or publish-subscribe queues (RabbitMQ), which can be accessed. We&rsquo;ll cover those in more details in a separate section.</p>
+<p>Microservices can make requests to each other via Control Tower. They also have unrestricted access to the public internet, so 3rd party services can be accessed as they normally would be. The API infrastructure also has other resources, like databases (MongoDB, ElasticSearch, Postgres) or publish-subscribe queues (RabbitMQ), which can be accessed. We&rsquo;ll cover those in more details in a separate section.</p>
 
           <h1 id="control-tower">Control Tower</h1>
 
@@ -970,7 +970,7 @@ Windows users: If after running <code>yarn</code> you get an error where <code>g
 </aside>
  
 
-<p>The microservice&rsquo;s <code class="prettyprint">README</code> may specify additional dependencies you need to install. <a href="https://www.mongodb.com/">MongoDB</a>, for example, is a common dependency of many RW API microservices, with applications like <a href="https://www.postgresql.org/">Postgres</a>, <a href="https://redis.io/">Redis</a>, <a href="https://www.rabbitmq.com/">RabbitMQ</a> or <a href="https://www.elastic.co/home">Elasticsearch</a> also being required on certain microservices. If a version number is not identified on the <code class="prettyprint">README.md</code> file, the <code class="prettyprint">docker-compose-test.yml</code> file may help. <code class="prettyprint">image: mongo:3.4</code> means this microservice depends on MongoDB v3.4.</p>
+<p>The microservice&rsquo;s <code class="prettyprint">README</code> may specify additional dependencies you need to install. <a href="https://www.mongodb.com/">MongoDB</a>, for example, is a common dependency of many RW API microservices, with applications like <a href="https://www.postgresql.org/">Postgres</a>, <a href="https://redis.io/">Redis</a>, <a href="https://www.rabbitmq.com/">RabbitMQ</a> or <a href="https://opendistro.github.io/for-elasticsearch/">Open Distro for Elasticsearch</a> also being required on certain microservices. If a version number is not identified on the <code class="prettyprint">README.md</code> file, the <code class="prettyprint">docker-compose-test.yml</code> file may help. <code class="prettyprint">image: mongo:3.4</code> means this microservice depends on MongoDB v3.4.</p>
 
 <p>Besides these dependencies, microservices may also depend on the Control Tower gateway, and other microservices: </p>
 
@@ -984,6 +984,14 @@ Windows users: If after running <code>yarn</code> you get an error where <code>g
 <p>If your endpoint does not rely on other microservices, and you don&rsquo;t rely on or can spoof the user data provided by Control Tower, you can set the <code class="prettyprint">CT_REGISTER_MODE</code> environment variable to a value other than <code class="prettyprint">auto</code> to disable the automatic registration on startup, thus removing the dependency on Control Tower. However, this is not recommended, as using Control Tower will have your development environment resemble the production setup, thus potentially highlighting any issues you may otherwise miss.</p>
 
 <p>To set up Control Tower, follow these same instructions, as the process is the same as for any nodejs microservice.</p>
+
+<p><strong>A note on dependencies</strong></p>
+
+<p>Due to a recent infrastructure migration, some <code class="prettyprint">README</code> files may mention old dependencies that have since been replaced with newer equivalents. Here are the old dependencies you may find, and their newer equivalent:</p>
+
+<ul>
+<li>Elasticsearch 5: it has been replaced by AWS Elasticsearch Service (based on Elasticsearch 7), which is based on <a href="https://opendistro.github.io/for-elasticsearch/">Open Distro for Elasticsearch</a>.</li>
+</ul>
 
 <h4 id="configuration">Configuration</h4>
 
@@ -1508,9 +1516,9 @@ This section is completely implementation specific and opinionated, and does not
 
 <p>To see an example of how to use Postgres on a real-world microservice, check out the <a href="https://github.com/resource-watch/resource-watch-manager/">Resource watch manager microservice</a> (written in Ruby on Rails).</p>
 
-<h3 id="elasticsearch-v5-5">Elasticsearch v5.5</h3>
+<h3 id="aws-elasticsearch-service-v7-7">AWS Elasticsearch Service v7.7</h3>
 
-<p>Use <a href="https://www.elastic.co/">Elasticsearch</a> for search optimization or heterogeneous data storage with quick access. The current setup also includes <a href="https://github.com/NLPchina/elasticsearch-sql">a 3rd party plugin for SQL support on ES 5</a>.</p>
+<p>Use <a href="https://aws.amazon.com/elasticsearch-service/">AWS Elasticsearch Service</a> (powered by <a href="https://opendistro.github.io/for-elasticsearch/">Open Distro for Elasticsearch</a>) for search optimization or heterogeneous data storage with quick access.</p>
 
 <p>To see an example of how to use Elasticsearch on a real-world microservice, check out the <a href="https://github.com/resource-watch/document-adapter/">Document dataset adapter microservice</a>.</p>
 
@@ -1728,16 +1736,19 @@ This section is completely implementation specific and opinionated, and does not
 <li>Build a docker image using the Docker file contained in your microservice.</li>
 <li>Uses the included docker compose configuration to run your tests. If the tests fail, the process is aborted at this stage</li>
 <li>Push the generated docker image to <a href="https://hub.docker.com/">dockerhub</a></li>
-<li>Depending on the git branch, the following actions will take place:
+<li>Depending on the git branch and the Jenkinsfile content, some of the following actions may take place:
 
 <ul>
-<li>If deploying from the <code class="prettyprint">develop</code> branch, it will push the docker image to the staging kubernetes cluster </li>
-<li>If deploying from the <code class="prettyprint">master</code> branch, you will get a confirmation input. If you confirm, it will push the docker image to the production kubernetes cluster </li>
+<li>If deploying from the <code class="prettyprint">dev</code> branch, it will push the docker image to the dev kubernetes cluster </li>
+<li>If deploying from the <code class="prettyprint">develop</code> or <code class="prettyprint">staging</code> branches, it will push the docker image to the staging kubernetes cluster </li>
+<li>If deploying from the <code class="prettyprint">master</code> or <code class="prettyprint">production</code> branches branch, you will get a confirmation input. If you confirm, it will push the docker image to the production kubernetes cluster </li>
 <li>Any other branches are ignored.</li>
 </ul></li>
 </ul>
 
-<p>At the beginning of each deploy process, you will also see an confirmation input that, if accepted, will redeploy the kubernetes configuration contained in the microservice code repository to the respective kubernetes cluster: <code class="prettyprint">develop</code> branch to the staging cluster, <code class="prettyprint">master</code> branch to the production cluster.</p>
+<p><strong>A note on branches</strong>: an old branching scheme you may still find on some microservices relied on <code class="prettyprint">master</code> + <code class="prettyprint">develop</code> branches, but it&rsquo;s gradually being replaced by a scheme that uses <code class="prettyprint">dev</code>, <code class="prettyprint">staging</code> and <code class="prettyprint">production</code>. All repos use one scheme or the other, but not both simultaneously, and the Jenkinsfile will reflect that.</p>
+
+<p>At the beginning of each deploy process, you may also see an confirmation input that, if accepted, will redeploy the kubernetes configuration contained in the microservice code repository to the respective kubernetes cluster: <code class="prettyprint">develop</code> branch to the staging cluster, <code class="prettyprint">master</code> branch to the production cluster.</p>
 
 <p>One thing worth noting is that the docker images generated using this method are publicly available on dockerhub. Be careful not to store any sensitive data in them, as it will be available to anyone.</p>
 
@@ -2457,9 +2468,9 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 
 <p><strong>While the WRI API aims to make the query interface as broad and transparent as possible, some of the querying options described below will not be available for specific dataset providers, depending on this API&rsquo;s implementation or limitations on the actual data provider&rsquo;s side.</strong></p>
 
-<p>Additionally to provider-specific limitations, every SQL query is transformed by <a href="https://github.com/resource-watch/sql2json">the <code class="prettyprint">sql2json</code> microservice</a>, also maintained as <a href="https://www.npmjs.com/package/sql2json">NPM package</a>. There is a first conversion from SQL to JSON, and then from JSON to a SQL syntax that is compatible with <a href="https://github.com/NLPchina/elasticsearch-sql">the Elasticsearch SQL plugin</a>.</p>
+<p>Additionally to provider-specific limitations, every SQL query is transformed by <a href="https://github.com/resource-watch/sql2json">the <code class="prettyprint">sql2json</code> microservice</a>, also maintained as <a href="https://www.npmjs.com/package/sql2json">NPM package</a>. There is a first conversion from SQL to JSON, and then from JSON to a SQL syntax that is compatible with <a href="https://opendistro.github.io/for-elasticsearch-docs/docs/sql/">Open Distro for Elasticsearch SQL syntax</a>.</p>
 
-<p>You can read more about the limitations of using SQL with Elasticsearch <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-limitations.html">here</a>.</p>
+<p>You can read more about the limitations of using SQL with Elasticsearch <a href="https://opendistro.github.io/for-elasticsearch-docs/docs/sql/">here</a>.</p>
 
           <h1 id="microservices">Microservices</h1>
 
