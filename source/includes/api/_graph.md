@@ -1,23 +1,6 @@
 # Graph
 
-The following graph endpoints are available
-
-## Update view counter for dataset and user
-
-Updates the total view counter for the corresponding dataset. If the request is authenticated, it will also increment the counter of number of times the user has viewed the dataset. 
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/graph/dataset/<dataset-id>/visited
--H "Authorization: Bearer <your-token>"
-```
-
-
-
-
-
-
-
-
+The following section details the endpoints you can use to interact with graph information about the RW API. If you are new to the RW API, or want to learn more about what the RW API graph can do for you, we strongly encourage you to read the [graph concept](#graph) documentation first.
 
 ## List graph concepts
 
@@ -596,7 +579,7 @@ This endpoint returns a list of dataset sorted by the number of times these data
 
 If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property, and the number of times the dataset was viewed in the `views` property.
 
-Note that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the increment view endpoint - TODO reference here
+Note that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](#increment-dataset-view-count).
 
 ### Filters
 
@@ -650,7 +633,7 @@ This endpoint returns a list of dataset sorted by the number of times these data
 
 If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property, and the number of times the dataset was viewed in the `views` property.
 
-As in the case of the `most-viewed` endpoint, please keep in mind that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the increment view endpoint - TODO reference here
+As in the case of the `most-viewed` endpoint, please keep in mind that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](#increment-dataset-view-count).
 
 ### Filters
 
@@ -678,6 +661,20 @@ limit        | Limits the number of results returned in the response. | Number |
 Error code | Error message | Description
 ---------- | ------------- | ---------------------------------
 401        | Unauthorized  | You must provide your API user's token in the response headers.
+
+## Increment dataset view count
+
+> POST request to find out which are the most viewed datasets for the user with token provided:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/dataset/:id/visited \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+Use this endpoint if you want to increment the view count of the dataset with id provided in the URL path. If successful, this endpoint will return 200 OK containing an empty object in the response body. 
+
+You can optionally provide the authentication token for your API user in the request headers. If no token is provided, a dataset view is registered without being associated to any user. If a token is provided, the dataset view count for your API user will be incremented.
 
 ## Graph concept reference
 
