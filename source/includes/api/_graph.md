@@ -800,6 +800,68 @@ Error code | Error message     | Description
 403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
 404        | Resource {:resourceType} and id ${:idResource} not found | No graph node for the resource with id provided was found.
 
+### Update concepts associated to a graph node
+
+> PUT request to update the concepts associated to a graph node:
+
+```shell
+curl -X PUT https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json" \
+-d '{
+  "tags": ["health", "society"],
+  "application": "rw"
+}'
+```
+
+This endpoint updates the graph edge associated to the resource identified in the URL path. Existing concepts are deleted and replaced with the ones provided in the `tags` field of the request body.
+
+TODO - when is this called!
+
+**This endpoint is automatically called when you associate vocabulary or tags with a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
+
+#### Errors for associating concepts with graph nodes
+
+Error code | Error message     | Description
+---------- | ----------------- | ---------------------------------
+401        | Unauthorized      | No authorization token provided.
+403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
+404        | Resource {:resourceType} and id ${:idResource} not found | No graph node for the resource with id provided was found.
+
+### Delete concepts associated to a graph node
+
+> DELETE request to remove concepts associated to a graph node:
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+This endpoint deletes the graph edge associated to the resource identified in the URL path.
+
+TODO - when is this called!
+
+**This endpoint is automatically called when you associate vocabulary or tags with a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
+
+### Query parameters
+
+> Specifying the application of the resource to be deleted:
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate?application=gfw
+```
+
+You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/index-rw.html#applications).
+
+#### Errors for associating concepts with graph nodes
+
+Error code | Error message     | Description
+---------- | ----------------- | ---------------------------------
+401        | Unauthorized      | No authorization token provided.
+403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
+404        | Resource {:resourceType} and id ${:idResource} not found | No graph node for the resource with id provided was found.
+
 ## Graph concept reference
 
 > Example concept entity structure:
