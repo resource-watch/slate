@@ -22,6 +22,7 @@ includes:
   - api/microservices
   - dev/areas_notification_emails
   - dev/subscriptions
+  - dev/graph
 
 logo: logo-rw.png
 
