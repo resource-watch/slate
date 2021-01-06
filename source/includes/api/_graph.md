@@ -790,7 +790,7 @@ Lastly, keep in mind that, despite the examples on the side refer to datasets, y
 
 ## Favorite relationships between graph nodes and users
 
-As in the case of managing relationships between graph nodes and concepts, **the management of favorite relationships between graph resources and users is handled by vocabulary endpoints.** Please refer to the [favorite endpoint documentation](#vocabulary-and-tags) (TODO missing reference) for more details on how to use these endpoints.
+As in the case of managing relationships between graph nodes and concepts, **the management of favorite relationships between graph resources and users is handled by vocabulary endpoints.** Please refer to the [favorite endpoint documentation](#favorites) for more details on how to use these endpoints.
 
 ## Graph concept reference
 
@@ -842,68 +842,8 @@ Field name                  | Type           | Description
 --------------------------- | -------------- | ---------------------------------------------------------------------------- 
 `id`                        | String         | The id of the relationship (usually the dataset id, if finding concepts related to a dataset).
 `type`                      | String         | Always set to "graph".
-`attributes.iso`            | String         | TODO: ???
+`attributes.iso`            | String         | *Deprecated attribute - you should not rely on this attribute.*
 `attributes.synonyms`       | Array          | A list of synonyms for this concept.
 `attributes.id`             | String         | The concept unique identifier.
-`attributes.id`             | String         | The concept unique identifier.
 `attributes.label`          | String         | A readable version of the concept identifier.
-`attributes.default_parent` | String         | The id of the parent concept, if existing. (TODO: explain hierarchy)
-
-
-
-
-
-
-
-
-
-
-
-<!-- ## Get ancestor concepts -- TODO: endpoint not working!!
-
-> GET request to get ancestor concepts for the concepts passed as query parameters:
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=society,urban \
--H "Content-Type: application/json"
-```
-
-> POST request to get ancestor concepts for the concepts passed in the request body:
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/graph/query/concepts-ancestors \
--H "Content-Type: application/json" \
--d \
-'{ "concepts": ["society", "urban"] }'
-```
-
-> Example response:
-
-```json
-{
-    "data": [
-        {
-            "id": "society",
-            "label": "Society",
-            "synonyms": ["People"],
-            "labels": ["CONCEPT", "TOPIC"]
-        },
-        {
-            "id": "urban",
-            "label": "Cities",
-            "synonyms": ["city", "urban"],
-            "labels": ["CONCEPT", "TOPIC"]
-        },
-    ]
-}
-```
-
-This endpoint lets API users discover concepts that have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
-
-If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
-
-### Errors for listing concepts for multiple datasets
-
-Error code | Error message | Description
----------- | ------------- | ---------------------------------
-400        | Concepts are required. | A list of concepts was not provided. -->
+`attributes.default_parent` | String         | The id of the parent concept, if existing.
