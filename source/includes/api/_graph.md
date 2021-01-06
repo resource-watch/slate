@@ -788,9 +788,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/as
 
 This endpoint creates a graph edge, representative of the relationship between the resource identified in the URL path and the concepts provided in the `tags` field of the request body.
 
-TODO - when is this called!
-
-**This endpoint is automatically called when you associate vocabulary or tags with a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
+**This endpoint is automatically called when you associate the vocabulary "knowledge_graph" to a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
 
 #### Errors for associating concepts with graph nodes
 
@@ -816,9 +814,7 @@ curl -X PUT https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/ass
 
 This endpoint updates the graph edge associated to the resource identified in the URL path. Existing concepts are deleted and replaced with the ones provided in the `tags` field of the request body.
 
-TODO - when is this called!
-
-**This endpoint is automatically called when you associate vocabulary or tags with a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
+**This endpoint is automatically called when you associate the vocabulary "knowledge_graph" to a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
 
 #### Errors for associating concepts with graph nodes
 
@@ -840,9 +836,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/
 
 This endpoint deletes the graph edge associated to the resource identified in the URL path.
 
-TODO - when is this called!
-
-**This endpoint is automatically called when you associate vocabulary or tags with a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
+**This endpoint is automatically called when you associate the vocabulary "knowledge_graph" to a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
 
 ### Query parameters
 
@@ -850,6 +844,65 @@ TODO - when is this called!
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate?application=gfw
+```
+
+You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/index-rw.html#applications).
+
+#### Errors for associating concepts with graph nodes
+
+Error code | Error message     | Description
+---------- | ----------------- | ---------------------------------
+401        | Unauthorized      | No authorization token provided.
+403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
+404        | Resource {:resourceType} and id ${:idResource} not found | No graph node for the resource with id provided was found.
+
+## Favorite relationships between graph nodes and users
+
+The following sections describe how you can manage favorite relationships between graph nodes previously created and users.
+
+### Create favorite relationship between user and graph node
+
+> POST request to create favorite relationship between user and graph node:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/favourite/:resourceType/:idResource/:userId \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json" \
+-d '{ "application": "rw" }'
+```
+
+This endpoint creates a graph edge representative of a favorite relationship between the resource identified in the URL path and the user id also identified in the URL path.
+
+**This endpoint is automatically called when you call vocabulary's create favorite endpoint**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
+
+#### Errors for associating concepts with graph nodes
+
+Error code | Error message     | Description
+---------- | ----------------- | ---------------------------------
+401        | Unauthorized      | No authorization token provided.
+403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
+404        | Resource {:resourceType} and id ${:idResource} not found | No graph node for the resource with id provided was found.
+
+### Delete favorite relationship between user and graph node
+
+> DELETE request to remove favorite relationship between user and graph node:
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/graph/favourite/:resourceType/:idResource/:userId \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+This endpoint deletes the graph edge representative of a favorite relationship between the resource identified in the URL path and the user id also identified in the URL path.
+
+**This endpoint is automatically called when you call vocabulary's delete favorite endpoint**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
+
+### Query parameters
+
+> Specifying the application of the favorite relationship to be deleted:
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/graph/favourite/:resourceType/:idResource/:userId?application=gfw
 ```
 
 You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/index-rw.html#applications).
