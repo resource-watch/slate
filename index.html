@@ -830,6 +830,40 @@
 
 <p>Read more on how to create areas using the different methods in the <a href="index-rw.html#creating-an-area">Areas v2 endpoints</a> section.</p>
 
+          <h2 id="graph">Graph</h2>
+
+<p>As you have read in the <a href="#dataset">Dataset concept section</a>, one of the main goals of the RW API is to provide a common interface for interacting with data provided by a variety of services. However, given the number of datasets currently hosted in the RW API (2506 at the time of writing), it can be hard to find exactly what dataset you are looking for. It can even be overwhelming to navigate through the datasets list, due to the number of datasets available and the wide range of topics each dataset relates to.</p>
+
+<p>The RW API provides you different ways to search for the information you are looking for: from <a href="#search">searching datasets</a> by keyword and exploring <a href="#metadata12">dataset metadata</a>, to categorization through the use of <a href="#vocabulary-and-tags">vocabulary and tags</a>. However, none of these options is optimal when it comes to finding similar datasets, related to the ones you find relevant. This is where the Graph service comes to the rescue.</p>
+
+<p>Before jumping to the details of the RW API Graph service, you should be familiar with what a graph is. There are many resources available online for this purpose (e.g. <a href="https://en.wikipedia.org/wiki/Graph_(abstract_data_type)">the Wikipedia entry on graph</a>), but the main concept you must keep in mind is that a graph is a data structure consisting of a set of nodes and a set of edges. A <strong>node</strong> represents an abstract entity, and an <strong>edge</strong> is a connection between two nodes, representative of a relationship between those two nodes. </p>
+
+<p>In the context of the RW API&rsquo;s Graph service, nodes represent one of the following: </p>
+
+<ul>
+<li><strong>concepts</strong></li>
+<li><strong>datasets</strong></li>
+<li><strong>layers</strong></li>
+<li><strong>widgets</strong></li>
+<li><strong>metadata</strong></li>
+<li><strong>users</strong></li>
+</ul>
+
+<p>Edges define relationships of different types between the different types of graph nodes. Relationships can be detailed and specific (for instance, defining a favorite relationship between a dataset and user), but they can also be more generic, establishing a connection between a resource and a concept.</p>
+
+<p>Using the Graph service, you will be able to explore RW API&rsquo;s datasets from a concept perspective. You will be able to:</p>
+
+<ul>
+<li>find datasets related to broad concepts such as <code class="prettyprint">solar_energy</code> or <code class="prettyprint">water_stress</code>;</li>
+<li>find datasets related to specific properties of the dataset&rsquo;s data like <code class="prettyprint">vector</code> or <code class="prettyprint">raster</code>;</li>
+<li>find datasets related to a given dataset;</li>
+<li>infer concepts from a given list of concepts;</li>
+</ul>
+
+<p>The RW API Graph service enables you to build powerful applications, where you can easily and more humanly navigate through your datasets. It gives you the possibility of focusing on topics and concepts each dataset is related to, building UIs geared towards navigation by similarity as opposed to simple datasets list. A great example of the usage of the Graph service is <a href="https://resourcewatch.org/data/explore">Resource Watch&rsquo;s Discover page</a>.</p>
+
+<p>Head to the <a href="#graph17">graph endpoint documentation</a> for more details on how you can leverage concepts and relationships to enhance your datasets.</p>
+
           <h1 id="authentication">Authentication</h1>
 
 <p>The RW API provides most of its data through endpoints that are available to all users, without requiring any form of registration. However, some actions, like uploading data or flagging a resource as a favourite, require having a user account and using an access token when issuing requests to the API.</p>
