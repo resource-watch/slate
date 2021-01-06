@@ -1,6 +1,6 @@
 # Graph
 
-The following section details the endpoints you can use to interact with graph information about the RW API. If you are new to the RW API, or want to learn more about what the RW API graph can do for you, we strongly encourage you to read the [graph concept](#graph) documentation first.
+The following section details the endpoints you can use to interact with graph information about the RW API. If you are new to the RW API or want to learn more about what the RW API graph can do for you, we strongly encourage you to read the [graph concept](#graph) documentation first.
 
 ## List graph concepts
 
@@ -86,7 +86,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:dataset
 
 This endpoint returns the list of relationships between the dataset with id provided in the URL path and graph concepts. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](#graph-relationship-reference) for details on each of the fields of the returned response.
 
-If the dataset id provided is not valid or not found, the response returned with contain an empty list in the `data` index.
+If the dataset id provided is not valid or not found, the response returned will contain an empty list in the `data` index.
 
 ### Filters
 
@@ -173,7 +173,7 @@ Error code | Error message | Description
 
 ## Infer concepts from other concepts
 
-> GET request to infer concepts related with the concepts passed as query parameters:
+> GET request to infer concepts related to the concepts passed as query parameters:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=society,urban \
@@ -210,7 +210,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/query/concepts-inferred \
 }
 ```
 
-This endpoint lets API users discover concepts which have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
+This endpoint lets API users discover concepts that have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
 
 If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
 
@@ -267,7 +267,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset?dataset
 }
 ```
 
-This endpoint lets API users discover datasets which share concepts with the dataset with id provided in the URL path. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the id of the dataset that is related and a list of concepts that are shared.
+This endpoint lets API users discover datasets that share concepts with the dataset with id provided in the URL path. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the id of the dataset that is related and a list of concepts that are shared.
 
 The results returned are sorted by their degree of similarity, meaning the datasets with the higher number of shared concepts are higher on the list.
 
@@ -330,7 +330,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-includi
 }
 ```
 
-This endpoint lets API users discover datasets which share concepts with the dataset with id provided in the URL path. The difference from the endpoint above is that this endpoint also looks at the ancestor concepts from the dataset with id provided - datasets returned might have ancestor concepts in common, but not necessarily the same exact concepts in common.
+This endpoint lets API users discover datasets that share concepts with the dataset with id provided in the URL path. The difference from the endpoint above is that this endpoint also looks at the ancestor concepts from the dataset with id provided - datasets returned might have ancestor concepts in common, but not necessarily the same exact concepts in common.
 
 If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the id of the dataset that is related and a list of concepts that are shared. Each list item also contains a `numberOfOcurrences` field, containing the count of common concepts. The results returned are sorted by their degree of similarity, meaning the datasets with the higher number of shared concepts (`numberOfOcurrences`) are higher on the list.
 
@@ -411,7 +411,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets \
 }
 ```
 
-This endpoint lets API users discover datasets related with the lists of concepts provided. Note that, either in the GET or POST forms for this endpoint, **concepts must be provided as a list of sets**. *AND* logical operators (`&&`) are applied among the list of sets, while *OR* (`||`) is used for set elements. You can provide up to three sets of concepts to search for - the example on the side exemplifies a request to this endpoint given the following sets of concepts:
+This endpoint lets API users discover datasets related to the lists of concepts provided. Note that, either in the GET or POST forms for this endpoint, **concepts must be provided as a list of sets**. *AND* logical operators (`&&`) are applied among the list of sets, while *OR* (`||`) is used for set elements. You can provide up to three sets of concepts to search for - the example on the side exemplifies a request to this endpoint given the following sets of concepts:
 
 - Set 1: `['spain', 'europe']`
 - Set 2: `['water']`
@@ -419,7 +419,7 @@ This endpoint lets API users discover datasets related with the lists of concept
 
 In this specific case, the datasets returned would be related with `"spain"` OR `"europe"`, `"water"`, and `"raster"` or `"geospatial"`. Or, expressed as a logical condition: `("spain" || "europe") && "water" && ("raster" || "geospatial")`.
 
-If successful, the response will have status 200 OK, containing a list of dataset ids that are related with the concepts provided in the `data` index. Also, note that ancestor concepts are also taken into account in the search.
+If successful, the response will have status 200 OK, containing a list of dataset ids that are related to the concepts provided in the `data` index. Also, note that ancestor concepts are also taken into account in the search.
 
 ### Filters
 
@@ -433,14 +433,14 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated with this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
 depth        | Limits the depth of the graph search. | Number | 15
 
 ### Errors for searching datasets by concepts
 
 Error code | Error message | Description
 ---------- | ------------- | ---------------------------------
-400        | Concepts query params is required | You must provide the list of sets of concepts.
+400        | Concepts query params are required | You must provide the list of sets of concepts.
 
 ## Search datasets by concepts and their synonyms
 
@@ -477,7 +477,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/search-by-label-synonym
 }
 ```
 
-This endpoint searches datasets in the graph that are related with the concepts provided or any of its synonyms. If successful, the response will have status 200 OK, containing a list of dataset ids in the `data` index. You can provide multiple concepts by splitting them with blank spaces.
+This endpoint finds datasets in the graph that are related to the concepts provided or any of its synonyms. If successful, the response will have status 200 OK, containing a list of dataset ids in the `data` index. You can provide multiple concepts by splitting them with blank spaces.
 
 ### Filters
 
@@ -531,13 +531,13 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets \
 }
 ```
 
-This endpoint returns a list of dataset sorted by the number of times these datasets were marked as favorite by users. The returned list is sorted descending, from the datasets with higher favorite count to the ones with lower count.
+This endpoint returns a list of dataset sorted by the number of times these datasets were marked as favorite by users. The returned list is sorted descending, from the datasets with higher favorite count to the ones with a lower count.
 
-If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `id` property, and the number of times the dataset was marked as favorite by a user in the `count.low` property.
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `id` property and the number of times the dataset was marked as favorite by a user in the `count.low` property.
 
 ### Filters
 
-> Filtering most liked datasets datasets by application:
+> Filtering most liked datasets by application:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets?application=gfw
@@ -575,9 +575,9 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed \
 }
 ```
 
-This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by users. The returned list is sorted descending, from the datasets with higher view count to the ones with lower count.
+This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by users. The returned list is sorted descending, from the datasets with higher view count to the ones with a lower count.
 
-If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property, and the number of times the dataset was viewed in the `views` property.
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property and the number of times the dataset was viewed in the `views` property.
 
 Note that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](#increment-dataset-view-count).
 
@@ -599,12 +599,12 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated with this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
 limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
 
 ## Most viewed datasets by user
 
-> GET request to find out which are the most viewed datasets for the user with token provided:
+> GET request to find out which are the most viewed datasets for the token user:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed \
@@ -629,9 +629,9 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed \
 }
 ```
 
-This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by the user of the token provided in the request headers. The returned list is sorted descending, from the datasets with higher view count to the ones with lower count.
+This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by the user of the token provided in the request headers. The returned list is sorted descending, from the datasets with higher view count to the ones with a lower count.
 
-If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property, and the number of times the dataset was viewed in the `views` property.
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property and the number of times the dataset was viewed in the `views` property.
 
 As in the case of the `most-viewed` endpoint, please keep in mind that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](#increment-dataset-view-count).
 
@@ -653,7 +653,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated with this graph concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
 limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
 
 ### Errors for getting most viewed datasets by user
@@ -664,7 +664,7 @@ Error code | Error message | Description
 
 ## Increment dataset view count
 
-> POST request to find out which are the most viewed datasets for the user with token provided:
+> POST request to find out which are the most viewed datasets for the token user:
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/graph/dataset/:id/visited \
@@ -674,11 +674,11 @@ curl -X POST https://api.resourcewatch.org/v1/graph/dataset/:id/visited \
 
 Use this endpoint if you want to increment the view count of the dataset with id provided in the URL path. If successful, this endpoint will return 200 OK containing an empty object in the response body. 
 
-You can optionally provide the authentication token for your API user in the request headers. If no token is provided, a dataset view is registered without being associated to any user. If a token is provided, the dataset view count for your API user will be incremented.
+You can optionally provide the authentication token for your API user in the request headers. If no token is provided, a dataset view is registered without being associated with any user. If a token is provided, the dataset view count for your API user will be incremented.
 
 ## Creating graph resources
 
-**The creation of graph resources is performed automatically after the creation of each resource, so you don't need to explicitly do it yourself.** Because of this, creating graph resources is restricted to other RW API services, and requires authentication from a RW API service. Normal API users won't be able to call these endpoint successfully - if you try to do it with a "normal" API user token, you will receive a response with HTTP status code `403 Forbidden`.
+**The creation of graph resources is performed automatically after the creation of each resource, so you don't need to explicitly do it yourself.** Because of this, creating graph resources is restricted to other RW API services, and requires authentication from a RW API service. Normal API users won't be able to call these endpoints successfully - if you try to do it with a "normal" API user token, you will receive a response with HTTP status code `403 Forbidden`.
 
 For details on how these specific endpoints work, you should check out the developer docs for each of the graph resources supported. The following resources are currently supported as graph nodes:
 
@@ -689,7 +689,7 @@ For details on how these specific endpoints work, you should check out the devel
 
 ## Deleting graph resources
 
-**The deletion of graph resources is performed automatically after the deletion of each resource, so you don't need to explicitly do it yourself.** Because of this, deleting graph resources is restricted to other RW API services, and requires authentication from a RW API service. Normal API users won't be able to call these endpoint successfully - if you try to do it with a "normal" API user token, you will receive a response with HTTP status code `403 Forbidden`.
+**The deletion of graph resources is performed automatically after the deletion of each resource, so you don't need to explicitly do it yourself.** Because of this, deleting graph resources is restricted to other RW API services, and requires authentication from a RW API service. Normal API users won't be able to call these endpoints successfully - if you try to do it with a "normal" API user token, you will receive a response with HTTP status code `403 Forbidden`.
 
 For details on how these specific endpoints work, you should check out the developer docs for each of the graph resources supported. The following resources are currently supported as graph nodes:
 
@@ -782,11 +782,11 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/:id/vocabulary/knowledge
 
 **The management of connections between graph resources and concepts is handled by vocabulary endpoints, using the vocabulary `"knowledge_graph"`.** Using this vocabulary, you can add tags to your dataset. These tags will be added as graph concepts, and one (or more, accordingly) graph edges will be created, establishing a connection between your resource and the provided tags.
 
-This section provides some examples on how you can use vocabulary endpoints to manage your resources' graph concepts. Keep in mind that you can always refer to the [vocabulary endpoint documentation](#vocabulary-and-tags) for more details on how to use these endpoints.
+This section provides some examples of how you can use vocabulary endpoints to manage your resources' graph concepts. Keep in mind that you can always refer to the [vocabulary endpoint documentation](#vocabulary-and-tags) for more details on how to use these endpoints.
 
-On the examples on the side, you'll be able to understand that you can map the tags associated with a given resource with the tags associated with the `"knowledge_graph"` vocabulary for the same resource. You can use vocabulary's endpoints to create (if it doesn't exist yet), edit, or delete the tags associated with that resource. Those changes will be reflected on the concepts that are associated with that same resource.
+On the examples on the side, you'll be able to understand that you can map the tags associated with a given resource with the tags associated with the `"knowledge_graph"` vocabulary for the same resource. You can use vocabulary's endpoints to create (if it doesn't exist yet), edit, or delete the tags associated with that resource. Those changes will be reflected in the concepts that are associated with that same resource.
 
-Lastly, keep in mind that, despite the examples on the side refer to datasets, you can use vocabulary's endpoints to update the tags associated to the `"knowledge_graph"` vocabulary for all supported resource types: datasets, layers, widgets and metadata.
+Lastly, keep in mind that, despite the examples on the side refer to datasets, you can use vocabulary's endpoints to update the tags associated with the `"knowledge_graph"` vocabulary for all supported resource types: datasets, layers, widgets, and metadata.
 
 ## Favorite relationships between graph nodes and users
 
@@ -898,7 +898,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/query/concepts-ancestors \
 }
 ```
 
-This endpoint lets API users discover concepts which have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
+This endpoint lets API users discover concepts that have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
 
 If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
 

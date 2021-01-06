@@ -33,7 +33,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/widget/:idDataset/:idWidget 
 -H "Content-Type: application/json"
 ```
 
-This endpoint creates a graph node for the widget with id provided in the URL path. It also creates a graph edge, connecting the newly created widget graph node to the graph node for the dataset associated to this widget.
+This endpoint creates a graph node for the widget with id provided in the URL path. It also creates a graph edge, connecting the newly created widget graph node to the graph node for the dataset associated with this widget.
 
 **This endpoint is automatically called on widget creation**, so you don't need to manually do it yourself after you create a widget. In order to ensure that API users cannot manually create graph nodes for widgets, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to create a graph node for a widget, you will receive a response with HTTP status code `403 Forbidden`.
 
@@ -55,7 +55,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/layer/:idDataset/:idLayer \
 -H "Content-Type: application/json"
 ```
 
-This endpoint creates a graph node for the layer with id provided in the URL path. It also creates a graph edge, connecting the newly created layer graph node to the graph node for the dataset associated to this layer.
+This endpoint creates a graph node for the layer with id provided in the URL path. It also creates a graph edge, connecting the newly created layer graph node to the graph node for the dataset associated with this layer.
 
 **This endpoint is automatically called on layer creation**, so you don't need to manually do it yourself after you create a layer. In order to ensure that API users cannot manually create graph nodes for layers, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to create a graph node for a layer, you will receive a response with HTTP status code `403 Forbidden`.
 
@@ -77,9 +77,9 @@ curl -X POST https://api.resourcewatch.org/v1/graph/metadata/:resourceType/:idRe
 -H "Content-Type: application/json"
 ```
 
-This endpoint creates a graph node for the metadata with id provided in the URL path. As you might have come across in the [Metadata endpoint documentation](#metadata12), metadata is always associated with either a dataset, layer or widget. So, when creating a graph node for a metadata entry, you must also to provide the resource type (dataset, layer or widget) and its corresponding id. 
+This endpoint creates a graph node for the metadata with id provided in the URL path. As you might have come across in the [Metadata endpoint documentation](#metadata12), metadata is always associated with either a dataset, layer, or widget. So, when creating a graph node for a metadata entry, you must also provide the resource type (dataset, layer, or widget) and its corresponding id. 
 
-Calling this endpoint will also create a graph edge connecting the newly created metadata graph node to the graph node for the resource (dataset, layer or widget) associated to it.
+Calling this endpoint will also create a graph edge connecting the newly created metadata graph node to the graph node for the resource (dataset, layer, or widget) associated with it.
 
 **This endpoint is automatically called on metadata creation**, so you don't need to manually do it yourself after you create a metadata entry. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to create a graph node for a metadata entry, you will receive a response with HTTP status code `403 Forbidden`.
 
@@ -200,7 +200,7 @@ Error code | Error message     | Description
 403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
 404        | Resource {:resourceType} and id ${:idResource} not found | No graph node for the resource with id provided was found.
 
-## Updating concepts associated to graph nodes
+## Updating concepts associated with graph nodes
 
 > PUT request to update the concepts associated to a graph node:
 
@@ -214,7 +214,7 @@ curl -X PUT https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/ass
 }'
 ```
 
-This endpoint updates the graph edge associated to the resource identified in the URL path. Existing concepts are deleted and replaced with the ones provided in the `tags` field of the request body.
+This endpoint updates the graph edge associated with the resource identified in the URL path. Existing concepts are deleted and replaced with the ones provided in the `tags` field of the request body.
 
 **This endpoint is automatically called when you associate the vocabulary "knowledge_graph" to a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
 
@@ -226,7 +226,7 @@ Error code | Error message     | Description
 403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
 404        | Resource {:resourceType} and id ${:idResource} not found | No graph node for the resource with id provided was found.
 
-## Deleting concepts associated to graph nodes
+## Deleting concepts associated with graph nodes
 
 > DELETE request to remove concepts associated to a graph node:
 
@@ -236,7 +236,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/
 -H "Content-Type: application/json"
 ```
 
-This endpoint deletes the graph edge associated to the resource identified in the URL path.
+This endpoint deletes the graph edge associated with the resource identified in the URL path.
 
 **This endpoint is automatically called when you associate the vocabulary "knowledge_graph" to a resource**, so you don't need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to call this endpoint, you will receive a response with HTTP status code `403 Forbidden`.
 
