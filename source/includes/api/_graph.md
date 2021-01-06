@@ -769,6 +769,94 @@ Error code | Error message     | Description
 403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
 404        | Resource {:resourceType} and id ${:idResource} not found | No graph node for the resource with id provided was found.
 
+## Deleting graph resources
+
+The following sections describe how you can delete graph resources.
+
+### Deleting dataset graph nodes
+
+> DELETE request to remove a dataset graph node:
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/graph/dataset/:id \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+This endpoint deletes the graph node for the dataset with id provided in the URL path. 
+
+**This endpoint is automatically called on dataset deletion**, so you don't need to manually do it yourself after you create a dataset. In order to ensure that API users cannot manually delete graph nodes for datasets, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to delete a graph node for a dataset, you will receive a response with HTTP status code `403 Forbidden`.
+
+#### Errors for deleting dataset graph nodes
+
+Error code | Error message   | Description
+---------- | --------------- | ---------------------------------
+401        | Unauthorized    | No authorization token provided.
+403        | Not authorized  | You are trying to call this endpoint without being identified as a RW API service.
+
+### Deleting widget graph nodes
+
+> DELETE request to remove a widget graph node:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/widget/:id \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+This endpoint deletes the graph node for the widget with id provided in the URL path.
+
+**This endpoint is automatically called on widget deletion**, so you don't need to manually do it yourself after you delete a widget. In order to ensure that API users cannot manually delete graph nodes for widgets, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to delete a graph node for a widget, you will receive a response with HTTP status code `403 Forbidden`.
+
+#### Errors for deleting widget graph nodes
+
+Error code | Error message     | Description
+---------- | ----------------- | ---------------------------------
+401        | Unauthorized      | No authorization token provided.
+403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
+
+### Deleting layer graph nodes
+
+> DELETE request to remove a layer graph node:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/layer/:id \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+This endpoint deletes the graph node for the layer with id provided in the URL path.
+
+**This endpoint is automatically called on layer deletion**, so you don't need to manually do it yourself after you delete a layer. In order to ensure that API users cannot manually delete graph nodes for layers, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to delete a graph node for a layer, you will receive a response with HTTP status code `403 Forbidden`.
+
+#### Errors for deleting layer graph nodes
+
+Error code | Error message     | Description
+---------- | ----------------- | ---------------------------------
+401        | Unauthorized      | No authorization token provided.
+403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
+
+### Deleting metadata graph nodes
+
+> DELETE request to remove a metadata graph node:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/metadata/:id \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+This endpoint deletes the graph node for the metadata with id provided in the URL path.
+
+**This endpoint is automatically called on metadata deletion**, so you don't need to manually do it yourself after you delete a metadata entry. In order to ensure that API users cannot manually delete graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won't be able to call this endpoint successfully. If, as an API user and using your user's token, you try to delete a graph node for a metadata entry, you will receive a response with HTTP status code `403 Forbidden`.
+
+#### Errors for deleting metadata graph nodes
+
+Error code | Error message     | Description
+---------- | ----------------- | ---------------------------------
+401        | Unauthorized      | No authorization token provided.
+403        | Not authorized    | You are trying to call this endpoint without being identified as a RW API service.
+
 ## Relationships between graph nodes and concepts
 
 The following sections describe how you can manage the connections between concepts and graph nodes previously created.
