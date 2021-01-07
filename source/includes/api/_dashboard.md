@@ -1,5 +1,7 @@
 # Dashboard
 
+**Note: the documentation for these endpoints is not maintained and might not be up to date.**
+
 ## What is a dashboard
 
 A dashboard contains the information to display a web page belonging to a user.

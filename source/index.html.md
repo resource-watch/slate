@@ -40,6 +40,7 @@ includes:
   - api/webshot
   - api/topic
   - api/dashboard
+  - api/static_pages
   - api/tasks
   - api/user_management
   - api/microservices
