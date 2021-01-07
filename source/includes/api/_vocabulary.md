@@ -313,6 +313,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
     }
 }'
 ```
+
 > Example response
 
 ```json
@@ -481,7 +482,7 @@ Error code     | Error message  | Description
 404            | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist      | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
 
 
-## Updating multiple vocabulary/tags for a resource
+### Updating multiple vocabulary/tags for a resource
 
 > Updating multiple vocabularies/tags for a dataset
 
@@ -597,6 +598,77 @@ Error code     | Error message  | Description
 403            | Forbidden      | You are trying to update a vocabulary for resource which `application` value is not associated with your user account.
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 404            | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist      | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
+
+
+## Cloning vocabularies/tags for a dataset
+
+> Cloning vocabularies/tags for a dataset
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/clone/dataset \
+-H "Content-Type: application/json"  -d \
+ '{
+    "newDataset": "<target-dataset-id>"
+  }'
+```
+
+> Example response
+
+```json
+{
+    "data": [
+        {
+            "id": "vocabulary1",
+            "type": "vocabulary",
+            "attributes": {
+                "tags": [
+                    "tag1",
+                    "tag2"
+                ],
+                "name": "vocabulary1",
+                "application": "rw"
+            }
+        },
+        {
+            "id": "vocabulary2",
+            "type": "vocabulary",
+            "attributes": {
+                "tags": [
+                    "tag3",
+                    "tag4"
+                ],
+                "name": "vocabulary2",
+                "application": "rw"
+            }
+        }
+    ]
+}
+```
+
+This endpoint allows you to clone all vocabularies/tags for all applications, for a single dataset. 
+
+The URL should include the id of the source dataset, while the POST body should include a `newDataset` field containing the id of the target dataset. The target dataset id is not validated - the cloning will still occur even if the target id doesn't correspond to an existing dataset.
+
+The dataset you use as the target dataset can have existing vocabularies - the cloning operation is an additive, and will not update nor destroy any existing vocabulary that may have already been associated with the target dataset. However, the cloning operation will fail if it tries to overwrite a vocabulary (ie. if the target dataset already has a vocabulary with the same name and application as one being created as part of the cloning). This failure is not atomic - the target dataset may end up with some of the vocabularies of the source dataset. It's up to you, as the RW API user, to both manage these collisions, and recover from them should they happen.
+
+Assuming the cloning was successful, the response will contain a list of all vocabularies (both newly cloned and preexisting) and their respective tags, for all applications, for the target dataset.
+
+If you want to clone vocabularies/tags for your datasets, you must have the necessary user account permissions. Specifically:
+
+- the user must be logged in and belong to the same application as the source dataset
+- the user must have role `ADMIN` or `MANAGER`
+
+When cloning vocabularies/tags for a dataset, the source dataset id specified in the URL is validated, and the requests fails if a dataset with the given id does not exist. When creating a vocabulary for a widget or layer, you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the layer's/widget's dataset id does not match the dataset id defined in the resource) may be purged without prior warning.
+
+#### Errors for cloning vocabularies/tags for a dataset
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | This relationship already exists | The target dataset already has one or more vocabularies with the same name(s) and application(s) as the source dataset.
+400            | - newDataset: newDataset can not be empty. -   | The body object must have a `newDataset` key with the id of the target dataset.
+401            | Unauthorized   | You are not authenticated.
+403            | Forbidden      | You are trying to clone vocabulary for a source dataset which `application` value is not associated with your user account.
+404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to clone a vocabularies for a source dataset that doesn't exist.
 
 
 ## Deleting relationships
@@ -715,25 +787,6 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-044
 }
 ```
 
-## Getting a single relationship (broken now)
-
-> Getting a single vocabulary and a Dataset
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id>
-```
-
-> Getting a single vocabulary and a widget
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id>
-```
-
-> Getting a single vocabulary and a layer
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id>
-```
 
 ## Getting resources (COMMON USE CASE)
 
