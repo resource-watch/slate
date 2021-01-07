@@ -165,7 +165,7 @@ These endpoints allow you to get a single vocabulary and its tags for a single d
 
 ## Creating vocabulary/tags for a resource
 
-There are two types of endpoints for associating vocabulary/tags with resources: one allows you to create a single vocabulary (and its tags) for a resource, while the other supports creating multiple vocabularies/tags for a single resource.
+There are two types of endpoints for associating vocabulary/tags with resources: one allows you to create a single vocabulary (and its tags) for a resource, while the other supports creating multiple vocabularies/tags for a single resource. The primary use case for these endpoint is when you just created a new dataset/layer/widget, and want to add vocabularies/tags to them.
 
 ### Creating a single vocabulary/tags for a resource
 
@@ -236,7 +236,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
 ```
 
 
-This set of endpoints will allow you to create a new vocabulary/tags for a resource. The primary use case for these endpoint is when you just created a new dataset/layer/widget, and want to add vocabulary/tags to them.
+This set of endpoints will allow you to create a new vocabulary/tags for a resource. 
 
 The request body must contain both an array of tags, and the `application` under which the vocabulary/tags are being created. If a vocabulary with the same name already exists for the specified application, you will get an error message - you can use the update endpoints to modify an existing vocabulary.
 
@@ -254,6 +254,7 @@ When creating vocabulary/tags for a resource, the dataset id specified in the UR
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | This relationship already exists | The resource already has a vocabulary with the same name for the specified application
+400            | - tags: tags can not be empty. -  | `tags` body fields is empty
 400            | - tags: tags check failed. -  | Either the `tags` or `applications` body fields are missing or have an invalid value
 401            | Unauthorized   | You are not authenticated.
 403            | Forbidden      | You are trying to create a vocabulary for resource which `application` value is not associated with your user account.
@@ -268,8 +269,14 @@ Error code     | Error message  | Description
 curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
 -H "Content-Type: application/json"  -d \
  '{
-   "application": <application>,
-   "tags": [<tags>]
+    "vocabulary1": {
+        "tags":["tag1", "tag2"],
+        "application": "rw"
+    },
+    "vocabulary2": {
+        "tags":["tag3", "tag4"],
+        "application": "rw"
+    }
   }'
 ```
 
@@ -339,7 +346,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
 }
 ```
 
-This set of endpoints will allow you to create multiple vocabularies/tags for a single resource in a single request. The primary use case for these endpoint is when you just created a new dataset/layer/widget, and want to add multiple vocabularies/tags to them.
+This set of endpoints will allow you to create multiple vocabularies/tags for a single resource in a single request. 
 
 The request body must contain at least one key, each of them corresponding to the names of the vocabularies you want to create. Each of these keys must have an object-type value, which in turn must contain the following keys:
 
@@ -367,54 +374,50 @@ Error code     | Error message  | Description
 403            | Forbidden      | You are trying to create a vocabulary for resource which `application` value is not associated with your user account.
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 
+
 ## Updating vocabulary/tags
 
+If you have already associated vocabularies and tags to your resources, and would like to modify those tags, the next set of endpoints is for you.
 
-> Updating a relationship between a Vocabulary and a Dataset
+There are two types of endpoints for updating existing vocabulary/tags: one allows you to modify a single vocabulary (and its tags) for a resource, while the other supports updating multiple vocabularies/tags for a single resource with a single request.
+
+### Updating a single vocabulary/tags for a resource
+
+
+> Updating a vocabulary for a dataset
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
- "application": <application>,
+   "application": <application>,
    "tags": [<tags>]
   }'
 ```
 
-> Updating a relationship between a Vocabulary and a Widget
+> Updating a vocabulary for a widget
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
- "application": <application>,
+   "application": <application>,
    "tags": [<tags>]
   }'
 ```
 
-> Updating a relationship between a Vocabulary and a Layer
+> Updating a vocabulary for a layer
 
 ```shell
 curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id> \
 -H "Content-Type: application/json"  -d \
  '{
- "application": <application>,
+   "application": <application>,
    "tags": [<tags>]
   }'
 ```
 
-> Example of request with real data
-
-```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
--H "Content-Type: application/json"  -d \
- '{
- "application": <application>,
-   "tags": ["maths", "astronomy"]
-  }'
-```
-
-> Example of response with real data
+> Example response 
 
 ```json
 {
@@ -454,174 +457,147 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0
 }
 ```
 
-## Creating several Vocabulary-Resource relationships
+This set of endpoints will allow you to update the tags of an existing vocabulary/tags for a resource.
 
-There is also an endpoint that allows you to create multiple relationships in the same request.
+The request body must contain the `application` of the vocabulary you want to update, and it will fail if you specify an vocabulary name/application pair that does not exist. Additionally, it must contain a `tags` array of strings with a list of new tags to use. Any existing tags that already existed for that vocabulary (for that resource and application) will be deleted, and replaced with the values you provide through this request. 
 
-> Creating multiple relationships between a Vocabulary and a Dataset
+Assuming the update was successful, the response will contain a list of all vocabularies and their respective tags associated with the specified resource, for all applications.
+
+If you want to update vocabulary/tags for your resources, you must have the necessary user account permissions. Specifically:
+
+- the user must be logged in and belong to the same application as the resource
+- the user must have role `ADMIN` or `MANAGER`
+
+When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails if a dataset with the given id does not exist. When updating a vocabulary for a widget or layer, you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the layer's/widget's dataset id does not match the dataset id defined in the resource) may be purged without prior warning.
+
+#### Errors for updating a single vocabulary/tags for a resource
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | - `<value>`: `<value>` check failed. -  | The body object has a `<value>` key which content is invalid (is not an object, or is missing `tags` and/or `application`).
+401            | Unauthorized   | You are not authenticated.
+403            | Forbidden      | You are trying to update a vocabulary for resource which `application` value is not associated with your user account.
+404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
+404            | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist      | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
+
+
+## Updating multiple vocabulary/tags for a resource
+
+> Updating multiple vocabularies/tags for a dataset
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
 -H "Content-Type: application/json"  -d \
  '{
-   "vocabularyOne": {
-   "application": <application>,
-       "tags": [<tags>]
-   },
-   "vocabularyTwo": {
-   "application": <application>,
-       "tags": [<tags>]
-   }
+    "vocabulary1": {
+        "tags":["tag1", "tag2"],
+        "application": "rw"
+    },
+    "vocabulary2": {
+        "tags":["tag3", "tag4"],
+        "application": "rw"
+    }
   }'
 ```
 
-> Creating multiple relationships between a Vocabulary and a Widget
+> Updating multiple vocabularies/tags for a widget
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary\
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary \
 -H "Content-Type: application/json"  -d \
 '{
-  "vocabularyOne": {
-  "application": <application>,
-      "tags": [<tags>]
-  },
-  "vocabularyTwo": {
-  "application": <application>,
-      "tags": [<tags>]
-  }
- }'
+    "vocabulary1": {
+        "tags":["tag1", "tag2"],
+        "application": "rw"
+    },
+    "vocabulary2": {
+        "tags":["tag3", "tag4"],
+        "application": "rw"
+    }
+}'
 ```
 
-> Creating multiple relationships between a Vocabulary and a Layer
+> Updating multiple vocabularies/tags for a layer
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary \
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary \
 -H "Content-Type: application/json"  -d \
 '{
-  "vocabularyOne": {
-  "application": <application>,
-      "tags": [<tags>]
-  },
-  "vocabularyTwo": {
-  "application": <application>,
-      "tags": [<tags>]
-  }
- }'
+    "vocabulary1": {
+        "tags":["tag1", "tag2"],
+        "application": "rw"
+    },
+    "vocabulary2": {
+        "tags":["tag3", "tag4"],
+        "application": "rw"
+    }
+}'
 ```
-
-> Example of request with real data
-
-```shell
-curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary?application=<application>
--H "Content-Type: application/json"  -d \
- '{
-     "country": {
-         "tags": ["Spain", "Italy", "Portugal"]
-     },
-     "sport": {
-         "tags": ["football", "basketball", "voleyball"]
-     },
-     "color": {
-         "tags": ["red", "green", "blue"]
-     }
-  }'
-```
-
-> Example of response with real data
+> Example response
 
 ```json
 {
-  "data": [
-    {
-      "id": "vocabularyNameTwo",
-      "type": "vocabulary",
-      "attributes": {
-        "tags": [
-          "tag1",
-          "tag2",
-          "tag3"
-        ]
-      }
-    },
-    {
-      "id": "vocabularyNameOne",
-      "type": "vocabulary",
-      "attributes": {
-        "tags": [
-          "tag1",
-          "tag2",
-          "tag3"
-        ]
-      }
-    },
-    {
-      "id": "a",
-      "type": "vocabulary",
-      "attributes": {
-        "tags": [
-          "tag1",
-          "tag2",
-          "tag3"
-        ]
-      }
-    },
-    {
-      "id": "b",
-      "type": "vocabulary",
-      "attributes": {
-        "tags": [
-          "tag1",
-          "tag2",
-          "tag3"
-        ]
-      }
-    },
-    {
-      "id": "newV",
-      "type": "vocabulary",
-      "attributes": {
-        "tags": [
-          "test1",
-          "test2"
-        ]
-      }
-    },
-    {
-      "id": "country",
-      "type": "vocabulary",
-      "attributes": {
-        "tags": [
-          "Spain",
-          "Italy",
-          "Portugal"
-        ]
-      }
-    },
-    {
-      "id": "sport",
-      "type": "vocabulary",
-      "attributes": {
-        "tags": [
-          "football",
-          "basketball",
-          "voleyball"
-        ]
-      }
-    },
-    {
-      "id": "color",
-      "type": "vocabulary",
-      "attributes": {
-        "tags": [
-          "red",
-          "green",
-          "blue"
-        ]
-      }
-    }
-  ]
+    "data": [
+        {
+            "id": "vocabulary1",
+            "type": "vocabulary",
+            "attributes": {
+                "tags": [
+                    "tag1",
+                    "tag2"
+                ],
+                "name": "vocabulary1",
+                "application": "rw"
+            }
+        },
+        {
+            "id": "vocabulary2",
+            "type": "vocabulary",
+            "attributes": {
+                "tags": [
+                    "tag3",
+                    "tag4"
+                ],
+                "name": "vocabulary2",
+                "application": "rw"
+            }
+        }
+    ]
 }
 ```
+
+**Know issue warning** There's a known issue where you may experience a `400 - This relationship already exists` error when using these endpoints. There's currently no ETA for its resolution.
+
+This set of endpoints will allow you to update multiple vocabularies/tags for a single resource in a single request.
+
+The request body must contain at least one key, each of them corresponding to the names of the vocabularies you want to update. Each of these keys must have an object-type value, which in turn must contain the following keys:
+
+- `tags`: an array of tags that will replace all the tags for that vocabulary (associated with that resource and application)
+- `application`: the application associated with the vocabulary you want to update.
+
+You can update different vocabularies for different applications in a single request.
+
+Assuming the update was successful, the response will contain a list of all vocabularies and their respective tags associated with the specified resource, for all applications.
+
+If you want to update vocabulary/tags for your resources, you must have the necessary user account permissions. Specifically:
+
+- the user must be logged in and belong to the same application as the resource
+- the user must have role `ADMIN` or `MANAGER`
+
+When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails if a dataset with the given id does not exist. When updating a vocabulary for a widget or layer, you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the layer's/widget's dataset id does not match the dataset id defined in the resource) may be purged without prior warning.
+
+#### Errors for updating multiple vocabularies/tags for a resource
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | - tags: tags can not be empty. -  | `tags` body fields is empty
+400            | - tags: tags check failed. -  | Either the `tags` or `applications` body fields are missing or have an invalid value.
+401
+401            | Unauthorized   | You are not authenticated.
+403            | Forbidden      | You are trying to update a vocabulary for resource which `application` value is not associated with your user account.
+404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
+404            | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist      | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
+
 
 ## Deleting relationships
 
@@ -631,25 +607,25 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-04
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id>
 ```
 
-> Deleting relationships between a Vocabulary and a Widget
+> Deleting relationships between a Vocabulary and a widget
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id>
 ```
 
-> Deleting relationships between a Vocabulary and a Layer
+> Deleting relationships between a Vocabulary and a layer
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id>
 ```
 
-> Example of request with real data
+> Example of request 
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
 ```
 
-> Example of response with real data
+> Example of response 
 
 ```json
 {
@@ -690,25 +666,25 @@ You can be request all vocabularies that are associated to a particular resource
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary
 ```
 
-> Getting Vocabularies related with a Widget
+> Getting Vocabularies related with a widget
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary
 ```
 
-> Getting Vocabularies related with a Layer
+> Getting Vocabularies related with a layer
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary
 ```
 
-> Example of request with real data
+> Example of request 
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
 ```
 
-> Example of response with real data
+> Example of response 
 
 ```json
 {
@@ -741,19 +717,19 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-044
 
 ## Getting a single relationship (broken now)
 
-> Getting a single relationship between a Vocabulary and a Dataset
+> Getting a single vocabulary and a Dataset
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id>
 ```
 
-> Getting a single relationship between a Vocabulary and a Widget
+> Getting a single vocabulary and a widget
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id>
 ```
 
-> Getting a single relationship between a Vocabulary and a Layer
+> Getting a single vocabulary and a layer
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id>
@@ -781,7 +757,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/vocabul
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/vocabulary/find
 ```
 
-> Example of response with real data
+> Example of response 
 
 ```shell
 curl -X GET http://api.resourcewatch.org/v1/dataset/vocabulary/find?legacy=cdi,coasts
@@ -827,7 +803,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/vocabul
   }'
 ```
 
-> Example of request with real data
+> Example of request 
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids \
@@ -837,7 +813,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids \
   }'
 ```
 
-> Example of response with real data
+> Example of response 
 
 ```json
 {
@@ -905,7 +881,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/:datasetId/vocabulary \
 -H "Authorization: Bearer <your-token>"
 ```
 
-> Deleting all Vocabulary associated with a Widget
+> Deleting all Vocabulary associated with a widget
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/widget/:widgetId/vocabulary \
@@ -913,7 +889,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/widget/:widget
 -H "Authorization: Bearer <your-token>"
 ```
 
-> Deleting all Vocabulary associated with a Layer
+> Deleting all Vocabulary associated with a layer
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/layer/:layerId/vocabulary \
