@@ -4,9 +4,9 @@
 
 [Vocabularies and tags concepts](#vocabularies-and-tags) are covered in their dedicated section, and we strongly recommend you read that section before diving into the details of the respective endpoints. In it, we explain in detail what is a tag and a vocabulary, and why you should use them to empower different use cases of the RW API.
 
-Simply put, a tag is a keyword that can be associated to one or more `resources`. A vocabulary is a groups of tags, which also defines their scope or context. Every tag belongs to a vocabulary, and a vocabulary does not exist without tags, so more often than not you'll need to specify both when using the different endpoints covered here. 
+Simply put, a tag is a keyword that describes a `resource` (we'll talk in depth about what these are in the next section). A vocabulary is a groups of tags, and has a name (also called and used as an `id` for the vocabulary) that should define the scope or context of the tags it contains.
 
-It's important to keep in mind that these associations between a resource and a vocabulary/tag have an [applications](#applications) associated with them. Putting this in an example, `dataset` A may be associated with vocabulary/tag X for application `rw`, but not for application `gfw`. Most endpoints will allow you explicitly define which application you are referring to (some will even require it), and a `rw` default value will be assumed when no explicit value is provided.
+It's important to keep in mind that these associations between a resource and a vocabulary have an [application](#applications) associated with them. Putting this in an example, `dataset` A may be associated with vocabulary X for application `rw`, but not for application `gfw`. Most endpoints will allow you explicitly define which application you are referring to (some will even require it), and a `rw` default value will be assumed when no explicit value is provided.
 
 ## What are resources?
 
@@ -15,6 +15,37 @@ Throughout this section, we'll refer multiple times to `resources`. Simply put, 
 We assume that, at this point, you are already familiar with the concepts of [dataset](#dataset), [layer](#layer) or [widget](#widget) (ideally you are familiar with the 3). If that's not the case, we strongly encourage you learn about those concepts first, and we also recommend you take some time to explore and experiment using actual [dataset](#dataset6), [layer](#layer8) or [widget](#widget9) endpoints before proceeding. Vocabularies and tags exist to improve and empower your use cases of those resources, so it should only be used by applications and users that are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.
 
 The behavior of vocabulary and tags endpoints aims to be, as much as possible, independent from the target resource it references. In the detailed endpoint documentation below we'll cover the different endpoints in depth, and highlight the differences in behavior when handling different resource types, but you can safely assume that, for most of it, behavior described for a type of resource will be the same for all 3 types.
+
+### A note on resources
+
+> Creating a new vocabulary/tag for a widget
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/AAA/widget/BBB/vocabulary/VVV \
+-H "Content-Type: application/json"  -d \
+ '{
+   "application": <application>,
+   "tags": [<tags>]
+  }'
+```
+
+In the context of the vocabulary/tag service, widgets and layers are identified not only by their own id, but also by the id you specify as being their associated dataset. Using the side example as reference, this API request would create a vocabulary `VVV` for the resource widget `BBB` associated with dataset `AAA`. If you later reference the same widget id, but as belonging to a different dataset, it will be treated as a different resource altogether, and thus will have different vocabularies and tags.
+
+## Associations between vocabularies, tags and resources
+
+### Vocabularies and resources
+
+Despite not being 100% accurate, it's useful to think that a vocabulary is uniquely identified by a tuple of 3 values:
+
+- The resource (id and type) to which it's associated
+- Its `name` or `id` (these are 2 names for the same underlying value)
+- Its `application`
+
+Putting it in other words: if you reuse the name of an existing vocabulary, but associate with a different resource and/or application, you are effectively creating a different vocabulary. 
+
+### Vocabularies and tags
+
+Tags are simply strings associated with an individual vocabulary. They have no direct connection to a resource, and have no logic or complexity within the context of a vocabulary. Tags that have the same value but belong to different vocabularies are not matched or related in any way.
 
 ## Endpoint overview
 
@@ -84,7 +115,6 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<wi
 
 These endpoints allow you to get vocabulary/tags for a single dataset, widget or layer. By default, vocabulary/tags for the `rw` application are returned, but you can use the optional `app` or `application` query parameters to load data for a different application.
 
-One important detail to keep in mind when getting vocabulary/tags for widgets or layers is that the dataset id used in these queries will need to match the dataset id provided when creating the association between a widget or layer, and the vocabulary/tags. If you provide an incorrect dataset id, you will not get the correct data.
 
 ### Getting a single vocabulary and its tags for a resource
 
@@ -132,8 +162,6 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<wi
 ```
 
 These endpoints allow you to get a single vocabulary and its tags for a single dataset, widget or layer. By default, vocabulary/tags for the `rw` application are returned, but you can use the optional `app` or `application` query parameters to load data for a different application.
-
-One important detail to keep in mind when getting vocabulary/tags for widgets or layers is that the dataset id used in these queries will need to match the dataset id provided when creating the association between a widget or layer, and the vocabulary/tags. If you provide an incorrect dataset id, you will not get the correct data.
 
 ## Creating vocabulary/tags for a resource
 
@@ -219,6 +247,8 @@ If you want to create new vocabulary/tags for your resources, you must have the 
 - the user must be logged in and belong to the same application as the resource
 - the user must have role `ADMIN` or `MANAGER`
 
+When creating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails if a dataset with the given id does not exist. When creating a vocabulary for a widget or layer, you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the layer's/widget's dataset id does not match the dataset id defined in the resource) may be purged without prior warning.
+
 #### Errors for creating a single vocabulary/tags for a resource
 
 Error code     | Error message  | Description
@@ -227,6 +257,7 @@ Error code     | Error message  | Description
 400            | - tags: tags check failed. -  | Either the `tags` or `applications` body fields are missing or have an invalid value
 401            | Unauthorized   | You are not authenticated.
 403            | Forbidden      | You are trying to create a vocabulary for resource which `application` value is not associated with your user account.
+404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 
 
 ### Creating multiple vocabulary/tags for a resource
@@ -324,6 +355,8 @@ If you want to create new vocabulary/tags for your resources, you must have the 
 - the user must be logged in and belong to the same application as the resource
 - the user must have role `ADMIN` or `MANAGER`
 
+When creating vocabularies/tags for a resource, the dataset id specified in the URL is validated, and the requests fails if a dataset with the given id does not exist. When creating a vocabulary for a widget or layer, you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the layer's/widget's dataset id does not match the dataset id defined in the resource) may be purged without prior warning.
+
 #### Errors for creating a single vocabulary/tags for a resource
 
 Error code     | Error message  | Description
@@ -332,10 +365,10 @@ Error code     | Error message  | Description
 400            | - `<value>`: `<value>` check failed. -  | The body object has a `<value>` key which content is invalid (is not an object, or is missing `tags` and/or `application`).
 401            | Unauthorized   | You are not authenticated.
 403            | Forbidden      | You are trying to create a vocabulary for resource which `application` value is not associated with your user account.
+404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 
 ## Updating vocabulary/tags
 
-As described above, 
 
 > Updating a relationship between a Vocabulary and a Dataset
 
