@@ -1,20 +1,17 @@
 # Areas
 
-The following area endpoints are available
+**Note: the documentation for these endpoints is not maintained and might not be up to date.**
 
+The following sections describe endpoints API users can use to interact with version 1 of Areas of Interest.
 
 ## Get user areas
 
-
 > Getting a list of areas for the current user
-
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/area
 -H "Authorization: Bearer <your-token>"
 ```
-
-
 
 > Response:
 
@@ -69,13 +66,11 @@ curl -X GET https://api.resourcewatch.org/v1/area
 }
 ```
 
-Returns the list of areas created by the user provided
+Returns the list of areas created by the user provided.
 
 ### Filters
 
-
 > Getting a list of areas for the current user and a given application
-
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/area?application=rw
@@ -85,7 +80,6 @@ curl -X GET https://api.resourcewatch.org/v1/area?application=rw
 Parameter    |        Description |    Type |                                 Values |
 ------------ | :----------------: | ------: | -------------------------------------: |
 application  |        Application. Read more about this field [here](/index-rw.html#applications). |    Text |  Any Text, values separated by commas
-
 
 ### Pagination
 
@@ -159,7 +153,7 @@ curl -X POST https://api.resourcewatch.org/v1/area?application=rw \
  }'
 ```
 
-```
+```json
 {
   "data": {
     "type": "area",
@@ -218,7 +212,7 @@ curl -X GET https://api.resourcewatch.org/v1/area/59ca32ea3209db0014e9a7b7 \
 -H "Authorization: Bearer <your-token>" \
 ```
 
-```
+```json
 {
     "data": {
         "type": "area",
