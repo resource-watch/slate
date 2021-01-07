@@ -163,7 +163,7 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<wi
 
 These endpoints allow you to get a single vocabulary and its tags for a single dataset, widget or layer. By default, vocabulary/tags for the `rw` application are returned, but you can use the optional `app` or `application` query parameters to load data for a different application.
 
-## Creating vocabulary/tags for a resource
+## Creating vocabularies/tags for a resource
 
 There are two types of endpoints for associating vocabulary/tags with resources: one allows you to create a single vocabulary (and its tags) for a resource, while the other supports creating multiple vocabularies/tags for a single resource. The primary use case for these endpoint is when you just created a new dataset/layer/widget, and want to add vocabularies/tags to them.
 
@@ -261,7 +261,7 @@ Error code     | Error message  | Description
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 
 
-### Creating multiple vocabulary/tags for a resource
+### Creating multiple vocabularies/tags for a resource
 
 > Creating new vocabularies/tags for a dataset
 
@@ -376,7 +376,7 @@ Error code     | Error message  | Description
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 
 
-## Updating vocabulary/tags
+## Updating vocabularies/tags
 
 If you have already associated vocabularies and tags to your resources, and would like to modify those tags, the next set of endpoints is for you.
 
@@ -482,7 +482,7 @@ Error code     | Error message  | Description
 404            | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist      | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
 
 
-### Updating multiple vocabulary/tags for a resource
+### Updating multiple vocabularies/tags for a resource
 
 > Updating multiple vocabularies/tags for a dataset
 
@@ -567,7 +567,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer
 }
 ```
 
-**Know issue warning** There's a known issue where you may experience a `400 - This relationship already exists` error when using these endpoints. There's currently no ETA for its resolution.
+**Know issue warning** There's a known issue where you may experience a `400 - This relationship already exists` error when using these endpoints. There's currently no ETA for its resolution. As a workaround, we suggest updating vocabularies individually.
 
 This set of endpoints will allow you to update multiple vocabularies/tags for a single resource in a single request.
 
@@ -671,33 +671,31 @@ Error code     | Error message  | Description
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to clone a vocabularies for a source dataset that doesn't exist.
 
 
-## Deleting relationships
+## Deleting vocabularies/tags for a resource
 
-> Deleting relationships between a Vocabulary and a Dataset
+There are two types of endpoints for deleting vocabularies/tags: one allows you to delete a single vocabulary (and its tags) for a resource, while the other supports deleting all the vocabularies/tags for a single resource. Some use cases for these include deleting vocabularies prior to deleting the actual resource, or typical housekeeping tasks you may want to carry out on your data.
+
+### Deleting a single vocabulary/tags for a resource
+
+> Deleting a single vocabulary/tag for a dataset
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id>
 ```
 
-> Deleting relationships between a Vocabulary and a widget
+> Deleting a single vocabulary/tag for a widget
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id>
 ```
 
-> Deleting relationships between a Vocabulary and a layer
+> Deleting a single vocabulary/tag for a layer
 
 ```shell
 curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id>
 ```
 
-> Example of request 
-
-```shell
-curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
-```
-
-> Example of response 
+> Example response 
 
 ```json
 {
@@ -728,35 +726,49 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-
 }
 ```
 
-## Getting Vocabularies associated to a Resource
+This set of endpoints will allow you to delete a single vocabulary and its tags, for a resource.
 
-You can be request all vocabularies that are associated to a particular resource. It optionally accepts a `app` or `application` query parameter, that will filter the vocabulary's `application`. If none is provided, `rw` is used as default.
+As a query param, you can optionally provide a `app` or `application` values, to identify the application of the vocabulary to delete - by default, `rw` is assumed.
 
-> Getting Vocabularies related with a Dataset
+Assuming the operation was successful, the response will contain a list of all vocabularies and their respective tags associated with the specified resource, for all applications - including the vocabulary that was deleted.
+
+If you want to delete vocabularies/tags for your resources, you must have the necessary user account permissions. Specifically:
+
+- the user must be logged in and belong to the same application as the resource
+- the user must have role `ADMIN` or `MANAGER`
+
+When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails if a dataset with the given id does not exist. When deleting a vocabulary for a widget or layer, you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a known limitation of the current implementation, and may be modified at any time.
+
+#### Errors for deleting a single vocabulary/tags for a resource
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | You are not authenticated.
+403            | Forbidden      | You are trying to delete a vocabulary for resource which `application` value is not associated with your user account.
+404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
+404            | Relationship between `<vocabulary id> and dataset - `<dataset id> and dataset: `<dataset id> doesn't exist      | You are trying to delete a vocabulary that doesn't exist.
+
+### Deleting all vocabulary/tags for a resource
+
+> Deleting all vocabularies/tag for a dataset
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id>
 ```
 
-> Getting Vocabularies related with a widget
+> Deleting all vocabularies/tag for a widget
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary/<vocabulary-id>
 ```
 
-> Getting Vocabularies related with a layer
+> Deleting all vocabularies/tag for a layer
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary/<vocabulary-id>
 ```
 
-> Example of request 
-
-```shell
-curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
-```
-
-> Example of response 
+> Example response 
 
 ```json
 {
@@ -786,6 +798,28 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-044
   ]
 }
 ```
+
+**Know issue warning** There's a known issue where you may experience a `404 - Relationship between undefined and dataset - <dataset id> and dataset: <dataset id> doesn't exist` error when using these endpoints. If you experience this issue, keep in mind that some vocabularies may have already been deleted, despite the error message. Those are not recoverable. There's currently no ETA for its resolution. As a workaround, we suggest deleting vocabularies individually.
+
+This set of endpoints will allow you to delete all vocabularies and their tags for a resource.
+
+Assuming the operation was successful, the response will contain a list of all vocabularies and their respective tags associated with the specified resource, for all applications - all of which were already deleted.
+
+If you want to delete vocabularies/tags for your resources, you must have the necessary user account permissions. Specifically:
+
+- the user must be logged in and belong to the same application as the resource
+- the user must have role `ADMIN` or `MANAGER`
+
+When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails if a dataset with the given id does not exist. When deleting vocabularies for a widget or layer, you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a known limitation of the current implementation, and may be modified at any time.
+
+#### Errors for deleting all vocabularies/tags for a resource
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+401            | Unauthorized   | You are not authenticated.
+403            | Forbidden      | You are trying to delete vocabularies for resource which `application` value is not associated with your user account.
+404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
+
 
 
 ## Getting resources (COMMON USE CASE)
@@ -810,7 +844,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/vocabul
 curl -X GET https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/vocabulary/find
 ```
 
-> Example of response 
+> Example response 
 
 ```shell
 curl -X GET http://api.resourcewatch.org/v1/dataset/vocabulary/find?legacy=cdi,coasts
@@ -866,7 +900,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids \
   }'
 ```
 
-> Example of response 
+> Example response 
 
 ```json
 {
