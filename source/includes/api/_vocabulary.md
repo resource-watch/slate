@@ -333,10 +333,9 @@ Error code     | Error message  | Description
 401            | Unauthorized   | You are not authenticated.
 403            | Forbidden      | You are trying to create a vocabulary for resource which `application` value is not associated with your user account.
 
-## Updating an existing Vocabulary-Resource relationship
+## Updating vocabulary/tags
 
-If a relationship has to be updated, it's necessary to define it's new tags.
-The previous tags will be deleted in benefit of the new ones.
+As described above, 
 
 > Updating a relationship between a Vocabulary and a Dataset
 
