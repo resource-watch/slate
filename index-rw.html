@@ -12889,7 +12889,9 @@ Given the following sets of concepts:</p>
 </code></pre>
           <h1 id="areas">Areas</h1>
 
-<p>The following area endpoints are available</p>
+<p><strong>Note: the documentation for these endpoints is not maintained and might not be up to date.</strong></p>
+
+<p>The following sections describe endpoints API users can use to interact with version 1 of Areas of Interest.</p>
 
 <h2 id="get-user-areas">Get user areas</h2>
 
@@ -12951,7 +12953,7 @@ Given the following sets of concepts:</p>
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>Returns the list of areas created by the user provided</p>
+<p>Returns the list of areas created by the user provided.</p>
 
 <h3 id="filters">Filters</h3>
 
@@ -13064,31 +13066,31 @@ Given the following sets of concepts:</p>
    "application": "rw",
    "geostore": "713899292fc118a915741728ef84a2a7"
  }'</span>
-</code></pre><pre class="highlight plaintext"><code>{
-  "data": {
-    "type": "area",
-    "id": "5a0da028e6d876001080c259",
-    "attributes": {
-      "name": "Portugal area",
-      "application": "rw",
-      "geostore": "713899292fc118a915741728ef84a2a7",
-      "userId": "58e22f662071c01c02f76a0f",
-      "createdAt": "2017-11-16T14:26:48.396Z",
-      "updatedAt": "2017-11-16T14:26:48.396Z",
-      "image": "",
-      "datasets": [
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"area"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5a0da028e6d876001080c259"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Portugal area"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"713899292fc118a915741728ef84a2a7"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58e22f662071c01c02f76a0f"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-11-16T14:26:48.396Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-11-16T14:26:48.396Z"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
 
-      ],
-      "use": {
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
 
-      },
-      "iso": {
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
 
-      }
-    }
-  }
-}
-</code></pre>
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h2 id="delete-area">Delete area</h2>
 
 <p>Deletes an area</p>
@@ -13108,25 +13110,25 @@ Given the following sets of concepts:</p>
 <h3 id="example">Example</h3>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/area/59ca32ea3209db0014e9a7b7 <span class="se">\</span>
 -H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
-</code></pre><pre class="highlight plaintext"><code>{
-    "data": {
-        "type": "area",
-        "id": "59ca32ea3209db0014e9a7b7",
-        "attributes": {
-            "name": "Test custom area",
-            "application": "rw",
-            "geostore": "b12640deba9d3c5012c5359dd5572e2d",
-            "userId": "58e22f662071c01c02f76a0f",
-            "createdAt": "2017-09-26T10:58:50.226Z",
-            "updatedAt": "2017-09-26T10:58:50.226Z",
-            "image": "",
-            "datasets": [],
-            "use": {},
-            "iso": {}
-        }
-    }
-}
-</code></pre>
+</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"area"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59ca32ea3209db0014e9a7b7"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test custom area"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"geostore"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b12640deba9d3c5012c5359dd5572e2d"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58e22f662071c01c02f76a0f"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-09-26T10:58:50.226Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-09-26T10:58:50.226Z"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+            </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
           <h1 id="areas-v2">Areas v2</h1>
 
 <p>Before reading any further, please ensure you have read the <a href="#area">Areas of Interest concept documentation</a> first. It gives you a brief and clear description of what an Area of Interest is and what it can do for you. </p>
@@ -14528,6 +14530,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </span></code></pre>
           <h1 id="dashboard">Dashboard</h1>
 
+<p><strong>Note: the documentation for these endpoints is not maintained and might not be up to date.</strong></p>
+
 <h2 id="what-is-a-dashboard">What is a dashboard</h2>
 
 <p>A dashboard contains the information to display a web page belonging to a user.</p>
@@ -15106,6 +15110,10 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <li><code class="prettyprint">staging</code></li>
 <li><code class="prettyprint">author-title</code></li>
 </ul>
+
+          <h1 id="static-pages">Static pages</h1>
+
+<p><strong>Note: the documentation for these endpoints is not maintained and might not be up to date.</strong></p>
 
           <h1 id="tasks">Tasks</h1>
 
