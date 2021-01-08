@@ -47,19 +47,28 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/AAA/widget/BBB/vocabulary/
   }'
 ```
 
-In the context of the vocabulary/tag service, widgets and layers are identified not only by their own id but also by
-the id you specify as being their associated dataset. Using the side example as reference, this API request would create
-a vocabulary `VVV` for the resource widget `BBB` associated with dataset `AAA`. If you later reference the same widget
-id, but as belonging to a different dataset, it will be treated as a different resource altogether, and thus will have
+In the context of the vocabulary/tag service, widgets and layers are identified not only by their own id but also by the
+id you specify as being their associated dataset. Using the side example as reference, this API request would create a
+vocabulary `VVV` for the resource widget `BBB` associated with dataset `AAA`. If you later reference the same widget id,
+but as belonging to a different dataset, it will be treated as a different resource altogether, and thus will have
 different vocabularies and tags.
 
 ## The special `knowledge_graph` vocabulary
 
-Throughout the whole vocabulary/tags service, there is a special vocabulary named `knowledge_graph`. When used, this vocabulary acts as any other vocabulary but has additional logic built-in for the purpose of integrating vocabulary/tags with the [graph](#graph) available as part of the RW API.
+Throughout the whole vocabulary/tags service, there is a special vocabulary named `knowledge_graph`. When used, this
+vocabulary acts as any other vocabulary but has additional logic built-in for the purpose of integrating vocabulary/tags
+with the [graph](#graph) available as part of the RW API.
 
-Whenever you create or clone a vocabulary named `knowledge_graph` for a resource, the [dataset](#creating-dataset-graph-nodes), [layer](#creating-layer-graph-nodes) or [widget](#creating-widget-graph-nodes) node is added to the graph if not already present, and the [tags are associated to it](#associating-concepts-to-graph-nodes). Updating the `knowledge_graph` vocabulary also updates the corresponding [tags associated to it](#updating-concepts-associated-with-graph-nodes) on the graph side, and deleting the vocabulary also [deletes the corresponding tags in the graph](#deleting-concepts-associated-with-graph-nodes).
+Whenever you create or clone a vocabulary named `knowledge_graph` for a resource,
+the [dataset](#creating-dataset-graph-nodes), [layer](#creating-layer-graph-nodes)
+or [widget](#creating-widget-graph-nodes) node is added to the graph if not already present, and
+the [tags are associated to it](#associating-concepts-to-graph-nodes). Updating the `knowledge_graph` vocabulary also
+updates the corresponding [tags associated to it](#updating-concepts-associated-with-graph-nodes) on the graph side, and
+deleting the vocabulary
+also [deletes the corresponding tags in the graph](#deleting-concepts-associated-with-graph-nodes).
 
-For more details on the graph, its purpose, and how to use it, please refer to the dedicated documentation section on the [graph](#graph) and [its endpoints](#graph7).
+For more details on the graph, its purpose, and how to use it, please refer to the dedicated documentation section on
+the [graph](#graph) and [its endpoints](#graph7).
 
 ## Associations between vocabularies, tags and resources
 
@@ -386,8 +395,8 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When creating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
-if a dataset with the given id does not exist. When creating a vocabulary for a widget or layer, you should ensure you
+When creating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail if
+a dataset with the given id does not exist. When creating a vocabulary for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
 known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the
 layer's/widget's dataset id does not match the dataset id defined in the resource) may be purged without prior warning.
@@ -528,8 +537,8 @@ Error code     | Error message  | Description
 
 ## Updating vocabularies/tags
 
-If you have already associated vocabularies and tags to your resources and would like to modify those tags, the next
-set of endpoints is for you.
+If you have already associated vocabularies and tags to your resources and would like to modify those tags, the next set
+of endpoints is for you.
 
 There are two types of endpoints for updating existing vocabulary/tags: one allows you to modify a single vocabulary (
 and its tags) for a resource, while the other supports updating multiple vocabularies/tags for a single resource with a
@@ -628,8 +637,8 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
-if a dataset with the given id does not exist. When updating a vocabulary for a widget or layer, you should ensure you
+When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail if
+a dataset with the given id does not exist. When updating a vocabulary for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
 known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the
 layer's/widget's dataset id does not match the dataset id defined in the resource) may be purged without prior warning.
@@ -644,12 +653,12 @@ Error code     | Error message  | Description
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 404            | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist      | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
 
-### Updating multiple vocabularies/tags for a resource
+### Updating multiple vocabularies/tags for a dataset
 
 > Updating multiple vocabularies/tags for a dataset
 
 ```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
+curl -X PUT https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
 -H "Content-Type: application/json"  -d \
  '{
     "vocabulary1": {
@@ -661,40 +670,6 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary \
         "application": "rw"
     }
   }'
-```
-
-> Updating multiple vocabularies/tags for a widget
-
-```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widget-id>/vocabulary \
--H "Content-Type: application/json"  -d \
-'{
-    "vocabulary1": {
-        "tags":["tag1", "tag2"],
-        "application": "rw"
-    },
-    "vocabulary2": {
-        "tags":["tag3", "tag4"],
-        "application": "rw"
-    }
-}'
-```
-
-> Updating multiple vocabularies/tags for a layer
-
-```shell
-curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-id>/vocabulary \
--H "Content-Type: application/json"  -d \
-'{
-    "vocabulary1": {
-        "tags":["tag1", "tag2"],
-        "application": "rw"
-    },
-    "vocabulary2": {
-        "tags":["tag3", "tag4"],
-        "application": "rw"
-    }
-}'
 ```
 
 > Example response
@@ -731,46 +706,40 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer
 ```
 
 **Know issue warning** There's a known issue where you may experience a `400 - This relationship already exists` error
-when using these endpoints. There's currently no ETA for its resolution. As a workaround, we suggest updating
-vocabularies individually.
+when using this endpoint. There's currently no ETA for its resolution. As a workaround, we suggest updating vocabularies
+individually.
 
-This set of endpoints will allow you to update multiple vocabularies/tags for a single resource in a single request.
+This endpoint will allow you to update multiple vocabularies/tags for a single dataset in a single request.
 
 The request body must contain at least one key, each of them corresponding to the names of the vocabularies you want to
 update. Each of these keys must have an object-type value, which in turn must contain the following keys:
 
-- `tags`: an array of tags that will replace all the tags for that vocabulary (associated with that resource and
+- `tags`: an array of tags that will replace all the tags for that vocabulary (associated with that dataset and
   application)
 - `application`: the application associated with the vocabulary you want to update.
 
 You can update different vocabularies for different applications in a single request.
 
 Assuming the update was successful, the response will contain a list of all vocabularies and their respective tags
-associated with the specified resource, for all applications.
+associated with the specified dataset, for all applications.
 
-If you want to update vocabulary/tags for your resources, you must have the necessary user account permissions.
+If you want to update vocabulary/tags for your datasets, you must have the necessary user account permissions.
 Specifically:
 
-- the user must be logged in and belong to the same application as the resource
+- the user must be logged in and belong to the same application as the dataset
 - the user must match one of the following:
     - have role `ADMIN`
-    - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
+    - have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset)
 
-When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
-if a dataset with the given id does not exist. When updating a vocabulary for a widget or layer, you should ensure you
-specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
-known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the
-layer's/widget's dataset id does not match the dataset id defined in the resource) may be purged without prior warning.
-
-#### Errors for updating multiple vocabularies/tags for a resource
+#### Errors for updating multiple vocabularies/tags for a dataset
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | - tags: tags can not be empty. -  | `tags` body fields is empty
 400            | - tags: tags check failed. -  | Either the `tags` or `applications` body fields are missing or have an invalid value.
-401 | Unauthorized | You are not authenticated. 
-403 | Forbidden | You are trying to update a vocabulary for a resource whose `application` value is not associated with your user account. 
-404 | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]} | You are trying to create a vocabulary for a dataset that doesn't exist. 
+401 | Unauthorized | You are not authenticated.
+403 | Forbidden | You are trying to update a vocabulary for a resource whose `application` value is not associated with your user account.
+404 | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]} | You are trying to create a vocabulary for a dataset that doesn't exist.
 404 | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
 
 ## Cloning vocabularies/tags for a dataset
@@ -933,8 +902,8 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
-if a dataset with the given id does not exist. When deleting a vocabulary for a widget or layer, you should ensure you
+When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail if
+a dataset with the given id does not exist. When deleting a vocabulary for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
 known limitation of the current implementation and may be modified at any time.
 
@@ -1017,8 +986,8 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
-if a dataset with the given id does not exist. When deleting vocabularies for a widget or layer, you should ensure you
+When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail if
+a dataset with the given id does not exist. When deleting vocabularies for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
 known limitation of the current implementation and may be modified at any time.
 
@@ -1244,8 +1213,8 @@ This is perhaps the most useful endpoint when it comes to data discovery - it al
 and a tag or set of tags, and see resources that match that search criteria.
 
 All three endpoints require at least one query parameter, in the format `<vocabulary-id>=<tag>`. This will return all
-resources of that type, associated with a vocabulary with the name `vocabulary-id`, and having a tag with value `tag` for
-that vocabulary.
+resources of that type, associated with a vocabulary with the name `vocabulary-id`, and having a tag with value `tag`
+for that vocabulary.
 
 You can expand these filters by specifying multiple tags for a single vocabulary, using
 the `<vocabulary-id>=<tag1>,<tag2>` syntax. This type of filter will return resources that have either `tag1` or `tag2`
@@ -1255,7 +1224,8 @@ You can also filter by multiple vocabularies using multiple query parameters wit
 result will contain any resource that matches either vocabulary/tags filters.
 
 The filters described above do not take into account the `application` for which the vocabularies were defined. If you
-wish to only see results matching the vocabulary of a specific application, you can pass either an `app` or `application`
+wish to only see results matching the vocabulary of a specific application, you can pass either an `app`
+or `application`
 query parameter with the value of the application you wish to filter by.
 
 #### Errors for getting resources by vocabulary and tag
