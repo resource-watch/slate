@@ -8,12 +8,12 @@ Before jumping to the details of the RW API Graph service, you should be familia
 
 In the context of the RW API's Graph service, nodes represent one of the following: 
 
-* **concepts**
-* **datasets**
-* **layers**
-* **widgets**
-* **metadata**
-* **users**
+* [Datasets](#dataset)
+* [Layers](#layer)
+* [Widgets](#widget)
+* [Metadata](#metadata)
+* **Users**
+* **Concepts**
 
 Edges define relationships of different types between the different types of graph nodes. Relationships can be detailed and specific (for instance, defining a favorite relationship between a dataset and user), but they can also be more generic, establishing a connection between a resource and a concept.
 
