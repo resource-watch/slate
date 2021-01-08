@@ -304,7 +304,7 @@ When loading widget data, you can optionally pass an `includes` query argument t
 
 #### Vocabulary
 
-Loads related [vocabularies](#vocabulary-and-tags). If none are found, an empty array is returned.
+Loads related [vocabularies](#vocabularies-and-tags). If none are found, an empty array is returned.
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?includes=vocabulary"
