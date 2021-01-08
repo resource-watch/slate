@@ -53,6 +53,14 @@ a vocabulary `VVV` for the resource widget `BBB` associated with dataset `AAA`. 
 id, but as belonging to a different dataset, it will be treated as a different resource altogether, and thus will have
 different vocabularies and tags.
 
+## The special `knowledge_graph` vocabulary
+
+Throughout the whole vocabulary/tags service, there is a special vocabulary named `knowledge_graph`. When used, this vocabulary acts as any other vocabulary, but has additional logic built in for the purpose of integrating vocabulary/tags with the [graph](#graph) available as part of the RW API.
+
+Whenever you create or clone a vocabulary named `knowledge_graph` for a resource, the [dataset](#creating-dataset-graph-nodes), [layer](#creating-layer-graph-nodes) or [widget](#creating-widget-graph-nodes) node is added to the graph if not already present, and the [tags are associated to it](#associating-concepts-to-graph-nodes). Updating the `knowledge_graph` vocabulary also [updates the corresponding [tags associated to it](#updating-concepts-associated-with-graph-nodes) on the graph side, and deleting the vocabulary also [deletes the corresponding tags in the graph](#deleting-concepts-associated-with-graph-nodes).
+
+For more details on the graph, its purpose and how to use it, please refer to the dedicated documentation section on the [graph](#graph) and [its endpoints](#graph7).
+
 ## Associations between vocabularies, tags and resources
 
 ### Vocabularies and resources
