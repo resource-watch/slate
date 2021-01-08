@@ -540,9 +540,11 @@ Error code     | Error message  | Description
 If you have already associated vocabularies and tags to your resources and would like to modify those tags, the next set
 of endpoints is for you.
 
-There are two types of endpoints for updating existing vocabulary/tags: one allows you to modify a single vocabulary (
-and its tags) for a resource, while the other supports updating multiple vocabularies/tags for a single resource with a
-single request.
+There are three types of endpoints for updating existing vocabulary/tags:
+
+- endpoints that allow you to modify a single vocabulary (and its tags) for a resource
+- endpoints that allow you to modify multiple vocabularies/tags for a single resource with a single request
+- endpoint that allow you to add new tags to an existing dataset vocabulary
 
 ### Updating a single vocabulary/tags for a resource
 
@@ -741,6 +743,66 @@ Error code     | Error message  | Description
 403 | Forbidden | You are trying to update a vocabulary for a resource whose `application` value is not associated with your user account.
 404 | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]} | You are trying to create a vocabulary for a dataset that doesn't exist.
 404 | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
+
+### Concatenating tags to a dataset vocabulary
+
+> Concatenating tags to a dataset vocabulary
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/vocabulary/<vocabulary-id>/concat \
+-H "Content-Type: application/json"  -d \
+'{
+    "tags":["tag1", "tag2"],
+    "application": "rw"
+}'
+```
+
+> Example response
+
+```json
+{
+    "data": [
+        {
+            "id": "vocabulary1",
+            "type": "vocabulary",
+            "attributes": {
+                "tags": [
+                    "tag1",
+                    "tag2"
+                ],
+                "name": "vocabulary1",
+                "application": "rw"
+            }
+        },
+        {
+            "id": "vocabulary2",
+            "type": "vocabulary",
+            "attributes": {
+                "tags": [
+                    "tag3",
+                    "tag4"
+                ],
+                "name": "vocabulary2",
+                "application": "rw"
+            }
+        }
+    ]
+}
+```
+
+This endpoint allows you to add more tags to an existing vocabulary for a dataset. The dataset is identified by the id provided in the URL, while the specific vocabulary to update is determined by the vocabulary id in the URL and the `application` value in the POST body - if no matching vocabulary is found, a new one is created. The body should also contain an array of `tags` which will be appended to the target vocabulary. The endpoint validates and requires that a dataset with the provided id exists. Any tags that exist both in the request and in the vocabulary prior to the concat are merged - the resulting tags list won't have duplicated values.
+
+Should the request be successful, the response will have a complete list of vocabularies/tags for the dataset, for all applications.
+
+#### Errors for concatenating tags to a dataset vocabulary
+
+Error code     | Error message  | Description
+-------------- | -------------- | --------------
+400            | - tags: tags can not be empty. -  | `tags` body fields is empty
+400            | - tags: tags check failed. -  | Either the `tags` or `applications` body fields are missing or have an invalid value.
+401 | Unauthorized | You are not authenticated.
+403 | Forbidden | You are trying to concatenate a vocabulary for a dataset whose `application` value is not associated with your user account.
+404 | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]} | The dataset specified in the request URL doesn't exist.
 
 ## Cloning vocabularies/tags for a dataset
 
