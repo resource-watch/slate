@@ -11,10 +11,10 @@ section). A vocabulary is a groups of tags, and has a name (also called and used
 should define the scope or context of the tags it contains.
 
 It's important to keep in mind that these associations between a resource and a vocabulary have
-an [application](#applications) associated with them. Putting this in an example, `dataset` A may be associated with
-vocabulary X for application `rw`, but not for application `gfw`. Most endpoints will allow you explicitly define which
-application you are referring to (some will even require it), and a `rw` default value will be assumed when no explicit
-value is provided.
+an [application](#applications) associated with them. Putting this in an example, `dataset` `AAA` may be associated with
+vocabulary `BBB` for application `rw`, but not for application `gfw`. Most endpoints will allow you explicitly define
+which application you are referring to (some will even require it), and a `rw` default value will be assumed when no
+explicit value is provided.
 
 ## What are resources?
 
@@ -29,10 +29,10 @@ actual [dataset](#dataset6), [layer](#layer8) or [widget](#widget9) endpoints be
 exist to improve and empower your use cases of those resources, so it should only be used by applications and users that
 are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.
 
-The behavior of vocabulary and tags endpoints aims to be, as much as possible, independent from the target resource it
-references. In the detailed endpoint documentation below we'll cover the different endpoints in depth, and highlight the
-differences in behavior when handling different resource types, but you can safely assume that, for most of it, behavior
-described for a type of resource will be the same for all 3 types.
+The behavior of vocabulary and tags endpoints aims to be, as much as possible, independent from the type of the target
+resource it references. In the detailed endpoint documentation below we'll cover the different endpoints in depth, and
+highlight the differences in behavior when handling different resource types, but you can safely assume that, for most
+of it, behavior described for a type of resource will be the same for all 3 types.
 
 ### A note on resources
 
@@ -1251,7 +1251,7 @@ result will contain any resource that matches either vocabulary/tags filters.
 
 The filters described above do not take into account the `application` for which the vocabularies were defined. If you
 wish to only see results matching the vocabulary of a specific application, you can pass either a `app` or `application`
-query parameter with the value of the application you wish to filter by. 
+query parameter with the value of the application you wish to filter by.
 
 #### Errors for getting resources by vocabulary and tag
 
