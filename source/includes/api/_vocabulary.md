@@ -760,13 +760,10 @@ Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | - tags: tags can not be empty. -  | `tags` body fields is empty
 400            | - tags: tags check failed. -  | Either the `tags` or `applications` body fields are missing or have an invalid value.
-
-401 401 | Unauthorized | You are not authenticated. 403 | Forbidden | You are trying to update a vocabulary for resource
-which `application` value is not associated with your user account. 404 | 404 -
-{\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]} | You are trying to create a
-vocabulary for a dataset that doesn't exist. 404 | Relationship between undefined and dataset - `<dataset id>` and
-dataset: `<dataset id>` doesn't exist | You are trying to update a vocabulary that doesn't exist. Check your vocabulary
-name and application
+401 | Unauthorized | You are not authenticated. 
+403 | Forbidden | You are trying to update a vocabulary for resource which `application` value is not associated with your user account. 
+404 | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]} | You are trying to create a vocabulary for a dataset that doesn't exist. 
+404 | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
 
 ## Cloning vocabularies/tags for a dataset
 
