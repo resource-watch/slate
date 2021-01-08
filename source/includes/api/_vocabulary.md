@@ -7,7 +7,7 @@ recommend you read that section before diving into the details of the respective
 what is a tag and a vocabulary, and why you should use them to empower different use cases of the RW API.
 
 Simply put, a tag is a keyword that describes a `resource` (we'll talk in depth about what these are in the next
-section). A vocabulary is a groups of tags, and has a name (also called and used as an `id` for the vocabulary) that
+section). A vocabulary is a group of tags and has a name (also called and used as an `id` for the vocabulary) that
 should define the scope or context of the tags it contains.
 
 It's important to keep in mind that these associations between a resource and a vocabulary have
@@ -23,16 +23,16 @@ widget, or a layer. Tags and vocabularies work in a similar fashion for each of 
 we'll refer to resources instead, for convenience.
 
 We assume that, at this point, you are already familiar with the concepts of [dataset](#dataset), [layer](#layer)
-or [widget](#widget) (ideally you are familiar with the 3). If that's not the case, we strongly encourage you learn
+or [widget](#widget) (ideally you are familiar with the 3). If that's not the case, we strongly encourage you to learn
 about those concepts first, and we also recommend you take some time to explore and experiment using
-actual [dataset](#dataset6), [layer](#layer8) or [widget](#widget9) endpoints before proceeding. Vocabularies and tags
+actual [dataset](#dataset6), [layer](#layer8), or [widget](#widget9) endpoints before proceeding. Vocabularies and tags
 exist to improve and empower your use cases of those resources, so it should only be used by applications and users that
 are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.
 
 The behavior of vocabulary and tags endpoints aims to be, as much as possible, independent from the type of the target
 resource it references. In the detailed endpoint documentation below we'll cover the different endpoints in depth, and
 highlight the differences in behavior when handling different resource types, but you can safely assume that, for most
-of it, behavior described for a type of resource will be the same for all 3 types.
+of it, the behavior described for a type of resource will be the same for all 3 types.
 
 ### A note on resources
 
@@ -47,7 +47,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/AAA/widget/BBB/vocabulary/
   }'
 ```
 
-In the context of the vocabulary/tag service, widgets and layers are identified not only by their own id, but also by
+In the context of the vocabulary/tag service, widgets and layers are identified not only by their own id but also by
 the id you specify as being their associated dataset. Using the side example as reference, this API request would create
 a vocabulary `VVV` for the resource widget `BBB` associated with dataset `AAA`. If you later reference the same widget
 id, but as belonging to a different dataset, it will be treated as a different resource altogether, and thus will have
@@ -55,11 +55,11 @@ different vocabularies and tags.
 
 ## The special `knowledge_graph` vocabulary
 
-Throughout the whole vocabulary/tags service, there is a special vocabulary named `knowledge_graph`. When used, this vocabulary acts as any other vocabulary, but has additional logic built in for the purpose of integrating vocabulary/tags with the [graph](#graph) available as part of the RW API.
+Throughout the whole vocabulary/tags service, there is a special vocabulary named `knowledge_graph`. When used, this vocabulary acts as any other vocabulary but has additional logic built-in for the purpose of integrating vocabulary/tags with the [graph](#graph) available as part of the RW API.
 
-Whenever you create or clone a vocabulary named `knowledge_graph` for a resource, the [dataset](#creating-dataset-graph-nodes), [layer](#creating-layer-graph-nodes) or [widget](#creating-widget-graph-nodes) node is added to the graph if not already present, and the [tags are associated to it](#associating-concepts-to-graph-nodes). Updating the `knowledge_graph` vocabulary also [updates the corresponding [tags associated to it](#updating-concepts-associated-with-graph-nodes) on the graph side, and deleting the vocabulary also [deletes the corresponding tags in the graph](#deleting-concepts-associated-with-graph-nodes).
+Whenever you create or clone a vocabulary named `knowledge_graph` for a resource, the [dataset](#creating-dataset-graph-nodes), [layer](#creating-layer-graph-nodes) or [widget](#creating-widget-graph-nodes) node is added to the graph if not already present, and the [tags are associated to it](#associating-concepts-to-graph-nodes). Updating the `knowledge_graph` vocabulary also updates the corresponding [tags associated to it](#updating-concepts-associated-with-graph-nodes) on the graph side, and deleting the vocabulary also [deletes the corresponding tags in the graph](#deleting-concepts-associated-with-graph-nodes).
 
-For more details on the graph, its purpose and how to use it, please refer to the dedicated documentation section on the [graph](#graph) and [its endpoints](#graph7).
+For more details on the graph, its purpose, and how to use it, please refer to the dedicated documentation section on the [graph](#graph) and [its endpoints](#graph7).
 
 ## Associations between vocabularies, tags and resources
 
@@ -72,15 +72,15 @@ think that a vocabulary is uniquely identified by a tuple of 3 values:
 - Its `name` or `id` (these are 2 names for the same underlying value)
 - Its `application`
 
-Putting it in other words: if you reuse the name of an existing vocabulary, but associate with a different resource
+Putting it in other words: if you reuse the name of an existing vocabulary, but associate it with a different resource
 and/or application, you are effectively creating a different vocabulary.
 
-Later on, we'll cover endpoints that aggregate multiple vocabularies in different ways, as a convenient for resource
+Later on, we'll cover endpoints that aggregate multiple vocabularies in different ways, as a convenience for resource
 browsing and discovery.
 
 ### Vocabularies and tags
 
-Tags are simply strings associated with an individual vocabulary. They have no direct connection to a resource, and have
+Tags are simply strings associated with an individual vocabulary. They have no direct connection to a resource and have
 no logic or complexity within the context of a vocabulary. Tags that have the same value but belong to different
 vocabularies are not matched or related in any way.
 
@@ -95,7 +95,7 @@ cover how to list vocabulary/tags, and their associated resources.
 
 ## Getting vocabulary/tags for a resource
 
-There are two types endpoints that will allow you to get vocabularies and tags for a resource: one to retrieve all
+There are two types of endpoints that will allow you to get vocabularies and tags for a resource: one to retrieve all
 vocabularies and their tags, and another to retrieve all tags for a given vocabulary.
 
 ### Getting all vocabularies and tags for a resource
@@ -154,7 +154,7 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<wi
 }
 ```
 
-These endpoints allow you to get vocabulary/tags for a single dataset, widget or layer. By default, vocabulary/tags for
+These endpoints allow you to get vocabulary/tags for a single dataset, widget, or layer. By default, vocabulary/tags for
 the `rw` application are returned, but you can use the optional `app` or `application` query parameters to load data for
 a different application.
 
@@ -202,7 +202,7 @@ curl -L -X GET 'https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<wi
 }
 ```
 
-These endpoints allow you to get a single vocabulary and its tags for a single dataset, widget or layer. By default,
+These endpoints allow you to get a single vocabulary and its tags for a single dataset, widget, or layer. By default,
 vocabulary/tags for the `rw` application are returned, but you can use the optional `app` or `application` query
 parameters to load data for a different application.
 
@@ -297,7 +297,7 @@ Error code     | Error message  | Description
 
 There are two types of endpoints for associating vocabulary/tags with resources: one allows you to create a single
 vocabulary (and its tags) for a resource, while the other supports creating multiple vocabularies/tags for a single
-resource. The primary use case for these endpoint is when you just created a new dataset/layer/widget, and want to add
+resource. The primary use case for these endpoints is when you just created a new dataset/layer/widget, and want to add
 vocabularies/tags to them.
 
 ### Creating a single vocabulary/tags for a resource
@@ -370,7 +370,7 @@ curl -X POST https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer-
 
 This set of endpoints will allow you to create a new vocabulary/tags for a resource.
 
-The request body must contain both an array of tags, and the `application` under which the vocabulary/tags are being
+The request body must contain both an array of tags and the `application` under which the vocabulary/tags are being
 created. If a vocabulary with the same name already exists for the specified application, you will get an error message
 
 - you can use the update endpoints to modify an existing vocabulary.
@@ -386,7 +386,7 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When creating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails
+When creating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
 if a dataset with the given id does not exist. When creating a vocabulary for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
 known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the
@@ -400,7 +400,7 @@ Error code     | Error message  | Description
 400            | - tags: tags can not be empty. -  | `tags` body fields is empty
 400            | - tags: tags check failed. -  | Either the `tags` or `applications` body fields are missing or have an invalid value
 401            | Unauthorized   | You are not authenticated.
-403            | Forbidden      | You are trying to create a vocabulary for resource which `application` value is not associated with your user account.
+403            | Forbidden      | You are trying to create a vocabulary for a resource whose `application` value is not associated with your user account.
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 
 ### Creating multiple vocabularies/tags for a resource
@@ -510,7 +510,7 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When creating vocabularies/tags for a resource, the dataset id specified in the URL is validated, and the requests fails
+When creating vocabularies/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
 if a dataset with the given id does not exist. When creating a vocabulary for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
 known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the
@@ -521,14 +521,14 @@ layer's/widget's dataset id does not match the dataset id defined in the resourc
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | This relationship already exists | The resource already has one or more vocabularies with the same name(s) for the specified application(s)
-400            | - `<value>`: `<value>` check failed. -  | The body object has a `<value>` key which content is invalid (is not an object, or is missing `tags` and/or `application`).
+400            | - `<value>`: `<value>` check failed. -  | The body object has a `<value>` key which content is invalid (is not an object or is missing `tags` and/or `application`).
 401            | Unauthorized   | You are not authenticated.
-403            | Forbidden      | You are trying to create a vocabulary for resource which `application` value is not associated with your user account.
+403            | Forbidden      | You are trying to create a vocabulary for a resource whose `application` value is not associated with your user account.
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 
 ## Updating vocabularies/tags
 
-If you have already associated vocabularies and tags to your resources, and would like to modify those tags, the next
+If you have already associated vocabularies and tags to your resources and would like to modify those tags, the next
 set of endpoints is for you.
 
 There are two types of endpoints for updating existing vocabulary/tags: one allows you to modify a single vocabulary (
@@ -612,7 +612,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<layer
 
 This set of endpoints will allow you to update the tags of an existing vocabulary/tags for a resource.
 
-The request body must contain the `application` of the vocabulary you want to update, and it will fail if you specify an
+The request body must contain the `application` of the vocabulary you want to update, and it will fail if you specify a
 vocabulary name/application pair that does not exist. Additionally, it must contain a `tags` array of strings with a
 list of new tags to use. Any existing tags that already existed for that vocabulary (for that resource and application)
 will be deleted, and replaced with the values you provide through this request.
@@ -628,7 +628,7 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails
+When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
 if a dataset with the given id does not exist. When updating a vocabulary for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
 known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the
@@ -640,7 +640,7 @@ Error code     | Error message  | Description
 -------------- | -------------- | --------------
 400            | - `<value>`: `<value>` check failed. -  | The body object has a `<value>` key which content is invalid (is not an object, or is missing `tags` and/or `application`).
 401            | Unauthorized   | You are not authenticated.
-403            | Forbidden      | You are trying to update a vocabulary for resource which `application` value is not associated with your user account.
+403            | Forbidden      | You are trying to update a vocabulary for a resource whose `application` value is not associated with your user account.
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 404            | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist      | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
 
@@ -756,7 +756,7 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails
+When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
 if a dataset with the given id does not exist. When updating a vocabulary for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
 known limitation of the current implementation, and may be modified at any time, and invalid resources (those where the
@@ -769,7 +769,7 @@ Error code     | Error message  | Description
 400            | - tags: tags can not be empty. -  | `tags` body fields is empty
 400            | - tags: tags check failed. -  | Either the `tags` or `applications` body fields are missing or have an invalid value.
 401 | Unauthorized | You are not authenticated. 
-403 | Forbidden | You are trying to update a vocabulary for resource which `application` value is not associated with your user account. 
+403 | Forbidden | You are trying to update a vocabulary for a resource whose `application` value is not associated with your user account. 
 404 | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]} | You are trying to create a vocabulary for a dataset that doesn't exist. 
 404 | Relationship between undefined and dataset - `<dataset id>` and dataset: `<dataset id>` doesn't exist | You are trying to update a vocabulary that doesn't exist. Check your vocabulary name and application
 
@@ -856,7 +856,7 @@ Error code     | Error message  | Description
 400            | This relationship already exists | The target dataset already has one or more vocabularies with the same name(s) and application(s) as the source dataset.
 400            | - newDataset: newDataset can not be empty. -   | The body object must have a `newDataset` key with the id of the target dataset.
 401            | Unauthorized   | You are not authenticated.
-403            | Forbidden      | You are trying to clone vocabulary for a source dataset which `application` value is not associated with your user account.
+403            | Forbidden      | You are trying to clone vocabulary for a source dataset whose `application` value is not associated with your user account.
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to clone a vocabularies for a source dataset that doesn't exist.
 
 ## Deleting vocabularies/tags for a resource
@@ -919,7 +919,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<laye
 
 This set of endpoints will allow you to delete a single vocabulary and its tags, for a resource.
 
-As a query param, you can optionally provide a `app` or `application` values, to identify the application of the
+As a query param, you can optionally provide an `app` or `application` values, to identify the application of the
 vocabulary to delete - by default, `rw` is assumed.
 
 Assuming the operation was successful, the response will contain a list of all vocabularies and their respective tags
@@ -933,17 +933,17 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails
+When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
 if a dataset with the given id does not exist. When deleting a vocabulary for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
-known limitation of the current implementation, and may be modified at any time.
+known limitation of the current implementation and may be modified at any time.
 
 #### Errors for deleting a single vocabulary/tags for a resource
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 401            | Unauthorized   | You are not authenticated.
-403            | Forbidden      | You are trying to delete a vocabulary for resource which `application` value is not associated with your user account.
+403            | Forbidden      | You are trying to delete a vocabulary for a resource whose `application` value is not associated with your user account.
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 404            | Relationship between `<vocabulary id> and dataset - `<dataset id> and dataset: `<dataset id> doesn't exist      | You are trying to delete a vocabulary that doesn't exist.
 
@@ -1017,17 +1017,17 @@ Specifically:
     - have role `ADMIN`
     - have role `MANAGER` and be the resource's owner (through the `userId` field of the resource)
 
-When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fails
+When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated, and the requests fail
 if a dataset with the given id does not exist. When deleting vocabularies for a widget or layer, you should ensure you
 specify the dataset id that matches that of the widget/layer, as that validation is not done automatically - this is a
-known limitation of the current implementation, and may be modified at any time.
+known limitation of the current implementation and may be modified at any time.
 
 #### Errors for deleting all vocabularies/tags for a resource
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 401            | Unauthorized   | You are not authenticated.
-403            | Forbidden      | You are trying to delete vocabularies for resource which `application` value is not associated with your user account.
+403            | Forbidden      | You are trying to delete vocabularies for a resource whose `application` value is not associated with your user account.
 404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
 
 ## Getting vocabularies and tags across resources
@@ -1159,7 +1159,7 @@ curl -X GET https://api.resourcewatch.org/v1/vocabulary/<vocabulary id>
 }
 ```
 
-This endpoint will give you the details for a single vocabulary, identified by name. In it you'll find a list of
+This endpoint will give you the details for a single vocabulary, identified by name. In it, you'll find a list of
 resources, identified by the resource id, type, associated dataset (if the resource is a dataset, the dataset id will be
 equal to the resource id) and the tags that said vocabulary associates to that resource.
 
@@ -1244,7 +1244,7 @@ This is perhaps the most useful endpoint when it comes to data discovery - it al
 and a tag or set of tags, and see resources that match that search criteria.
 
 All three endpoints require at least one query parameter, in the format `<vocabulary-id>=<tag>`. This will return all
-resources of that type, associated with a vocabulary with name `vocabulary-id`, and having a tag with value `tag` for
+resources of that type, associated with a vocabulary with the name `vocabulary-id`, and having a tag with value `tag` for
 that vocabulary.
 
 You can expand these filters by specifying multiple tags for a single vocabulary, using
@@ -1255,7 +1255,7 @@ You can also filter by multiple vocabularies using multiple query parameters wit
 result will contain any resource that matches either vocabulary/tags filters.
 
 The filters described above do not take into account the `application` for which the vocabularies were defined. If you
-wish to only see results matching the vocabulary of a specific application, you can pass either a `app` or `application`
+wish to only see results matching the vocabulary of a specific application, you can pass either an `app` or `application`
 query parameter with the value of the application you wish to filter by.
 
 #### Errors for getting resources by vocabulary and tag
