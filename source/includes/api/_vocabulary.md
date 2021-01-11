@@ -1059,7 +1059,7 @@ Error code     | Error message  | Description
 -------------- | -------------- | --------------
 401            | Unauthorized   | You are not authenticated.
 403            | Forbidden      | You are trying to delete vocabularies for a resource whose `application` value is not associated with your user account.
-404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to create a vocabulary for a dataset that doesn't exist.
+404            | 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset with id `<dataset id>` doesn't exist\"}]}      | You are trying to delete vocabularies for a dataset that doesn't exist.
 
 ## Getting vocabularies and tags across resources
 
