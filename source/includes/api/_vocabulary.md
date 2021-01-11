@@ -544,7 +544,7 @@ There are three types of endpoints for updating existing vocabulary/tags:
 
 - endpoints that allow you to modify a single vocabulary (and its tags) for a resource
 - endpoints that allow you to modify multiple vocabularies/tags for a single resource with a single request
-- endpoint that allow you to add new tags to an existing dataset vocabulary
+- endpoint that allows you to add new tags to an existing vocabulary. This endpoint only exists for dataset resources, not widgets or layers.
 
 ### Updating a single vocabulary/tags for a resource
 
