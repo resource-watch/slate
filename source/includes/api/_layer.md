@@ -1067,11 +1067,13 @@ Error code     | Error message           | Description
 curl -X GET "https://api.resourcewatch.org/v1/contextual-layer/loss-layer/:startYear/:endYear/:z/:x/:y.png"
 ```
 
+**This endpoint can be used as a shortcut to obtain PNG tiles, instead of retrieving the contextual layer's `url` field and manually interpolating coordinates. The base URL of the service containing the PNG tiles for the layers referred by this endpoint can be configured changing the [`hansenUrl` configuration value in the Contextual Layers service](https://github.com/gfw-api/fw-contextual-layers/blob/a8442da2c7a4e68625867479860c0185f35488a8/config/default.json#L17).**
+
 Use this endpoint to retrieve PNG image corresponding to the loss layer tiles for the `(x,y,z)` tuple (where `x` represents latitude, `y` longitude, and `z` the zoom level) for loss layers for the interval of years from `startYear` to `endYear`.
 
 If successful, this endpoint returns a PNG file of the loss layer tile.
 
-#### Errors for deleting a layer
+#### Errors for getting loss layer tiles
 
 Error code     | Error message           | Description
 -------------- | ----------------------- | ---------------------------------------------------------------------------------
