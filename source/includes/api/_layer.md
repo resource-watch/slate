@@ -920,7 +920,7 @@ curl -X POST "https://api.resourcewatch.org/v1/contextual-layer" \
 
 RW API contextual layers can be associated with either a user or a team. This section details the information you need to provide to create a contextual layer associated with a user. This endpoint is available to all registered API users.
 
-You can create a contextual layer by calling a POST request, passing the relevant data as body fields. The supported body fields are defined on the [contextual layer reference](#contextual-layer-reference) section, but the required fields you must provide are `name` and `url`.
+You can create a contextual layer by calling a POST request, passing the relevant data as body fields. The supported body fields are defined in the [contextual layer reference](#contextual-layer-reference) section, but the required fields you must provide are `name` and `url`.
 
 #### Errors for creating a contextual layer for a user
 
