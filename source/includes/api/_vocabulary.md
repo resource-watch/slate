@@ -51,7 +51,9 @@ In the context of the vocabulary/tag service, widgets and layers are identified 
 id you specify as being their associated dataset. Using the side example as reference, this API request would create a
 vocabulary `VVV` for the resource widget `BBB` associated with dataset `AAA`. If you later reference the same widget id,
 but as belonging to a different dataset, it will be treated as a different resource altogether, and thus will have
-different vocabularies and tags. Keep in mind that widgets and layers should only be associated with a single dataset, so this behavior is described as a pitfall, and you should only rely on vocabularies/tags for widgets/layers properly associated with their correct dataset. 
+different vocabularies and tags. Keep in mind that widgets and layers should only be associated with a single dataset,
+so this behavior is described as a pitfall, and you should only rely on vocabularies/tags for widgets/layers properly
+associated with their correct dataset.
 
 ## The special `knowledge_graph` vocabulary
 
@@ -74,18 +76,22 @@ the [graph](#graph) and [its endpoints](#graph7).
 
 ### Vocabularies and resources
 
-Despite not being 100% accurate, when manipulating vocabularies in the context of a single resource, it's useful to
-think that a vocabulary is uniquely identified by a tuple of 3 values:
+Despite not being 100% accurate, it's useful to think that a vocabulary is uniquely identified by a tuple of 3 values:
 
 - The resource (id and type) to which it's associated
 - Its `name` or `id` (these are 2 names for the same underlying value)
 - Its `application`
 
-Putting it in other words: if you reuse the name of an existing vocabulary, but associate it with a different resource
-and/or application, you are effectively creating a different vocabulary.
+Putting it in other words: you can think of a vocabulary as being **associated with only one resource at a time**. So,
+if you create, update or delete a vocabulary, you are only doing so *for that resource*. You can safely modify the
+vocabularies for a resource without fear of affecting vocabularies and tags for other resources.
 
-Later on, we'll cover endpoints that aggregate multiple vocabularies in different ways, as a convenience for resource
-browsing and discovery.
+Further down, we'll cover endpoints that allow you to discover resources by performing searches based on vocabularies
+and tags. These endpoints are able to aggregate these different vocabularies and tags from multiple resources, and
+produce a unified response - making it look like vocabularies are shared across resources, and thus producing meaningful
+results.
+
+If you find the above slightly confusing, we advice you explore these docs and learn more about the different endpoints available - maybe even try to add vocabularies and tags to one of your resources - and then come back and see if your newly gained knowledge helps you get a deeper understanding of how vocabularies and tags work on the RW API. 
 
 ### Vocabularies and tags
 
@@ -546,7 +552,8 @@ There are three types of endpoints for updating existing vocabulary/tags:
 
 - endpoints that allow you to modify a single vocabulary (and its tags) for a resource
 - endpoints that allow you to modify multiple vocabularies/tags for a single resource with a single request
-- endpoint that allows you to add new tags to an existing vocabulary. This endpoint only exists for dataset resources, not widgets or layers.
+- endpoint that allows you to add new tags to an existing vocabulary. This endpoint only exists for dataset resources,
+  not widgets or layers.
 
 ### Updating a single vocabulary/tags for a resource
 
