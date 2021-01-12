@@ -18,6 +18,16 @@ Similarly, we'll refer multiple times to `concepts`. A `concept` is a keyword us
 
 As with resources, in the context of the RW API Graph service, concepts are represented as graph nodes. They can be associated (using graph edges) with resources to create relationships of relevance between the two entities.
 
+## Bird's-eye view of the graph service
+
+As an API user, I'm sure you will be glad to hear that most of the management of graph entities is performed automatically. As you will discover by reading the sections on [creating](#creating-resources) or [deleting](#deleting-resources) graph resources, graph nodes for resources are automatically created and deleted when you create or delete your resources, respectively. This means that, as an API user, you are abstracted from these processes and the only thing you need to worry about is actually managing relationships between graph resources and concepts.
+
+To do so, you will need to interact with [vocabulary endpoints](#vocabulary-and-tags), using a specific vocabulary called `knowledge_graph`. You can tag your resources using said vocabulary, and the tags you add will be added as graph concepts and associated with your resources. You can read more about this process in the section on [relationships between graph nodes and concepts](#relationships-between-graph-nodes-and-concepts). Some concepts have been pre-loaded into the graph service, and you can use them to associate your resources with widely-used concepts. However, you are also encouraged to create your own concepts - which, once again, is performed automatically when managing your associations using the vocabulary endpoints.
+
+You may come across some hierarchical concepts in the following sections, such as "ancestors", "parent concepts" or "descendants". These were initially added with the intention of supporting hierarchy between graph concepts, but such features were not completed. As such, it is recommended that, for now, you ignore and do not rely on any type of hierarchy between graph concepts. This may, however, change in the future.
+
+Lastly, a note: **none of the endpoints below are paginated.** Most of the endpoints interact with a single resource (dataset, layer, widget, or metadata), which contributes to a healthy size for most of the Graph service endpoint responses, as long as you keep your associations between graph resources and concepts to a reasonable amount. However, some of the endpoints aim at retrieving full lists of, for instance, graph concepts - *please ensure that you take into consideration the impact of using such endpoints in the performance of your applications*.
+
 ## List concepts
 
 > Request to list concepts:
@@ -43,9 +53,9 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
 }
 ```
 
-This endpoint returns the list of concepts available in the graph. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
+**This endpoint does not return a paginated list - you will receive a full list of all the concepts available in the graph. Additionally, the returned response can only be filtered by application, not searched - which means that it's very unlikely that you will receive a reduced payload by using this endpoint. As such, uou should avoid using this specific endpoint since it might harm the performance of your application, should the graph increase significantly in size. You can find alternative endpoints in the sections below that allow you to navigate the graph by similarity of concepts, which is the recommended approach to navigating the graph.**
 
-Please keep in mind this endpoint **does not return a paginated list** - instead, it returns all the concepts available in the graph, no matter how many they are. You should avoid using this specific endpoint since it might harm the performance of your application, should the graph increase significantly in size.
+This endpoint returns the list of concepts available in the graph. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
 
 ### Filters
 
