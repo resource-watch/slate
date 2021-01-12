@@ -829,7 +829,7 @@ Field name               | Type           | Description
 ------------------------ | -------------- | ---------------------------------------------------------------------------- 
 `id`                     | String         | The concept unique identifier.
 `label`                  | String         | A readable version of the concept identifier.
-`synonyms`               | String | Array | The list of synonyms for this concept (or an empty string, if no synonyms exist).
+`synonyms`               | String &#124; Array | The list of synonyms for this concept (or an empty string, if no synonyms exist).
 `labels`                 | Array          | The list of identifiers for the type of this graph node.
 `numberOfDatasetsTagged` | Number         | The number of datasets that are currently tagged with this concept.
 `datasets`               | Array          | The list of dataset ids that are currently tagged with this concept.
