@@ -858,7 +858,7 @@ This endpoint allows you to list contextual layers and their properties. If succ
 * the contextual layer is owned by the user making the request - `owner.id` attribute matches the user id in the token provided in the request;
 * the contextual layer is owned by a team you belong to - the contextual layer `id` is part of the layers of the team the user making the request belongs to.
 
-Keep in mind this endpoint is restricted to authenticated users, so always remember to provide your authentication token when calling this endpoint. The result is **not** paginated, so you will all layers that match at least one of the conditions defined above.
+Keep in mind this endpoint is restricted to authenticated users, so always remember to provide your authentication token when calling this endpoint. The result is **not** paginated, so you will get all layers that match at least one of the conditions defined above.
 
 #### Filters
 
