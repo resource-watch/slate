@@ -1,583 +1,875 @@
 # Graph
 
-The following graph endpoints are available
+The following section details the endpoints you can use to interact with graph information about the RW API. If you are new to the RW API or want to learn more about what the RW API graph can do for you, we strongly encourage you to read the [graph concept](#graph) documentation first.
+
+Before proceeding, let's look at some concepts that will be used across the graph endpoint documentation.
+
+## What is a resource
+
+Throughout this section, we'll refer multiple times to `resources`. Simply put, a `resource` is either a dataset, a widget, a layer, or a metadata entry. Graph nodes represent in a similar fashion these 4 types of RW API entity, so often we'll refer to resources instead, for convenience.
+
+We assume that, at this point, you are already familiar with the concepts of [dataset](#dataset), [layer](#layer), [widget](#widget) or [metadata](#metadata) (ideally you are familiar with the 4). If that's not the case, we strongly encourage you to learn about those concepts first, and we also recommend you take some time to explore and experiment using actual [dataset](#dataset6), [layer](#layer8), [widget](#widget9), or [metadata](#metadata12) endpoints before proceeding. The RW API Graph service builds on top of these concepts and empowers your use cases of those resources, so it should only be used by applications and users that are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.
+
+In the context of the RW API Graph service, resources are represented as graph nodes. They can be associated (using graph edges) with concepts to create relationships of relevance between the two entities.
+
+## What is a concept
+
+Similarly, we'll refer multiple times to `concepts`. A `concept` is a keyword used to describe a resource (e.g. `health`, `society`, `solar_power`, etc.). It shares some similarities with [tags](#vocabularies-and-tags), in the sense it can be associated with resources of different types (datasets, layers, or widgets).
+
+As with resources, in the context of the RW API Graph service, concepts are represented as graph nodes. They can be associated (using graph edges) with resources to create relationships of relevance between the two entities.
+
+## Bird's-eye view of the graph service
+
+As an API user, I'm sure you will be glad to hear that most of the management of graph entities is performed automatically. As you will discover by reading the sections on [creating](#creating-resources) or [deleting](#deleting-resources) graph resources, graph nodes for resources are automatically created and deleted when you create or delete your resources, respectively. This means that, as an API user, you are abstracted from these processes and the only thing you need to worry about is actually managing relationships between graph resources and concepts.
+
+To do so, you will need to interact with [vocabulary endpoints](#vocabulary-and-tags), using a specific vocabulary called `knowledge_graph`. You can tag your resources using said vocabulary, and the tags you add will be added as graph concepts and associated with your resources. You can read more about this process in the section on [relationships between graph nodes and concepts](#relationships-between-graph-nodes-and-concepts). Some concepts have been pre-loaded into the graph service, and you can use them to associate your resources with widely-used concepts. However, you are also encouraged to create your own concepts - which, once again, is performed automatically when managing your associations using the vocabulary endpoints.
+
+You may come across some hierarchical concepts in the following sections, such as "ancestors", "parent concepts" or "descendants". These were initially added with the intention of supporting hierarchy between graph concepts, but such features were not completed. As such, it is recommended that, for now, you ignore and do not rely on any type of hierarchy between graph concepts. This may, however, change in the future.
+
+Lastly, a note: **none of the endpoints below are paginated.** Most of the endpoints interact with a single resource (dataset, layer, widget, or metadata), which contributes to a healthy size for most of the Graph service endpoint responses, as long as you keep your associations between graph resources and concepts to a reasonable amount. However, some of the endpoints aim at retrieving full lists of, for instance, graph concepts - *please ensure that you take into consideration the impact of using such endpoints in the performance of your applications*.
 
 ## List concepts
 
-Returns a list including all the concepts present in the graph
+> Request to list concepts:
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
 ```
 
-### Query example
+> Example response:
 
 ```json
 {
-  "data": [
-    {
-      "id": "europe",
-      "label": "Europe",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ],
-      "numberOfDatasetsTagged": 0
-    },
-    {
-      "id": "damage",
-      "label": "Damage",
-      "synonyms": [
-        "destruction"
-      ],
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ],
-      "numberOfDatasetsTagged": 2
-    },
-    {
-      "id": "guernsey",
-      "label": "Guernsey",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ],
-      "numberOfDatasetsTagged": 0
-    }
-  ]
+    "data": [
+        {
+            "id": "society",
+            "label": "Society",
+            "synonyms": ["People"],
+            "labels": ["CONCEPT", "TOPIC"],
+            "numberOfDatasetsTagged": 1,
+            "datasets": ["4458eb12-8572-45d1-bf07-d5a3ee097021"]
+        },
+    ]
 }
 ```
 
-## Get inferred concepts
+**This endpoint does not return a paginated list - you will receive a full list of all the concepts available in the graph. Additionally, the returned response can only be filtered by application, not searched - which means that it's very unlikely that you will receive a reduced payload by using this endpoint. As such, you should avoid using this specific endpoint since it might harm the performance of your application, should the graph increase significantly in size. You can find alternative endpoints in the sections below that allow you to navigate the graph by similarity of concepts, which is the recommended approach to navigating the graph.**
 
-This endpoint returns the set of concepts that are inferred from the set passed as a parameter
+This endpoint returns the list of concepts available in the graph. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
 
-### Parameters
+### Filters
 
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-concepts         |           List of concepts            |    Text |                                        Any Text, values separated by commas |      Yes
-
+> Filtering concepts by application:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=<concept_list>
+curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts?application=gfw
 ```
 
-### Example
+This endpoint supports the following filters as query string parameters:
 
-Concepts inferred from the set: ['spain', 'raster']
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
 
-```url
-https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=spain,raster
-```
+## List concepts for a dataset
 
-```json
-{
-  "data": [
-    {
-      "id": "location",
-      "label": "Location",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "eu",
-      "label": "EU",
-      "synonyms": [
-        "European Union"
-      ],
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "raster",
-      "label": "Raster",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "DATA_TYPE"
-      ]
-    },
-    {
-      "id": "oecd",
-      "label": "OECD",
-      "synonyms": [
-        "Organisation for Economic Co-operation and Development"
-      ],
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "schengen_area",
-      "label": "Schengen Area",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "country",
-      "label": "Country",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "continent",
-      "label": "Continent",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "global",
-      "label": "Global",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "general",
-      "label": "General",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "spain",
-      "label": "Spain",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    },
-    {
-      "id": "dataset",
-      "label": "Dataset",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "DATA_TYPE"
-      ]
-    },
-    {
-      "id": "europe",
-      "label": "Europe",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "GEOGRAPHY"
-      ]
-    }
-  ]
-}
-```
-
-## Concepts' ancestors
-
-This endpoint returns the ancestors from the list of concepts provided
-
-### Parameters
-
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-concepts         |           List of concepts            |    Text |                                        Any Text, values separated by commas |      Yes
+> Request to list concepts for a dataset:
 
 ```shell
-https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=<concept_list>
+curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:dataset
 ```
 
-### Example
-
-Ancestors of the concepts from the set: ['forest_cover', 'landslide']
-
-```url
-https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=forest_cover,landslide
-```
+> Example response:
 
 ```json
 {
-  "data": [
-    {
-      "id": "indicator",
-      "label": "Indicator",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "forest",
-      "label": "Forest",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "natural_disaster",
-      "label": "Natural disaster",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    },
-    {
-      "id": "natural_phenomena",
-      "label": "Natural phenomena",
-      "synonyms": "",
-      "labels": [
-        "CONCEPT",
-        "TOPIC"
-      ]
-    }
-  ]
+    "data": [
+        {
+            "id": "4458eb12-8572-45d1-bf07-d5a3ee097021",
+            "type": "graph",
+            "attributes": {
+                "iso": "",
+                "synonyms": ["Habitat"],
+                "id": "habitat",
+                "label": "Habitats",
+                "default_parent": "ecosystem"
+            }
+        },
+        {
+            "id": "4458eb12-8572-45d1-bf07-d5a3ee097021",
+            "type": "graph",
+            "attributes": {
+                "iso": "",
+                "synonyms": "",
+                "id": "species",
+                "label": "Species",
+                "default_parent": "biodiversity"
+            }
+        }
+    ]
 }
 ```
 
-## Similar datasets
+This endpoint returns the list of relationships between the dataset with id provided in the URL path and concepts. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](#graph-relationship-reference) for details on each of the fields of the returned response.
 
-Returns a set of datasets that are similar to the dataset provider sorted by their degree of similarity.
+If the dataset id provided is not valid or not found, the response returned will contain an empty list in the `data` index.
+
+### Filters
+
+> Filtering concepts for a dataset by application:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset/<dataset-id>
+curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:dataset?application=gfw
 ```
 
-### Parameters available
+This endpoint supports the following filters as query string parameters:
 
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-published         |   Include only published datasets            |    Boolean |                                        true/false |      No
-app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
-env  |   Include only datasets with at least one of the specified environments - read more about this field in the [Environments concept section](/index-rw.html#environments). | Text | One or more values from ['production', 'preproduction'] |       No
-limit | Maximum number of datasets returned by the endpoint | Integer | A positive integer (3 by default) | No
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
 
-### Example
+## List concepts for multiple datasets
 
-Datasets that are similar to the dataset with id `63a7a997-695d-4629-b6e9-9b169f5c69b` including only those that are **published** with a **limit of 6 results** in total, datasets from both `production` and `preproduction` environments are included.
-
-```url
-https://api.resourcewatch.org/v1/graph/query/similar-dataset/63a7a997-695d-4629-b6e9-9b169f5c69bf?published=true&env=production,preproduction&app=rw&limit=6
-```
-
-```json
-{
-  "data": [
-    {
-      "dataset": "0a59f415-ee0b-4d19-96f7-c7304c152e1b",
-      "concepts": [
-        "global",
-        "raster",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "0087944f-871c-44bc-b4d9-cd5acfc27023",
-      "concepts": [
-        "global",
-        "raster",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "0303127a-70b0-4164-9251-d8162615d058",
-      "concepts": [
-        "raster",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "05b7c688-09ba-4f33-90ea-185a1039df43",
-      "concepts": [
-        "global",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "050f4146-566c-4a6d-9aaa-b49ab66a3090",
-      "concepts": [
-        "global",
-        "geospatial"
-      ]
-    },
-    {
-      "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
-      "concepts": [
-        "global",
-        "geospatial"
-      ]
-    }
-  ]
-}
-```
-
-## Similar datasets including ancestors
-
-Returns a set of datasets that are similar to the dataset provider sorted by their degree of similarity as well as taking into account ancestor concepts.
+> Request to list concepts for multiple datasets:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendent/<dataset-id>
+curl -X POST https://api.resourcewatch.org/v1/graph/find-by-ids \
+-H "Content-Type: application/json" \
+-d \
+'{
+    "ids": [
+        "37d04efc-0ab2-4499-a891-54dca1013c74",
+        "0448c79d-0ee0-42ff-9331-aeee70cef301"
+    ]
+}'
 ```
 
-### Parameters available
+> Example response:
 
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-published         |   Include only published datasets            |    Boolean |                                        true/false |      No
-app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
-env  |   Include only datasets with at least one of the specified environments - read more about this field in the [Environments concept section](/index-rw.html#environments). | Text | One or more values from ['production', 'preproduction'] |       No
-limit | Maximum number of datasets returned by the endpoint | Integer | A positive integer (3 by default) | No
-
-### Example
-
-Datasets that are similar to the dataset with id `03bfb30e-829f-4299-bab9-b2be1b66b5d4` including only those that are **published** with a **limit of 6 results** in total, datasets from both `production` and `preproduction` environments are included.
-
-```url
-https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendent/03bfb30e-829f-4299-bab9-b2be1b66b5d4?published=true&env=production,preproduction&app=rw&limit=6
+```json
+{
+    "data": [
+        {
+            "type": "concept",
+            "attributes": {
+                "dataset": "37d04efc-0ab2-4499-a891-54dca1013c74",
+                "iso": "",
+                "synonyms": "",
+                "id": "sanitation",
+                "label": "Sanitation",
+                "default_parent": "health"
+            }
+        },
+        {
+            "type": "concept",
+            "attributes": {
+                "dataset": "37d04efc-0ab2-4499-a891-54dca1013c74",
+                "iso": "",
+                "synonyms": ["city", "urban"],
+                "id": "urban",
+                "label": "Cities",
+                "default_parent": "settlements"
+            }
+        }
+    ]
+}
 ```
+
+This endpoint returns the list of relationships between the datasets with ids provided in the body of the POST request. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](#graph-relationship-reference) for details on each of the fields of the returned response.
+
+### Filters
+
+> Filtering concepts for multiple datasets by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/find-by-ids?application=gfw
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+
+### Errors for listing concepts for multiple datasets
+
+Error code | Error message | Description
+---------- | ------------- | ---------------------------------
+400        | Bad Request   | The `ids` provided in the body of the request are not correctly formatted.
+
+## Infer concepts from other concepts
+
+> GET request to infer concepts related to the concepts passed as query parameters:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=society,urban \
+-H "Content-Type: application/json"
+```
+
+> POST request to infer concepts related with the concepts passed in the request body:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/query/concepts-inferred \
+-H "Content-Type: application/json" \
+-d \
+'{ "concepts": ["society", "urban"] }'
+```
+
+> Example response:
+
+```json
+{
+    "data": [
+        {
+            "id": "society",
+            "label": "Society",
+            "synonyms": ["People"],
+            "labels": ["CONCEPT", "TOPIC"]
+        },
+        {
+            "id": "urban",
+            "label": "Cities",
+            "synonyms": ["city", "urban"],
+            "labels": ["CONCEPT", "TOPIC"]
+        },
+    ]
+}
+```
+
+This endpoint lets API users discover concepts that have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
+
+If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
+
+### Filters
+
+> Filtering inferred concepts by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?application=gfw
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+
+### Errors for listing concepts for multiple datasets
+
+Error code | Error message | Description
+---------- | ------------- | ---------------------------------
+400        | Concepts are required. | A list of concepts was not provided.
+
+## Query similar datasets
+
+> GET request to find out similar datasets to a dataset with id provided:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset/:dataset \
+-H "Content-Type: application/json"
+```
+
+> Alternative syntax, providing the dataset id as query string parameter:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset?dataset=:dataset \
+-H "Content-Type: application/json"
+```
+
+> Example response:
 
 ```json
 {
   "data": [
     {
-      "dataset": "05b7c688-09ba-4f33-90ea-185a1039df43",
-      "concepts": [
-        "country",
-        "forest",
-        "geospatial",
-        "table"
-      ],
+      "dataset": "1b97e47e-ca18-4e50-9aae-a2853acca3f0",
+      "concepts": ["health", "urban"]
+    },
+    {
+      "dataset": "51159bdb-4904-4101-a88e-ca7bd4f67cb0",
+      "concepts": ["infrastructure"]
+    }
+  ]
+}
+```
+
+This endpoint lets API users discover datasets that share concepts with the dataset with id provided in the URL path. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the id of the dataset that is related and a list of concepts that are shared.
+
+The results returned are sorted by their degree of similarity, meaning the datasets with the higher number of shared concepts are higher on the list.
+
+### Filters
+
+> Filtering similar datasets by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset/:dataset?application=gfw
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+
+### Errors for querying similar datasets
+
+Error code | Error message | Description
+---------- | ------------- | ---------------------------------
+400        | Dataset query param required | You must provide a valid dataset id.
+
+## Query similar datasets including descendants
+
+> GET request to find out similar datasets including descendants to a dataset with id provided:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendant/:dataset \
+-H "Content-Type: application/json"
+```
+
+> Alternative syntax, providing the dataset id as query string parameter:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendant?dataset=:dataset \
+-H "Content-Type: application/json"
+```
+
+> Example response:
+
+```json
+{
+  "data": [
+    {
+      "dataset": "37d04efc-0ab2-4499-a891-54dca1013c74",
+      "concepts": ["urban", "health", "sanitation"],
       "numberOfOcurrences": 1
     },
     {
-      "dataset": "0448c79d-0ee0-42ff-9331-aeee70cef301",
+      "dataset": "223b936e-06b8-4970-abd9-4f123904d95d",
       "concepts": [
-        "forest_cover",
-        "forest_gain",
-        "forest_loss",
-        "geospatial"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "098b33df-6871-4e53-a5ff-b56a7d989f9a",
-      "concepts": [
-        "country",
-        "geospatial"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "0be2ce12-79b3-434b-b557-d6ea92d787fe",
-      "concepts": [
-        "geospatial",
-        "table"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "050f4146-566c-4a6d-9aaa-b49ab66a3090",
-      "concepts": [
-        "geospatial",
-        "table"
-      ],
-      "numberOfOcurrences": 1
-    },
-    {
-      "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
-      "concepts": [
-        "geospatial",
-        "table"
+          "hunger",
+          "famine",
+          "health"
       ],
       "numberOfOcurrences": 1
     }
   ]
 }
 ```
+
+This endpoint lets API users discover datasets that share concepts with the dataset with id provided in the URL path. The difference from the endpoint above is that this endpoint also looks at the ancestor concepts from the dataset with id provided - datasets returned might have ancestor concepts in common, but not necessarily the same exact concepts in common.
+
+If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the id of the dataset that is related and a list of concepts that are shared. Each list item also contains a `numberOfOcurrences` field, containing the count of common concepts. The results returned are sorted by their degree of similarity, meaning the datasets with the higher number of shared concepts (`numberOfOcurrences`) are higher on the list.
+
+### Filters
+
+> Filtering similar datasets including descendants by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendant/:dataset?application=gfw
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+
+### Errors for querying similar datasets
+
+Error code | Error message | Description
+---------- | ------------- | ---------------------------------
+400        | Dataset query param required | You must provide a valid dataset id.
 
 ## Search datasets by concepts
 
-This endpoint performs a dataset search based on the concepts provided and the tags that have been associated to all the different datasets that are part of the
-application. Ancestors of the tags directly associated to a datasets are taken into account in the search.
+> GET request to search datasets by concepts:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]='water'
+curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=:concept \
+-H "Content-Type: application/json"
 ```
 
-Up to three sets of concepts can be provided as shown in the example below.
-Given the following sets of concepts:
+> POST request to search datasets by concepts provided in the request body:
 
-- Set 1: `['spain', 'europe']`
-- Set 2: `['water']`
-- Set 3: `['raster', 'geospatial']`
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/query/search-datasets \
+-H "Content-Type: application/json" \
+-d '{ "concepts": [[":concept"]] }'
+```
 
-The url should be formed as follows:
+> Providing multiple sets of concepts as GET request:
 
-`https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=spain,concepts[0][1]=europe,concepts[1][0]=water,concepts[2][0]=raster,concepts[2][1]=geospatial`
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=spain,concepts[0][1]=europe,concepts[1][0]=water,concepts[2][0]=raster,concepts[2][1]=geospatial \
+-H "Content-Type: application/json"
+```
 
-**AND** logical operators are applied among the sets while **OR** is used for set elements.
+> Providing multiple sets of concepts as POST request:
 
-### Parameters available
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets \
+-H "Content-Type: application/json" \
+-d '{ 
+  "concepts": [
+    ["spain", "europe"],
+    ["water"],
+    ["raster", "geospatial"]
+  ] 
+}'
+```
 
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-published         |   Include only published datasets            |    Boolean |                                        true/false |      No
-app  |   List of applications datasets should belong to (at least one of them). Read more about this field [here](/index-rw.html#applications). |    Text |     Any text, values separated by commas |       No
-env  |   Include only datasets with at least one of the specified environments - read more about this field in the [Environments concept section](/index-rw.html#environments). | Text | One or more values from ['production', 'preproduction'] |       No
-page[size] | Maximum number of results returned by the endpoint | Number | No
-
-### Example
-
-Search for datasets with the tag `global` and `water` and at least one of the two tags: `raster`, `geospatial`. The resulting datasets should also be published and be categorized either as `production` or `preproduction` and belong to the application `rw`. The total number of results returned won't be limited since a very high number has been provided as limit _(999999)_.
-
-`https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=global&concepts[1][0]=water&concepts[2][0]=raster&concepts[2][1]=geospatial&published=true&env=production,preproduction&app=rw&page[size]=999999`
+> Example response:
 
 ```json
 {
   "data": [
     "11f43558-d703-4b9d-aff0-f2354a11b359",
+    "12510410-1eb3-4af0-844f-8a05be50b1c1",
+    "1b8f1592-2a92-4dd5-bd85-6d231c7d3229",
     "1b97e47e-ca18-4e50-9aae-a2853acca3f0",
-    "20c70a51-4ddf-4f6c-ad2c-1a6729b95fa4",
-    "21ac3cd2-9c19-47c7-ad18-4bcad118870f",
-    "33bed1fb-9261-41bf-8b50-127a4d0c80c5",
-    "3624554e-b240-4edb-9110-1f010642c3f3",
-    "36803484-c413-49a9-abe2-2286ee99b624",
     "371e700e-bc9a-4526-af92-335d888de309",
+    "4b000ded-5f4d-4dbd-83c9-03f2dfcd36db",
+    "5be16fea-5b1a-4daf-a9e9-9dc1f6ea6d4e",
     "60be01b0-99fb-459c-8a08-b934270f8c4b",
     "63a7a997-695d-4629-b6e9-9b169f5c69bf",
-    "894f43a8-ce8e-43a5-a4c7-fa80faa43d63",
-    "99075509-df36-461e-abb0-659cee555bd0",
-    "9e9a5c50-b825-4f12-838f-1650943c2be1",
-    "c17fab24-f71a-4c3e-bb87-6b753a944e6b",
-    "c9eadefd-4a06-4f3b-a2eb-3e3f45624c24",
-    "d7c3d954-ac86-4d1a-bb6a-c8c432a94e26",
-    "e63bb157-4b98-4ecb-81d6-c1b15e79895a",
-    "e7582657-9c16-4eb1-89e8-0211d94015c6",
-    "e94f0e2d-2b5f-41ed-967f-d97e54dd81ea",
-    "ede84747-0116-45c2-accb-1dfe141c00ff",
-    "f717ac77-6f06-493f-8336-4e660a18f74c",
-    "fa6443ff-eb95-4d0f-84d2-f0c91682efdf"
+    "795a7ceb-ebc1-4479-95ad-76ea4d045ad3"
   ]
 }
 ```
 
-## Get most liked datasets
+This endpoint lets API users discover datasets related to the lists of concepts provided. Note that, either in the GET or POST forms for this endpoint, **concepts must be provided as a list of sets**. *AND* logical operators (`&&`) are applied among the list of sets, while *OR* (`||`) is used for set elements. You can provide up to three sets of concepts to search for - the example on the side exemplifies a request to this endpoint given the following sets of concepts:
 
-This endpoint returns the list of the most liked datasets in descending order.
+- Set 1: `['spain', 'europe']`
+- Set 2: `['water']`
+- Set 3: `['raster', 'geospatial']`
+
+In this specific case, the datasets returned would be related with `"spain"` OR `"europe"`, `"water"`, and `"raster"` or `"geospatial"`. Or, expressed as a logical condition: `("spain" || "europe") && "water" && ("raster" || "geospatial")`.
+
+If successful, the response will have status 200 OK, containing a list of dataset ids that are related to the concepts provided in the `data` index. Also, note that ancestor concepts are also taken into account in the search.
+
+### Filters
+
+> Filtering searched datasets by application:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
+curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendant/:dataset?application=gfw
 ```
 
-> Response:
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated with this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+depth        | Limits the depth of the graph search. | Number | 15
+
+### Errors for searching datasets by concepts
+
+Error code | Error message | Description
+---------- | ------------- | ---------------------------------
+400        | Concepts query params are required | You must provide the list of sets of concepts.
+
+## Search datasets by concepts and their synonyms
+
+> GET request to search datasets by concepts and their synonyms:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/search-by-label-synonyms?search=:search \
+-H "Content-Type: application/json"
+```
+
+> Example providing multiple concepts in one request:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/search-by-label-synonyms?search=health society \
+-H "Content-Type: application/json"
+```
+
+> Example response:
 
 ```json
 {
-	"data": [
-		{
-			"id": "e2971008-029f-441b-97cd-ee0555728182",
-			"count": {
-				"low": 2,
-				"high": 0
-			}
-		},
-		{
-			"id": "f6bb99af-541a-4d41-9e47-cc36cb479d4b",
-			"count": {
-				"low": 2,
-				"high": 0
-			}
-		},
-		{
-			"id": "223b936e-06b8-4970-abd9-4f123904d95d",
-			"count": {
-				"low": 2,
-				"high": 0
-			}
-		},
-		{
-			"id": "0b9f0100-ce5b-430f-ad8f-3363efa05481",
-			"count": {
-				"low": 2,
-				"high": 0
-			}
-		}
-	]
+  "data": [
+    "11f43558-d703-4b9d-aff0-f2354a11b359",
+    "12510410-1eb3-4af0-844f-8a05be50b1c1",
+    "1b8f1592-2a92-4dd5-bd85-6d231c7d3229",
+    "1b97e47e-ca18-4e50-9aae-a2853acca3f0",
+    "371e700e-bc9a-4526-af92-335d888de309",
+    "4b000ded-5f4d-4dbd-83c9-03f2dfcd36db",
+    "5be16fea-5b1a-4daf-a9e9-9dc1f6ea6d4e",
+    "60be01b0-99fb-459c-8a08-b934270f8c4b",
+    "63a7a997-695d-4629-b6e9-9b169f5c69bf",
+    "795a7ceb-ebc1-4479-95ad-76ea4d045ad3"
+  ]
 }
 ```
 
-## Get most viewed datasets list
+This endpoint finds datasets in the graph that are related to the concepts provided or any of its synonyms. If successful, the response will have status 200 OK, containing a list of dataset ids in the `data` index. You can provide multiple concepts by splitting them with blank spaces.
 
-This endpoint returns the list of the most viewed datasets in descending order of total views.
+### Filters
 
-### Parameters
-
-Parameter        |               Description               |    Type |                                          Values | Required
------------- | :-------------------------------------: | ------: | ----------------------------------------------: | -------:
-limit         |           Maximum number of results            |    Number |                                        Any positive number |      No
+> Filtering searched datasets by application:
 
 ```shell
-curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed
+curl -X GET https://api.resourcewatch.org/v1/graph/query/search-by-label-synonyms?application=gfw
 ```
 
-> Response:
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+
+### Errors for searching datasets by concepts and their synonyms
+
+Error code | Error message | Description
+---------- | ------------- | ---------------------------------
+400        | Search query param required | You must provide the search query parameter.
+
+## Most liked datasets
+
+> GET request to find out which are the most liked datasets:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets \
+-H "Content-Type: application/json"
+```
+
+> Example response:
+
+```json
+{
+  "data": [
+    {
+      "id": "c36c3108-2581-4b68-852a-c929fc758001",
+      "count": {
+        "low": 6,
+        "high": 0
+      }
+    },
+    {
+      "id": "20cc5eca-8c63-4c41-8e8e-134dcf1e6d76",
+      "count": {
+        "low": 5,
+        "high": 0
+      }
+    }
+  ]
+}
+```
+
+This endpoint returns a list of dataset sorted by the number of times these datasets were marked as favorite by users. The returned list is sorted descending, from the datasets with higher favorite count to the ones with a lower count.
+
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `id` property and the number of times the dataset was marked as favorite by a user in the `count.low` property.
+
+### Filters
+
+> Filtering most liked datasets by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets?application=gfw
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+
+## Most viewed datasets
+
+> GET request to find out which are the most viewed datasets:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed \
+-H "Content-Type: application/json"
+```
+
+> Example response:
 
 ```json
 {
   "data": [
     {
       "dataset": "0087944f-871c-44bc-b4d9-cd5acfc27023",
-      "views": 172
+      "views": 76
     },
     {
       "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
-      "views": 68
-    },
-    {
-      "dataset": "01b0b8cf-6638-4a9b-9896-d919d0656a64",
-      "views": 5
-    },
-    {
-      "dataset": "01ae2fd7-b818-429f-a27e-a36c8def971a",
-      "views": 2
-    },
-    {
-      "dataset": "00b5c224-8a78-41c4-89a6-8299dec8609e",
-      "views": 0
+      "views": 39
     }
   ]
 }
 ```
 
-## Update view counter for dataset and user
+This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by users. The returned list is sorted descending, from the datasets with higher view count to the ones with a lower count.
 
-Updates the total view counter for the corresponding dataset. If the request is authenticated, it will also increment the counter of number of times the user has viewed the dataset. 
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property and the number of times the dataset was viewed in the `views` property.
+
+Note that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](#increment-dataset-view-count).
+
+### Filters
+
+> Filtering most viewed datasets by application:
 
 ```shell
-curl -X POST https://api.resourcewatch.org/v1/graph/dataset/<dataset-id>/visited
--H "Authorization: Bearer <your-token>"
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed?application=gfw
 ```
 
+> Limiting the number of returned results:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed?limit=3
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated with this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
+
+## Most viewed datasets by user
+
+> GET request to find out which are the most viewed datasets for the token user:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+> Example response:
+
+```json
+{
+  "data": [
+    {
+      "dataset": "0087944f-871c-44bc-b4d9-cd5acfc27023",
+      "views": 76
+    },
+    {
+      "dataset": "00abb46f-34e2-4bf7-be30-1fb0b1de022f",
+      "views": 39
+    }
+  ]
+}
+```
+
+This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by the user of the token provided in the request headers. The returned list is sorted descending, from the datasets with higher view count to the ones with a lower count.
+
+If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property and the number of times the dataset was viewed in the `views` property.
+
+As in the case of the `most-viewed` endpoint, please keep in mind that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](#increment-dataset-view-count).
+
+### Filters
+
+> Filtering most viewed datasets by the token user by application:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed-by-user?application=gfw
+```
+
+> Limiting the number of returned results:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed-by-user?limit=3
+```
+
+This endpoint supports the following filters as query string parameters:
+
+Filter       | Description                   | Type        | Default value
+------------ | ----------------------------- | ----------- | ----------------
+application  | Applications associated with this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
+
+### Errors for getting most viewed datasets by user
+
+Error code | Error message | Description
+---------- | ------------- | ---------------------------------
+401        | Unauthorized  | You must provide your API user's token in the response headers.
+
+## Increment dataset view count
+
+> POST request to find out which are the most viewed datasets for the token user:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/graph/dataset/:id/visited \
+-H "Authorization: Bearer <your-token>" \
+-H "Content-Type: application/json"
+```
+
+Use this endpoint if you want to increment the view count of the dataset with id provided in the URL path. If successful, this endpoint will return 200 OK containing an empty object in the response body. 
+
+You can optionally provide the authentication token for your API user in the request headers. If no token is provided, a dataset view is registered without being associated with any user. If a token is provided, the dataset view count for your API user will be incremented.
+
+## Creating resources
+
+**The creation of resources on the graph is performed automatically after the creation of each resource, so you don't need to explicitly do it yourself.** Because of this, creating resources on the graph is restricted to other RW API services, and requires authentication from a RW API service. Normal API users won't be able to call these endpoints successfully - if you try to do it with a "normal" API user token, you will receive a response with HTTP status code `403 Forbidden`.
+
+For details on how these specific endpoints work, you should check out the developer docs for each of the resources supported. The following resources are currently supported as graph nodes:
+
+* [dataset](/developer.html#creating-dataset-graph-nodes)
+* [layer](/developer.html#creating-layer-graph-nodes)
+* [widget](/developer.html#creating-widget-graph-nodes)
+* [metadata](/developer.html#creating-metadata-graph-nodes)
+
+## Deleting resources
+
+**The deletion of resources on the graph is performed automatically after the deletion of each resource, so you don't need to explicitly do it yourself.** Because of this, deleting resources on the graph is restricted to other RW API services, and requires authentication from a RW API service. Normal API users won't be able to call these endpoints successfully - if you try to do it with a "normal" API user token, you will receive a response with HTTP status code `403 Forbidden`.
+
+For details on how these specific endpoints work, you should check out the developer docs for each of the resources supported. The following resources are currently supported as graph nodes:
+
+* [dataset](/developer.html#deleting-dataset-graph-nodes)
+* [layer](/developer.html#deleting-layer-graph-nodes)
+* [widget](/developer.html#deleting-widget-graph-nodes)
+* [metadata](/developer.html#deleting-metadata-graph-nodes)
+
+## Relationships between graph nodes and concepts
+
+> Getting the list of concepts for a dataset:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:id
+```
+
+> Example response, containing the "urban" concept:
+
+```json
+{
+  "data": [
+    {
+      "id": "37d04efc-0ab2-4499-a891-54dca1013c74",
+      "type": "graph",
+      "attributes": {
+        "iso": "",
+        "synonyms": ["city", "urban"],
+        "id": "urban",
+        "label": "Cities",
+        "default_parent": "settlements"
+      }
+    }
+  ]
+}
+```
+
+> Getting vocabulary for the same dataset:
+
+```shell
+curl -X GET https://api.resourcewatch.org/v1/dataset/:id/vocabulary
+```
+
+> Example response, containing the "knowledge_graph" vocabulary with the "urban" tag associated:
+
+```json
+{
+  "data": [
+    {
+      "id": "knowledge_graph",
+      "type": "vocabulary",
+      "attributes": {
+        "tags": ["urban"],
+        "name": "knowledge_graph",
+        "application": "rw"
+      }
+    }
+  ]
+}
+```
+
+> Creating (if it doesn't exist yet) the association between the vocabulary "knowledge_graph" and a dataset:
+
+```shell
+curl -X POST https://api.resourcewatch.org/v1/dataset/:id/vocabulary/knowledge_graph \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer <your-token>' \
+-d '{
+  "application": "rw",
+  "tags": ["urban", "society"]
+}'
+```
+
+> Editing the association between the vocabulary "knowledge_graph" and a dataset:
+
+```shell
+curl -X PATCH https://api.resourcewatch.org/v1/dataset/:id/vocabulary/knowledge_graph
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer <your-token>' \
+-d '{
+  "application": "rw",
+  "tags": ["urban"]
+}'
+```
+
+> Deleting the association between the vocabulary "knowledge_graph" and a dataset:
+
+```shell
+curl -X DELETE https://api.resourcewatch.org/v1/dataset/:id/vocabulary/knowledge_graph
+```
+
+**The management of connections between resources and concepts is handled by vocabulary endpoints, using the vocabulary `"knowledge_graph"`.** Using this vocabulary, you can add tags to your dataset. These tags will be added as concepts, and one (or more, accordingly) graph edges will be created, establishing a connection between your resource and the provided tags.
+
+This section provides some examples of how you can use vocabulary endpoints to manage your resources' concepts. Keep in mind that you can always refer to the [vocabulary endpoint documentation](#vocabulary-and-tags) for more details on how to use these endpoints.
+
+On the examples on the side, you'll be able to understand that you can map the tags associated with a given resource with the tags associated with the `"knowledge_graph"` vocabulary for the same resource. You can use vocabulary's endpoints to create (if it doesn't exist yet), edit, or delete the tags associated with that resource. Those changes will be reflected in the concepts that are associated with that same resource.
+
+Lastly, keep in mind that, despite the examples on the side refer to datasets, you can use vocabulary's endpoints to update the tags associated with the `"knowledge_graph"` vocabulary for all supported resource types: datasets, layers, widgets, and metadata.
+
+## Favorite relationships between graph nodes and users
+
+As in the case of managing relationships between graph nodes and concepts, **the management of favorite relationships between resources and users is handled by vocabulary endpoints.** Please refer to the [favorite endpoint documentation](#favorites) for more details on how to use these endpoints.
+
+## Graph concept reference
+
+> Example concept entity structure:
+
+```json
+{
+  "id": "society",
+  "label": "Society",
+  "synonyms": ["People"],
+  "labels": ["CONCEPT", "TOPIC"],
+  "numberOfDatasetsTagged": 1,
+  "datasets": ["4458eb12-8572-45d1-bf07-d5a3ee097021"]
+}
+```
+
+This section describes the attributes that are present on a graph concept entity:
+
+Field name               | Type           | Description                                                                  
+------------------------ | -------------- | ---------------------------------------------------------------------------- 
+`id`                     | String         | The concept unique identifier.
+`label`                  | String         | A readable version of the concept identifier.
+`synonyms`               | String &#124; Array | The list of synonyms for this concept (or an empty string, if no synonyms exist).
+`labels`                 | Array          | The list of identifiers for the type of this graph node.
+`numberOfDatasetsTagged` | Number         | The number of datasets that are currently tagged with this concept.
+`datasets`               | Array          | The list of dataset ids that are currently tagged with this concept.
+
+## Graph relationship reference
+
+> Example relationship entity structure:
+
+```json
+{
+  "id": "4458eb12-8572-45d1-bf07-d5a3ee097021",
+  "type": "graph",
+  "attributes": {
+    "iso": "",
+    "synonyms": ["Habitat"],
+    "id": "habitat",
+    "label": "Habitats",
+    "default_parent": "ecosystem"
+  }
+}
+```
+
+This section describes the attributes that are present on a graph relationship entity:
+
+Field name                  | Type           | Description                                                                  
+--------------------------- | -------------- | ---------------------------------------------------------------------------- 
+`id`                        | String         | The id of the relationship (usually the dataset id, if finding concepts related to a dataset).
+`type`                      | String         | Always set to "graph".
+`attributes.iso`            | String         | *Deprecated attribute - you should not rely on this attribute.*
+`attributes.synonyms`       | Array          | A list of synonyms for this concept.
+`attributes.id`             | String         | The concept unique identifier.
+`attributes.label`          | String         | A readable version of the concept identifier.
+`attributes.default_parent` | String         | The id of the parent concept, if existing.
