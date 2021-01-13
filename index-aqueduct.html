@@ -763,6 +763,30 @@
 
 <p>Besides being associated with a single RW API resource (dataset, widget, or layer), metadata objects must also identify the language in which they are written, as well as the <a href="https://resource-watch.github.io/doc-api/index-rw.html#applications">application</a> they are associated with. This allows a single resource, say a dataset, to have its metadata translated into different languages, and be adjusted to meet the needs of different applications. We&rsquo;ll go into further details on these when we cover the metadata endpoints in their dedicated section.</p>
 
+          <h2 id="vocabularies-and-tags">Vocabularies and tags</h2>
+
+<p>Vocabularies and tags are the two central pillars of the RW API&rsquo;s tagging mechanism, so we&rsquo;ll be covering them together. These concepts can seem abstract at times, so it&rsquo;s important that you understand the concepts we&rsquo;ll describe here, before moving on to the documentation for the actual endpoints.</p>
+
+<h3 id="tags">Tags</h3>
+
+<p>Let&rsquo;s start with an example: you are browsing some old files on your computer, and you run into your MP3 collection from when you were a teenager. You re-discover some great tunes from way back when, but you also rediscover how unorganized you were, so you decide to curate your music collection a bit, for old times sake. So, as you listen to those &ldquo;dusty&rdquo; files, you start adding keywords to each file, like &ldquo;rock&rdquo;, &ldquo;slow one&rdquo; or &ldquo;1996&rdquo;, that describe each song, and help you structure and organize your collection. You are adding <strong>tags</strong> to your files.</p>
+
+<p>Like in our example, a RW API tag is a simple word or a concept, that is used to describe a resource. In the RW API, a resource can be a dataset, a widget, or a layer (MP3 files currently not supported, sorry). While a tag can be whatever you want, they are most useful if they capture simple concepts that apply to multiple resources. So, while &ldquo;rock&rdquo;, &ldquo;slow one&rdquo; and &ldquo;1996&rdquo; are three good tags for your music collection, a tag like &ldquo;slow rock song from 1996&rdquo; is probably too specific, and wouldn&rsquo;t work well as a tag - we&rsquo;ll see why in a moment.</p>
+
+<p>Now that you have your tags in place, your music collection is starting to feel a lot more organized. You notice you can quickly group similar songs, and create playlists like &ldquo;pop songs&rdquo; or &ldquo;95s punk&rdquo;, and you can even use tags to find songs that match your current mood, that you didn&rsquo;t remember you had in your collection. Tags are really powerful to discover resources you didn&rsquo;t know existed - whether it&rsquo;s &ldquo;pop&rdquo; songs, &ldquo;deforestation&rdquo; datasets, or &ldquo;social inequality&rdquo; layers. </p>
+
+<p>RW API tags are shared by all users, meaning any user can discover your resources if they search by the tags you assigned to them. Similarly, you can use tags to discover resources created and tagged by other users, so it adds discoverability value both ways.</p>
+
+<p>However, in order to reach their full potential, tags need to be combined with another concept: vocabularies.</p>
+
+<h3 id="vocabulary">Vocabulary</h3>
+
+<p>Let&rsquo;s go back to your music collection. As you realize tags are a powerful tool to curate your collection, you start adding more tags to your songs. Soon you realize that every file now has many many tags, and it&rsquo;s starting to become complicated to make sense of each of the 20 tags you&rsquo;ve now added to your songs - you&rsquo;re no longer sure if the &ldquo;1996&rdquo; refers to the year it was recorded, released, or remastered. You play songs tagged with &ldquo;brainstorm&rdquo; and start thinking about a way to solve this problem.</p>
+
+<p>You realize the problem you&rsquo;re facing could be solved by grouping tags in a way that identifies what they refer to. So, for example, you could have tag groups called &ldquo;year of release&rdquo;, &ldquo;instruments played&rdquo; or &ldquo;genre&rdquo;. Each song could use as many or as few tags from each tag group, and tags with the same name but belonging to different groups would effectively mean and be different things. When associating a tag with a song, you would need to identify which tag group that tag belongs to, to make it work. Finally, you realize that &ldquo;tag groups&rdquo; is a poor name, and decide to call it something else - <strong>vocabulary</strong>.</p>
+
+<p>As in our example above, RW API vocabularies are a way to group multiple tags in a way that makes it easier to organize them, while also giving them more meaning. When tagging a RW API resource, not only do you need to specify the tag values but also the vocabulary to which each tag belongs - giving context to your tags and making them more powerful and easier to understand. Like with tags, vocabularies are also shared by all RW API users, which benefits everyone in terms of discoverability.</p>
+
           <h2 id="geostore">Geostore</h2>
 
 <p>Allowing users to interact with data in the context of geographic data structures, such as the boundaries of countries or the location of power plants, is an important goal of the Resource Watch API (RW API). For example a user maybe looking to answer questions like <em>&ldquo;How much tree cover is there in my region?&rdquo;</em> or <em>&ldquo;How many power-plants are situated on the coast?&rdquo;</em>.</p>
@@ -841,12 +865,12 @@
 <p>In the context of the RW API&rsquo;s Graph service, nodes represent one of the following: </p>
 
 <ul>
-<li><strong>concepts</strong></li>
-<li><strong>datasets</strong></li>
-<li><strong>layers</strong></li>
-<li><strong>widgets</strong></li>
-<li><strong>metadata</strong></li>
-<li><strong>users</strong></li>
+<li><a href="#dataset">Datasets</a></li>
+<li><a href="#layer">Layers</a></li>
+<li><a href="#widget">Widgets</a></li>
+<li><a href="#metadata">Metadata</a></li>
+<li><strong>Users</strong></li>
+<li><strong>Concepts</strong></li>
 </ul>
 
 <p>Edges define relationships of different types between the different types of graph nodes. Relationships can be detailed and specific (for instance, defining a favorite relationship between a dataset and user), but they can also be more generic, establishing a connection between a resource and a concept.</p>
@@ -6049,6 +6073,467 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 <td>No (autogenerated)</td>
 <td><current date></td>
 <td>Automatically maintained date of when the layer was last updated. Cannot be modified by users.</td>
+</tr>
+</tbody></table>
+
+<h2 id="contextual-layers">Contextual layers</h2>
+
+<h3 id="what-is-a-contextual-layer">What is a contextual layer</h3>
+
+<p>Contextual layers are a simpler version of RW API layers, focused on supporting raster or vector layers that can be intersected with map coordinates. Unlike RW API layers, contextual layers support out-of-the-box downloading layer tiles from a remote tile URL pattern set in the contextual layer itself.</p>
+
+<p>Also, another significant difference between layers and contextual layers is that layers, despite being owned by users, cannot be private - if you create layers, any other RW API user will be able to see them when they <a href="#getting-all-layers">get all layers</a>. Contextual layers are, by default, private. However, you can also set your contextual layers to be publicly accessible by other users, if you choose to do so.</p>
+
+<p>Another thing you should keep in mind is that, aside from being owned by users, contextual layers can be owned by teams - a separate RW API entity that groups users, assigning some of them a <code class="prettyprint">manager</code> profile (not to be confused with the <a href="#user-roles"><code class="prettyprint">MANAGER</code> user role</a>). If owned by a team, the contextual layer can be fetched or edited by any of the team members, not only by the creator of the contextual layer. Additionally, the contextual layer can also be deleted by a team manager aside from the owner of the contextual layer. Unfortunately, documentation for team endpoints is not up-to-date, so it can be hard to understand how you can interact with teams or use them to create contextual layers. However, for the time being, just keep in mind that contextual layers can be owned by teams, not only by users.</p>
+
+<p>Contextual layers are mostly used by the <a href="https://forestwatcher.globalforestwatch.org/">Forest Watcher mobile application</a>, so for more information about contextual layer use cases, please check out the FW app or reach out to a member of the FW team.</p>
+
+<h3 id="getting-contextual-layers">Getting contextual layers</h3>
+
+<blockquote>
+<p>Getting the list of contextual layers:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/contextual-layer"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextual-layers"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59a979235f17780012d7dfcf"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"isPublic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layers.treeCoverLoss2015"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://production-api.globalforestwatch.org/contextual-layer/loss-layer/2015/2016/{z}/{x}/{y}.png"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-09-01T15:13:39.502Z"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint allows you to list contextual layers and their properties. If successful, the returned response will include a list of contextual layers in the <code class="prettyprint">data</code> index of the response body, including contextual layers that match one of the following conditions:</p>
+
+<ul>
+<li>the contextual layer is public - <code class="prettyprint">isPublic</code> attribute is set to <code class="prettyprint">true</code>;</li>
+<li>the contextual layer is owned by the user making the request - <code class="prettyprint">owner.id</code> attribute matches the user id in the token provided in the request;</li>
+<li>the contextual layer is owned by a team you belong to - the contextual layer <code class="prettyprint">id</code> is part of the layers of the team the user making the request belongs to.</li>
+</ul>
+
+<p>Keep in mind this endpoint is restricted to authenticated users, so always remember to provide your authentication token when calling this endpoint. The result is <strong>not</strong> paginated, so you will get all layers that match at least one of the conditions defined above.</p>
+
+<h4 id="filters">Filters</h4>
+
+<blockquote>
+<p>Return only contextual layers with the <code class="prettyprint">enabled</code> attribute equal to true:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/contextual-layer?enabled=true"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre>
+<p>The contextual layer list endpoint allows you to filter by the <code class="prettyprint">enabled</code> attribute, to retrieve only enabled or disabled layers.</p>
+
+<h4 id="sorting">Sorting</h4>
+
+<p>Sorting is currently not supported for contextual layers.</p>
+
+<h4 id="errors-for-getting-contextual-layers">Errors for getting contextual layers</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You haven&rsquo;t provided your authentication token.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Error while retrieving user team</td>
+<td>An internal error occurred while fetching the request user&rsquo;s team.</td>
+</tr>
+</tbody></table>
+
+<h3 id="creating-a-contextual-layer-for-a-user">Creating a contextual layer for a user</h3>
+
+<blockquote>
+<p>To create a contextual layer for a user, you need to provide at least the following fields:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/contextual-layer"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-d  <span class="se">\</span>
+<span class="s1">'{
+    "name": "Test",
+    "url": "https://example.com/contextual-layer/{z}/{x}/{y}.png"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example successful response for creating a contextual layer:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextual-layers"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5fe9fe6bdc8bd5001bbcb9d0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"isPublic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/contextual-layer/{z}/{x}/{y}.png"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-12-28T15:48:59.812Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>RW API contextual layers can be associated with either a user or a team. This section details the information you need to provide to create a contextual layer associated with a user. This endpoint is available to all registered API users.</p>
+
+<p>You can create a contextual layer by calling a POST request, passing the relevant data as body fields. The supported body fields are defined in the <a href="#contextual-layer-reference">contextual layer reference</a> section, but the required fields you must provide are <code class="prettyprint">name</code> and <code class="prettyprint">url</code>.</p>
+
+<h4 id="errors-for-creating-a-contextual-layer-for-a-user">Errors for creating a contextual layer for a user</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>The structure of the JSON request payload is not valid.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You haven&rsquo;t provided your authentication token.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Layer creation Failed.</td>
+<td>The creation of the contextual layer failed, check if you are sending all the required fields.</td>
+</tr>
+</tbody></table>
+
+<h3 id="creating-a-contextual-layer-for-a-team">Creating a contextual layer for a team</h3>
+
+<blockquote>
+<p>To create a contextual layer for a team, you need to provide at least the following fields:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.resourcewatch.org/v1/contextual-layer/team/:teamId"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-d  <span class="se">\</span>
+<span class="s1">'{
+    "name": "Test",
+    "url": "https://example.com/contextual-layer/{z}/{x}/{y}.png"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example successful response for creating a contextual layer:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextual-layers"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5fe9fe6bdc8bd5001bbcb9d0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"isPublic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/contextual-layer/{z}/{x}/{y}.png"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-12-28T15:48:59.812Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>RW API contextual layers can be associated with either a user or a team. This section details the information you need to provide to create a contextual layer associated with a team. This endpoint is available to all registered API users.</p>
+
+<p>You can create a contextual layer by calling a POST request, passing the relevant data as body fields. The supported body fields are defined on the <a href="#contextual-layer-reference">contextual layer reference</a> section, but the required fields you must provide are <code class="prettyprint">name</code> and <code class="prettyprint">url</code>.</p>
+
+<h4 id="errors-for-creating-a-contextual-layer-for-a-team">Errors for creating a contextual layer for a team</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>The structure of the JSON request payload is not valid.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You haven&rsquo;t provided your authentication token.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Layer creation Failed.</td>
+<td>The creation of the contextual layer failed, check if you are sending all the required fields.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Team retrieval Failed.</td>
+<td>An error occurred while fetching the information about the team with id provided, check you are providing a valid team id.</td>
+</tr>
+</tbody></table>
+
+<h3 id="updating-a-contextual-layer">Updating a contextual layer</h3>
+
+<blockquote>
+<p>Example PATCH request to update a contextual layer:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/contextual-layer/:layerId"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> -d <span class="se">\</span>
+<span class="s1">'{
+    "name": "Test 2",
+    "url": "https://example.com/contextual-layer/{z}/{x}/{y}.png"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example successful response for updating a contextual layer:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextual-layers"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5fe9fe6bdc8bd5001bbcb9d0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"isPublic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test 2"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/contextual-layer/{z}/{x}/{y}.png"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-12-28T15:48:59.812Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>To update the details of an existing contextual layer (either created for a user or a team), you should issue a PATCH request. This endpoint is available to all registered API users. </p>
+
+<p>Keep in mind that, as in the case of creating a contextual layer, you must provide at least <code class="prettyprint">name</code> and <code class="prettyprint">url</code> in all update contextual layer requests. Remember that you can check the <a href="#contextual-layer-reference">contextual layer reference</a> section for the list of fields available.</p>
+
+<p>Updating contextual layers also has some caveats:</p>
+
+<ul>
+<li>you can only update the <code class="prettyprint">enabled</code> attribute of contextual layers you own, or contextual layers that belong to a team that you manage - if one of these conditions is not met, the <code class="prettyprint">enabled</code> attribute value is kept as is.</li>
+<li>you can only update the <code class="prettyprint">isPublic</code> attribute of contextual layers if you are an <code class="prettyprint">ADMIN</code> user and the contextual layer you are trying to update is owned by a user (not by a team) - in all other cases, the <code class="prettyprint">isPublic</code> attribute value is kept as is.</li>
+</ul>
+
+<h4 id="errors-for-updating-a-layer">Errors for updating a layer</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Layer not found</td>
+<td>No contextual layer was found for the provided id.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Layer retrieval failed.</td>
+<td>An error occurred while fetching the layer information from the database.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Team retrieval Failed.</td>
+<td>An error occurred while fetching the information about the team with id provided.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Layer update failed.</td>
+<td>An error occurred while saving the updated information of the contextual layer.</td>
+</tr>
+</tbody></table>
+
+<h3 id="deleting-a-contextual-layer">Deleting a contextual layer</h3>
+
+<blockquote>
+<p>Example DELETE request to delete a contextual layer:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/contextual-layer/:layerId"</span> <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>Use this endpoint if you&rsquo;d like to delete a contextual layer from the RW API. In order to delete a contextual layer, you must either be an <code class="prettyprint">ADMIN</code> user or, alternatively, meet all of the following conditions:</p>
+
+<ul>
+<li>the contextual layer&rsquo;s <code class="prettyprint">isPublic</code> property must be set to <code class="prettyprint">false</code>.</li>
+<li>if the contextual layer is owned by a user, you must be the owner of the contextual layer.</li>
+<li>if the contextual layer is owned by a team, you must be one of the managers of the team that owns the contextual layer.</li>
+</ul>
+
+<p>If successful, the request to delete a contextual layer returns a 204 No Content response.</p>
+
+<h4 id="errors-for-deleting-a-layer">Errors for deleting a layer</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Layer not found</td>
+<td>No contextual layer was found for the provided id.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Layer retrieval failed.</td>
+<td>An error occurred while fetching the layer information from the database.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Team retrieval Failed.</td>
+<td>An error occurred while fetching the information about the team with id provided.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Layer update failed.</td>
+<td>An error occurred while saving the updated information of the contextual layer.</td>
+</tr>
+</tbody></table>
+
+<h3 id="getting-loss-layer-tiles">Getting loss layer tiles</h3>
+
+<blockquote>
+<p>Example request to fetch loss layer tiles:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/contextual-layer/loss-layer/:startYear/:endYear/:z/:x/:y.png"</span>
+</code></pre>
+<p><strong>This endpoint can be used as a shortcut to obtain PNG tiles, instead of retrieving the contextual layer&rsquo;s <code class="prettyprint">url</code> field and manually interpolating coordinates. The base URL of the service containing the PNG tiles for the layers referred by this endpoint can be configured changing the <a href="https://github.com/gfw-api/fw-contextual-layers/blob/a8442da2c7a4e68625867479860c0185f35488a8/config/default.json#L17"><code class="prettyprint">hansenUrl</code> configuration value in the Contextual Layers service</a>.</strong></p>
+
+<p>Use this endpoint to retrieve PNG image corresponding to the loss layer tiles for the <code class="prettyprint">(x,y,z)</code> tuple (where <code class="prettyprint">x</code> represents latitude, <code class="prettyprint">y</code> longitude, and <code class="prettyprint">z</code> the zoom level) for loss layers for the interval of years from <code class="prettyprint">startYear</code> to <code class="prettyprint">endYear</code>.</p>
+
+<p>If successful, this endpoint returns a PNG file of the loss layer tile.</p>
+
+<h4 id="errors-for-getting-loss-layer-tiles">Errors for getting loss layer tiles</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>404</td>
+<td>Tile not found</td>
+<td>No tile was found for the parameters provided.</td>
+</tr>
+</tbody></table>
+
+<h3 id="contextual-layer-reference">Contextual layer reference</h3>
+
+<p>This section gives you a complete view of the properties that are maintained as part of a contextual layer. When interacting with a contextual layer (on get, on create, etc) you will find most of these properties available to you, although they may be organized in a slightly different structure (ie: on get, everything but the <code class="prettyprint">id</code> is nested inside an <code class="prettyprint">attributes</code> object).</p>
+
+<p>You can find more details in the <a href="https://github.com/gfw-api/fw-contextual-layers/blob/dev/app/src/models/layer.model.js">source code</a>.</p>
+
+<table><thead>
+<tr>
+<th>Field name</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>Yes (autogenerated)</td>
+<td></td>
+<td>Unique Id of the contextual layer. Auto-generated on creation. Cannot be modified by users.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>Name of the contextual layer.</td>
+</tr>
+<tr>
+<td>description</td>
+<td>String</td>
+<td>No</td>
+<td></td>
+<td>Description of the contextual layer.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>String</td>
+<td>Yes</td>
+<td></td>
+<td>URL to fetch tiles for the contextual layer.</td>
+</tr>
+<tr>
+<td>isPublic</td>
+<td>Boolean</td>
+<td>No</td>
+<td>false</td>
+<td>If the contextual layer is publicly accessible.</td>
+</tr>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>No</td>
+<td>false</td>
+<td>If the contextual layer is enabled.</td>
+</tr>
+<tr>
+<td>owner</td>
+<td>Object</td>
+<td>No</td>
+<td></td>
+<td>Object containing information about the owner of the contextual layer.</td>
+</tr>
+<tr>
+<td>owner.type</td>
+<td>String</td>
+<td>Yes (auto-filled according to the endpoint used to create the contextual layer)</td>
+<td></td>
+<td>Type of the owner of the layer - can be <code class="prettyprint">USER</code> or <code class="prettyprint">TEAM</code>.</td>
+</tr>
+<tr>
+<td>owner.id</td>
+<td>String</td>
+<td>Yes (auto-filled according to the endpoint used to create the contextual layer)</td>
+<td></td>
+<td>Id of the user or team (according to the value of the <code class="prettyprint">owner.type</code> attribute) owner of the contextual layer.</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td>Date</td>
+<td>No (autogenerated)</td>
+<td><current date></td>
+<td>Automatically maintained date of when the contextual layer was created. Cannot be modified by users.</td>
 </tr>
 </tbody></table>
 
