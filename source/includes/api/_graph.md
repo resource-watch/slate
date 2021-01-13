@@ -53,7 +53,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
 }
 ```
 
-**This endpoint does not return a paginated list - you will receive a full list of all the concepts available in the graph. Additionally, the returned response can only be filtered by application, not searched - which means that it's very unlikely that you will receive a reduced payload by using this endpoint. As such, uou should avoid using this specific endpoint since it might harm the performance of your application, should the graph increase significantly in size. You can find alternative endpoints in the sections below that allow you to navigate the graph by similarity of concepts, which is the recommended approach to navigating the graph.**
+**This endpoint does not return a paginated list - you will receive a full list of all the concepts available in the graph. Additionally, the returned response can only be filtered by application, not searched - which means that it's very unlikely that you will receive a reduced payload by using this endpoint. As such, you should avoid using this specific endpoint since it might harm the performance of your application, should the graph increase significantly in size. You can find alternative endpoints in the sections below that allow you to navigate the graph by similarity of concepts, which is the recommended approach to navigating the graph.**
 
 This endpoint returns the list of concepts available in the graph. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
 
