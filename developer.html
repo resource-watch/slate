@@ -3013,6 +3013,520 @@ curl -X POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se
 </tr>
 </tbody></table>
 
+          <h1 id="graph">Graph</h1>
+
+<p>The interaction with some of the graph endpoints is restricted to other RW API services - the following sections describe these endpoints. Keep in mind user-facing graph endpoints are described in detail in the <a href="index-rw.html#graph">graph endpoint documentation</a>. The <a href="index-rw.html#concepts">graph concept docs</a> might also be a useful resource for learning what the RW API graph is and what it has to offer you.</p>
+
+<h2 id="creating-dataset-graph-nodes">Creating dataset graph nodes</h2>
+
+<blockquote>
+<p>POST request to create a dataset graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/dataset/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint creates a graph node for the dataset with id provided in the URL path. </p>
+
+<p><strong>This endpoint is automatically called on dataset creation</strong>, so you don&rsquo;t need to manually do it yourself after you create a dataset. In order to ensure that API users cannot manually create graph nodes for datasets, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to create a graph node for a dataset, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-creating-dataset-graph-nodes">Errors for creating dataset graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+</tbody></table>
+
+<h2 id="creating-widget-graph-nodes">Creating widget graph nodes</h2>
+
+<blockquote>
+<p>POST request to create a widget graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/widget/:idDataset/:idWidget <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint creates a graph node for the widget with id provided in the URL path. It also creates a graph edge, connecting the newly created widget graph node to the graph node for the dataset associated with this widget.</p>
+
+<p><strong>This endpoint is automatically called on widget creation</strong>, so you don&rsquo;t need to manually do it yourself after you create a widget. In order to ensure that API users cannot manually create graph nodes for widgets, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to create a graph node for a widget, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-creating-widget-graph-nodes">Errors for creating widget graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset not found</td>
+<td>No graph node for the dataset with id provided was found.</td>
+</tr>
+</tbody></table>
+
+<h2 id="creating-layer-graph-nodes">Creating layer graph nodes</h2>
+
+<blockquote>
+<p>POST request to create a layer graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/layer/:idDataset/:idLayer <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint creates a graph node for the layer with id provided in the URL path. It also creates a graph edge, connecting the newly created layer graph node to the graph node for the dataset associated with this layer.</p>
+
+<p><strong>This endpoint is automatically called on layer creation</strong>, so you don&rsquo;t need to manually do it yourself after you create a layer. In order to ensure that API users cannot manually create graph nodes for layers, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to create a graph node for a layer, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-creating-layer-graph-nodes">Errors for creating layer graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Dataset not found</td>
+<td>No graph node for the dataset with id provided was found.</td>
+</tr>
+</tbody></table>
+
+<h2 id="creating-metadata-graph-nodes">Creating metadata graph nodes</h2>
+
+<blockquote>
+<p>POST request to create a metadata graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/metadata/:resourceType/:idResource/:idMetadata <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint creates a graph node for the metadata with id provided in the URL path. As you might have come across in the <a href="#metadata12">Metadata endpoint documentation</a>, metadata is always associated with either a dataset, layer, or widget. So, when creating a graph node for a metadata entry, you must also provide the resource type (dataset, layer, or widget) and its corresponding id. </p>
+
+<p>Calling this endpoint will also create a graph edge connecting the newly created metadata graph node to the graph node for the resource (dataset, layer, or widget) associated with it.</p>
+
+<p><strong>This endpoint is automatically called on metadata creation</strong>, so you don&rsquo;t need to manually do it yourself after you create a metadata entry. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to create a graph node for a metadata entry, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-creating-metadata-graph-nodes">Errors for creating metadata graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Resource {:resourceType} and id ${:idResource} not found</td>
+<td>No graph node for the resource with id provided was found.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-dataset-graph-nodes">Deleting dataset graph nodes</h2>
+
+<blockquote>
+<p>DELETE request to remove a dataset graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/graph/dataset/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint deletes the graph node for the dataset with id provided in the URL path. </p>
+
+<p><strong>This endpoint is automatically called on dataset deletion</strong>, so you don&rsquo;t need to manually do it yourself after you create a dataset. In order to ensure that API users cannot manually delete graph nodes for datasets, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to delete a graph node for a dataset, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-deleting-dataset-graph-nodes">Errors for deleting dataset graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-widget-graph-nodes">Deleting widget graph nodes</h2>
+
+<blockquote>
+<p>DELETE request to remove a widget graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/widget/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint deletes the graph node for the widget with id provided in the URL path.</p>
+
+<p><strong>This endpoint is automatically called on widget deletion</strong>, so you don&rsquo;t need to manually do it yourself after you delete a widget. In order to ensure that API users cannot manually delete graph nodes for widgets, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to delete a graph node for a widget, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-deleting-widget-graph-nodes">Errors for deleting widget graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-layer-graph-nodes">Deleting layer graph nodes</h2>
+
+<blockquote>
+<p>DELETE request to remove a layer graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/layer/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint deletes the graph node for the layer with id provided in the URL path.</p>
+
+<p><strong>This endpoint is automatically called on layer deletion</strong>, so you don&rsquo;t need to manually do it yourself after you delete a layer. In order to ensure that API users cannot manually delete graph nodes for layers, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to delete a graph node for a layer, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-deleting-layer-graph-nodes">Errors for deleting layer graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-metadata-graph-nodes">Deleting metadata graph nodes</h2>
+
+<blockquote>
+<p>DELETE request to remove a metadata graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/metadata/:id <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint deletes the graph node for the metadata with id provided in the URL path.</p>
+
+<p><strong>This endpoint is automatically called on metadata deletion</strong>, so you don&rsquo;t need to manually do it yourself after you delete a metadata entry. In order to ensure that API users cannot manually delete graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to delete a graph node for a metadata entry, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-deleting-metadata-graph-nodes">Errors for deleting metadata graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+</tbody></table>
+
+<h2 id="associating-concepts-to-graph-nodes">Associating concepts to graph nodes</h2>
+
+<blockquote>
+<p>POST request to associate concepts to a graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{
+  "tags": ["health", "society"]
+}'</span>
+</code></pre>
+<p>This endpoint creates a graph edge, representative of the relationship between the resource identified in the URL path and the concepts provided in the <code class="prettyprint">tags</code> field of the request body.</p>
+
+<p><strong>This endpoint is automatically called when you associate the vocabulary &ldquo;knowledge_graph&rdquo; to a resource</strong>, so you don&rsquo;t need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to call this endpoint, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-associating-concepts-with-graph-nodes">Errors for associating concepts with graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Resource {:resourceType} and id ${:idResource} not found</td>
+<td>No graph node for the resource with id provided was found.</td>
+</tr>
+</tbody></table>
+
+<h2 id="updating-concepts-associated-with-graph-nodes">Updating concepts associated with graph nodes</h2>
+
+<blockquote>
+<p>PUT request to update the concepts associated to a graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PUT https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{
+  "tags": ["health", "society"],
+  "application": "rw"
+}'</span>
+</code></pre>
+<p>This endpoint updates the graph edge associated with the resource identified in the URL path. Existing concepts are deleted and replaced with the ones provided in the <code class="prettyprint">tags</code> field of the request body.</p>
+
+<p><strong>This endpoint is automatically called when you associate the vocabulary &ldquo;knowledge_graph&rdquo; to a resource</strong>, so you don&rsquo;t need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to call this endpoint, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-associating-concepts-with-graph-nodes">Errors for associating concepts with graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Resource {:resourceType} and id ${:idResource} not found</td>
+<td>No graph node for the resource with id provided was found.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-concepts-associated-with-graph-nodes">Deleting concepts associated with graph nodes</h2>
+
+<blockquote>
+<p>DELETE request to remove concepts associated to a graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint deletes the graph edge associated with the resource identified in the URL path.</p>
+
+<p><strong>This endpoint is automatically called when you associate the vocabulary &ldquo;knowledge_graph&rdquo; to a resource</strong>, so you don&rsquo;t need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to call this endpoint, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="query-parameters">Query parameters</h3>
+
+<blockquote>
+<p>Specifying the application of the resource to be deleted:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate?application<span class="o">=</span>gfw
+</code></pre>
+<p>You can use the query parameter <code class="prettyprint">application</code> to specify the application of the graph edge to be deleted by this request. You can find out more information about this field <a href="index-rw.html#applications">here</a>.</p>
+
+<h3 id="errors-for-associating-concepts-with-graph-nodes">Errors for associating concepts with graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Resource {:resourceType} and id ${:idResource} not found</td>
+<td>No graph node for the resource with id provided was found.</td>
+</tr>
+</tbody></table>
+
+<h2 id="creating-favorite-relationships-between-users-and-graph-nodes">Creating favorite relationships between users and graph nodes</h2>
+
+<blockquote>
+<p>POST request to create favorite relationship between user and graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/favourite/:resourceType/:idResource/:userId <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{ "application": "rw" }'</span>
+</code></pre>
+<p>This endpoint creates a graph edge representative of a favorite relationship between the resource identified in the URL path and the user id also identified in the URL path.</p>
+
+<p><strong>This endpoint is automatically called when you call vocabulary&rsquo;s create favorite endpoint</strong>, so you don&rsquo;t need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to call this endpoint, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="errors-for-associating-concepts-with-graph-nodes">Errors for associating concepts with graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Resource {:resourceType} and id ${:idResource} not found</td>
+<td>No graph node for the resource with id provided was found.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-favorite-relationships-between-users-and-graph-nodes">Deleting favorite relationships between users and graph nodes</h2>
+
+<blockquote>
+<p>DELETE request to remove favorite relationship between user and graph node:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/graph/favourite/:resourceType/:idResource/:userId <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>This endpoint deletes the graph edge representative of a favorite relationship between the resource identified in the URL path and the user id also identified in the URL path.</p>
+
+<p><strong>This endpoint is automatically called when you call vocabulary&rsquo;s delete favorite endpoint</strong>, so you don&rsquo;t need to manually do it yourself. In order to ensure that API users cannot manually create graph nodes for metadata entries, this endpoint requires authentication from a RW API service, meaning that normal API users won&rsquo;t be able to call this endpoint successfully. If, as an API user and using your user&rsquo;s token, you try to call this endpoint, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<h3 id="query-parameters">Query parameters</h3>
+
+<blockquote>
+<p>Specifying the application of the favorite relationship to be deleted:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/graph/favourite/:resourceType/:idResource/:userId?application<span class="o">=</span>gfw
+</code></pre>
+<p>You can use the query parameter <code class="prettyprint">application</code> to specify the application of the graph edge to be deleted by this request. You can find out more information about this field <a href="index-rw.html#applications">here</a>.</p>
+
+<h3 id="errors-for-associating-concepts-with-graph-nodes">Errors for associating concepts with graph nodes</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>No authorization token provided.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Not authorized</td>
+<td>You are trying to call this endpoint without being identified as a RW API service.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Resource {:resourceType} and id ${:idResource} not found</td>
+<td>No graph node for the resource with id provided was found.</td>
+</tr>
+</tbody></table>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">

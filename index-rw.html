@@ -12711,481 +12711,530 @@ Remember — All favorite endpoints need to be authenticated.
 </code></pre>
           <h1 id="graph">Graph</h1>
 
-<p>The following graph endpoints are available</p>
+<p>The following section details the endpoints you can use to interact with graph information about the RW API. If you are new to the RW API or want to learn more about what the RW API graph can do for you, we strongly encourage you to read the <a href="#graph">graph concept</a> documentation first.</p>
+
+<p>Before proceeding, let&rsquo;s look at some concepts that will be used across the graph endpoint documentation.</p>
+
+<h2 id="what-is-a-resource">What is a resource</h2>
+
+<p>Throughout this section, we&rsquo;ll refer multiple times to <code class="prettyprint">resources</code>. Simply put, a <code class="prettyprint">resource</code> is either a dataset, a widget, a layer, or a metadata entry. Graph nodes represent in a similar fashion these 4 types of RW API entity, so often we&rsquo;ll refer to resources instead, for convenience.</p>
+
+<p>We assume that, at this point, you are already familiar with the concepts of <a href="#dataset">dataset</a>, <a href="#layer">layer</a>, <a href="#widget">widget</a> or <a href="#metadata">metadata</a> (ideally you are familiar with the 4). If that&rsquo;s not the case, we strongly encourage you to learn about those concepts first, and we also recommend you take some time to explore and experiment using actual <a href="#dataset6">dataset</a>, <a href="#layer8">layer</a>, <a href="#widget9">widget</a>, or <a href="#metadata12">metadata</a> endpoints before proceeding. The RW API Graph service builds on top of these concepts and empowers your use cases of those resources, so it should only be used by applications and users that are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.</p>
+
+<p>In the context of the RW API Graph service, resources are represented as graph nodes. They can be associated (using graph edges) with concepts to create relationships of relevance between the two entities.</p>
+
+<h2 id="what-is-a-concept">What is a concept</h2>
+
+<p>Similarly, we&rsquo;ll refer multiple times to <code class="prettyprint">concepts</code>. A <code class="prettyprint">concept</code> is a keyword used to describe a resource (e.g. <code class="prettyprint">health</code>, <code class="prettyprint">society</code>, <code class="prettyprint">solar_power</code>, etc.). It shares some similarities with <a href="#vocabularies-and-tags">tags</a>, in the sense it can be associated with resources of different types (datasets, layers, or widgets).</p>
+
+<p>As with resources, in the context of the RW API Graph service, concepts are represented as graph nodes. They can be associated (using graph edges) with resources to create relationships of relevance between the two entities.</p>
+
+<h2 id="bird-39-s-eye-view-of-the-graph-service">Bird&rsquo;s-eye view of the graph service</h2>
+
+<p>As an API user, I&rsquo;m sure you will be glad to hear that most of the management of graph entities is performed automatically. As you will discover by reading the sections on <a href="#creating-resources">creating</a> or <a href="#deleting-resources">deleting</a> graph resources, graph nodes for resources are automatically created and deleted when you create or delete your resources, respectively. This means that, as an API user, you are abstracted from these processes and the only thing you need to worry about is actually managing relationships between graph resources and concepts.</p>
+
+<p>To do so, you will need to interact with <a href="#vocabulary-and-tags">vocabulary endpoints</a>, using a specific vocabulary called <code class="prettyprint">knowledge_graph</code>. You can tag your resources using said vocabulary, and the tags you add will be added as graph concepts and associated with your resources. You can read more about this process in the section on <a href="#relationships-between-graph-nodes-and-concepts">relationships between graph nodes and concepts</a>. Some concepts have been pre-loaded into the graph service, and you can use them to associate your resources with widely-used concepts. However, you are also encouraged to create your own concepts - which, once again, is performed automatically when managing your associations using the vocabulary endpoints.</p>
+
+<p>You may come across some hierarchical concepts in the following sections, such as &ldquo;ancestors&rdquo;, &ldquo;parent concepts&rdquo; or &ldquo;descendants&rdquo;. These were initially added with the intention of supporting hierarchy between graph concepts, but such features were not completed. As such, it is recommended that, for now, you ignore and do not rely on any type of hierarchy between graph concepts. This may, however, change in the future.</p>
+
+<p>Lastly, a note: <strong>none of the endpoints below are paginated.</strong> Most of the endpoints interact with a single resource (dataset, layer, widget, or metadata), which contributes to a healthy size for most of the Graph service endpoint responses, as long as you keep your associations between graph resources and concepts to a reasonable amount. However, some of the endpoints aim at retrieving full lists of, for instance, graph concepts - <em>please ensure that you take into consideration the impact of using such endpoints in the performance of your applications</em>.</p>
 
 <h2 id="list-concepts">List concepts</h2>
 
-<p>Returns a list including all the concepts present in the graph</p>
+<blockquote>
+<p>Request to list concepts:</p>
+</blockquote>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
 </code></pre>
-<h3 id="query-example">Query example</h3>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"society"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Society"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"People"</span><span class="p">],</span><span class="w">
+            </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w"> </span><span class="s2">"TOPIC"</span><span class="p">],</span><span class="w">
+            </span><span class="s2">"numberOfDatasetsTagged"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"4458eb12-8572-45d1-bf07-d5a3ee097021"</span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>This endpoint does not return a paginated list - you will receive a full list of all the concepts available in the graph. Additionally, the returned response can only be filtered by application, not searched - which means that it&rsquo;s very unlikely that you will receive a reduced payload by using this endpoint. As such, you should avoid using this specific endpoint since it might harm the performance of your application, should the graph increase significantly in size. You can find alternative endpoints in the sections below that allow you to navigate the graph by similarity of concepts, which is the recommended approach to navigating the graph.</strong></p>
+
+<p>This endpoint returns the list of concepts available in the graph. If successful, the response will have status 200 OK, containing a list of elements in the <code class="prettyprint">data</code> index, each containing the information about one concept. Check out the <a href="#graph-concept-reference">Graph concept reference</a> for details on each of the fields of the returned response.</p>
+
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering concepts by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts?application<span class="o">=</span>gfw
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>Applications associated to this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
+</tr>
+</tbody></table>
+
+<h2 id="list-concepts-for-a-dataset">List concepts for a dataset</h2>
+
+<blockquote>
+<p>Request to list concepts for a dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:dataset
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4458eb12-8572-45d1-bf07-d5a3ee097021"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graph"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Habitat"</span><span class="p">],</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"habitat"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Habitats"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"default_parent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ecosystem"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4458eb12-8572-45d1-bf07-d5a3ee097021"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graph"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"species"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Species"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"default_parent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"biodiversity"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint returns the list of relationships between the dataset with id provided in the URL path and concepts. If successful, the response will have status 200 OK, containing a list of elements in the <code class="prettyprint">data</code> index, each containing the information about one graph relationship. Check out the <a href="#graph-relationship-reference">Graph relationship reference</a> for details on each of the fields of the returned response.</p>
+
+<p>If the dataset id provided is not valid or not found, the response returned will contain an empty list in the <code class="prettyprint">data</code> index.</p>
+
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering concepts for a dataset by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:dataset?application<span class="o">=</span>gfw
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>Applications associated to this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
+</tr>
+</tbody></table>
+
+<h2 id="list-concepts-for-multiple-datasets">List concepts for multiple datasets</h2>
+
+<blockquote>
+<p>Request to list concepts for multiple datasets:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="se">\</span>
+<span class="s1">'{
+    "ids": [
+        "37d04efc-0ab2-4499-a891-54dca1013c74",
+        "0448c79d-0ee0-42ff-9331-aeee70cef301"
+    ]
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concept"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"37d04efc-0ab2-4499-a891-54dca1013c74"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sanitation"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sanitation"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"default_parent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"health"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concept"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"37d04efc-0ab2-4499-a891-54dca1013c74"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"city"</span><span class="p">,</span><span class="w"> </span><span class="s2">"urban"</span><span class="p">],</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urban"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"default_parent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"settlements"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint returns the list of relationships between the datasets with ids provided in the body of the POST request. If successful, the response will have status 200 OK, containing a list of elements in the <code class="prettyprint">data</code> index, each containing the information about one graph relationship. Check out the <a href="#graph-relationship-reference">Graph relationship reference</a> for details on each of the fields of the returned response.</p>
+
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering concepts for multiple datasets by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/find-by-ids?application<span class="o">=</span>gfw
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>Applications associated to this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
+</tr>
+</tbody></table>
+
+<h3 id="errors-for-listing-concepts-for-multiple-datasets">Errors for listing concepts for multiple datasets</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>The <code class="prettyprint">ids</code> provided in the body of the request are not correctly formatted.</td>
+</tr>
+</tbody></table>
+
+<h2 id="infer-concepts-from-other-concepts">Infer concepts from other concepts</h2>
+
+<blockquote>
+<p>GET request to infer concepts related to the concepts passed as query parameters:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts<span class="o">=</span>society,urban <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>POST request to infer concepts related with the concepts passed in the request body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/query/concepts-inferred <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="se">\</span>
+<span class="s1">'{ "concepts": ["society", "urban"] }'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"society"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Society"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"People"</span><span class="p">],</span><span class="w">
+            </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w"> </span><span class="s2">"TOPIC"</span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urban"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"city"</span><span class="p">,</span><span class="w"> </span><span class="s2">"urban"</span><span class="p">],</span><span class="w">
+            </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w"> </span><span class="s2">"TOPIC"</span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint lets API users discover concepts that have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the <code class="prettyprint">concepts</code> index of the POST request body.</p>
+
+<p>If successful, the response will have status 200 OK, containing a list of elements in the <code class="prettyprint">data</code> index, each containing the information about one concept. Check out the <a href="#graph-concept-reference">Graph concept reference</a> for details on each of the fields of the returned response.</p>
+
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering inferred concepts by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?application<span class="o">=</span>gfw
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>Applications associated to this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
+</tr>
+</tbody></table>
+
+<h3 id="errors-for-listing-concepts-for-multiple-datasets">Errors for listing concepts for multiple datasets</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Concepts are required.</td>
+<td>A list of concepts was not provided.</td>
+</tr>
+</tbody></table>
+
+<h2 id="query-similar-datasets">Query similar datasets</h2>
+
+<blockquote>
+<p>GET request to find out similar datasets to a dataset with id provided:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset/:dataset <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Alternative syntax, providing the dataset id as query string parameter:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset?dataset<span class="o">=</span>:dataset <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"europe"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfDatasetsTagged"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1b97e47e-ca18-4e50-9aae-a2853acca3f0"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"health"</span><span class="p">,</span><span class="w"> </span><span class="s2">"urban"</span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"damage"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Damage"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"destruction"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"TOPIC"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfDatasetsTagged"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"guernsey"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Guernsey"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfDatasetsTagged"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51159bdb-4904-4101-a88e-ca7bd4f67cb0"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"infrastructure"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="get-inferred-concepts">Get inferred concepts</h2>
+<p>This endpoint lets API users discover datasets that share concepts with the dataset with id provided in the URL path. If successful, the response will have status 200 OK, containing a list of elements in the <code class="prettyprint">data</code> index, each containing the id of the dataset that is related and a list of concepts that are shared.</p>
 
-<p>This endpoint returns the set of concepts that are inferred from the set passed as a parameter</p>
+<p>The results returned are sorted by their degree of similarity, meaning the datasets with the higher number of shared concepts are higher on the list.</p>
 
-<h3 id="parameters">Parameters</h3>
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering similar datasets by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset/:dataset?application<span class="o">=</span>gfw
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>concepts</td>
-<td style="text-align: center">List of concepts</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any Text, values separated by commas</td>
-<td style="text-align: right">Yes</td>
+<td>application</td>
+<td>Applications associated to this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts<span class="o">=</span>&lt;concept_list&gt;
-</code></pre>
-<h3 id="example">Example</h3>
 
-<p>Concepts inferred from the set: [&lsquo;spain&rsquo;, &#39;raster&rsquo;]</p>
-<pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/concepts-inferred?concepts=spain,raster
-</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"location"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Location"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"TOPIC"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EU"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"European Union"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Raster"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"DATA_TYPE"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oecd"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OECD"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"Organisation for Economic Co-operation and Development"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"schengen_area"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Schengen Area"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Country"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"continent"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Continent"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Global"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"general"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"General"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"TOPIC"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"spain"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dataset"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"DATA_TYPE"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"europe"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"GEOGRAPHY"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h2 id="concepts-39-ancestors">Concepts&rsquo; ancestors</h2>
-
-<p>This endpoint returns the ancestors from the list of concepts provided</p>
-
-<h3 id="parameters">Parameters</h3>
+<h3 id="errors-for-querying-similar-datasets">Errors for querying similar datasets</h3>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>concepts</td>
-<td style="text-align: center">List of concepts</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any Text, values separated by commas</td>
-<td style="text-align: right">Yes</td>
+<td>400</td>
+<td>Dataset query param required</td>
+<td>You must provide a valid dataset id.</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts<span class="o">=</span>&lt;concept_list&gt;
-</code></pre>
-<h3 id="example">Example</h3>
 
-<p>Ancestors of the concepts from the set: [&#39;forest_cover&rsquo;, &#39;landslide&rsquo;]</p>
-<pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/concepts-ancestors?concepts=forest_cover,landslide
-</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
+<h2 id="query-similar-datasets-including-descendants">Query similar datasets including descendants</h2>
+
+<blockquote>
+<p>GET request to find out similar datasets including descendants to a dataset with id provided:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendant/:dataset <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Alternative syntax, providing the dataset id as query string parameter:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendant?dataset<span class="o">=</span>:dataset <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"indicator"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Indicator"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"TOPIC"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"37d04efc-0ab2-4499-a891-54dca1013c74"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"urban"</span><span class="p">,</span><span class="w"> </span><span class="s2">"health"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sanitation"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forest"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Forest"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"TOPIC"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"natural_disaster"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Natural disaster"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"TOPIC"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"natural_phenomena"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Natural phenomena"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"TOPIC"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"223b936e-06b8-4970-abd9-4f123904d95d"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"hunger"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"famine"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"health"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="similar-datasets">Similar datasets</h2>
+<p>This endpoint lets API users discover datasets that share concepts with the dataset with id provided in the URL path. The difference from the endpoint above is that this endpoint also looks at the ancestor concepts from the dataset with id provided - datasets returned might have ancestor concepts in common, but not necessarily the same exact concepts in common.</p>
 
-<p>Returns a set of datasets that are similar to the dataset provider sorted by their degree of similarity.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset/&lt;dataset-id&gt;
+<p>If successful, the response will have status 200 OK, containing a list of elements in the <code class="prettyprint">data</code> index, each containing the id of the dataset that is related and a list of concepts that are shared. Each list item also contains a <code class="prettyprint">numberOfOcurrences</code> field, containing the count of common concepts. The results returned are sorted by their degree of similarity, meaning the datasets with the higher number of shared concepts (<code class="prettyprint">numberOfOcurrences</code>) are higher on the list.</p>
+
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering similar datasets including descendants by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendant/:dataset?application<span class="o">=</span>gfw
 </code></pre>
-<h3 id="parameters-available">Parameters available</h3>
+<p>This endpoint supports the following filters as query string parameters:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>published</td>
-<td style="text-align: center">Include only published datasets</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true/false</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>app</td>
-<td style="text-align: center">List of applications datasets should belong to (at least one of them). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any text, values separated by commas</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>env</td>
-<td style="text-align: center">Include only datasets with at least one of the specified environments - read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">One or more values from [&#39;production&rsquo;, &#39;preproduction&rsquo;]</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>limit</td>
-<td style="text-align: center">Maximum number of datasets returned by the endpoint</td>
-<td style="text-align: right">Integer</td>
-<td style="text-align: right">A positive integer (3 by default)</td>
-<td style="text-align: right">No</td>
+<td>application</td>
+<td>Applications associated to this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
 </tr>
 </tbody></table>
 
-<h3 id="example">Example</h3>
-
-<p>Datasets that are similar to the dataset with id <code class="prettyprint">63a7a997-695d-4629-b6e9-9b169f5c69b</code> including only those that are <strong>published</strong> with a <strong>limit of 6 results</strong> in total, datasets from both <code class="prettyprint">production</code> and <code class="prettyprint">preproduction</code> environments are included.</p>
-<pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/similar-dataset/63a7a997-695d-4629-b6e9-9b169f5c69bf?published=true&amp;env=production,preproduction&amp;app=rw&amp;limit=6
-</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0a59f415-ee0b-4d19-96f7-c7304c152e1b"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0087944f-871c-44bc-b4d9-cd5acfc27023"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0303127a-70b0-4164-9251-d8162615d058"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"raster"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05b7c688-09ba-4f33-90ea-185a1039df43"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"050f4146-566c-4a6d-9aaa-b49ab66a3090"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00abb46f-34e2-4bf7-be30-1fb0b1de022f"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"global"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h2 id="similar-datasets-including-ancestors">Similar datasets including ancestors</h2>
-
-<p>Returns a set of datasets that are similar to the dataset provider sorted by their degree of similarity as well as taking into account ancestor concepts.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendent/&lt;dataset-id&gt;
-</code></pre>
-<h3 id="parameters-available">Parameters available</h3>
+<h3 id="errors-for-querying-similar-datasets">Errors for querying similar datasets</h3>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>published</td>
-<td style="text-align: center">Include only published datasets</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true/false</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>app</td>
-<td style="text-align: center">List of applications datasets should belong to (at least one of them). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any text, values separated by commas</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>env</td>
-<td style="text-align: center">Include only datasets with at least one of the specified environments - read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">One or more values from [&#39;production&rsquo;, &#39;preproduction&rsquo;]</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>limit</td>
-<td style="text-align: center">Maximum number of datasets returned by the endpoint</td>
-<td style="text-align: right">Integer</td>
-<td style="text-align: right">A positive integer (3 by default)</td>
-<td style="text-align: right">No</td>
+<td>400</td>
+<td>Dataset query param required</td>
+<td>You must provide a valid dataset id.</td>
 </tr>
 </tbody></table>
 
-<h3 id="example">Example</h3>
-
-<p>Datasets that are similar to the dataset with id <code class="prettyprint">03bfb30e-829f-4299-bab9-b2be1b66b5d4</code> including only those that are <strong>published</strong> with a <strong>limit of 6 results</strong> in total, datasets from both <code class="prettyprint">production</code> and <code class="prettyprint">preproduction</code> environments are included.</p>
-<pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendent/03bfb30e-829f-4299-bab9-b2be1b66b5d4?published=true&amp;env=production,preproduction&amp;app=rw&amp;limit=6
-</code></pre><pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"05b7c688-09ba-4f33-90ea-185a1039df43"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"forest"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"table"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0448c79d-0ee0-42ff-9331-aeee70cef301"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"forest_cover"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"forest_gain"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"forest_loss"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"098b33df-6871-4e53-a5ff-b56a7d989f9a"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0be2ce12-79b3-434b-b557-d6ea92d787fe"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"table"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"050f4146-566c-4a6d-9aaa-b49ab66a3090"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"table"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00abb46f-34e2-4bf7-be30-1fb0b1de022f"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"concepts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"geospatial"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"table"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"numberOfOcurrences"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
 <h2 id="search-datasets-by-concepts">Search datasets by concepts</h2>
 
-<p>This endpoint performs a dataset search based on the concepts provided and the tags that have been associated to all the different datasets that are part of the
-application. Ancestors of the tags directly associated to a datasets are taken into account in the search.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]<span class="o">=</span><span class="s1">'water'</span>
+<blockquote>
+<p>GET request to search datasets by concepts:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]<span class="o">=</span>:concept <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
-<p>Up to three sets of concepts can be provided as shown in the example below.
-Given the following sets of concepts:</p>
+<blockquote>
+<p>POST request to search datasets by concepts provided in the request body:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/query/search-datasets <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{ "concepts": [[":concept"]] }'</span>
+</code></pre>
+<blockquote>
+<p>Providing multiple sets of concepts as GET request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]<span class="o">=</span>spain,concepts[0][1]<span class="o">=</span>europe,concepts[1][0]<span class="o">=</span>water,concepts[2][0]<span class="o">=</span>raster,concepts[2][1]<span class="o">=</span>geospatial <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Providing multiple sets of concepts as POST request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/search-datasets <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+-d <span class="s1">'{ 
+  "concepts": [
+    ["spain", "europe"],
+    ["water"],
+    ["raster", "geospatial"]
+  ] 
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"11f43558-d703-4b9d-aff0-f2354a11b359"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"12510410-1eb3-4af0-844f-8a05be50b1c1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"1b8f1592-2a92-4dd5-bd85-6d231c7d3229"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"1b97e47e-ca18-4e50-9aae-a2853acca3f0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"371e700e-bc9a-4526-af92-335d888de309"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"4b000ded-5f4d-4dbd-83c9-03f2dfcd36db"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"5be16fea-5b1a-4daf-a9e9-9dc1f6ea6d4e"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"60be01b0-99fb-459c-8a08-b934270f8c4b"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"63a7a997-695d-4629-b6e9-9b169f5c69bf"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"795a7ceb-ebc1-4479-95ad-76ea4d045ad3"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint lets API users discover datasets related to the lists of concepts provided. Note that, either in the GET or POST forms for this endpoint, <strong>concepts must be provided as a list of sets</strong>. <em>AND</em> logical operators (<code class="prettyprint">&amp;&amp;</code>) are applied among the list of sets, while <em>OR</em> (<code class="prettyprint">||</code>) is used for set elements. You can provide up to three sets of concepts to search for - the example on the side exemplifies a request to this endpoint given the following sets of concepts:</p>
 
 <ul>
 <li>Set 1: <code class="prettyprint">[&#39;spain&#39;, &#39;europe&#39;]</code></li>
@@ -13193,185 +13242,584 @@ Given the following sets of concepts:</p>
 <li>Set 3: <code class="prettyprint">[&#39;raster&#39;, &#39;geospatial&#39;]</code></li>
 </ul>
 
-<p>The url should be formed as follows:</p>
+<p>In this specific case, the datasets returned would be related with <code class="prettyprint">&quot;spain&quot;</code> OR <code class="prettyprint">&quot;europe&quot;</code>, <code class="prettyprint">&quot;water&quot;</code>, and <code class="prettyprint">&quot;raster&quot;</code> or <code class="prettyprint">&quot;geospatial&quot;</code>. Or, expressed as a logical condition: <code class="prettyprint">(&quot;spain&quot; || &quot;europe&quot;) &amp;&amp; &quot;water&quot; &amp;&amp; (&quot;raster&quot; || &quot;geospatial&quot;)</code>.</p>
 
-<p><code class="prettyprint">https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=spain,concepts[0][1]=europe,concepts[1][0]=water,concepts[2][0]=raster,concepts[2][1]=geospatial</code></p>
+<p>If successful, the response will have status 200 OK, containing a list of dataset ids that are related to the concepts provided in the <code class="prettyprint">data</code> index. Also, note that ancestor concepts are also taken into account in the search.</p>
 
-<p><strong>AND</strong> logical operators are applied among the sets while <strong>OR</strong> is used for set elements.</p>
+<h3 id="filters">Filters</h3>
 
-<h3 id="parameters-available">Parameters available</h3>
+<blockquote>
+<p>Filtering searched datasets by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/similar-dataset-including-descendant/:dataset?application<span class="o">=</span>gfw
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>published</td>
-<td style="text-align: center">Include only published datasets</td>
-<td style="text-align: right">Boolean</td>
-<td style="text-align: right">true/false</td>
-<td style="text-align: right">No</td>
+<td>application</td>
+<td>Applications associated with this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
 </tr>
 <tr>
-<td>app</td>
-<td style="text-align: center">List of applications datasets should belong to (at least one of them). Read more about this field <a href="index-rw.html#applications">here</a>.</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">Any text, values separated by commas</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>env</td>
-<td style="text-align: center">Include only datasets with at least one of the specified environments - read more about this field in the <a href="index-rw.html#environments">Environments concept section</a>.</td>
-<td style="text-align: right">Text</td>
-<td style="text-align: right">One or more values from [&#39;production&rsquo;, &#39;preproduction&rsquo;]</td>
-<td style="text-align: right">No</td>
-</tr>
-<tr>
-<td>page[size]</td>
-<td style="text-align: center">Maximum number of results returned by the endpoint</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">No</td>
-<td style="text-align: right"></td>
+<td>depth</td>
+<td>Limits the depth of the graph search.</td>
+<td>Number</td>
+<td>15</td>
 </tr>
 </tbody></table>
 
-<h3 id="example">Example</h3>
+<h3 id="errors-for-searching-datasets-by-concepts">Errors for searching datasets by concepts</h3>
 
-<p>Search for datasets with the tag <code class="prettyprint">global</code> and <code class="prettyprint">water</code> and at least one of the two tags: <code class="prettyprint">raster</code>, <code class="prettyprint">geospatial</code>. The resulting datasets should also be published and be categorized either as <code class="prettyprint">production</code> or <code class="prettyprint">preproduction</code> and belong to the application <code class="prettyprint">rw</code>. The total number of results returned won&rsquo;t be limited since a very high number has been provided as limit <em>(999999)</em>.</p>
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Concepts query params are required</td>
+<td>You must provide the list of sets of concepts.</td>
+</tr>
+</tbody></table>
 
-<p><code class="prettyprint">https://api.resourcewatch.org/v1/graph/query/search-datasets?concepts[0][0]=global&amp;concepts[1][0]=water&amp;concepts[2][0]=raster&amp;concepts[2][1]=geospatial&amp;published=true&amp;env=production,preproduction&amp;app=rw&amp;page[size]=999999</code></p>
+<h2 id="search-datasets-by-concepts-and-their-synonyms">Search datasets by concepts and their synonyms</h2>
+
+<blockquote>
+<p>GET request to search datasets by concepts and their synonyms:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/search-by-label-synonyms?search<span class="o">=</span>:search <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Example providing multiple concepts in one request:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/search-by-label-synonyms?search<span class="o">=</span>health society <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"11f43558-d703-4b9d-aff0-f2354a11b359"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"12510410-1eb3-4af0-844f-8a05be50b1c1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"1b8f1592-2a92-4dd5-bd85-6d231c7d3229"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"1b97e47e-ca18-4e50-9aae-a2853acca3f0"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"20c70a51-4ddf-4f6c-ad2c-1a6729b95fa4"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"21ac3cd2-9c19-47c7-ad18-4bcad118870f"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"33bed1fb-9261-41bf-8b50-127a4d0c80c5"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"3624554e-b240-4edb-9110-1f010642c3f3"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"36803484-c413-49a9-abe2-2286ee99b624"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"371e700e-bc9a-4526-af92-335d888de309"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"4b000ded-5f4d-4dbd-83c9-03f2dfcd36db"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"5be16fea-5b1a-4daf-a9e9-9dc1f6ea6d4e"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"60be01b0-99fb-459c-8a08-b934270f8c4b"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"63a7a997-695d-4629-b6e9-9b169f5c69bf"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"894f43a8-ce8e-43a5-a4c7-fa80faa43d63"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"99075509-df36-461e-abb0-659cee555bd0"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"9e9a5c50-b825-4f12-838f-1650943c2be1"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"c17fab24-f71a-4c3e-bb87-6b753a944e6b"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"c9eadefd-4a06-4f3b-a2eb-3e3f45624c24"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"d7c3d954-ac86-4d1a-bb6a-c8c432a94e26"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"e63bb157-4b98-4ecb-81d6-c1b15e79895a"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"e7582657-9c16-4eb1-89e8-0211d94015c6"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"e94f0e2d-2b5f-41ed-967f-d97e54dd81ea"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ede84747-0116-45c2-accb-1dfe141c00ff"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"f717ac77-6f06-493f-8336-4e660a18f74c"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fa6443ff-eb95-4d0f-84d2-f0c91682efdf"</span><span class="w">
+    </span><span class="s2">"795a7ceb-ebc1-4479-95ad-76ea4d045ad3"</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="get-most-liked-datasets">Get most liked datasets</h2>
+<p>This endpoint finds datasets in the graph that are related to the concepts provided or any of its synonyms. If successful, the response will have status 200 OK, containing a list of dataset ids in the <code class="prettyprint">data</code> index. You can provide multiple concepts by splitting them with blank spaces.</p>
 
-<p>This endpoint returns the list of the most liked datasets in descending order.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets
-</code></pre>
+<h3 id="filters">Filters</h3>
+
 <blockquote>
-<p>Response:</p>
+<p>Filtering searched datasets by application:</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e2971008-029f-441b-97cd-ee0555728182"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f6bb99af-541a-4d41-9e47-cc36cb479d4b"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"223b936e-06b8-4970-abd9-4f123904d95d"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0b9f0100-ce5b-430f-ad8f-3363efa05481"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h2 id="get-most-viewed-datasets-list">Get most viewed datasets list</h2>
-
-<p>This endpoint returns the list of the most viewed datasets in descending order of total views.</p>
-
-<h3 id="parameters">Parameters</h3>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/search-by-label-synonyms?application<span class="o">=</span>gfw
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
-<th style="text-align: right">Values</th>
-<th style="text-align: right">Required</th>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>limit</td>
-<td style="text-align: center">Maximum number of results</td>
-<td style="text-align: right">Number</td>
-<td style="text-align: right">Any positive number</td>
-<td style="text-align: right">No</td>
+<td>application</td>
+<td>Applications associated to this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed
+
+<h3 id="errors-for-searching-datasets-by-concepts-and-their-synonyms">Errors for searching datasets by concepts and their synonyms</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Search query param required</td>
+<td>You must provide the search query parameter.</td>
+</tr>
+</tbody></table>
+
+<h2 id="most-liked-datasets">Most liked datasets</h2>
+
+<blockquote>
+<p>GET request to find out which are the most liked datasets:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
 </code></pre>
 <blockquote>
-<p>Response:</p>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c36c3108-2581-4b68-852a-c929fc758001"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20cc5eca-8c63-4c41-8e8e-134dcf1e6d76"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"count"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"low"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint returns a list of dataset sorted by the number of times these datasets were marked as favorite by users. The returned list is sorted descending, from the datasets with higher favorite count to the ones with a lower count.</p>
+
+<p>If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the <code class="prettyprint">data</code> index of the response body. Each element of the list contains the dataset id in the <code class="prettyprint">id</code> property and the number of times the dataset was marked as favorite by a user in the <code class="prettyprint">count.low</code> property.</p>
+
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering most liked datasets by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-liked-datasets?application<span class="o">=</span>gfw
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>Applications associated to this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
+</tr>
+</tbody></table>
+
+<h2 id="most-viewed-datasets">Most viewed datasets</h2>
+
+<blockquote>
+<p>GET request to find out which are the most viewed datasets:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0087944f-871c-44bc-b4d9-cd5acfc27023"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">172</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">76</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00abb46f-34e2-4bf7-be30-1fb0b1de022f"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">68</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01b0b8cf-6638-4a9b-9896-d919d0656a64"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01ae2fd7-b818-429f-a27e-a36c8def971a"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00b5c224-8a78-41c4-89a6-8299dec8609e"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="update-view-counter-for-dataset-and-user">Update view counter for dataset and user</h2>
+<p>This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by users. The returned list is sorted descending, from the datasets with higher view count to the ones with a lower count.</p>
 
-<p>Updates the total view counter for the corresponding dataset. If the request is authenticated, it will also increment the counter of number of times the user has viewed the dataset. </p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/dataset/&lt;dataset-id&gt;/visited
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+<p>If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the <code class="prettyprint">data</code> index of the response body. Each element of the list contains the dataset id in the <code class="prettyprint">dataset</code> property and the number of times the dataset was viewed in the <code class="prettyprint">views</code> property.</p>
+
+<p>Note that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the <a href="#increment-dataset-view-count">increment view endpoint</a>.</p>
+
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering most viewed datasets by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed?application<span class="o">=</span>gfw
 </code></pre>
+<blockquote>
+<p>Limiting the number of returned results:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed?limit<span class="o">=</span>3
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>Applications associated with this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
+</tr>
+<tr>
+<td>limit</td>
+<td>Limits the number of results returned in the response.</td>
+<td>Number</td>
+<td>No limit applied - all results are returned.</td>
+</tr>
+</tbody></table>
+
+<h2 id="most-viewed-datasets-by-user">Most viewed datasets by user</h2>
+
+<blockquote>
+<p>GET request to find out which are the most viewed datasets for the token user:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0087944f-871c-44bc-b4d9-cd5acfc27023"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">76</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00abb46f-34e2-4bf7-be30-1fb0b1de022f"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"views"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint returns a list of dataset sorted by the number of times these datasets were viewed by the user of the token provided in the request headers. The returned list is sorted descending, from the datasets with higher view count to the ones with a lower count.</p>
+
+<p>If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the <code class="prettyprint">data</code> index of the response body. Each element of the list contains the dataset id in the <code class="prettyprint">dataset</code> property and the number of times the dataset was viewed in the <code class="prettyprint">views</code> property.</p>
+
+<p>As in the case of the <code class="prettyprint">most-viewed</code> endpoint, please keep in mind that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the <a href="#increment-dataset-view-count">increment view endpoint</a>.</p>
+
+<h3 id="filters">Filters</h3>
+
+<blockquote>
+<p>Filtering most viewed datasets by the token user by application:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed-by-user?application<span class="o">=</span>gfw
+</code></pre>
+<blockquote>
+<p>Limiting the number of returned results:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/most-viewed-by-user?limit<span class="o">=</span>3
+</code></pre>
+<p>This endpoint supports the following filters as query string parameters:</p>
+
+<table><thead>
+<tr>
+<th>Filter</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application</td>
+<td>Applications associated with this concept - read more about this field <a href="index-rw.html#applications">here</a>.</td>
+<td>String</td>
+<td><code class="prettyprint">&quot;rw&quot;</code></td>
+</tr>
+<tr>
+<td>limit</td>
+<td>Limits the number of results returned in the response.</td>
+<td>Number</td>
+<td>No limit applied - all results are returned.</td>
+</tr>
+</tbody></table>
+
+<h3 id="errors-for-getting-most-viewed-datasets-by-user">Errors for getting most viewed datasets by user</h3>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You must provide your API user&rsquo;s token in the response headers.</td>
+</tr>
+</tbody></table>
+
+<h2 id="increment-dataset-view-count">Increment dataset view count</h2>
+
+<blockquote>
+<p>POST request to find out which are the most viewed datasets for the token user:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/graph/dataset/:id/visited <span class="se">\</span>
+-H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+<p>Use this endpoint if you want to increment the view count of the dataset with id provided in the URL path. If successful, this endpoint will return 200 OK containing an empty object in the response body. </p>
+
+<p>You can optionally provide the authentication token for your API user in the request headers. If no token is provided, a dataset view is registered without being associated with any user. If a token is provided, the dataset view count for your API user will be incremented.</p>
+
+<h2 id="creating-resources">Creating resources</h2>
+
+<p><strong>The creation of resources on the graph is performed automatically after the creation of each resource, so you don&rsquo;t need to explicitly do it yourself.</strong> Because of this, creating resources on the graph is restricted to other RW API services, and requires authentication from a RW API service. Normal API users won&rsquo;t be able to call these endpoints successfully - if you try to do it with a &ldquo;normal&rdquo; API user token, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<p>For details on how these specific endpoints work, you should check out the developer docs for each of the resources supported. The following resources are currently supported as graph nodes:</p>
+
+<ul>
+<li><a href="developer.html#creating-dataset-graph-nodes">dataset</a></li>
+<li><a href="developer.html#creating-layer-graph-nodes">layer</a></li>
+<li><a href="developer.html#creating-widget-graph-nodes">widget</a></li>
+<li><a href="developer.html#creating-metadata-graph-nodes">metadata</a></li>
+</ul>
+
+<h2 id="deleting-resources">Deleting resources</h2>
+
+<p><strong>The deletion of resources on the graph is performed automatically after the deletion of each resource, so you don&rsquo;t need to explicitly do it yourself.</strong> Because of this, deleting resources on the graph is restricted to other RW API services, and requires authentication from a RW API service. Normal API users won&rsquo;t be able to call these endpoints successfully - if you try to do it with a &ldquo;normal&rdquo; API user token, you will receive a response with HTTP status code <code class="prettyprint">403 Forbidden</code>.</p>
+
+<p>For details on how these specific endpoints work, you should check out the developer docs for each of the resources supported. The following resources are currently supported as graph nodes:</p>
+
+<ul>
+<li><a href="developer.html#deleting-dataset-graph-nodes">dataset</a></li>
+<li><a href="developer.html#deleting-layer-graph-nodes">layer</a></li>
+<li><a href="developer.html#deleting-widget-graph-nodes">widget</a></li>
+<li><a href="developer.html#deleting-metadata-graph-nodes">metadata</a></li>
+</ul>
+
+<h2 id="relationships-between-graph-nodes-and-concepts">Relationships between graph nodes and concepts</h2>
+
+<blockquote>
+<p>Getting the list of concepts for a dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:id
+</code></pre>
+<blockquote>
+<p>Example response, containing the &ldquo;urban&rdquo; concept:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"37d04efc-0ab2-4499-a891-54dca1013c74"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graph"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"city"</span><span class="p">,</span><span class="w"> </span><span class="s2">"urban"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urban"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cities"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"default_parent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"settlements"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Getting vocabulary for the same dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/:id/vocabulary
+</code></pre>
+<blockquote>
+<p>Example response, containing the &ldquo;knowledge_graph&rdquo; vocabulary with the &ldquo;urban&rdquo; tag associated:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"knowledge_graph"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"urban"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"knowledge_graph"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Creating (if it doesn&rsquo;t exist yet) the association between the vocabulary &ldquo;knowledge_graph&rdquo; and a dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/:id/vocabulary/knowledge_graph <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+-H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span> <span class="se">\</span>
+-d <span class="s1">'{
+  "application": "rw",
+  "tags": ["urban", "society"]
+}'</span>
+</code></pre>
+<blockquote>
+<p>Editing the association between the vocabulary &ldquo;knowledge_graph&rdquo; and a dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/:id/vocabulary/knowledge_graph
+-H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+-H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span> <span class="se">\</span>
+-d <span class="s1">'{
+  "application": "rw",
+  "tags": ["urban"]
+}'</span>
+</code></pre>
+<blockquote>
+<p>Deleting the association between the vocabulary &ldquo;knowledge_graph&rdquo; and a dataset:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/:id/vocabulary/knowledge_graph
+</code></pre>
+<p><strong>The management of connections between resources and concepts is handled by vocabulary endpoints, using the vocabulary <code class="prettyprint">&quot;knowledge_graph&quot;</code>.</strong> Using this vocabulary, you can add tags to your dataset. These tags will be added as concepts, and one (or more, accordingly) graph edges will be created, establishing a connection between your resource and the provided tags.</p>
+
+<p>This section provides some examples of how you can use vocabulary endpoints to manage your resources&rsquo; concepts. Keep in mind that you can always refer to the <a href="#vocabulary-and-tags">vocabulary endpoint documentation</a> for more details on how to use these endpoints.</p>
+
+<p>On the examples on the side, you&rsquo;ll be able to understand that you can map the tags associated with a given resource with the tags associated with the <code class="prettyprint">&quot;knowledge_graph&quot;</code> vocabulary for the same resource. You can use vocabulary&rsquo;s endpoints to create (if it doesn&rsquo;t exist yet), edit, or delete the tags associated with that resource. Those changes will be reflected in the concepts that are associated with that same resource.</p>
+
+<p>Lastly, keep in mind that, despite the examples on the side refer to datasets, you can use vocabulary&rsquo;s endpoints to update the tags associated with the <code class="prettyprint">&quot;knowledge_graph&quot;</code> vocabulary for all supported resource types: datasets, layers, widgets, and metadata.</p>
+
+<h2 id="favorite-relationships-between-graph-nodes-and-users">Favorite relationships between graph nodes and users</h2>
+
+<p>As in the case of managing relationships between graph nodes and concepts, <strong>the management of favorite relationships between resources and users is handled by vocabulary endpoints.</strong> Please refer to the <a href="#favorites">favorite endpoint documentation</a> for more details on how to use these endpoints.</p>
+
+<h2 id="graph-concept-reference">Graph concept reference</h2>
+
+<blockquote>
+<p>Example concept entity structure:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"society"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Society"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"People"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"CONCEPT"</span><span class="p">,</span><span class="w"> </span><span class="s2">"TOPIC"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"numberOfDatasetsTagged"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"datasets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"4458eb12-8572-45d1-bf07-d5a3ee097021"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This section describes the attributes that are present on a graph concept entity:</p>
+
+<table><thead>
+<tr>
+<th>Field name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>String</td>
+<td>The concept unique identifier.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">label</code></td>
+<td>String</td>
+<td>A readable version of the concept identifier.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">synonyms</code></td>
+<td>String &#124; Array</td>
+<td>The list of synonyms for this concept (or an empty string, if no synonyms exist).</td>
+</tr>
+<tr>
+<td><code class="prettyprint">labels</code></td>
+<td>Array</td>
+<td>The list of identifiers for the type of this graph node.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">numberOfDatasetsTagged</code></td>
+<td>Number</td>
+<td>The number of datasets that are currently tagged with this concept.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">datasets</code></td>
+<td>Array</td>
+<td>The list of dataset ids that are currently tagged with this concept.</td>
+</tr>
+</tbody></table>
+
+<h2 id="graph-relationship-reference">Graph relationship reference</h2>
+
+<blockquote>
+<p>Example relationship entity structure:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4458eb12-8572-45d1-bf07-d5a3ee097021"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"graph"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"synonyms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Habitat"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"habitat"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Habitats"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"default_parent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ecosystem"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This section describes the attributes that are present on a graph relationship entity:</p>
+
+<table><thead>
+<tr>
+<th>Field name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>String</td>
+<td>The id of the relationship (usually the dataset id, if finding concepts related to a dataset).</td>
+</tr>
+<tr>
+<td><code class="prettyprint">type</code></td>
+<td>String</td>
+<td>Always set to &ldquo;graph&rdquo;.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">attributes.iso</code></td>
+<td>String</td>
+<td><em>Deprecated attribute - you should not rely on this attribute.</em></td>
+</tr>
+<tr>
+<td><code class="prettyprint">attributes.synonyms</code></td>
+<td>Array</td>
+<td>A list of synonyms for this concept.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">attributes.id</code></td>
+<td>String</td>
+<td>The concept unique identifier.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">attributes.label</code></td>
+<td>String</td>
+<td>A readable version of the concept identifier.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">attributes.default_parent</code></td>
+<td>String</td>
+<td>The id of the parent concept, if existing.</td>
+</tr>
+</tbody></table>
+
           <h1 id="areas">Areas</h1>
 
 <p><strong>Note: the documentation for these endpoints is not maintained and might not be up to date.</strong></p>
