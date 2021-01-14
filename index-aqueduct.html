@@ -5700,7 +5700,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/layer/&lt;layer_s
 
 <p>There&rsquo;s also a dependency on a dataset id, as it is required to build the POST URL. As noted on the <a href="#layer">layer concept</a> documentation, a layer is meant to hold the rendering details of a layer, but not the actual data - that should be part of the dataset. While this is not enforced - it&rsquo;s up to your rendering tool to load the data, and it can do it from a RW API dataset or from anywhere else - it&rsquo;s common and best practice to have the data for a layer be sourced from the dataset that&rsquo;s associated with it.</p>
 
-<p>When a layer is created, a <a href="#vocabulary-and-tags">vocabulary tag</a> for it is automatically created, associated with the dataset tag.</p>
+<p>When a layer is created, a <a href="#vocabularies-and-tags">vocabulary tag</a> for it is automatically created, associated with the dataset tag.</p>
 
 <p>The layer service was built to be very flexible, and not be restricted to specific layer rendering libraries or tools. This gives you the freedom to use virtually any rendering technology you want, but it also means you&rsquo;ll have to make additional decisions on how to structure your data into the different open format fields provided by a RW API layer. In a future release of these docs, we&rsquo;ll show you some examples of how existing applications use different rendering tools with the layer endpoints, to give you an idea on how you can structure your own data, and also as a way to help you get started creating your first layers for your own custom applications. Until then, the <a href="https://resource-watch.github.io/doc-api/tutorials.html">tutorials section of the documentation</a> shows an example of how existing raster tile layers may be structured and how the information in the layer response can be utilized by a third-party visualization library.</p>
 
@@ -6826,7 +6826,7 @@ curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/dataset/11de2bc1-
 
 <h4 id="vocabulary">Vocabulary</h4>
 
-<p>Loads related <a href="#vocabulary-and-tags">vocabularies</a>. If none are found, an empty array is returned.</p>
+<p>Loads related <a href="#vocabularies-and-tags">vocabularies</a>. If none are found, an empty array is returned.</p>
 <pre class="highlight shell"><code>curl -X GET <span class="s2">"https://api.resourcewatch.org/v1/widget?includes=vocabulary"</span>
 </code></pre>
 <blockquote>
@@ -9515,661 +9515,1539 @@ curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/widget/&lt;wid
 </tr>
 </tbody></table>
 
-          <h1 id="vocabulary-and-tags">Vocabulary (and Tags)</h1>
+          <h1 id="vocabularies-and-tags">Vocabularies and tags</h1>
 
-<h2 id="resource-definition">Resource definition</h2>
+<h2 id="what-are-vocabularies-and-tags">What are vocabularies and tags?</h2>
 
-<p>A Resource represents an external entity that will be related with a Vocabulary. The most common resources used when creating relationships with vocabulary are <em>datasets</em>, <em>layers</em> and <em>widgets</em>.</p>
+<p><a href="#vocabularies-and-tags">Vocabularies and tags concepts</a> are covered in their dedicated section, and we strongly
+recommend you read that section before diving into the details of the respective endpoints. In it, we explain in detail
+what is a tag and a vocabulary, and why you should use them to empower different use cases of the RW API.</p>
 
-<h2 id="tags-definition">Tags definition</h2>
+<p>Simply put, a tag is a keyword that describes a <code class="prettyprint">resource</code> (we&rsquo;ll talk in depth about what these are in the next
+section). A vocabulary is a group of tags and has a name (also called and used as an <code class="prettyprint">id</code> for the vocabulary) that
+should define the scope or context of the tags it contains.</p>
 
-<p>A Tag is a way to categorize a resource within a vocabulary context.</p>
+<p>It&rsquo;s important to keep in mind that these associations between a resource and a vocabulary have
+an <a href="#applications">application</a> associated with them. Putting this in an example, <code class="prettyprint">dataset</code> <code class="prettyprint">AAA</code> may be associated with
+vocabulary <code class="prettyprint">BBB</code> for application <code class="prettyprint">rw</code>, but not for application <code class="prettyprint">gfw</code>. Most endpoints will allow you explicitly define
+which application you are referring to (some will even require it), and a <code class="prettyprint">rw</code> default value will be assumed when no
+explicit value is provided.</p>
 
-<h2 id="vocabulary-definition">Vocabulary definition</h2>
+<h2 id="what-are-resources">What are resources?</h2>
 
-<p>The Vocabulary can be described as a cluster of tags.</p>
+<p>Throughout this section, we&rsquo;ll refer multiple times to <code class="prettyprint">resources</code>. Simply put, a <code class="prettyprint">resource</code> is either a dataset, a
+widget, or a layer. Tags and vocabularies work in a similar fashion for each of these 3 types of RW API entity, so often
+we&rsquo;ll refer to resources instead, for convenience.</p>
 
-<p>It is currently possible to just create a Vocabulary without any tags or relationships.
-To do it, the only parameter that is required is the name of the Vocabulary.</p>
+<p>We assume that, at this point, you are already familiar with the concepts of <a href="#dataset">dataset</a>, <a href="#layer">layer</a>
+or <a href="#widget">widget</a> (ideally you are familiar with the 3). If that&rsquo;s not the case, we strongly encourage you to learn
+about those concepts first, and we also recommend you take some time to explore and experiment using
+actual <a href="#dataset6">dataset</a>, <a href="#layer8">layer</a>, or <a href="#widget9">widget</a> endpoints before proceeding. Vocabularies and tags
+exist to improve and empower your use cases of those resources, so it should only be used by applications and users that
+are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.</p>
+
+<p>The behavior of vocabulary and tags endpoints aims to be, as much as possible, independent from the type of the target
+resource it references. In the detailed endpoint documentation below we&rsquo;ll cover the different endpoints in depth, and
+highlight the differences in behavior when handling different resource types, but you can safely assume that, for most
+of it, the behavior described for a type of resource will be the same for all 3 types.</p>
+
+<h3 id="a-note-on-resources">A note on resources</h3>
+
+<blockquote>
+<p>Creating a new vocabulary/tag for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/AAA/widget/BBB/vocabulary/VVV <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;application&gt;,
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<p>In the context of the vocabulary/tag service, widgets and layers are identified not only by their own id but also by the
+id you specify as being their associated dataset. Using the side example as reference, this API request would create a
+vocabulary <code class="prettyprint">VVV</code> for the resource widget <code class="prettyprint">BBB</code> associated with dataset <code class="prettyprint">AAA</code>. If you later reference the same widget id,
+but as belonging to a different dataset, it will be treated as a different resource altogether, and thus will have
+different vocabularies and tags. Keep in mind that widgets and layers should only be associated with a single dataset,
+so this behavior is described as a pitfall, and you should only rely on vocabularies/tags for widgets/layers properly
+associated with their correct dataset.</p>
+
+<h2 id="the-special-knowledge_graph-vocabulary">The special <code class="prettyprint">knowledge_graph</code> vocabulary</h2>
+
+<p>Throughout the whole vocabulary/tags service, there is a special vocabulary named <code class="prettyprint">knowledge_graph</code>. When used, this
+vocabulary acts as any other vocabulary but has additional logic built-in for the purpose of integrating vocabulary/tags
+with the <a href="#graph">graph</a> available as part of the RW API.</p>
+
+<p>Whenever you create or clone a vocabulary named <code class="prettyprint">knowledge_graph</code> for a resource,
+the <a href="#creating-dataset-graph-nodes">dataset</a>, <a href="#creating-layer-graph-nodes">layer</a>
+or <a href="#creating-widget-graph-nodes">widget</a> node is added to the graph if not already present, and
+the <a href="#associating-concepts-to-graph-nodes">tags are associated to it</a>. Updating the <code class="prettyprint">knowledge_graph</code> vocabulary also
+updates the corresponding <a href="#updating-concepts-associated-with-graph-nodes">tags associated to it</a> on the graph side, and
+deleting the vocabulary
+also <a href="#deleting-concepts-associated-with-graph-nodes">deletes the corresponding tags in the graph</a>.</p>
+
+<p>For more details on the graph, its purpose, and how to use it, please refer to the dedicated documentation section on
+the <a href="#graph">graph</a> and <a href="#graph7">its endpoints</a>.</p>
+
+<h2 id="associations-between-vocabularies-tags-and-resources">Associations between vocabularies, tags and resources</h2>
+
+<h3 id="vocabularies-and-resources">Vocabularies and resources</h3>
+
+<p>Despite not being 100% accurate, it&rsquo;s useful to think that a vocabulary is uniquely identified by a tuple of 3 values:</p>
+
+<ul>
+<li>The resource (id and type) to which it&rsquo;s associated</li>
+<li>Its <code class="prettyprint">name</code> or <code class="prettyprint">id</code> (these are 2 names for the same underlying value)</li>
+<li>Its <code class="prettyprint">application</code></li>
+</ul>
+
+<p>Putting it in other words: you can think of a vocabulary as being <strong>associated with only one resource at a time</strong>. So,
+if you create, update or delete a vocabulary, you are only doing so <em>for that resource</em>. You can safely modify the
+vocabularies for a resource without fear of affecting vocabularies and tags for other resources.</p>
+
+<p>Further down, we&rsquo;ll cover endpoints that allow you to discover resources by performing searches based on vocabularies
+and tags. These endpoints are able to aggregate these different vocabularies and tags from multiple resources, and
+produce a unified response - making it look like vocabularies are shared across resources, and thus producing meaningful
+results.</p>
+
+<p>If you find the above slightly confusing, we advise you explore these docs and learn more about the different endpoints available - maybe even try to add vocabularies and tags to one of your resources - and then come back and see if your newly gained knowledge helps you get a deeper understanding of how vocabularies and tags work on the RW API. </p>
+
+<h3 id="vocabularies-and-tags">Vocabularies and tags</h3>
+
+<p>Tags are simply strings associated with an individual vocabulary. They have no direct connection to a resource and have
+no logic or complexity within the context of a vocabulary. Tags that have the same value but belong to different
+vocabularies are not matched or related in any way.</p>
+
+<h2 id="endpoint-overview">Endpoint overview</h2>
+
+<p>In broad terms, there are two types of endpoints for manipulating vocabulary/tags: endpoints that allow
+to <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> vocabulary/tags for a given resource, and
+endpoints that allow you to query for resources for a given vocabulary/tag.</p>
+
+<p>We&rsquo;ll start by covering how you can manipulate associations between vocabulary/tags and resources, and further down will
+cover how to list vocabulary/tags, and their associated resources.</p>
+
+<h2 id="getting-vocabulary-tags-for-a-resource">Getting vocabulary/tags for a resource</h2>
+
+<p>There are two types of endpoints that will allow you to get vocabularies and tags for a resource: one to retrieve all
+vocabularies and their tags, and another to retrieve all tags for a given vocabulary.</p>
+
+<h3 id="getting-all-vocabularies-and-tags-for-a-resource">Getting all vocabularies and tags for a resource</h3>
+
+<blockquote>
+<p>Getting vocabularies and tags associated with a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Getting vocabularies and tags associated with a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer_id&gt;/vocabulary'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Getting vocabularies and tags associated with a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id&gt;/vocabulary'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testVocabulary1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testVocabulary1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testVocabulary2"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag3"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testVocabulary2"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>These endpoints allow you to get vocabulary/tags for a single dataset, widget, or layer. By default, vocabulary/tags for
+the <code class="prettyprint">rw</code> application are returned, but you can use the optional <code class="prettyprint">app</code> or <code class="prettyprint">application</code> query parameters to load data for
+a different application.</p>
+
+<h3 id="getting-a-single-vocabulary-and-its-tags-for-a-resource">Getting a single vocabulary and its tags for a resource</h3>
+
+<blockquote>
+<p>Getting a single vocabulary and tags associated with a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Getting a single vocabulary and tags associated with a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer_id&gt;/vocabulary/&lt;vocabulary-id&gt;'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Getting a single vocabulary and tags associated with a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -L -X GET <span class="s1">'https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget_id&gt;/vocabulary/&lt;vocabulary-id&gt;'</span> <span class="se">\</span>
+-H <span class="s1">'Content-Type: application/json'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>These endpoints allow you to get a single vocabulary and its tags for a single dataset, widget, or layer. By default,
+vocabulary/tags for the <code class="prettyprint">rw</code> application are returned, but you can use the optional <code class="prettyprint">app</code> or <code class="prettyprint">application</code> query
+parameters to load data for a different application.</p>
+
+<h3 id="getting-vocabularies-and-tags-for-multiple-resources">Getting vocabularies and tags for multiple resources</h3>
+
+<blockquote>
+<p>Getting vocabularies and tags for multiple datasets</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Getting vocabularies and tags for multiple widgets</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Getting vocabularies and tags for multiple layers</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/vocabulary/find-by-ids <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "ids": [&lt;ids&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag5"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ca6817fd-130c-47d4-8a95-303083b2cffa"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag3"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test2"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This group of endpoints allows you to retrieve the vocabularies for multiple resources of the same type using a single
+request. It expects a body containing an <code class="prettyprint">ids</code> value, which can either be an array of ids, or a string containing
+multiple ids separated by commas.</p>
+
+<p>When retrieving widgets or layers using these endpoints, the dataset id passed in the URL is ignored, and will not
+affect the result of the endpoint.</p>
+
+<p>These endpoints return vocabularies for all applications by default, but you can pass an optional <code class="prettyprint">application</code> value as
+a query parameter to filter by a specific application.</p>
+
+<h4 id="errors-for-getting-vocabularies-and-tags-for-multiple-resources">Errors for getting vocabularies and tags for multiple resources</h4>
 
 <table><thead>
 <tr>
-<th>Field</th>
-<th style="text-align: center">Description</th>
-<th style="text-align: right">Type</th>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>name</td>
-<td style="text-align: center">The name of the Vocabulary (<strong>it has to be unique and it represents the &ldquo;primaryKey&rdquo;</strong>)</td>
-<td style="text-align: right">String</td>
-</tr>
-<tr>
-<td>application</td>
-<td style="text-align: center">The associated application for this vocabulary. Read more about the <code class="prettyprint">application</code> field <a href="index-rw.html#applications">here</a>.</td>
-<td style="text-align: right">String</td>
+<td>404</td>
+<td>Bad request - Missing &lsquo;ids&rsquo; from request body</td>
+<td>Your request body is missing the <code class="prettyprint">ids</code> field</td>
 </tr>
 </tbody></table>
 
-<p>However, the most common use case relies on the relationships creation.</p>
+<h2 id="creating-vocabularies-tags-for-a-resource">Creating vocabularies/tags for a resource</h2>
 
-<h2 id="relationships">Relationships</h2>
+<p>There are two types of endpoints for associating vocabulary/tags with resources: one allows you to create a single
+vocabulary (and its tags) for a resource, while the other supports creating multiple vocabularies/tags for a single
+resource. The primary use case for these endpoints is when you just created a new dataset/layer/widget, and want to add
+vocabularies/tags to them.</p>
 
-<p>This section describes how to associate an existing or new Vocabulary to a resource.</p>
-
-<p>Some important points:</p>
-
-<ul>
-<li>A <strong>Vocabulary</strong> can have <strong>N</strong> associated <strong>Resources</strong>.</li>
-<li>A <strong>Resource</strong> can have <strong>M</strong> associated <strong>Vocabularies</strong>.</li>
-<li>The way of building these <strong>relationships</strong> is creating <strong>Tags</strong>.</li>
-</ul>
-
-<h2 id="creating-a-vocabulary-resource-relationship">Creating a Vocabulary-Resource relationship</h2>
-
-<p>To create a relationship between a Resource and a Vocabulary (even if the Vocabulary or the Resource doesn&rsquo;t exist yet) it is only required that you set the tags that define the relationship.</p>
-
-<p>Some writing operations can take a little more time than reading ones. Even if the relationships are not strong, the writing operations have to ensure consistency along entities.</p>
-
-<p>Remember that you can create relationshipts between Vocabulary and datasets, widgets or layers (the supported Resources).</p>
-
-<aside class="notice">
-Please, be sure that the request is properly authenticated and the current user has permission to the resource.
-If you don&rsquo;t know how to do this, please go to the <a href="#authentication">Authentication section</a>
-</aside>
+<h3 id="creating-a-single-vocabulary-tags-for-a-resource">Creating a single vocabulary/tags for a resource</h3>
 
 <blockquote>
-<p>Creating a relationship between a Vocabulary and a Dataset</p>
+<p>Creating a new vocabulary/tag for a dataset</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
- "application": &lt;application&gt;,
+   "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre>
 <blockquote>
-<p>Creating a relationship between a Vocabulary and a Widget</p>
+<p>Creating a new vocabulary/tag for a widget</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
- "application": &lt;application&gt;,
+   "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre>
 <blockquote>
-<p>Creating a relationship between a Vocabulary and a Layer</p>
+<p>Creating a new vocabulary/tag for a layer</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
- "application": &lt;application&gt;,
+   "application": &lt;application&gt;,
    "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre>
 <blockquote>
-<p>Example of request with real data</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": ["biology", "chemistry"]
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example of response with real data</p>
+<p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag3"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"science"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"chemistry"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"chemistry"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testVocabulary1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testVocabulary1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testVocabulary2"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag3"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testVocabulary2"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="updating-an-existing-vocabulary-resource-relationship">Updating an existing Vocabulary-Resource relationship</h2>
+<p>This set of endpoints will allow you to create a new vocabulary/tags for a resource.</p>
 
-<p>If a relationship has to be updated, it&rsquo;s necessary to define it&rsquo;s new tags.
-The previous tags will be deleted in benefit of the new ones.</p>
+<p>The request body must contain both an array of tags and the <code class="prettyprint">application</code> under which the vocabulary/tags are being
+created. If a vocabulary with the same name already exists for the specified application, you will get an error message</p>
 
-<blockquote>
-<p>Updating a relationship between a Vocabulary and a Dataset</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": [&lt;tags&gt;]
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Updating a relationship between a Vocabulary and a Widget</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": [&lt;tags&gt;]
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Updating a relationship between a Vocabulary and a Layer</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": [&lt;tags&gt;]
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example of request with real data</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
- "application": &lt;application&gt;,
-   "tags": ["maths", "astronomy"]
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example of response with real data</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag3"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"science"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"maths"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"astronomy"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"chemistry"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<h2 id="creating-several-vocabulary-resource-relationships">Creating several Vocabulary-Resource relationships</h2>
+<ul>
+<li>you can use the update endpoints to modify an existing vocabulary.</li>
+</ul>
 
-<p>There is also an endpoint that allows you to create multiple relationships in the same request.</p>
+<p>Assuming the creation was successful, the response will contain a list of all vocabularies and their respective tags
+associated with the specified resource, for all applications.</p>
+
+<p>If you want to create new vocabulary/tags for your resources, you must have the necessary user account permissions.
+Specifically:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the resource</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the resource&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the resource)</li>
+</ul></li>
+</ul>
+
+<p><strong>An important note:</strong> When creating vocabulary/tags for a resource, the dataset id specified in the URL is validated,
+and the requests fail if a dataset with the given id does not exist. When creating a vocabulary for a widget or layer,
+you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done
+automatically - this is a known limitation of the current implementation, and may be modified at any time, and invalid
+resources (those where the layer&rsquo;s/widget&rsquo;s dataset id does not match the dataset id defined in the resource) may be
+purged without prior warning.</p>
+
+<h4 id="errors-for-creating-a-single-vocabulary-tags-for-a-resource">Errors for creating a single vocabulary/tags for a resource</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>This relationship already exists</td>
+<td>The resource already has a vocabulary with the same name for the specified application</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- tags: tags can not be empty. -</td>
+<td><code class="prettyprint">tags</code> body fields is empty</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- tags: tags check failed. -</td>
+<td>Either the <code class="prettyprint">tags</code> or <code class="prettyprint">applications</code> body fields are missing or have an invalid value</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to create a vocabulary for a resource whose <code class="prettyprint">application</code> value is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>404 - {\&ldquo;errors\&rdquo;:[{\&ldquo;status\&rdquo;:404,\&ldquo;detail\&rdquo;:\&ldquo;Dataset with id <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist\&rdquo;}]}</td>
+<td>You are trying to create a vocabulary for a dataset that doesn&rsquo;t exist.</td>
+</tr>
+</tbody></table>
+
+<h3 id="creating-multiple-vocabularies-tags-for-a-resource">Creating multiple vocabularies/tags for a resource</h3>
 
 <blockquote>
-<p>Creating multiple relationships between a Vocabulary and a Dataset</p>
+<p>Creating new vocabularies/tags for a dataset</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-   "vocabularyOne": {
-   "application": &lt;application&gt;,
-       "tags": [&lt;tags&gt;]
-   },
-   "vocabularyTwo": {
-   "application": &lt;application&gt;,
-       "tags": [&lt;tags&gt;]
-   }
+    "vocabulary1": {
+        "tags":["tag1", "tag2"],
+        "application": "rw"
+    },
+    "vocabulary2": {
+        "tags":["tag3", "tag4"],
+        "application": "rw"
+    }
   }'</span>
 </code></pre>
 <blockquote>
-<p>Creating multiple relationships between a Vocabulary and a Widget</p>
+<p>Creating new vocabularies/tags for a widget</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary<span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-  "vocabularyOne": {
-  "application": &lt;application&gt;,
-      "tags": [&lt;tags&gt;]
-  },
-  "vocabularyTwo": {
-  "application": &lt;application&gt;,
-      "tags": [&lt;tags&gt;]
-  }
- }'</span>
+    "vocabulary1": {
+        "tags":["tag1", "tag2"],
+        "application": "rw"
+    },
+    "vocabulary2": {
+        "tags":["tag3", "tag4"],
+        "application": "rw"
+    }
+}'</span>
 </code></pre>
 <blockquote>
-<p>Creating multiple relationships between a Vocabulary and a Layer</p>
+<p>Creating new vocabularies/tags for a layer</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
 <span class="s1">'{
-  "vocabularyOne": {
-  "application": &lt;application&gt;,
-      "tags": [&lt;tags&gt;]
-  },
-  "vocabularyTwo": {
-  "application": &lt;application&gt;,
-      "tags": [&lt;tags&gt;]
-  }
- }'</span>
+    "vocabulary1": {
+        "tags":["tag1", "tag2"],
+        "application": "rw"
+    },
+    "vocabulary2": {
+        "tags":["tag3", "tag4"],
+        "application": "rw"
+    }
+}'</span>
 </code></pre>
 <blockquote>
-<p>Example of request with real data</p>
+<p>Example response</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary?application<span class="o">=</span>&lt;application&gt;
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary2"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag3"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag4"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary2"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This set of endpoints will allow you to create multiple vocabularies/tags for a single resource in a single request.</p>
+
+<p>The request body must contain at least one key, each of them corresponding to the names of the vocabularies you want to
+create. Each of these keys must have an object-type value, which in turn must contain the following keys:</p>
+
+<ul>
+<li><code class="prettyprint">tags</code>: an array of tags</li>
+<li><code class="prettyprint">application</code>: the application associated with the vocabulary.</li>
+</ul>
+
+<p>You can create different vocabularies for different applications in a single request.</p>
+
+<p>Assuming the creation was successful, the response will contain a list of all vocabularies and their respective tags
+associated with the specified resource, for all applications.</p>
+
+<p>If you want to create new vocabulary/tags for your resources, you must have the necessary user account permissions.
+Specifically:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the resource</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the resource&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the resource)</li>
+</ul></li>
+</ul>
+
+<p><strong>An important note:</strong> When creating vocabularies/tags for a resource, the dataset id specified in the URL is validated,
+and the requests fail if a dataset with the given id does not exist. When creating a vocabulary for a widget or layer,
+you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done
+automatically - this is a known limitation of the current implementation, and may be modified at any time, and invalid
+resources (those where the layer&rsquo;s/widget&rsquo;s dataset id does not match the dataset id defined in the resource) may be
+purged without prior warning.</p>
+
+<h4 id="errors-for-creating-a-single-vocabulary-tags-for-a-resource">Errors for creating a single vocabulary/tags for a resource</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>This relationship already exists</td>
+<td>The resource already has one or more vocabularies with the same name(s) for the specified application(s)</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- <code class="prettyprint">&lt;value&gt;</code>: <code class="prettyprint">&lt;value&gt;</code> check failed. -</td>
+<td>The body object has a <code class="prettyprint">&lt;value&gt;</code> key which content is invalid (is not an object or is missing <code class="prettyprint">tags</code> and/or <code class="prettyprint">application</code>).</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to create a vocabulary for a resource whose <code class="prettyprint">application</code> value is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>404 - {\&ldquo;errors\&rdquo;:[{\&ldquo;status\&rdquo;:404,\&ldquo;detail\&rdquo;:\&ldquo;Dataset with id <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist\&rdquo;}]}</td>
+<td>You are trying to create a vocabulary for a dataset that doesn&rsquo;t exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="updating-vocabularies-tags">Updating vocabularies/tags</h2>
+
+<p>If you have already associated vocabularies and tags to your resources and would like to modify those tags, the next set
+of endpoints is for you.</p>
+
+<p>There are three types of endpoints for updating existing vocabulary/tags:</p>
+
+<ul>
+<li>endpoints that allow you to modify a single vocabulary (and its tags) for a resource</li>
+<li>endpoints that allow you to modify multiple vocabularies/tags for a single resource with a single request</li>
+<li>endpoint that allows you to add new tags to an existing vocabulary. This endpoint only exists for dataset resources,
+not widgets or layers.</li>
+</ul>
+
+<h3 id="updating-a-single-vocabulary-tags-for-a-resource">Updating a single vocabulary/tags for a resource</h3>
+
+<blockquote>
+<p>Updating a vocabulary for a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
 -H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
  <span class="s1">'{
-     "country": {
-         "tags": ["Spain", "Italy", "Portugal"]
-     },
-     "sport": {
-         "tags": ["football", "basketball", "voleyball"]
-     },
-     "color": {
-         "tags": ["red", "green", "blue"]
-     }
+   "application": &lt;application&gt;,
+   "tags": [&lt;tags&gt;]
   }'</span>
 </code></pre>
 <blockquote>
-<p>Example of response with real data</p>
+<p>Updating a vocabulary for a widget</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;application&gt;,
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Updating a vocabulary for a layer</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PATCH https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt; <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+   "application": &lt;application&gt;,
+   "tags": [&lt;tags&gt;]
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameTwo"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag3"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag3"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag3"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tag3"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newV"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"test2"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"Portugal"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sport"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"football"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"basketball"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"voleyball"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"blue"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabularyNameOne"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag3"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"science"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"maths"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"astronomy"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaa"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"biology"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"chemistry"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="deleting-relationships">Deleting relationships</h2>
+<p>This set of endpoints will allow you to update the tags of an existing vocabulary/tags for a resource.</p>
+
+<p>The request body must contain the <code class="prettyprint">application</code> of the vocabulary you want to update, and it will fail if you specify a
+vocabulary name/application pair that does not exist. Additionally, it must contain a <code class="prettyprint">tags</code> array of strings with a
+list of new tags to use. Any existing tags that already existed for that vocabulary (for that resource and application)
+will be deleted, and replaced with the values you provide through this request.</p>
+
+<p>Assuming the update was successful, the response will contain a list of all vocabularies and their respective tags
+associated with the specified resource, for all applications.</p>
+
+<p>If you want to update vocabulary/tags for your resources, you must have the necessary user account permissions.
+Specifically:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the resource</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the resource&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the resource)</li>
+</ul></li>
+</ul>
+
+<p><strong>An important note:</strong> When updating vocabulary/tags for a resource, the dataset id specified in the URL is validated,
+and the requests fail if a dataset with the given id does not exist. When updating a vocabulary for a widget or layer,
+you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done
+automatically - this is a known limitation of the current implementation, and may be modified at any time, and invalid
+resources (those where the layer&rsquo;s/widget&rsquo;s dataset id does not match the dataset id defined in the resource) may be
+purged without prior warning.</p>
+
+<h4 id="errors-for-updating-a-single-vocabulary-tags-for-a-resource">Errors for updating a single vocabulary/tags for a resource</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>- <code class="prettyprint">&lt;value&gt;</code>: <code class="prettyprint">&lt;value&gt;</code> check failed. -</td>
+<td>The body object has a <code class="prettyprint">&lt;value&gt;</code> key which content is invalid (is not an object, or is missing <code class="prettyprint">tags</code> and/or <code class="prettyprint">application</code>).</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to update a vocabulary for a resource whose <code class="prettyprint">application</code> value is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>404 - {\&ldquo;errors\&rdquo;:[{\&ldquo;status\&rdquo;:404,\&ldquo;detail\&rdquo;:\&ldquo;Dataset with id <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist\&rdquo;}]}</td>
+<td>You are trying to create a vocabulary for a dataset that doesn&rsquo;t exist.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Relationship between undefined and dataset - <code class="prettyprint">&lt;dataset id&gt;</code> and dataset: <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist</td>
+<td>You are trying to update a vocabulary that doesn&rsquo;t exist. Check your vocabulary name and application</td>
+</tr>
+</tbody></table>
+
+<h3 id="updating-multiple-vocabularies-tags-for-a-dataset">Updating multiple vocabularies/tags for a dataset</h3>
 
 <blockquote>
-<p>Deleting relationships between a Vocabulary and a Dataset</p>
+<p>Updating multiple vocabularies/tags for a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X PUT https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "vocabulary1": {
+        "tags":["tag1", "tag2"],
+        "application": "rw"
+    },
+    "vocabulary2": {
+        "tags":["tag3", "tag4"],
+        "application": "rw"
+    }
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary2"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag3"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag4"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary2"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>Know issue warning</strong> There&rsquo;s a known issue where you may experience a <code class="prettyprint">400 - This relationship already exists</code> error
+when using this endpoint. There&rsquo;s currently no ETA for its resolution. As a workaround, we suggest updating vocabularies
+individually.</p>
+
+<p>This endpoint will allow you to update multiple vocabularies/tags for a single dataset in a single request.</p>
+
+<p>The request body must contain at least one key, each of them corresponding to the names of the vocabularies you want to
+update. Each of these keys must have an object-type value, which in turn must contain the following keys:</p>
+
+<ul>
+<li><code class="prettyprint">tags</code>: an array of tags that will replace all the tags for that vocabulary (associated with that dataset and
+application)</li>
+<li><code class="prettyprint">application</code>: the application associated with the vocabulary you want to update.</li>
+</ul>
+
+<p>You can update different vocabularies for different applications in a single request.</p>
+
+<p>Assuming the update was successful, the response will contain a list of all vocabularies and their respective tags
+associated with the specified dataset, for all applications.</p>
+
+<p>If you want to update vocabulary/tags for your datasets, you must have the necessary user account permissions.
+Specifically:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the dataset</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the dataset&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the dataset)</li>
+</ul></li>
+</ul>
+
+<h4 id="errors-for-updating-multiple-vocabularies-tags-for-a-dataset">Errors for updating multiple vocabularies/tags for a dataset</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>- tags: tags can not be empty. -</td>
+<td><code class="prettyprint">tags</code> body fields is empty</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- tags: tags check failed. -</td>
+<td>Either the <code class="prettyprint">tags</code> or <code class="prettyprint">applications</code> body fields are missing or have an invalid value.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to update a vocabulary for a resource whose <code class="prettyprint">application</code> value is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>404 - {\&ldquo;errors\&rdquo;:[{\&ldquo;status\&rdquo;:404,\&ldquo;detail\&rdquo;:\&ldquo;Dataset with id <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist\&rdquo;}]}</td>
+<td>You are trying to create a vocabulary for a dataset that doesn&rsquo;t exist.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Relationship between undefined and dataset - <code class="prettyprint">&lt;dataset id&gt;</code> and dataset: <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist</td>
+<td>You are trying to update a vocabulary that doesn&rsquo;t exist. Check your vocabulary name and application</td>
+</tr>
+</tbody></table>
+
+<h3 id="concatenating-tags-to-a-dataset-vocabulary">Concatenating tags to a dataset vocabulary</h3>
+
+<blockquote>
+<p>Concatenating tags to a dataset vocabulary</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;/concat <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<span class="s1">'{
+    "tags":["tag1", "tag2"],
+    "application": "rw"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary2"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag3"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag4"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary2"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint allows you to add more tags to an existing vocabulary for a dataset. The dataset is identified by the id
+provided in the URL, while the specific vocabulary to update is determined by the vocabulary id in the URL and
+the <code class="prettyprint">application</code> value in the POST body - if no matching vocabulary is found, a new one is created. The body should
+also contain an array of <code class="prettyprint">tags</code> which will be appended to the target vocabulary. The endpoint validates and requires
+that a dataset with the provided id exists. Any tags that exist both in the request and in the vocabulary prior to the
+concat are merged - the resulting tags list won&rsquo;t have duplicated values.</p>
+
+<p>Should the request be successful, the response will have a complete list of vocabularies/tags for the dataset, for all
+applications.</p>
+
+<h4 id="errors-for-concatenating-tags-to-a-dataset-vocabulary">Errors for concatenating tags to a dataset vocabulary</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>- tags: tags can not be empty. -</td>
+<td><code class="prettyprint">tags</code> body fields is empty</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- tags: tags check failed. -</td>
+<td>Either the <code class="prettyprint">tags</code> or <code class="prettyprint">applications</code> body fields are missing or have an invalid value.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to concatenate a vocabulary for a dataset whose <code class="prettyprint">application</code> value is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>404 - {\&ldquo;errors\&rdquo;:[{\&ldquo;status\&rdquo;:404,\&ldquo;detail\&rdquo;:\&ldquo;Dataset with id <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist\&rdquo;}]}</td>
+<td>The dataset specified in the request URL doesn&rsquo;t exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="cloning-vocabularies-tags-for-a-dataset">Cloning vocabularies/tags for a dataset</h2>
+
+<blockquote>
+<p>Cloning vocabularies/tags for a dataset</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/clone/dataset <span class="se">\</span>
+-H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+ <span class="s1">'{
+    "newDataset": "&lt;target-dataset-id&gt;"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag2"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary2"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"tag3"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"tag4"</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary2"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint allows you to clone all vocabularies/tags for all applications, for a single dataset.</p>
+
+<p>The URL should include the id of the source dataset, while the POST body should include a <code class="prettyprint">newDataset</code> field containing
+the id of the target dataset. The target dataset id is not validated - the cloning will still occur even if the target
+id doesn&rsquo;t correspond to an existing dataset.</p>
+
+<p>The dataset you use as the target dataset can have existing vocabularies - the cloning operation is an additive, and
+will not update nor destroy any existing vocabulary that may have already been associated with the target dataset.
+However, the cloning operation will fail if it tries to overwrite a vocabulary (ie. if the target dataset already has a
+vocabulary with the same name and application as one being created as part of the cloning). This failure is not atomic -
+the target dataset may end up with some of the vocabularies of the source dataset. It&rsquo;s up to you, as the RW API user,
+to both manage these collisions, and recover from them should they happen.</p>
+
+<p>Assuming the cloning was successful, the response will contain a list of all vocabularies (both newly cloned and
+preexisting) and their respective tags, for all applications, for the target dataset.</p>
+
+<p>If you want to clone vocabularies/tags for your datasets, you must have the necessary user account permissions.
+Specifically:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the source dataset</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the resource&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the resource)</li>
+</ul></li>
+</ul>
+
+<p><strong>An important note:</strong> When cloning vocabularies/tags for a dataset, the source dataset id specified in the URL is
+validated, and the requests fails if a dataset with the given id does not exist. When creating a vocabulary for a widget
+or layer, you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not
+done automatically - this is a known limitation of the current implementation, and may be modified at any time, and
+invalid resources (those where the layer&rsquo;s/widget&rsquo;s dataset id does not match the dataset id defined in the resource)
+may be purged without prior warning.</p>
+
+<h4 id="errors-for-cloning-vocabularies-tags-for-a-dataset">Errors for cloning vocabularies/tags for a dataset</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>This relationship already exists</td>
+<td>The target dataset already has one or more vocabularies with the same name(s) and application(s) as the source dataset.</td>
+</tr>
+<tr>
+<td>400</td>
+<td>- newDataset: newDataset can not be empty. -</td>
+<td>The body object must have a <code class="prettyprint">newDataset</code> key with the id of the target dataset.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to clone vocabulary for a source dataset whose <code class="prettyprint">application</code> value is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>404 - {\&ldquo;errors\&rdquo;:[{\&ldquo;status\&rdquo;:404,\&ldquo;detail\&rdquo;:\&ldquo;Dataset with id <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist\&rdquo;}]}</td>
+<td>You are trying to clone a vocabularies for a source dataset that doesn&rsquo;t exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="deleting-vocabularies-tags-for-a-resource">Deleting vocabularies/tags for a resource</h2>
+
+<p>There are two types of endpoints for deleting vocabularies/tags: one allows you to delete a single vocabulary (and its
+tags) for a resource, while the other supports deleting all the vocabularies/tags for a single resource. Some use cases
+for these include deleting vocabularies prior to deleting the actual resource, or typical housekeeping tasks you may
+want to carry out on your data.</p>
+
+<h3 id="deleting-a-single-vocabulary-tags-for-a-resource">Deleting a single vocabulary/tags for a resource</h3>
+
+<blockquote>
+<p>Deleting a single vocabulary/tag for a dataset</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;
 </code></pre>
 <blockquote>
-<p>Deleting relationships between a Vocabulary and a Widget</p>
+<p>Deleting a single vocabulary/tag for a widget</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
 </code></pre>
 <blockquote>
-<p>Deleting relationships between a Vocabulary and a Layer</p>
+<p>Deleting a single vocabulary/tag for a layer</p>
 </blockquote>
 <pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
 </code></pre>
 <blockquote>
-<p>Example of request with real data</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary/science
-</code></pre>
-<blockquote>
-<p>Example of response with real data</p>
+<p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"Portugal"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"blue"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"Portugal"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"blue"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="getting-vocabularies-associated-to-a-resource">Getting Vocabularies associated to a Resource</h2>
+<p>This set of endpoints will allow you to delete a single vocabulary and its tags, for a resource.</p>
 
-<p>You can be request all vocabularies that are associated to a particular resource. It optionally accepts a <code class="prettyprint">app</code> or <code class="prettyprint">application</code> query parameter, that will filter the vocabulary&rsquo;s <code class="prettyprint">application</code>. If none is provided, <code class="prettyprint">rw</code> is used as default.</p>
+<p>As a query param, you can optionally provide an <code class="prettyprint">app</code> or <code class="prettyprint">application</code> values, to identify the application of the
+vocabulary to delete - by default, <code class="prettyprint">rw</code> is assumed.</p>
+
+<p>Assuming the operation was successful, the response will contain a list of all vocabularies and their respective tags
+associated with the specified resource, for all applications - including the vocabulary that was deleted.</p>
+
+<p>If you want to delete vocabularies/tags for your resources, you must have the necessary user account permissions.
+Specifically:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the resource</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the resource&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the resource)</li>
+</ul></li>
+</ul>
+
+<p><strong>An important note:</strong> When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated,
+and the requests fail if a dataset with the given id does not exist. When deleting a vocabulary for a widget or layer,
+you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done
+automatically - this is a known limitation of the current implementation and may be modified at any time.</p>
+
+<h4 id="errors-for-deleting-a-single-vocabulary-tags-for-a-resource">Errors for deleting a single vocabulary/tags for a resource</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to delete a vocabulary for a resource whose <code class="prettyprint">application</code> value is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>404 - {\&ldquo;errors\&rdquo;:[{\&ldquo;status\&rdquo;:404,\&ldquo;detail\&rdquo;:\&ldquo;Dataset with id <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist\&rdquo;}]}</td>
+<td>You are trying to create a vocabulary for a dataset that doesn&rsquo;t exist.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Relationship between <code class="prettyprint">&lt;vocabulary-id&gt; and dataset -</code><dataset id> and dataset: `<dataset id> doesn&rsquo;t exist</td>
+<td>You are trying to delete a vocabulary that doesn&rsquo;t exist.</td>
+</tr>
+</tbody></table>
+
+<h3 id="deleting-all-vocabulary-tags-for-a-resource">Deleting all vocabulary/tags for a resource</h3>
 
 <blockquote>
-<p>Getting Vocabularies related with a Dataset</p>
+<p>Deleting all vocabularies/tag for a dataset</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary
 </code></pre>
 <blockquote>
-<p>Getting Vocabularies related with a Widget</p>
+<p>Deleting all vocabularies/tag for a widget</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary
 </code></pre>
 <blockquote>
-<p>Getting Vocabularies related with a Layer</p>
+<p>Deleting all vocabularies/tag for a layer</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary
+<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary
 </code></pre>
 <blockquote>
-<p>Example of request with real data</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/942b3f38-9504-4273-af51-0440170ffc86/vocabulary
-</code></pre>
-<blockquote>
-<p>Example of response with real data</p>
+<p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"Portugal"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"blue"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"Portugal"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"color"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"blue"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="getting-a-single-relationship-broken-now">Getting a single relationship (broken now)</h2>
+<p><strong>Know issue warning</strong> There&rsquo;s a known issue where you may experience
+a <code class="prettyprint">404 - Relationship between undefined and dataset - &lt;dataset id&gt; and dataset: &lt;dataset id&gt; doesn&#39;t exist</code> error when
+using these endpoints. If you experience this issue, keep in mind that some vocabularies may have already been deleted,
+despite the error message. Those are not recoverable. There&rsquo;s currently no ETA for its resolution. As a workaround, we
+suggest deleting vocabularies individually.</p>
+
+<p>This set of endpoints will allow you to delete all vocabularies and their tags for a resource.</p>
+
+<p>Assuming the operation was successful, the response will contain a list of all vocabularies and their respective tags
+associated with the specified resource, for all applications - all of which were already deleted.</p>
+
+<p>If you want to delete vocabularies/tags for your resources, you must have the necessary user account permissions.
+Specifically:</p>
+
+<ul>
+<li>the user must be logged in and belong to the same application as the resource</li>
+<li>the user must match one of the following:
+
+<ul>
+<li>have role <code class="prettyprint">ADMIN</code></li>
+<li>have role <code class="prettyprint">MANAGER</code> and be the resource&rsquo;s owner (through the <code class="prettyprint">userId</code> field of the resource)</li>
+</ul></li>
+</ul>
+
+<p><strong>An important note:</strong> When deleting vocabulary/tags for a resource, the dataset id specified in the URL is validated,
+and the requests fail if a dataset with the given id does not exist. When deleting vocabularies for a widget or layer,
+you should ensure you specify the dataset id that matches that of the widget/layer, as that validation is not done
+automatically - this is a known limitation of the current implementation and may be modified at any time.</p>
+
+<h4 id="errors-for-deleting-all-vocabularies-tags-for-a-resource">Errors for deleting all vocabularies/tags for a resource</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>You are not authenticated.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>You are trying to delete vocabularies for a resource whose <code class="prettyprint">application</code> value is not associated with your user account.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>404 - {\&ldquo;errors\&rdquo;:[{\&ldquo;status\&rdquo;:404,\&ldquo;detail\&rdquo;:\&ldquo;Dataset with id <code class="prettyprint">&lt;dataset id&gt;</code> doesn&rsquo;t exist\&rdquo;}]}</td>
+<td>You are trying to delete vocabularies for a dataset that doesn&rsquo;t exist.</td>
+</tr>
+</tbody></table>
+
+<h2 id="getting-vocabularies-and-tags-across-resources">Getting vocabularies and tags across resources</h2>
+
+<p>There are several endpoints you can use to retrieve vocabularies and their details, independently from the resources to
+which they are associated</p>
+
+<h3 id="getting-all-vocabularies">Getting all vocabularies</h3>
 
 <blockquote>
-<p>Getting a single relationship between a Vocabulary and a Dataset</p>
+<p>Getting all vocabularies, their resources and tags</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/vocabulary/&lt;vocabulary-id&gt;
-</code></pre>
-<blockquote>
-<p>Getting a single relationship between a Vocabulary and a Widget</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/&lt;widget-id&gt;/vocabulary/&lt;vocabulary-id&gt;
-</code></pre>
-<blockquote>
-<p>Getting a single relationship between a Vocabulary and a Layer</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/&lt;layer-id&gt;/vocabulary/&lt;vocabulary-id&gt;
-</code></pre>
-<h2 id="getting-resources-common-use-case">Getting resources (COMMON USE CASE)</h2>
-
-<p>There is also an endpoint available which accepts requests just indicating resource type and
-the desired vocabulary-tag matching.</p>
-
-<p>It currently supports DOUBLE-OR pattern matching, meaning the API will return
-all resources that at least have one (or more) tags in a particular vocabulary. At the same time it will also apply an OR to the entities of other vocabulary-tag matchings.</p>
-
-<p>The query has to be set in the url by the query params.</p>
-<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/vocabulary/find
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/vocabulary/find
-</code></pre><pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/vocabulary/find
-</code></pre>
-<blockquote>
-<p>Example of response with real data</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X GET http://api.resourcewatch.org/v1/dataset/vocabulary/find?legacy<span class="o">=</span>cdi,coasts
-</code></pre>
-<h2 id="getting-all-vocabularies">Getting all vocabularies</h2>
-
-<p>This endpoint is quite useful to have a quick overview of all existing vocabularies and resources.</p>
 <pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/vocabulary
 </code></pre>
-<h2 id="finding-vocabularies-by-ids">Finding vocabularies by ids</h2>
-
-<p>The <code class="prettyprint">ids</code> property is required in the body of the request. It can be either an array of ids or a string of comma-separated ids:</p>
-
-<ul>
-<li><code class="prettyprint">{&quot;ids&quot;: [&quot;112313&quot;, &quot;111123&quot;]}</code></li>
-<li><code class="prettyprint">{&quot;ids&quot;: &quot;112313, 111123&quot;}</code></li>
-</ul>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "ids": [&lt;ids&gt;]
-  }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/vocabulary/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "ids": [&lt;ids&gt;]
-  }'</span>
-</code></pre><pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/vocabulary/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "ids": [&lt;ids&gt;]
-  }'</span>
-</code></pre>
 <blockquote>
-<p>Example of request with real data</p>
-</blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset/vocabulary/find-by-ids <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-    "ids": "942b3f38-9504-4273-af51-0440170ffc86, 08ff8183-48dc-457a-8924-bb4e7a87b8a8"
-  }'</span>
-</code></pre>
-<blockquote>
-<p>Example of response with real data</p>
+<p>Example response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"08ff8183-48dc-457a-8924-bb4e7a87b8a8"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"legacy"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"cdi"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"inundation"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"national"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"united states"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"coasts"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"flooding"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"health"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"942b3f38-9504-4273-af51-0440170ffc86"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"Spain"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"Italy"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"Portugal"</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"red"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"green"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"blue"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"tag2"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"tag2"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0002ed77-f07d-4231-b4eb-cfda77eeafe5"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"tag2"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0002ed77-f07d-4231-b4eb-cfda77eeafe5"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e91"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forestChange"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forestChange"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gfw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<h2 id="vocabulary-creation">Vocabulary Creation</h2>
+<p>This endpoint will give you a list of vocabularies. Inside each, you&rsquo;ll find a list of resources, identifying the
+resource id, type, associated dataset (if the resource is a dataset, the dataset id will be equal to the resource id)and
+the tags that said vocabulary associates to that resource</p>
 
-<p>As was mentioned before, it is possible to just create a new and empty vocabulary</p>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/vocabulary/vocabularyName <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
- <span class="s1">'{
-   "application": &lt;application&gt;,
-   "name": &lt;vocabularyName&gt;
-  }'</span>
-</code></pre>
-<p>It is also possible to update and delete an entire vocabulary. Said that, because
-it&rsquo;s necessary to keep consistency between entities with weak relationship, these
-operations are only available to SUPERADMINS.</p>
+<p>You can optionally pass a <code class="prettyprint">limit</code> integer value as a query parameter if you wish to limit the number of vocabularies
+returned by calls to this endpoint. There is not full blown pagination support for this endpoint.</p>
 
-<h2 id="bulk-delete-of-resource-39-s-vocabulary">Bulk delete of resource&rsquo;s vocabulary</h2>
+<h3 id="getting-a-single-vocabulary">Getting a single vocabulary</h3>
 
 <blockquote>
-<p>Deleting all Vocabulary associated with a Dataset</p>
+<p>Getting a single vocabulary, all its resources and tags</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/:datasetId/vocabulary <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/vocabulary/&lt;vocabulary-id&gt;
 </code></pre>
 <blockquote>
-<p>Deleting all Vocabulary associated with a Widget</p>
+<p>Example response</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/widget/:widgetId/vocabulary <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"tag2"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"tag2"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0002ed77-f07d-4231-b4eb-cfda77eeafe5"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+                            </span><span class="s2">"tag2"</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0002ed77-f07d-4231-b4eb-cfda77eeafe5"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e91"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test1"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rw"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint will give you the details for a single vocabulary, identified by name. In it, you&rsquo;ll find a list of
+resources, identified by the resource id, type, associated dataset (if the resource is a dataset, the dataset id will be
+equal to the resource id) and the tags that said vocabulary associates to that resource.</p>
+
+<p>Keep in mind that there&rsquo;s an implicit application filter applied to the data returned - only vocabularies and
+associations for the corresponding application are returned. By default, this filter uses the <code class="prettyprint">rw</code> value, but you can
+modify it with the <code class="prettyprint">application</code> or <code class="prettyprint">app</code> query parameters.</p>
+
+<h3 id="getting-tags-for-single-vocabulary">Getting tags for single vocabulary</h3>
+
+<blockquote>
+<p>Getting the tags for a single vocabulary</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/vocabulary/&lt;vocabulary-id&gt;/tags
 </code></pre>
 <blockquote>
-<p>Deleting all Vocabulary associated with a Layer</p>
+<p>Example response</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X DELETE https://api.resourcewatch.org/v1/dataset/datasetId/layer/:layerId/vocabulary <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"tag11"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tag21"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tag1"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tag2"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint will give you a flat list of all the tags associated with the specified vocabulary.</p>
+
+<p>Keep in mind that there&rsquo;s an implicit application filter applied to the data returned - only tags for the corresponding
+application are returned. By default, this filter uses the <code class="prettyprint">rw</code> value, but you can modify it with the <code class="prettyprint">application</code>
+or <code class="prettyprint">app</code> query parameters.</p>
+
+<h2 id="getting-resources-by-vocabulary-and-tag">Getting resources by vocabulary and tag</h2>
+
+<blockquote>
+<p>Getting datasets by vocabulary and tag</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/vocabulary/find?&lt;vocabulary-id&gt;<span class="o">=</span>&lt;tag&gt;
 </code></pre>
-<p>In order to use these endpoints, you need to meet one of the following criteria:</p>
+<blockquote>
+<p>Getting widgets by vocabulary and tag</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/widget/vocabulary/find?&lt;vocabulary-id&gt;<span class="o">=</span>&lt;tag&gt;
+</code></pre>
+<blockquote>
+<p>Getting layers by vocabulary and tag</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -X GET https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer/vocabulary/find?&lt;vocabulary-id&gt;<span class="o">=</span>&lt;tag&gt;
+</code></pre>
+<blockquote>
+<p>Example response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vocabulary"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e92"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e92"</span><span class="p">,</span><span class="w">
+                        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This is perhaps the most useful endpoint when it comes to data discovery - it allows you to specify a vocabulary name
+and a tag or set of tags, and see resources that match that search criteria.</p>
 
-<ul>
-<li>being authenticated as a SUPERADMIN;</li>
-<li>being authenticated as an ADMIN who has access to the apps of the resource associated (dataset/widget/layer);</li>
-<li>being authenticated as a MANAGER who has access to the apps of the resource associated AND own the resource.</li>
-</ul>
+<p>All three endpoints require at least one query parameter, in the format <code class="prettyprint">&lt;vocabulary-id&gt;=&lt;tag&gt;</code>. This will return all
+resources of that type, associated with a vocabulary with the name <code class="prettyprint">vocabulary-id</code>, and having a tag with value <code class="prettyprint">tag</code>
+for that vocabulary.</p>
 
-<p>All endpoints return <code class="prettyprint">200 OK</code> in case of success, along with the list of the deleted entities.</p>
+<p>You can expand these filters by specifying multiple tags for a single vocabulary, using
+the <code class="prettyprint">&lt;vocabulary-id&gt;=&lt;tag1&gt;,&lt;tag2&gt;</code> syntax. This type of filter will return resources that have either <code class="prettyprint">tag1</code> or <code class="prettyprint">tag2</code>
+for vocabulary <code class="prettyprint">vocabulary-id</code></p>
+
+<p>You can also filter by multiple vocabularies using multiple query parameters with the formats described above. The
+result will contain any resource that matches either vocabulary/tags filters.</p>
+
+<p>The filters described above do not take into account the <code class="prettyprint">application</code> for which the vocabularies were defined. If you
+wish to only see results matching the vocabulary of a specific application, you can pass either an <code class="prettyprint">app</code>
+or <code class="prettyprint">application</code>
+query parameter with the value of the application you wish to filter by.</p>
+
+<h4 id="errors-for-getting-resources-by-vocabulary-and-tag">Errors for getting resources by vocabulary and tag</h4>
+
+<table><thead>
+<tr>
+<th>Error code</th>
+<th>Error message</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Vocabulary and Tags are required in the queryParams</td>
+<td>You must specify at least one vocabulary/tag to filter by.</td>
+</tr>
+</tbody></table>
 
           <h1 id="geostore">Geostore</h1>
 
