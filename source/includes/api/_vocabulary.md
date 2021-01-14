@@ -91,7 +91,7 @@ and tags. These endpoints are able to aggregate these different vocabularies and
 produce a unified response - making it look like vocabularies are shared across resources, and thus producing meaningful
 results.
 
-If you find the above slightly confusing, we advice you explore these docs and learn more about the different endpoints available - maybe even try to add vocabularies and tags to one of your resources - and then come back and see if your newly gained knowledge helps you get a deeper understanding of how vocabularies and tags work on the RW API. 
+If you find the above slightly confusing, we advise you explore these docs and learn more about the different endpoints available - maybe even try to add vocabularies and tags to one of your resources - and then come back and see if your newly gained knowledge helps you get a deeper understanding of how vocabularies and tags work on the RW API. 
 
 ### Vocabularies and tags
 
