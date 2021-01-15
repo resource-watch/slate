@@ -28,6 +28,8 @@ Besides authentication, user accounts are also used for authorization. Authoriza
 
 Keep in mind that it's up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.
 
+**Deprecation notice:** Throughout these endpoints, you'll notice that many API responses contain both `id` and `_id` (with and without an underscore prefix). Whenever both are present, they will always have the same value, and you should rely on `id` (no prefix) - `_id` is present for BC reasons, but should be considered deprecated, and will be removed in the near future. 
+
 ## User management and applications 
 
 As we've covered in previous sections, several RW API resources, like users, datasets or widgets, are associated with one or more applications. Applications are a way to identify the different tools that rely on the RW API, and are used to make resource management easier.
@@ -72,9 +74,13 @@ curl -X POST "https://api.resourcewatch.org/auth/login" \
 ```json
 {
   "data": {
+    "id": "5bfd237767b3176dd63f2eb7",
+    "_id": "5bfd237767b3176dd63f2eb7",
     "email": "your-email@provider.com",
     "createdAt": "2018-11-15T04:46:35.313Z",
-    "role": "USER",
+    "updatedAt": "2018-11-15T04:46:35.313Z",
+    "role": "USER", 
+    "provider": "local",
     "extraUserData": {
       "apps": [
         "rw"
@@ -116,9 +122,12 @@ curl -X GET "https://api.resourcewatch.org/auth/check-logged" \
 {
   "data": {
     "id": "5bfd237767b3176dd63f2eb7",
+    "_id": "5bfd237767b3176dd63f2eb7",
     "email": "your-email@provider.com",
     "createdAt": "2018-11-27T10:59:03.531Z",
+    "updatedAt": "2018-11-27T10:59:03.531Z",
     "role": "USER",
+    "provider": "local",
     "extraUserData": {
       "apps": ["rw"]
     }
@@ -292,10 +301,12 @@ curl -X GET "https://api.resourcewatch.org/auth/confirm/:token" \
 {
     "data": {
         "id": "5dbadc495eae7358322dd64b",
+        "_id": "5dbadc495eae7358322dd64b",
         "email": "info@vizzuality.com",
         "createdAt": "2019-10-31T13:06:17.676Z",
         "updatedAt": "2019-10-31T13:06:17.676Z",
         "role": "USER",
+        "provider": "local",
         "extraUserData": {
             "apps": []
         }
@@ -387,6 +398,7 @@ curl -X POST "https://api.resourcewatch.org/auth/reset-password/<email token>" \
     "provider": "local",
     "role": "ADMIN",
     "_id": "5dbadb0adf24534d1ad05dfb",
+    "id": "5dbadb0adf24534d1ad05dfb",
     "email": "test.user@example.com",
     "extraUserData": {
         "apps": [
@@ -434,8 +446,10 @@ curl -X GET "https://api.resourcewatch.org/auth/user"
 {
     "data": [
         {
-             "id": "5d2fadb3adf1dc74d2ad05dfb",
+            "id": "5d2fadb3adf1dc74d2ad05dfb",
+            "_id": "5d2fadb3adf1dc74d2ad05dfb",
             "email": "john.doe@vizzuality.com",
+            "provider": "local",
             "createdAt": "2019-10-31T13:00:58.191Z",
             "updatedAt": "2019-10-31T13:00:58.191Z",
             "role": "USER",
@@ -504,7 +518,9 @@ curl -X GET "https://api.resourcewatch.org/auth/user?role=ADMIN&app=gfw,rw"
 {
     "data": [
         {
-             "id": "5d2fadb3adf1dc74d2ad05dfb",
+            "id": "5d2fadb3adf1dc74d2ad05dfb",
+            "_id": "5d2fadb3adf1dc74d2ad05dfb",
+            "provider": "local",
             "email": "john.doe@vizzuality.com",
             "createdAt": "2019-10-31T13:00:58.191Z",
             "updatedAt": "2019-10-31T13:00:58.191Z",
@@ -557,6 +573,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user/me"
     "provider": "local",
     "role": "ADMIN",
     "_id": "5dbadb0adf24534d1ad05dfb",
+    "id": "5dbadb0adf24534d1ad05dfb",
     "email": "test.user@example.com",
     "extraUserData": {
         "apps": [
@@ -594,6 +611,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user/<user_id>"
     "provider": "local",
     "role": "ADMIN",
     "_id": "5dbadb0adf24534d1ad05dfb",
+    "id": "5dbadb0adf24534d1ad05dfb",
     "email": "test.user@example.com",
     "extraUserData": {
         "apps": [
@@ -639,6 +657,8 @@ curl -X PATCH "https://api.resourcewatch.org/auth/user/me"
 {
     "data": {
         "id": "57bc2611f098ce9800798688",
+        "_id": "57bc2611f098ce9800798688",
+        "provider": "local",
         "email": "test@example.com",
         "name": "new-name",
         "photo": "https://photo-url.com",
@@ -694,6 +714,8 @@ curl -X PATCH "https://api.resourcewatch.org/auth/user/57bc2611f098ce9800798688"
 {
     "data": {
         "id": "57bc2611f098ce9800798688",
+        "_id": "57bc2611f098ce9800798688",
+        "provider": "local",
         "email": "test@example.com",
         "name": "new-name",
         "photo": "https://photo-url.com",
@@ -743,6 +765,8 @@ curl -X DELETE "https://api.resourcewatch.org/auth/user/<user_id>"
 {
     "data": {
         "id": "57bc2611f098ce9800798688",
+        "_id": "57bc2611f098ce9800798688",
+        "provider": "local",
         "email": "test@example.com",
         "name": "new-name",
         "photo": "https://photo-url.com",
