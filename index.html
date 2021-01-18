@@ -17310,6 +17310,8 @@ If you are accessing these endpoints from a browser, it will typically generate 
 
 <p>Keep in mind that it&rsquo;s up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.</p>
 
+<p><strong>Deprecation notice:</strong> Throughout these endpoints, you&rsquo;ll notice that many API responses contain both <code class="prettyprint">id</code> and <code class="prettyprint">_id</code> (with and without an underscore prefix). Whenever both are present, they will always have the same value, and you should rely on <code class="prettyprint">id</code> (no prefix) - <code class="prettyprint">_id</code> is present for BC reasons, but should be considered deprecated, and will be removed in the near future. </p>
+
 <h2 id="user-management-and-applications">User management and applications</h2>
 
 <p>As we&rsquo;ve covered in previous sections, several RW API resources, like users, datasets or widgets, are associated with one or more applications. Applications are a way to identify the different tools that rely on the RW API, and are used to make resource management easier.</p>
@@ -17353,9 +17355,13 @@ If you are accessing these endpoints from a browser, it will typically generate 
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-email@provider.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-15T04:46:35.313Z"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-15T04:46:35.313Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w"> 
+    </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"rw"</span><span class="w">
@@ -17405,9 +17411,12 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-email@provider.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-27T10:59:03.531Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-27T10:59:03.531Z"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -17611,10 +17620,12 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadc495eae7358322dd64b"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadc495eae7358322dd64b"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info@vizzuality.com"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:06:17.676Z"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:06:17.676Z"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">}</span><span class="w">
@@ -17719,6 +17730,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
     </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADMIN"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.user@example.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -17781,8 +17793,10 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-             </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d2fadb3adf1dc74d2ad05dfb"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d2fadb3adf1dc74d2ad05dfb"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d2fadb3adf1dc74d2ad05dfb"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@vizzuality.com"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
@@ -17857,7 +17871,9 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-             </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d2fadb3adf1dc74d2ad05dfb"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d2fadb3adf1dc74d2ad05dfb"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d2fadb3adf1dc74d2ad05dfb"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@vizzuality.com"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="p">,</span><span class="w">
             </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="p">,</span><span class="w">
@@ -17940,6 +17956,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
     </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADMIN"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.user@example.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -17985,6 +18002,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
     </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADMIN"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.user@example.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -18042,6 +18060,8 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2611f098ce9800798688"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2611f098ce9800798688"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test@example.com"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-name"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://photo-url.com"</span><span class="p">,</span><span class="w">
@@ -18108,6 +18128,8 @@ Updating your account details may invalidate your token and cause your apps to s
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2611f098ce9800798688"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2611f098ce9800798688"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test@example.com"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-name"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://photo-url.com"</span><span class="p">,</span><span class="w">
@@ -18171,6 +18193,8 @@ Updating a user&rsquo;s account details may invalidate their token and cause the
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2611f098ce9800798688"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc2611f098ce9800798688"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test@example.com"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-name"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"photo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://photo-url.com"</span><span class="p">,</span><span class="w">
