@@ -10,6 +10,7 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
+  - tos
   - concept/overview
   - concept/dataset
   - concept/query

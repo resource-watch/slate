@@ -8,6 +8,7 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
+  - tos
   - tutorial/webdev_mapbox_quickstart/quickstart_webmap
   - tutorial/webdev_geometry_analysis/geometry_analysis
 
