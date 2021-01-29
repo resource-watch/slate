@@ -1,5 +1,5 @@
 ---
-title: RW API Reference
+title: Resource Watch API Reference
 app: rw
 language_tabs:
   - shell: cURL
@@ -10,16 +10,6 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - concept/overview
-  - concept/dataset
-  - concept/query
-  - concept/layer
-  - concept/widget
-  - concept/metadata
-  - concept/vocabulary
-  - concept/geostore
-  - concept/area
-  - concept/graph
   - api/authentication
   - api/contact
   - api/dataset
@@ -53,7 +43,3 @@ logo: logo-rw.png
 
 search: true
 ---
-
-<aside class="notice">
-  All use of the Resource Watch API is governed by the Resource Watch <a href="https://resourcewatch.org/terms-of-service" target="_blank">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements" target="_blank">API Attribution Requirements</a>.
-</aside>

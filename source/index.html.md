@@ -10,45 +10,9 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - concept/overview
-  - concept/dataset
-  - concept/query
-  - concept/layer
-  - concept/widget
-  - concept/metadata
-  - concept/vocabulary
-  - concept/geostore
-  - concept/area
-  - concept/graph
-  - api/authentication
-  - api/contact
-  - api/dataset
-  - api/fields
-  - api/query
-  - api/layer
-  - api/widget
-  - api/collections
-  - api/jiminy
-  - api/forms
-  - api/metadata
-  - api/vocabulary
-  - api/geostore
-  - api/subscriptions
-  - api/favourites
-  - api/graph
-  - api/areas
-  - api/areas_v2
-  - api/webshot
-  - api/topic
-  - api/dashboard
-  - api/static_pages
-  - api/tasks
-  - api/user_management
-  - api/microservices
-  - api/troubleshooting
-  - errors
-  - attribution
+  - intro/intro
 
+logo: logo-rw.png
 
 search: true
 ---
