@@ -11,7 +11,8 @@ toc_footers:
 
 includes:
   - tos
-  - concept/overview
+  - concept/intro
+  - back
   - concept/dataset
   - concept/query
   - concept/layer

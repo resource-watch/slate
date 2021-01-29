@@ -1,5 +1,5 @@
 ---
-title: API Reference
+title: Resource Watch API Documentation
 
 language_tabs:
   - shell: cURL

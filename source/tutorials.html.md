@@ -9,6 +9,8 @@ toc_footers:
 
 includes:
   - tos
+  - tutorial/intro
+  - back
   - tutorial/webdev_mapbox_quickstart/quickstart_webmap
   - tutorial/webdev_geometry_analysis/geometry_analysis
 
@@ -17,7 +19,4 @@ logo: logo-rw.png
 search: true
 ---
 
-# Introduction
-
-This documentation hosts guided tutorials and how-to's for building products and analyes with the Resource Watch API and other technology.
 

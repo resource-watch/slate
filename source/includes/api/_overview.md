@@ -10,9 +10,7 @@ The RW API is [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) 
 
 For readability, URLs and query parameters may be displayed without escaping/encoding, but be sure to encode your URLs before issuing a request to the API, or it may produce undesired results. If you are using the RW API to build your own application, there's probably a library out there that does this for you automatically.
 
-In these examples, you'll also find references to a `Authorization: Bearer <your-token>` HTTP header. You can find more details about tokens in the [authentication](#authentication) section, which you should read before you get started.   
-
-Last but not least, the RW API and its docs are made by humans, who will occasionally make mistakes. If you find something that you think is incorrect, could be improved, if you want to contribute yourself, or just want to say "thank you", you can reach us through [the RW API documentation Github project page](https://github.com/resource-watch/doc-api).
+In these examples, you'll also find references to a `Authorization: Bearer <your-token>` HTTP header. You can find more details about tokens in the [authentication](#authentication) section, which you should read before you get started.
 
 
 ## Before you get started
@@ -414,5 +412,3 @@ The following endpoints adhere to the pagination conventions defined above:
 * [Tasks service](/index-rw.html#tasks)
 * [Users service](/index-rw.html#user-management)
 * [Widgets service](/index-rw.html#widget7)
-
-# Concepts
