@@ -149,11 +149,11 @@ Successful login page for HTML requests. Not supported on JSON requests.
 
 ### GET `<BASE API URL>/auth/logout`
 
-Login invalidation endpoint. Only invalidates the session cookie set on login. If using JWT token based authentication, this endpoint will NOT invalidate the token.
+Login invalidation endpoint. Only invalidates the session cookie set on login. If using JSON Web Token based authentication, this endpoint will NOT invalidate the token.
 
 ### GET `<BASE API URL>/auth/generate-token`
 
-> Generate the user's JWT token
+> Generate the user's JSON Web Token
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/auth/generate-token" \
@@ -168,7 +168,7 @@ curl -X GET "https://api.resourcewatch.org/auth/generate-token" \
 }
 ```
 
-Generates a JWT token for the current user session. This is useful when using the HTML UI through a browser, where a session is established using a cookie returned on login. This cookie authenticates the user, and allows retrieving the token.
+Generates a JSON Web Token for the current user session. This is useful when using the HTML UI through a browser, where a session is established using a cookie returned on login. This cookie authenticates the user, and allows retrieving the token.
 
 **Errors**
 
@@ -205,7 +205,7 @@ Keep in mind that, depending on the `origin` application you specify, different 
 
 - GET `<BASE API URL>/auth/apple` - Starts authentication using the configured Apple settings
 - POST `<BASE API URL>/auth/apple/callback` - Callback used once Apple auth is done
-- GET `<BASE API URL>/auth/apple/token?access_token=<Apple JWT token>` - Endpoint that expects the Apple JWT token obtained by the user while authenticating using another application. It validates that token using Apple's services, and if valid, creates/updates the user's RW API account. It returns a RW API JWT token.
+- GET `<BASE API URL>/auth/apple/token?access_token=<Apple JSON Web Token>` - Endpoint that expects the Apple JSON Web Token obtained by the user while authenticating using another application. It validates that token using Apple's services, and if valid, creates/updates the user's RW API account. It returns a RW API JSON Web Token.
 
 ## Registration
 

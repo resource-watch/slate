@@ -13,7 +13,6 @@ includes:
   - tos
   - api/intro
   - back
-  - api/overview
   - api/authentication
   - api/contact
   - api/dataset

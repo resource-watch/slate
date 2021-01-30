@@ -191,7 +191,7 @@ It's worth pointing out that endpoints that retrieve a resource by id typically 
 
 ### User roles
 
-RW API users have a role associated with it, defined in the `role` field of each user. You can check your own role by consulting your user information using the [`GET /users/me` endpoint](/index-rw.html#get-the-current-user) or getting a JWT token and decoding its information. The `role` of the user is defined as a string, and it can take one of the following values:
+RW API users have a role associated with it, defined in the `role` field of each user. You can check your own role by consulting your user information using the [`GET /users/me` endpoint](/index-rw.html#get-the-current-user) or getting a JSON Web Token and decoding its information. The `role` of the user is defined as a string, and it can take one of the following values:
 
 * `USER`
 * `MANAGER`

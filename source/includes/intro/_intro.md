@@ -10,9 +10,15 @@ The RW API is a set of common back-end backend services used to power a number o
 
 # How these docs are organized
 
+## Getting Started
+
+The [Quickstart guide](/quickstart.html) will get you up and running with the RW API. In it, you will learn how to create an account, get your JSON Web Token for authentication, and make a test request.
+  
+If you're new to the API, this is the place to start!
+
 ## Concepts
 
-[Concepts](/concepts.html) discusses the key features of the RW API at a high level, providing motivation and background for individual features and how they work together. If you're new to the API, this is the place to start!
+[Concepts](/concepts.html) discusses the key features of the RW API at a high level, providing motivation and background for individual features and how they work together.
 
 ## Reference
 
