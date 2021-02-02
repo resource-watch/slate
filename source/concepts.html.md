@@ -1,5 +1,5 @@
 ---
-title: Resource Watch API Concepts
+title: Concepts - Resource Watch API
 app: rw
 language_tabs:
   - shell: cURL

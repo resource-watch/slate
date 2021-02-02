@@ -315,7 +315,7 @@ Alternatively you may prefer to get selected geometries from the datasets alread
 
 ### Get a geostore object by Geostore id
 
-Geostore objects can be retrieved via the GET `geostore/:id` endpoint, which returns a single object selected from the Geostore using a single [Geostore id](/concept.html#geostore) (`<id>`).
+Geostore objects can be retrieved via the GET `geostore/:id` endpoint, which returns a single object selected from the Geostore using a single [Geostore id](/concepts.html#geostore) (`<id>`).
 
 > Example request pattern
 

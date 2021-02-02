@@ -1,5 +1,5 @@
 ---
-title: Resource Watch API Tutorials
+title: Tutorials - Resource Watch API
 app: rw
 
 toc_footers:

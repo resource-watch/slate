@@ -1,5 +1,5 @@
 ---
-title: Resource Watch API Quickstart
+title: Quickstart - Resource Watch API
 
 language_tabs:
   - shell: cURL

@@ -691,7 +691,7 @@ curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<laye
 }'
 ```
 
-The update layer endpoint allows you to modify the details of an existing layer. As noted on the [layer concept](/concept.html#layer) documentation, the layer object stores the details of how layer is meant to be rendered, but does not contain the actual data. As such, if you are looking to update the data that's being displayed on your map, this is probably not the endpoint you're looking for - you may want to [update your dataset](/reference.html#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
+The update layer endpoint allows you to modify the details of an existing layer. As noted on the [layer concept](/concepts.html#layer) documentation, the layer object stores the details of how layer is meant to be rendered, but does not contain the actual data. As such, if you are looking to update the data that's being displayed on your map, this is probably not the endpoint you're looking for - you may want to [update your dataset](/reference.html#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
 
 Unless specified otherwise in their description, all the fields present in the [layer reference](/reference.html#layer-reference) section can be updated using this endpoint. When passing new values for Object type fields, the new value will fully overwrite the previous one. It’s up to you, as an API user, to build any merging logic into your application.
 

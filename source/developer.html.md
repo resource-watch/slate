@@ -1,5 +1,5 @@
 ---
-title: RW API Developer docs
+title: Developer Docs - Resource Watch API
 app: rw
 language_tabs:
   - shell: cURL

@@ -2,7 +2,7 @@
 # THIS IS A LEGACY LANDING PAGE
 # It just redirects to the main documentation page
 
-title: Resource Watch API Reference
+title: Reference - Resource Watch API
 
 ---
 

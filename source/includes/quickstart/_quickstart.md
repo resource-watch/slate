@@ -142,7 +142,7 @@ Now you're ready to make your first request!
 
 Try making the request you see on the right. Don't forget to replace `your token` with the JWT you generated in the previous step.
 
-In this example, you are requesting your own user information using the `/auth/user/me` endpoint of the API.
+In this example, you are requesting your own user information using the [`/auth/user/me` endpoint](/reference.html#get-the-current-user) of the API.
 
 > Sample user information response
 
