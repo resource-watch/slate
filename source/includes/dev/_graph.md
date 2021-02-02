@@ -1,6 +1,6 @@
 # Graph
 
-The interaction with some of the graph endpoints is restricted to other RW API services - the following sections describe these endpoints. Keep in mind user-facing graph endpoints are described in detail in the [graph endpoint documentation](/reference.html#graph). The [graph concept docs](/reference.html#concepts) might also be a useful resource for learning what the RW API graph is and what it has to offer you.
+The interaction with some of the graph endpoints is restricted to other RW API services - the following sections describe these endpoints. Keep in mind user-facing graph endpoints are described in detail in the [graph endpoint documentation](/reference.html#graph). The [graph concept docs](/concepts.html#graph) might also be a useful resource for learning what the RW API graph is and what it has to offer you.
 
 ## Creating dataset graph nodes
 
@@ -77,7 +77,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/metadata/:resourceType/:idRe
 -H "Content-Type: application/json"
 ```
 
-This endpoint creates a graph node for the metadata with id provided in the URL path. As you might have come across in the [Metadata endpoint documentation](#metadata12), metadata is always associated with either a dataset, layer, or widget. So, when creating a graph node for a metadata entry, you must also provide the resource type (dataset, layer, or widget) and its corresponding id. 
+This endpoint creates a graph node for the metadata with id provided in the URL path. As you might have come across in the [Metadata endpoint documentation](/reference.html#metadata10), metadata is always associated with either a dataset, layer, or widget. So, when creating a graph node for a metadata entry, you must also provide the resource type (dataset, layer, or widget) and its corresponding id. 
 
 Calling this endpoint will also create a graph edge connecting the newly created metadata graph node to the graph node for the resource (dataset, layer, or widget) associated with it.
 
