@@ -158,7 +158,7 @@ curl -X GET https://api.resourcewatch.org/v1/doc-importer/task
 curl -X GET https://api.resourcewatch.org/v1/doc-importer/task?page[number]=2&page[size]=25
 ```
 
-The Tasks service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your tasks list.
+The Tasks service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your tasks list.
 
 ### Filter params
 

@@ -10,7 +10,7 @@ In the following sections, we will cover how you can interact and manage subscri
 
 ## Subscription lifecycle
 
-In this section, you will learn about the lifecycle of a subscription. This will help you understand how you can best use subscriptions to meet your goals. The first step for using subscriptions is understanding which data you want to subscribe - for this, we recommend [searching the existing datasets](/index-rw.html#getting-all-datasets) in the WRI API (or maybe even [creating a new one](/index-rw.html#creating-a-dataset)). Once you are certain of the dataset you wish to subscribe, the next step is ensuring that this dataset is subscribable.
+In this section, you will learn about the lifecycle of a subscription. This will help you understand how you can best use subscriptions to meet your goals. The first step for using subscriptions is understanding which data you want to subscribe - for this, we recommend [searching the existing datasets](/reference.html#getting-all-datasets) in the WRI API (or maybe even [creating a new one](/reference.html#creating-a-dataset)). Once you are certain of the dataset you wish to subscribe, the next step is ensuring that this dataset is subscribable.
 
 ### Subscribable datasets
 
@@ -171,8 +171,8 @@ The `v1/subscriptions` endpoint supports the following optional query parameters
 
 Field       |  Description                                             | Type   | Default value
 ----------- | :------------------------------------------------------: | -----: | ---------------:
-application | Application to which the subscription is associated. Read more about this field [here](/index-rw.html#applications). | String | 'gfw'
-env         | The environment to which the subscription is associated. Read more about this field in the [Environments concept section](/index-rw.html#environments). | String | 'production'
+application | Application to which the subscription is associated. Read more about this field [here](/reference.html#applications). | String | 'gfw'
+env         | The environment to which the subscription is associated. Read more about this field in the [Environments concept section](/reference.html#environments). | String | 'production'
 
 **Deprecation notice:** the default value for the `application` filter (currently, `gfw`) will be removed and the `application` filter will then have no default value. We recommend reviewing your application to ensure you set and load the correct `application` explicitly.
 
@@ -296,7 +296,7 @@ Error code     | Error message                       | Description
 You will need to provide the dataset ids to which your subscription will watch for updates. In order to do so, you'll need to provide one of two fields when creating a subscription:
 
 * `datasets` - this field is a simple array of dataset ids. Each dataset will be individually evaluated for updates, and it will trigger an email if the `subscriptionsQuery` returns greater than 0.
-* `datasetsQuery` is an alternative way of defining the datasets to subscribe: using this field, you have the advantage of being able to define a different threshold for sending the email (i.e. the email is sent if the `subscriptionQuery` returns a count greater than the threshold defined in the `datasetsQuery` object). For more details on the structure of the objects inside `datasetsQuery`, please check the [subscription model reference](/index-rw.html#subscription-reference).
+* `datasetsQuery` is an alternative way of defining the datasets to subscribe: using this field, you have the advantage of being able to define a different threshold for sending the email (i.e. the email is sent if the `subscriptionQuery` returns a count greater than the threshold defined in the `datasetsQuery` object). For more details on the structure of the objects inside `datasetsQuery`, please check the [subscription model reference](/reference.html#subscription-reference).
 
 ### Customizing the geographic area for the subscription
 
@@ -766,7 +766,7 @@ Field       |             Description                                           
 ----------- | :----------------------------------------------------------------------------------: | -----: | ------: | ---------: |
 start       | The start of the date range to fetch the statistics. **This parameter is required.** | String | None    | 01-01-2020 |
 end         | The end of the date range to fetch the statistics. **This parameter is required.**   | String | None    | 02-20-2020 |
-application | The application for which the statistics will be fetched. Read more about this field [here](/index-rw.html#applications). | String | 'gfw'   | 'rw'       |
+application | The application for which the statistics will be fetched. Read more about this field [here](/reference.html#applications). | String | 'gfw'   | 'rw'       |
 
 ### Grouped subscription statistics
 
@@ -838,7 +838,7 @@ Field       |             Description                                           
 ----------- | :----------------------------------------------------------------------------------: | -----: | ------: | ---------: |
 start       | The start of the date range to fetch the statistics. **This parameter is required.** | String | None    | 01-01-2020 |
 end         | The end of the date range to fetch the statistics. **This parameter is required.**   | String | None    | 02-20-2020 |
-application | The application for which the statistics will be fetched. Read more about this field [here](/index-rw.html#applications). | String | 'gfw'   | 'rw'       |
+application | The application for which the statistics will be fetched. Read more about this field [here](/reference.html#applications). | String | 'gfw'   | 'rw'       |
 
 ## Subscription reference
 
@@ -864,7 +864,7 @@ datasetsQuery[0].lastSentDate | Date     | No    | (auto-generated)    | This va
 params           | Object  | No                  | `{}`                | Determines the area of interest that this subscription should track. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).
 userId           | String  | Yes                 | (auto-populated)    | Id of the user who owns the subscription. Set automatically on creation. Cannot be modified by users.
 language         | String  | No                  | `'en'`              | The language for this subscription. Useful for customizing email notifications according to the language of the subscription. Possible values include `'en'`, `'es'`, `'fr'`, `'pt'` or `'zh'`.
-application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription. Read more about this field [here](/index-rw.html#applications).
-env              | String  | Yes                 | `'production'`      | Environment to which the subscription belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).
+application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription. Read more about this field [here](/reference.html#applications).
+env              | String  | Yes                 | `'production'`      | Environment to which the subscription belongs. Read more about this field in the [Environments concept section](/reference.html#environments).
 createdAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was created. Cannot be modified by users.
 updatedAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was last updated. Cannot be modified by users.

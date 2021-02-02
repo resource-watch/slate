@@ -6,7 +6,7 @@ If you are new to the RW API, or want to learn more about the concept of a geost
 
 Once you've read that section, you can come back here to learn more details about using the RW API Geostore feature, which aims to provide a comprehensive way to communicate geographic vector-data structures described using [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) between platforms and microservices.
 
-[Geostore objects](/index-rw.html#what-are-geostore-objects), describing things like the boundaries of countries, protected areas or land use types, have been uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you. They are particularly useful for combining with the range of [datasets](#dataset) available in the RW API, for example to create national summaries or for making a specific analysis within your own user-defined region.
+[Geostore objects](/reference.html#what-are-geostore-objects), describing things like the boundaries of countries, protected areas or land use types, have been uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you. They are particularly useful for combining with the range of [datasets](#dataset) available in the RW API, for example to create national summaries or for making a specific analysis within your own user-defined region.
 
 To find out more about accessing the geostore objects already available on the RW API, check out the documentation on [getting geostore objects](#getting-geostore-objects). A quick, visual way to view an existing geostore is by using the [`/geostore/:id/view`](#get-geostore-by-geostore-id-and-view-at-geojson-io) endpoint.
 
@@ -62,17 +62,17 @@ As these data sets are periodically updated, these "helper" endpoints are update
 
 | Method | Path                                | Description                                                                   |
 |--------|-------------------------------------|------------------------------------------------------------------------------ |
-| POST   | `/v1/geostore`                      | [Create a geostore object](/index-rw.html#create-a-geostore-object)                         |
-| GET    | `/v2/geostore/:id`                  | [Get a geostore object by Geostore id](/index-rw.html#get-a-geostore-object-by-geostore-id) |
-| POST   | `/v2/geostore/find-by-ids`          | [Get geostore objects by Geostore ids](/index-rw.html#get-geostore-objects-by-geostore-ids) |
-| GET    | `/v2/geostore/:id/view`             | [Get a geostore object by Geostore id and view at GeoJSON.io](/index-rw.html#get-geostore-by-geostore-id-and-view-at-geojson-io) |
-| GET    | `/v2/geostore/admin/list`           | [Get all Geostore ids, names and country codes](/index-rw.html#get-all-geostore-ids-names-and-country-codes) |
-| GET    | `/v2/geostore/admin/:iso`           | [Get a geostore object by country code](/index-rw.html#get-geostore-by-country-code)                    |
-| GET    | `/v2/geostore/admin/:iso/:id1`      | [Get a geostore object by country code and GADM admin 1 id](/index-rw.html#get-geostore-by-country-code-and-gadm-admin-1-id) |
-| GET    | `/v2/geostore/admin/:iso/:id1/:id2` | [Get a geostore object by country code, GADM admin 1 and admin 2 ids](/index-rw.html#get-geostore-by-country-code-gadm-admin-1-and-admin-2-ids) |
-| GET    | `/v2/geostore/wdpa/:id`             | [Get a geostore object by WDPA id](/index-rw.html#get-geostore-by-world-database-on-protected-areas-id)         |
-| GET    | `/v2/geostore/use/:name/:id`        | [Get a geostore object by Land Use Type name and id](/index-rw.html#get-geostore-by-land-use-type-keyword-and-id) |
-| POST   | `/v1/geostore/area`                 | [Calculate the area of a provided Geostore object](/index-rw.html#calculate-the-area-of-a-geostore-object) |
+| POST   | `/v1/geostore`                      | [Create a geostore object](/reference.html#create-a-geostore-object)                         |
+| GET    | `/v2/geostore/:id`                  | [Get a geostore object by Geostore id](/reference.html#get-a-geostore-object-by-geostore-id) |
+| POST   | `/v2/geostore/find-by-ids`          | [Get geostore objects by Geostore ids](/reference.html#get-geostore-objects-by-geostore-ids) |
+| GET    | `/v2/geostore/:id/view`             | [Get a geostore object by Geostore id and view at GeoJSON.io](/reference.html#get-geostore-by-geostore-id-and-view-at-geojson-io) |
+| GET    | `/v2/geostore/admin/list`           | [Get all Geostore ids, names and country codes](/reference.html#get-all-geostore-ids-names-and-country-codes) |
+| GET    | `/v2/geostore/admin/:iso`           | [Get a geostore object by country code](/reference.html#get-geostore-by-country-code)                    |
+| GET    | `/v2/geostore/admin/:iso/:id1`      | [Get a geostore object by country code and GADM admin 1 id](/reference.html#get-geostore-by-country-code-and-gadm-admin-1-id) |
+| GET    | `/v2/geostore/admin/:iso/:id1/:id2` | [Get a geostore object by country code, GADM admin 1 and admin 2 ids](/reference.html#get-geostore-by-country-code-gadm-admin-1-and-admin-2-ids) |
+| GET    | `/v2/geostore/wdpa/:id`             | [Get a geostore object by WDPA id](/reference.html#get-geostore-by-world-database-on-protected-areas-id)         |
+| GET    | `/v2/geostore/use/:name/:id`        | [Get a geostore object by Land Use Type name and id](/reference.html#get-geostore-by-land-use-type-keyword-and-id) |
+| POST   | `/v1/geostore/area`                 | [Calculate the area of a provided Geostore object](/reference.html#calculate-the-area-of-a-geostore-object) |
 
 ## Create a geostore object
 

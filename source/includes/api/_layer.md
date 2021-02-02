@@ -273,7 +273,7 @@ Please note that, unlike [getting all layers](#getting-all-layers) or [getting a
 curl -X GET "https://api.resourcewatch.org/v1/layer?page[number]=2&page[size]=25"
 ```
 
-The Layers service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your layers list.
+The Layers service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your layers list.
 
 ### Filters
 
@@ -309,7 +309,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?env=staging"
 curl -X GET "https://api.resourcewatch.org/v1/layer?app=rw"
 ```
 
-The layer list endpoint provides a wide range of filters that you can use to tailor your layer listing. Filtering layers adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you will be able to use the great majority of the layer fields you'll find on the [layer reference](#layer-reference) section, with the following exceptions:
+The layer list endpoint provides a wide range of filters that you can use to tailor your layer listing. Filtering layers adheres to the conventions defined in the [Filter guidelines for the RW API](/reference.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you will be able to use the great majority of the layer fields you'll find on the [layer reference](#layer-reference) section, with the following exceptions:
 
 - `id`
 - `userName`
@@ -347,7 +347,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?sort=-name,+slug"
 curl -X GET "https://api.resourcewatch.org/v1/layer?sort=user.role"
 ```
 
-The Layer service currently supports sorting using the `sort` query parameter. Sorting layer adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Layer reference](#layer-reference) section for a detailed description of the fields you can use when sorting. In addition to all layer model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the layer. Keep in mind that sorting by user data is restricted to ADMIN users.
+The Layer service currently supports sorting using the `sort` query parameter. Sorting layer adheres to the conventions defined in the [Sorting guidelines for the RW API](/reference.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Layer reference](#layer-reference) section for a detailed description of the fields you can use when sorting. In addition to all layer model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the layer. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 ### Include entities associated with the layers
 
@@ -652,7 +652,7 @@ In this section we'll guide you through the process of creating a layer in the R
 Before creating a layer, there are a few things you must know and do:
 
 - In order to be able to create a layer, you need to be [authenticated](#authentication).
-- Depending on your user account's role, you may have permission to create a layer but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- Depending on your user account's role, you may have permission to create a layer but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 - The layers you create on the RW API will be publicly visible and available to other users.
 
 Creating a layer is done using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [layer reference](#layer-reference) section, but the minimum field list you must specify for all layers is:
@@ -698,7 +698,7 @@ Unless specified otherwise in their description, all the fields present in the [
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the layer
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 
 #### Errors for updating a layer
 
@@ -763,7 +763,7 @@ In order to delete a layer, the following conditions must be met:
 
 - the layer's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the layer.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 
 #### Errors for deleting a layer
 
@@ -789,7 +789,7 @@ name                    | String         | Yes                  |               
 dataset                 | String         | Yes                  |                            | Id of the dataset to which the layer corresponds. Set on layer creation, cannot be modified.   
 slug                    | String         | Yes (autogenerated)  |                            | Slug of the layer. Auto generated on creation. Cannot be modified by users.  
 description             | String         | No                   |                            | User defined description of the layer.   
-application             | Array          | Yes                  |                            | Applications associated with this layer. Read more about this field [here](/index-rw.html#applications).
+application             | Array          | Yes                  |                            | Applications associated with this layer. Read more about this field [here](/reference.html#applications).
 iso                     | Array          | No                   |                            | List of ISO3 codes of the countries that relate to the layer. If empty (or contains a single element: 'global') then the layer is a global layer.
 provider                | String         | No                   |                            | Layer provider. It typically identifies the source service for the data displayed in the layer.
 type                    | String         | No                   |                            | Layer type.
@@ -797,7 +797,7 @@ userId                  | String         | Yes (autopopulated)  |               
 default                 | Boolean        | No                   | false                      | If the layer should be used as the dataset's default layer.
 protected               | Boolean        | Yes                  | false                      | If the layer is protected. A protected layer cannot be deleted.               
 published               | Boolean        | Yes                  | true                       | If the layer is published or not.                                               
-env                     | String         | Yes                  | production                 | Environment to which the layer belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).
+env                     | String         | Yes                  | production                 | Environment to which the layer belongs. Read more about this field in the [Environments concept section](/reference.html#environments).
 applicationConfig       | Object         | No                   |                            | Schema-less object meant to host application-specific data or behavior configuration.
 layerConfig             | Object         | No                   |                            | Schema-less object meant to define layer specific data, like source of data, styling and animation settings.
 legendConfig            | Object         | No                   |                            | Schema-less object meant to define how a layer legend should be represented visually.

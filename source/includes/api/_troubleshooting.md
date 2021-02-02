@@ -17,7 +17,7 @@ If you are sure you have an up-to-date token but are still experiencing `401 Una
 
 A `403 Forbidden` error means that you are identified as a valid user, but you do not have the required permissions for the action you are trying to perform. Common scenarios where this happens are:
 - You do not have the required user `ROLE` to carry out that operation.
-- You may be trying to operate on a resource that belongs to a different `application` than the ones you are associated with. Read more about how the `application` field works [here](/index-rw.html#applications).
+- You may be trying to operate on a resource that belongs to a different `application` than the ones you are associated with. Read more about how the `application` field works [here](/reference.html#applications).
 - Certain resources have a concept of `owner` with certain actions being exclusively available to that particular user.
 
 Check the specific documentation for the endpoint you are trying to use for more details on its behavior. Conditions that trigger a `403 Forbidden` error will often vary beyond the ones listed above.

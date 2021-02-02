@@ -27,7 +27,7 @@ Field          | Description                                                    
 `page[size]`   | The number elements per page. **Values above 100 are not officially supported.** | Number | 10
 `page[number]` | The page number.                                                                 | Number | 1
 
-Keep in mind that, to work predictably, **you must always specify sorting criteria when fetching paginated results**. If sorting criteria is not provided, the overall order of the elements might change between requests. Pagination will still work, but the actual content of the pages might show missing and/or duplicate elements. Refer to the [general sorting guidelines](/index-rw.html#sorting) and the sorting section for the RW API resource you're loading for details on sorting options available for that resource type.
+Keep in mind that, to work predictably, **you must always specify sorting criteria when fetching paginated results**. If sorting criteria is not provided, the overall order of the elements might change between requests. Pagination will still work, but the actual content of the pages might show missing and/or duplicate elements. Refer to the [general sorting guidelines](/concepts.html#sorting) and the sorting section for the RW API resource you're loading for details on sorting options available for that resource type.
 
 Once again, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the pagination strategy. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on how to correctly paginate your list requests.
 
@@ -88,12 +88,12 @@ Paginated responses return a JSON object containing 3 data structures:
 
 The following endpoints adhere to the pagination conventions defined above:
 
-* [Areas service](/index-rw.html#areas)
-* [Areas v2 service](/index-rw.html#areas-v2)
-* [Collections service](/index-rw.html#collections)
-* [Dashboards service](/index-rw.html#dashboard)
-* [Datasets service](/index-rw.html#dataset4)
-* [Layers service](/index-rw.html#layer6)
-* [Tasks service](/index-rw.html#tasks)
-* [Users service](/index-rw.html#user-management)
-* [Widgets service](/index-rw.html#widget7)
+* [Areas service](/reference.html#areas)
+* [Areas v2 service](/reference.html#areas-v2)
+* [Collections service](/reference.html#collections)
+* [Dashboards service](/reference.html#dashboard)
+* [Datasets service](/reference.html#dataset)
+* [Layers service](/reference.html#layer)
+* [Tasks service](/reference.html#tasks)
+* [Users service](/reference.html#user-management)
+* [Widgets service](/reference.html#widget)

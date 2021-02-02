@@ -22,9 +22,9 @@ Besides authentication, user accounts are also used for authorization. Authoriza
 
 `id` is a unique identifier of your account. Certain actions may be limited to specific users, typically in the context of a given resource being associated directly with a specific user `id`.
 
-`role` can be one of 3 values: `USER`, `MANAGER` and `ADMIN` and it is usually used for role-based access control - read more about this field in the [User roles concept documentation](/index-rw.html#user-roles).
+`role` can be one of 3 values: `USER`, `MANAGER` and `ADMIN` and it is usually used for role-based access control - read more about this field in the [User roles concept documentation](/reference.html#user-roles).
 
-`application` is a list of keys meant to identify the different client applications that are built using the RW API. It's present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping `application` value. You can find out more about how the `application` field works [here](/index-rw.html#applications).
+`application` is a list of keys meant to identify the different client applications that are built using the RW API. It's present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping `application` value. You can find out more about how the `application` field works [here](/reference.html#applications).
 
 Keep in mind that it's up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.
 
@@ -492,7 +492,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user?page[number]=2&page[size]=2
 -H "Authorization: Bearer <your-token>" \
 ```
 
-The Users service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your users list.
+The Users service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your users list.
 
 #### Filters
 
@@ -546,7 +546,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user?role=ADMIN&app=gfw,rw"
 }
 ```
 
-The users list provides a set of parameters that you can use to tailor your users listing. Please note that filtering users adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. in addition to these conventions, you can use the following fields as filters supported by the users list endpoint:
+The users list provides a set of parameters that you can use to tailor your users listing. Please note that filtering users adheres to the conventions defined in the [Filter guidelines for the RW API](/reference.html#filtering), so we strongly recommend reading that section before proceeding. in addition to these conventions, you can use the following fields as filters supported by the users list endpoint:
 
 Filter         | Description                                                                  | Type        | Expected values
 -------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------

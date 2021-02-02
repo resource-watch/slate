@@ -98,13 +98,13 @@ curl -X GET "https://api.resourcewatch.org/v1/dataset?env=production&application
 }
 ```
 
-Most of the resources on the RW API are publicly available, and do not require any authentication. For example, to the right is a simple call to the `/dataset` endpoint, and it  returns the list of all of the datasets that are registered with the API as part of the Resource Watch application. In fact, if you go to the Resource Watch [Explore page](https://resourcewatch.org/data/explore) and open the developer console, you will find this is very similar to the call that the Resource Watch application makes to populate the left sidebar with datasets.
+Most of the resources on the RW API are publicly available, and do not require any authentication. For example, to the right is a simple call to the `/dataset` endpoint, and it  returns the list of all of the datasets that are registered with the API as part of the Resource Watch application. In fact, if you go to the [Resource Watch Explore page](https://resourcewatch.org/data/explore) and open the developer console, you will find this is very similar to the call that the Resource Watch application makes to populate the left sidebar with datasets.
 
 Note: When you make a request to a public endpoint, you _may_ pass your JWT in the `Authorization` header, but it will not affect the response.
 
 ## 2. Create an account with the RW API
 
-In order to make authenticated requests, you first need to create an account with the RW API. To do so, go to the [login](https://api.resourcewatch.org/auth/login) page and register. You can log in using an existing Facebook, Google, or Apple account, or you can register with an email and password.
+In order to make authenticated requests, you first need to create an account with the RW API. To do so, go to the [login page](https://api.resourcewatch.org/auth/login) and register. You can log in using an existing Facebook, Google, or Apple account, or you can register with an email and password.
 
 If you create a new user account using an email and password, a confirmation link will be sent to the email address you provided. You must click this confirmation link in order to activate your account.
 
@@ -114,7 +114,7 @@ After you login, you should see the following message in your browser:
 
 ## 3. Obtain your JWT for authentication
 
-> Sample response from `/auth/generate-token`
+> Sample response from `https://api.resourcewatch.org/auth/generate-token`
 
 ```json
 {

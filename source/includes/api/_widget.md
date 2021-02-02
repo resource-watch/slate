@@ -223,7 +223,7 @@ Please note that, unlike [getting all widgets](#getting-all-widgets) or [getting
 curl -X GET "https://api.resourcewatch.org/v1/widget?page[number]=2&page[size]=25"
 ```
 
-The Widgets service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your widgets list.
+The Widgets service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your widgets list.
 
 ### Filters
 
@@ -259,7 +259,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?env=staging"
 curl -X GET "https://api.resourcewatch.org/v1/widget?app=rw@prep"
 ```
 
-The widget list endpoint provides a wide range of filters that you can use to tailor your widget listing. Filtering widgets adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you'll be able to use the great majority of the widget fields you'll find on the [widget reference](#widget-reference), with the following exceptions:
+The widget list endpoint provides a wide range of filters that you can use to tailor your widget listing. Filtering widgets adheres to the conventions defined in the [Filter guidelines for the RW API](/reference.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you'll be able to use the great majority of the widget fields you'll find on the [widget reference](#widget-reference), with the following exceptions:
 
 - `id`
 - `userName`
@@ -296,7 +296,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?sort=-name,+slug"
 curl -X GET "https://api.resourcewatch.org/v1/widget?sort=user.role"
 ```
 
-The Widget service currently supports sorting using the `sort` query parameter. Sorting widgets adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Widget reference](#widget-reference) section for a detailed description of the fields you can use when sorting. In addition to all widget model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the widget. Keep in mind that sorting by user data is restricted to ADMIN users.
+The Widget service currently supports sorting using the `sort` query parameter. Sorting widgets adheres to the conventions defined in the [Sorting guidelines for the RW API](/reference.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Widget reference](#widget-reference) section for a detailed description of the fields you can use when sorting. In addition to all widget model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the widget. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 ### Include entities associated with the widgets
 
@@ -780,7 +780,7 @@ In this section we'll guide you through the process of creating a widget in the 
 Before creating a widget, there are a few things you must know and do:
 
 - In order to be able to create a widget, you need to be [authenticated](#authentication).
-- Depending on your user account's role, you may have permission to create a widget but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- Depending on your user account's role, you may have permission to create a widget but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 - The widgets you create on the RW API will be publicly visible and available to other users.
 
 Creating a widget is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [widget reference](#widget-reference) section, but the minimum field list you must specify for all widgets is:
@@ -1077,7 +1077,7 @@ In order to delete a widget, the following conditions must be met:
 
 - the widget's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the widget.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 
 ## Widget reference
 
@@ -1098,9 +1098,9 @@ sourceUrl               | String         | No                   |               
 authors                 | String         | No                   |                            | Author or authors of the data displayed on the widget, as it's meant to be displayed to the end user.
 queryUrl                | String         | No                   |                            | URL of the RW API query or external URL containing the data displayed on the widget
 thumbnailUrl            | String         | No                   |                            | URL of a example thumbnail of the rendered widget.
-env                     | String         | Yes                  | production                 | Environment to which the widget belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).
+env                     | String         | Yes                  | production                 | Environment to which the widget belongs. Read more about this field in the [Environments concept section](/reference.html#environments).
 widgetConfig            | Object         | No                   |                            | Schema-less object meant to host widget behavior configuration.
-application             | Array          | Yes                  |                            | Applications associated with this widget. Read more about this field [here](/index-rw.html#applications).
+application             | Array          | Yes                  |                            | Applications associated with this widget. Read more about this field [here](/reference.html#applications).
 layerId                 | String         | No                   |                            | Id of the layer to which the widget corresponds.  
 verified                | Boolean        | Yes                  | false                      | 
 default                 | Boolean        | No                   | false                      | If the widget should be used as the dataset's default widget.

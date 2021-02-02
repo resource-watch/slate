@@ -84,7 +84,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
 curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=2&page[size]=25
 ```
 
-The Dataset service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your datasets list.
+The Dataset service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your datasets list.
 
 ### Search
 
@@ -118,7 +118,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?vocabulary[legacy]=umd
 
 The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you'll find in a dataset itself (which you can learn more about in the [Dataset reference](#dataset-reference) section), while others are convenience filters for things like user role or favourites.
 
-Filtering datasets adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you can use the following fields as filters supported by the dataset list endpoint:
+Filtering datasets adheres to the conventions defined in the [Filter guidelines for the RW API](/reference.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you can use the following fields as filters supported by the dataset list endpoint:
 
 Filter         | Description                                                                  | Type        | Expected values
 -------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------
@@ -126,12 +126,12 @@ name           | Filter returned datasets by the name of the dataset.           
 slug           | Filter returned datasets by the slug of the dataset.                         | String      | any valid text
 type           | Filter returned datasets by dataset type.                                    | String      | any valid text
 subtitle       | Filter returned datasets by dataset subtitle.                                | String      | any valid text
-application    | Applications associated to this dataset. Read more about this field [here](/index-rw.html#applications). | Array       | any valid text
+application    | Applications associated to this dataset. Read more about this field [here](/reference.html#applications). | Array       | any valid text
 applicationConfig | If the dataset has `applicationConfig` data (i.e. contains a non-empty object in the `applicationConfig` field) | Boolean | `true` or `false`
 dataPath       |                                                                              | String      | any valid text
 attributesPath |                                                                              | String      | any valid text
 connectorType  | Filter returned datasets by the type of connector used.                      | String      | `rest`, `document` or `wms`
-provider       | Dataset provider this include inner connectors and 3rd party ones            | String      | [Check the available providers when creating a dataset](index-rw.html#creating-a-dataset)
+provider       | Dataset provider this include inner connectors and 3rd party ones            | String      | [Check the available providers when creating a dataset](reference.html#creating-a-dataset)
 connectorUrl   |                                                                              | String      | any valid text
 sources        |                                                                              | Array       | any valid text
 tableName      |                                                                              | String      | any valid text
@@ -141,7 +141,7 @@ overwrite      | If the data can be overwritten (only for being able to make dat
 errorMessage   | If this dataset is in `error` state, this field may contain additional details about the error. | String      | any valid text
 mainDateField  |                                                                              | String      | any valid text
 published      | If the dataset is published or not.                                          | Boolean     | `true`or `false`
-env            | Environment to which the dataset belongs. Multiple values can be combined using `,` as a separator. Does not support regexes. Read more about this field in the [Environments concept section](/index-rw.html#environments). | String      | any valid text. Defaults to `production`. 
+env            | Environment to which the dataset belongs. Multiple values can be combined using `,` as a separator. Does not support regexes. Read more about this field in the [Environments concept section](/reference.html#environments). | String      | any valid text. Defaults to `production`. 
 geoInfo        | If it contains interceptable geographical info                               | Boolean     | `true`or `false`
 protected      | If the dataset is protected.                                                 | Boolean     | `true`or `false`
 taskId         | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets | String      | any valid text
@@ -204,7 +204,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=user.role
 ```
 
-The Dataset service currently supports sorting using the `sort` query parameter. Sorting dataset adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Dataset reference](#dataset-reference) section for a detailed description of the fields you can use when sorting. In addition to all dataset model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dataset. Keep in mind that sorting by user data is restricted to ADMIN users.
+The Dataset service currently supports sorting using the `sort` query parameter. Sorting dataset adheres to the conventions defined in the [Sorting guidelines for the RW API](/reference.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Dataset reference](#dataset-reference) section for a detailed description of the fields you can use when sorting. In addition to all dataset model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dataset. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 #### Special sorting criteria
 
@@ -427,7 +427,7 @@ So you are ready to create your first dataset on the RW API? Great, welcome aboa
 Before creating a dataset, there are a few things you must know and do:
 
 - In order to be able to create a dataset, you need to be [authenticated](#authentication).
-- Depending on your user account's role, you may have permission to create a dataset but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- Depending on your user account's role, you may have permission to create a dataset but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 - All data uploaded to the RW API will be publicly visible and available to other users. 
 
 The first thing to consider when creating a dataset is where your data currently is - this will determine the [Dataset provider](#dataset-providers) you will need to use and, with it, a set of things you need to take into account - we'll cover each provider in detail shortly. When building your request to the RW API to create your dataset, you will need to take into account both the general details that follow, plus the details for the `provider` you are using. Be sure to review both sections when creating your datasets, to avoid any pitfalls.
@@ -845,7 +845,7 @@ When passing new values for Object type fields, the new value will fully overwri
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the dataset
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 
 Use this endpoint when:
 
@@ -912,7 +912,7 @@ In order to perform these operation, the following conditions must be met:
 
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 - the user must have at least one overlapping application with the ones associated with the dataset.
 
 While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.
@@ -989,7 +989,7 @@ In order to perform this operation, the following conditions must be met:
 
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 - the user must have at least one overlapping application with the ones associated with the dataset.
 
 Here's a more detailed description of the request's body fields:
@@ -1046,7 +1046,7 @@ This endpoint allows you to create a new, json based dataset, from the result of
 In order to perform this operation, the following conditions must be met:
 
 - the user must belong to the applications specified in the request body.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 
 The request requires two fields to be present:
 
@@ -1100,7 +1100,7 @@ In order to delete a dataset, the following conditions must be met:
 
 - the dataset's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the dataset
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
 
 > Example request for deleting a dataset
 
@@ -1183,7 +1183,7 @@ Flushes the cache for the specified dataset. Take into account that only the dat
 In order to flush a dataset's cache, the following conditions must be met:
 
 - the user must be logged in.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).  
+- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).  
   
 #### Errors for flushing a dataset's cache
 
@@ -1237,7 +1237,7 @@ name                    | String         | Yes                  |               
 slug                    | String         | Yes (autogenerated)  |                            | Slug of the dataset. Auto generated on creation. Cannot be modified by users.        
 type                    | String         | No                   | null                       | Type of the dataset.                                                         
 subtitle                | String         | No                   | null                       | Subtitle of the dataset.                                                     
-application             | Array          | Yes                  |                            | Applications associated with this dataset. Read more about this field [here](/index-rw.html#applications).
+application             | Array          | Yes                  |                            | Applications associated with this dataset. Read more about this field [here](/reference.html#applications).
 applicationConfig       | Object         | No                   |                            | Key-value storage of application-specific data. Use the `application` value as key and a JSON Object as the value to store complex, extensible data. | Object      
 dataPath                | String         | No                   | null                       | Path to the data in a JSON file-based datasets.                              
 attributesPath          | String         | No                   | null                       |                                                                              
@@ -1252,7 +1252,7 @@ overwrite               | Boolean        | No                   | false         
 errorMessage            | String         | No                   | null                       | If this dataset is in `error` state, this field may contain additional details about the error. 
 mainDateField           | String         | No                   | null                       |                                                                                
 published               | Boolean        | Yes                  | true                       | If the dataset is published or not.                                               
-env                     | String         | Yes                  | production                 | Environment to which the dataset belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).                                    
+env                     | String         | Yes                  | production                 | Environment to which the dataset belongs. Read more about this field in the [Environments concept section](/reference.html#environments).                                    
 geoInfo                 | Boolean        | Yes                  | false                      | If it contains interceptable geographical info                                    
 protected               | Boolean        | Yes                  | false                      | If the dataset is protected. A protected dataset cannot be deleted.               
 taskId                  | String         | No                   | null                       | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets      

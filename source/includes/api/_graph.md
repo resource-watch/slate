@@ -69,7 +69,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 
 ## List concepts for a dataset
 
@@ -126,7 +126,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 
 ## List concepts for multiple datasets
 
@@ -189,7 +189,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 
 ### Errors for listing concepts for multiple datasets
 
@@ -252,7 +252,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 
 ### Errors for listing concepts for multiple datasets
 
@@ -309,7 +309,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 
 ### Errors for querying similar datasets
 
@@ -372,7 +372,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 
 ### Errors for querying similar datasets
 
@@ -459,7 +459,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated with this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated with this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 depth        | Limits the depth of the graph search. | Number | 15
 
 ### Errors for searching datasets by concepts
@@ -517,7 +517,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 
 ### Errors for searching datasets by concepts and their synonyms
 
@@ -573,7 +573,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 
 ## Most viewed datasets
 
@@ -625,7 +625,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated with this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated with this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
 
 ## Most viewed datasets by user
@@ -679,7 +679,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated with this concept - read more about this field [here](/index-rw.html#applications). | String | `"rw"`
+application  | Applications associated with this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
 limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
 
 ### Errors for getting most viewed datasets by user
