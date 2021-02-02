@@ -20,7 +20,7 @@ includes:
   - dev/microservice_reference
   - dev/smoke_tests
   - dev/query_transformations
-  - api/microservices
+  - dev/microservices
   - dev/areas_notification_emails
   - dev/subscriptions
   - dev/graph
