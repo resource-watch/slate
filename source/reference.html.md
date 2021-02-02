@@ -39,7 +39,6 @@ includes:
   - api/microservices
   - api/troubleshooting
   - api/contact
-  - errors
 
 logo: logo-rw.png
 

@@ -15,6 +15,7 @@ includes:
   - back
 
   - concept/behaviors_header
+  - concept/errors
   - concept/caching
   - concept/sorting_filtering
   - concept/pagination
