@@ -56,6 +56,12 @@ All microservices can be executed in two ways: natively or using [Docker](https:
 The first step will be getting the source code from [Github](https://github.com/resource-watch/dataset/) to your computer using the [Git](https://git-scm.com/) CLI (or equivalent). 
 
 ```shell
+git clone https://github.com/resource-watch/dataset.git 
+```
+
+Or, if you prefer, you can use:
+
+```shell
 git clone git@github.com:resource-watch/dataset.git
 ```
 
@@ -180,6 +186,12 @@ See right for how to run tests for microservices in different languages. You can
 #### Getting the code
 
 The first step will be getting the source code from [Github](https://github.com/resource-watch/dataset/) to your computer using the [Git](https://git-scm.com/) CLI (or equivalent). 
+
+```shell
+git clone https://github.com/resource-watch/dataset.git 
+```
+
+Or, if you prefer, you can use:
 
 ```shell
 git clone git@github.com:resource-watch/dataset.git
@@ -862,6 +874,16 @@ In a nutshell, this Jenkinsfile will:
 At the beginning of each deploy process, you may also see an confirmation input that, if accepted, will redeploy the kubernetes configuration contained in the microservice code repository to the respective kubernetes cluster: `develop` branch to the staging cluster, `master` branch to the production cluster.
 
 One thing worth noting is that the docker images generated using this method are publicly available on dockerhub. Be careful not to store any sensitive data in them, as it will be available to anyone.
+
+#### Getting access to Jenkins
+
+Each environment (`dev`, `staging`, `production`) has its own Jenkins server:
+
+- [Jenkins for the dev environment](https://jenkins.aws-dev.resourcewatch.org)
+- [Jenkins for the staging environment](https://jenkins.aws-staging.resourcewatch.org)
+- [Jenkins for the production environment](https://jenkins.aws-prod.resourcewatch.org)
+
+If you need an account in one of these environments (for example to approve a deployment in production), contact ethan.roday@wri.org.
 
 ### Kubernetes configuration
 
