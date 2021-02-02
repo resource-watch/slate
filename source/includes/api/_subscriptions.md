@@ -2,7 +2,7 @@
 
 ## What is a subscription?
 
-*Note: We strongly recommend that you read the [dataset concept](#dataset) and [dataset endpoints](#dataset6) sections before proceeding.*
+*Note: We strongly recommend that you read the [dataset concept](/concepts.html#dataset) and [dataset endpoints](/reference.html#dataset) sections before proceeding.*
 
 A subscription allows you to get notified of updates on a datasets' data - either for every update, or for updates restricted to geographical areas of your interest. For example, you can use subscriptions to subscribe to deforestation alerts ([GLAD alerts dataset](http://api.resourcewatch.org/v1/dataset/61170ad0-9d6a-4347-8e58-9b551eeb341e)) in the Amazon forest, or track fire alerts ([VIIRS fire alerts dataset](http://api.resourcewatch.org/v1/dataset/64c948a6-5e34-4ef2-bb69-6a6535967bd5)) in your area of residence.
 
@@ -38,7 +38,7 @@ In order to support a functional subscription, a dataset must have some queries 
 * `dataQuery`, which will be evaluated as the subscription's content - i.e. this is what has been updated since the last check on the updates of this dataset.
 * `subscriptionQuery`, which will be evaluated to check if a subscription has changed since the last update. This query should return a single row with the count of updated items since the last update check. If the value returned by this query is greater than 0, then all the subscriptions that reference this dataset will receive a notification.
 
-The example on the side defines the `subscribable` object for an example dataset, and this object contains a the key `test`, including both a `dataQuery` and a `subscriptionQuery`. For more details on how you can modify the `subscribable` property of a dataset, check out the documentation on [updating a dataset](#updating-a-dataset). The keys in the subscribable object (e.g. `test`) are just for organizational purposes, and they won't be used in any way from the subscription's perspective.
+The example on the side defines the `subscribable` object for an example dataset, and this object contains a the key `test`, including both a `dataQuery` and a `subscriptionQuery`. For more details on how you can modify the `subscribable` property of a dataset, check out the documentation on [updating a dataset](/reference.html#updating-a-dataset). The keys in the subscribable object (e.g. `test`) are just for organizational purposes, and they won't be used in any way from the subscription's perspective.
 
 Both queries can contain two special keywords: `{begin}` and `{end}`. These will be replaced with ISO-formatted dates on runtime, with the datetime in which the subscription was last evaluated, and the datetime at the time of evaluation, respectively.
 
@@ -46,13 +46,13 @@ Both queries can contain two special keywords: `{begin}` and `{end}`. These will
 
 ### Creating and confirming the subscription
 
-You have your dataset ready to be subscribed. The next steps would be to actually create the subscription - check the [docs for creating subscriptions](#creating-a-subscription) for detailed information on how to do that.
+You have your dataset ready to be subscribed. The next steps would be to actually create the subscription - check the [docs for creating subscriptions](/reference.html#creating-a-subscription) for detailed information on how to do that.
 
-After creating the subscription, an email is sent with a confirmation link. You need to click this link in order to confirm the notification and start receiving notifications. You can check if the subscription is confirmed or not by looking at the `confirmed` field of the subscription object. Check more information about confirming subscriptions in the [confirming a subscription](#confirming-a-subscription) section.
+After creating the subscription, an email is sent with a confirmation link. You need to click this link in order to confirm the notification and start receiving notifications. You can check if the subscription is confirmed or not by looking at the `confirmed` field of the subscription object. Check more information about confirming subscriptions in the [confirming a subscription](/reference.html#confirming-a-subscription) section.
 
-If, for some reason, you have lost the confirmation email, you can check the [resending confirmation emails](#resending-the-subscription-confirmation-email) section for more information on how to resend the confirmation email.
+If, for some reason, you have lost the confirmation email, you can check the [resending confirmation emails](/reference.html#resending-the-subscription-confirmation-email) section for more information on how to resend the confirmation email.
 
-At any point, you might want to stop receiving email or webhook notifications - if that is the case, you can check the [unsubscribing](#unsubscribing) section for details on how to stop receiving notifications for your subscriptions.
+At any point, you might want to stop receiving email or webhook notifications - if that is the case, you can check the [unsubscribing](/reference.html#unsubscribing) section for details on how to stop receiving notifications for your subscriptions.
 
 The same subscription can subscribe to multiple datasets - for that, you just need to provide all the dataset ids you intend to subscribe in either the `datasets` or `datasetsQuery` fields of the subscription on creation. However, a subscription can only notify a single email at a time - if you intend to receive subscription notifications on multiple emails, you'll need to create multiple subscriptions.
 
@@ -163,7 +163,7 @@ curl -X GET "https://api.resourcewatch.org/v1/subscriptions" \
 
 This endpoint will allow you to get all the subscriptions owned by the user who performed the request (identified by the access token). To use this endpoint, you must be logged in (i.e. a token must be provided). In the sections below, we’ll explore how you can customize this endpoint call to match your needs.
 
-For a detailed description of each field, check out the [Subscription reference](#subscription-reference) section.
+For a detailed description of each field, check out the [Subscription reference](reference.html#subscription-reference) section.
 
 ### Filters
 
@@ -171,8 +171,8 @@ The `v1/subscriptions` endpoint supports the following optional query parameters
 
 Field       |  Description                                             | Type   | Default value
 ----------- | :------------------------------------------------------: | -----: | ---------------:
-application | Application to which the subscription is associated. Read more about this field [here](/reference.html#applications). | String | 'gfw'
-env         | The environment to which the subscription is associated. Read more about this field in the [Environments concept section](/reference.html#environments). | String | 'production'
+application | Application to which the subscription is associated. Read more about this field [here](/concepts.html#applications). | String | 'gfw'
+env         | The environment to which the subscription is associated. Read more about this field in the [Environments concept section](/concepts.html#environments). | String | 'production'
 
 **Deprecation notice:** the default value for the `application` filter (currently, `gfw`) will be removed and the `application` filter will then have no default value. We recommend reviewing your application to ensure you set and load the correct `application` explicitly.
 
@@ -274,7 +274,7 @@ curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
 }
 ```
 
-This section will guide you through the process of creating a basic subscription in the RW API. Creating a subscription can be done by any logged user using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [subscription reference](#subscription-reference) section, but the minimum field list you must specify for all subscriptions are:
+This section will guide you through the process of creating a basic subscription in the RW API. Creating a subscription can be done by any logged user using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [subscription reference](reference.html#subscription-reference) section, but the minimum field list you must specify for all subscriptions are:
 
 * `datasets` or `datasetsQuery`
 * `resource` (which must include both `resource.type` and `resource.content`)
@@ -282,7 +282,7 @@ This section will guide you through the process of creating a basic subscription
 * `application`
 * `language`
 
-If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. Please note that **subscriptions must be confirmed** before they become active - refer to the [subscription lifecycle](#subscription-lifecycle) for more details on this.
+If the creation of the subscription is successful, the HTTP response code will be 200 OK, and the response body will contain the created subscription object. Please note that **subscriptions must be confirmed** before they become active - refer to the [subscription lifecycle](/reference.html#subscription-lifecycle) for more details on this.
 
 ### Errors for creating subscriptions
 
@@ -325,12 +325,12 @@ curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
   }'
 ```
 
-A subscription can refer to a specific area of interest that has been created using the [RW API Areas service](#areas). If this is the case, you should first [create your area of interest](#create-area), grab its id and provide it in the `params.area` field of the request body when creating the subscription.
+A subscription can refer to a specific area of interest that has been created using the [RW API Areas service](/reference.html#areas). If this is the case, you should first [create your area of interest](/reference.html#create-area), grab its id and provide it in the `params.area` field of the request body when creating the subscription.
 
 Field         | Description                                                    | Type
 ------------- | :------------------------------------------------------------: | ----------------:
 `params`      | Geographic area of the subscription                            | Object
-`params.area` | Id of area of interest from the [RW API Areas service](#areas) | String
+`params.area` | Id of area of interest from the [RW API Areas service](/reference.html#areas) | String
 
 #### Subscribing to a country, country region or subregion
 
@@ -442,7 +442,7 @@ curl -X POST "https://api.resourcewatch.org/v1/subscriptions" \
   }'
 ```
 
-A subscription can refer to a specific geostore that has been created using the [RW API Geostore service](#geostore). If this is the case, you should [create your geostore](#create-geostore) and use its id in the `params.geostore` field of the request body when creating the subscription.
+A subscription can refer to a specific geostore that has been created using the [RW API Geostore service](/reference.html#geostore). If this is the case, you should [create your geostore](/reference.html#create-geostore) and use its id in the `params.geostore` field of the request body when creating the subscription.
 
 Field                 | Description                                                    | Type
 --------------------- | :------------------------------------------------------------: | ----------------:
@@ -766,7 +766,7 @@ Field       |             Description                                           
 ----------- | :----------------------------------------------------------------------------------: | -----: | ------: | ---------: |
 start       | The start of the date range to fetch the statistics. **This parameter is required.** | String | None    | 01-01-2020 |
 end         | The end of the date range to fetch the statistics. **This parameter is required.**   | String | None    | 02-20-2020 |
-application | The application for which the statistics will be fetched. Read more about this field [here](/reference.html#applications). | String | 'gfw'   | 'rw'       |
+application | The application for which the statistics will be fetched. Read more about this field [here](/concepts.html#applications). | String | 'gfw'   | 'rw'       |
 
 ### Grouped subscription statistics
 
@@ -838,7 +838,7 @@ Field       |             Description                                           
 ----------- | :----------------------------------------------------------------------------------: | -----: | ------: | ---------: |
 start       | The start of the date range to fetch the statistics. **This parameter is required.** | String | None    | 01-01-2020 |
 end         | The end of the date range to fetch the statistics. **This parameter is required.**   | String | None    | 02-20-2020 |
-application | The application for which the statistics will be fetched. Read more about this field [here](/reference.html#applications). | String | 'gfw'   | 'rw'       |
+application | The application for which the statistics will be fetched. Read more about this field [here](/concepts.html#applications). | String | 'gfw'   | 'rw'       |
 
 ## Subscription reference
 
@@ -864,7 +864,7 @@ datasetsQuery[0].lastSentDate | Date     | No    | (auto-generated)    | This va
 params           | Object  | No                  | `{}`                | Determines the area of interest that this subscription should track. Can contain information to narrow the updates being tracked (especially in the case of geo-referenced data).
 userId           | String  | Yes                 | (auto-populated)    | Id of the user who owns the subscription. Set automatically on creation. Cannot be modified by users.
 language         | String  | No                  | `'en'`              | The language for this subscription. Useful for customizing email notifications according to the language of the subscription. Possible values include `'en'`, `'es'`, `'fr'`, `'pt'` or `'zh'`.
-application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription. Read more about this field [here](/reference.html#applications).
-env              | String  | Yes                 | `'production'`      | Environment to which the subscription belongs. Read more about this field in the [Environments concept section](/reference.html#environments).
+application      | String  | Yes                 | `'gfw'`             | Applications associated with this subscription. Read more about this field [here](/concepts.html#applications).
+env              | String  | Yes                 | `'production'`      | Environment to which the subscription belongs. Read more about this field in the [Environments concept section](/concepts.html#environments).
 createdAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was created. Cannot be modified by users.
 updatedAt        | Date    | No                  | (auto-populated)    | Automatically maintained date of when the subscription was last updated. Cannot be modified by users.

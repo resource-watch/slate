@@ -2,7 +2,7 @@
 
 ## What are vocabularies and tags?
 
-[Vocabularies and tags concepts](#vocabularies-and-tags) are covered in their dedicated section, and we strongly
+[Vocabularies and tags concepts](/concepts.html#vocabularies-and-tags) are covered in their dedicated section, and we strongly
 recommend you read that section before diving into the details of the respective endpoints. In it, we explain in detail
 what is a tag and a vocabulary, and why you should use them to empower different use cases of the RW API.
 
@@ -11,7 +11,7 @@ section). A vocabulary is a group of tags and has a name (also called and used a
 should define the scope or context of the tags it contains.
 
 It's important to keep in mind that these associations between a resource and a vocabulary have
-an [application](#applications) associated with them. Putting this in an example, `dataset` `AAA` may be associated with
+an [application](/concepts.html#applications) associated with them. Putting this in an example, `dataset` `AAA` may be associated with
 vocabulary `BBB` for application `rw`, but not for application `gfw`. Most endpoints will allow you explicitly define
 which application you are referring to (some will even require it), and a `rw` default value will be assumed when no
 explicit value is provided.
@@ -22,10 +22,10 @@ Throughout this section, we'll refer multiple times to `resources`. Simply put, 
 widget, or a layer. Tags and vocabularies work in a similar fashion for each of these 3 types of RW API entity, so often
 we'll refer to resources instead, for convenience.
 
-We assume that, at this point, you are already familiar with the concepts of [dataset](#dataset), [layer](#layer)
-or [widget](#widget) (ideally you are familiar with the 3). If that's not the case, we strongly encourage you to learn
+We assume that, at this point, you are already familiar with the concepts of [dataset](/concepts.html#dataset), [layer](/concepts.html#layer)
+or [widget](/concepts.html#widget) (ideally you are familiar with the 3). If that's not the case, we strongly encourage you to learn
 about those concepts first, and we also recommend you take some time to explore and experiment using
-actual [dataset](#dataset6), [layer](#layer8), or [widget](#widget9) endpoints before proceeding. Vocabularies and tags
+actual [dataset](/reference.html#dataset), [layer](/reference.html#layer), or [widget](/reference.html#widget) endpoints before proceeding. Vocabularies and tags
 exist to improve and empower your use cases of those resources, so it should only be used by applications and users that
 are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.
 
@@ -59,18 +59,16 @@ associated with their correct dataset.
 
 Throughout the whole vocabulary/tags service, there is a special vocabulary named `knowledge_graph`. When used, this
 vocabulary acts as any other vocabulary but has additional logic built-in for the purpose of integrating vocabulary/tags
-with the [graph](#graph) available as part of the RW API.
+with the [graph](/concepts.html#graph) available as part of the RW API.
 
 Whenever you create or clone a vocabulary named `knowledge_graph` for a resource,
-the [dataset](#creating-dataset-graph-nodes), [layer](#creating-layer-graph-nodes)
-or [widget](#creating-widget-graph-nodes) node is added to the graph if not already present, and
-the [tags are associated to it](#associating-concepts-to-graph-nodes). Updating the `knowledge_graph` vocabulary also
-updates the corresponding [tags associated to it](#updating-concepts-associated-with-graph-nodes) on the graph side, and
+the dataset, layer or widget node is added to the graph if not already present, and
+the [tags are associated to it](/reference.html#relationships-between-graph-nodes-and-concepts). Updating the `knowledge_graph` vocabulary also
+updates the corresponding tags associated to it on the graph side, and
 deleting the vocabulary
-also [deletes the corresponding tags in the graph](#deleting-concepts-associated-with-graph-nodes).
+also deletes the corresponding tags in the graph.
 
-For more details on the graph, its purpose, and how to use it, please refer to the dedicated documentation section on
-the [graph](#graph) and [its endpoints](#graph7).
+For more details on the graph, its purpose, and how to use it, please refer its dedicated [concept](/concepts.html#graph) and [reference](/reference.html#graph) documentation.
 
 ## Associations between vocabularies, tags and resources
 

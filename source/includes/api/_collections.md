@@ -84,7 +84,7 @@ To create a collection, you should send a POST request to the `/v1/collection` e
 | Field name   | Description                                                     | Required | Type
 | -------------|:--------------------------------------------------------------: | -----:   | -----:
 | name         | Name of collection.                                             | Yes      | String
-| application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/reference.html#applications). | No       | String
+| application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/concepts.html#applications). | No       | String
 | resources    | Array of resources in the collection.                           | No       | Array of Objects
 
 ## Updating a collection
@@ -245,7 +245,7 @@ curl -X GET https://api.resourcewatch.org/v1/collection?page[number]=2&page[size
 -H "Authorization: Bearer <your-token>"
 ```
 
-The Collections service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your collections list.
+The Collections service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your collections list.
 
 In the specific case of the Collections service, the default value for the `page[size]` query parameter is 9999999, instead of 10. However (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.
 
@@ -272,7 +272,7 @@ curl -X GET "https://api.resourcewatch.org/v1/collection?sort=-name,+application
 -H "Authorization: Bearer <your-token>"
 ```
 
-The Collections service currently supports sorting using the `sort` query parameter. Sorting collections adheres to the conventions defined in the [Sorting guidelines for the RW API](/reference.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Collection reference](/reference.html#collection-reference) section for a detailed description of the fields you can use when sorting.
+The Collections service currently supports sorting using the `sort` query parameter. Sorting collections adheres to the conventions defined in the [Sorting guidelines for the RW API](/concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Collection reference](/reference.html#collection-reference) section for a detailed description of the fields you can use when sorting.
 
 ## Get a collection by id
 
@@ -428,7 +428,7 @@ You can filter the returned results by application by providing the `application
 | -------------|:--------------------------------------------------------------: | -----:
 | name         | Name of collection.                                             | String
 | ownerId      | Id of the user owner of this collection.                        | String
-| application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/reference.html#applications). | String
+| application  | The application this collection belongs to (defaults to `'rw'`). Read more about this field [here](/concepts.html#applications). | String
 | resources    | Array of resources in the collection.                           | Array of Objects
 | --- type     | The type of resource.                                           | String (dataset, layer, widget)
 | --- id       | The id of the resource.                                         | String

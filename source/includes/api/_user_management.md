@@ -1,6 +1,6 @@
 # User management
 
-The following endpoints expose the RW API's functionality regarding user management. These endpoints will allow you to login, recover a forgotten password, create, edit or delete a user account. We've already covered the basics of getting a user account in the [authentication](#authentication) section, and here we'll dive deeper into all the functionality exposed by these endpoints.
+The following endpoints expose the RW API's functionality regarding user management. These endpoints will allow you to login, recover a forgotten password, create, edit or delete a user account. We've already covered the basics of getting a user account in the [quickstart guide](/quickstart.html) section, and here we'll dive deeper into all the functionality exposed by these endpoints.
 
 These endpoints have a key difference from most of the endpoint covered so far. The great majority of the RW API endpoints are meant to be used by your applications, and as such produce JSON responses, which are easily interpreted by computers. However, some of the functionality we'll cover in this section is meant to be used only or also by humans, making JSON a less than ideal response format. 
 
@@ -22,9 +22,9 @@ Besides authentication, user accounts are also used for authorization. Authoriza
 
 `id` is a unique identifier of your account. Certain actions may be limited to specific users, typically in the context of a given resource being associated directly with a specific user `id`.
 
-`role` can be one of 3 values: `USER`, `MANAGER` and `ADMIN` and it is usually used for role-based access control - read more about this field in the [User roles concept documentation](/reference.html#user-roles).
+`role` can be one of 3 values: `USER`, `MANAGER` and `ADMIN` and it is usually used for role-based access control - read more about this field in the [User roles concept documentation](/concepts.html#user-roles).
 
-`application` is a list of keys meant to identify the different client applications that are built using the RW API. It's present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping `application` value. You can find out more about how the `application` field works [here](/reference.html#applications).
+`application` is a list of keys meant to identify the different client applications that are built using the RW API. It's present not only on user accounts, but also on many of the resources found on the RW API, either as a single value or as a list of values. Typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping `application` value. You can find out more about how the `application` field works [here](/concepts.html#applications).
 
 Keep in mind that it's up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.
 
@@ -474,7 +474,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user"
 }
 ```
 
-This endpoint allows users with `ADMIN` role to list and filter existing user accounts. Through this endpoint, only 3rd party-based and confirmed email-based user accounts are listed - user accounts that have not been confirmed will not be listed. It's also important to keep in mind that, by default, only users belonging to the same apps as the requesting user will be shown - you can use [filters](#filters337) to modify this behavior.
+This endpoint allows users with `ADMIN` role to list and filter existing user accounts. Through this endpoint, only 3rd party-based and confirmed email-based user accounts are listed - user accounts that have not been confirmed will not be listed. It's also important to keep in mind that, by default, only users belonging to the same apps as the requesting user will be shown - you can use [filters](#filters449) to modify this behavior.
 
 **Errors**
 
@@ -492,7 +492,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user?page[number]=2&page[size]=2
 -H "Authorization: Bearer <your-token>" \
 ```
 
-The Users service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your users list.
+The Users service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your users list.
 
 #### Filters
 
@@ -546,7 +546,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user?role=ADMIN&app=gfw,rw"
 }
 ```
 
-The users list provides a set of parameters that you can use to tailor your users listing. Please note that filtering users adheres to the conventions defined in the [Filter guidelines for the RW API](/reference.html#filtering), so we strongly recommend reading that section before proceeding. in addition to these conventions, you can use the following fields as filters supported by the users list endpoint:
+The users list provides a set of parameters that you can use to tailor your users listing. Please note that filtering users adheres to the conventions defined in the [Filter guidelines for the RW API](/concepts.html#filtering), so we strongly recommend reading that section before proceeding. in addition to these conventions, you can use the following fields as filters supported by the users list endpoint:
 
 Filter         | Description                                                                  | Type        | Expected values
 -------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------

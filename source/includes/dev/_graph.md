@@ -248,7 +248,7 @@ This endpoint deletes the graph edge associated with the resource identified in 
 curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate?application=gfw
 ```
 
-You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/reference.html#applications).
+You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/concepts.html#applications).
 
 ### Errors for associating concepts with graph nodes
 
@@ -303,7 +303,7 @@ This endpoint deletes the graph edge representative of a favorite relationship b
 curl -X DELETE https://api.resourcewatch.org/v1/graph/favourite/:resourceType/:idResource/:userId?application=gfw
 ```
 
-You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/reference.html#applications).
+You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/concepts.html#applications).
 
 ### Errors for associating concepts with graph nodes
 

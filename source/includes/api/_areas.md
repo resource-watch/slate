@@ -79,7 +79,7 @@ curl -X GET https://api.resourcewatch.org/v1/area?application=rw
 
 Parameter    |        Description |    Type |                                 Values |
 ------------ | :----------------: | ------: | -------------------------------------: |
-application  |        Application. Read more about this field [here](/reference.html#applications). |    Text |  Any Text, values separated by commas
+application  |        Application. Read more about this field [here](/concepts.html#applications). |    Text |  Any Text, values separated by commas
 
 ### Pagination
 
@@ -89,7 +89,7 @@ application  |        Application. Read more about this field [here](/reference.
 curl -X GET https://api.resourcewatch.org/v1/area?page[number]=2&page[size]=25
 ```
 
-The Areas service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
+The Areas service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
 
 In the specific case of the Areas service, the default value for the `page[size]` query parameter is 1000 for backwards compatibility reasons, instead of 10. However (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.
 
@@ -113,7 +113,7 @@ curl -X GET https://api.resourcewatch.org/v1/area?sort=name,createdAt
 curl -X GET https://api.resourcewatch.org/v1/area?sort=-name,+createdAt
 ```
 
-The Areas service currently supports sorting using the `sort` query parameter. Sorting areas adheres to the conventions defined in the [Sorting guidelines for the RW API](/reference.html#sorting), so we strongly recommend reading that section before proceeding.
+The Areas service currently supports sorting using the `sort` query parameter. Sorting areas adheres to the conventions defined in the [Sorting guidelines for the RW API](/concepts.html#sorting), so we strongly recommend reading that section before proceeding.
 
 ## Create area
 
@@ -123,7 +123,7 @@ Creates a new area
 
 Parameter | Description | Type | Values | Required |
 --------- | :---------: | ---: | -----: | -------: |
-application | Application. Read more about this field [here](/reference.html#applications). | Text | Any Text, values separated by commas | Yes |
+application | Application. Read more about this field [here](/concepts.html#applications). | Text | Any Text, values separated by commas | Yes |
 name      | Name of the new area | Text | Any Text | Yes |
 geostore  | Geostore ID  | Text | Any Text | Yes |
 

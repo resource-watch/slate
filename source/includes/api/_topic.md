@@ -58,7 +58,7 @@ Field     |                         Description                          |    Ty
 published |   Filter topics by publishing status (true, false)       | Boolean
 private   |   Filter topics by private status (true, false)          | Boolean
 user      |           Filter topics by author user id                | Text
-application | The application to which the topic belongs. Read more about this field [here](/reference.html#applications). | Text (single value)
+application | The application to which the topic belongs. Read more about this field [here](/concepts.html#applications). | Text (single value)
 
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/topic?user=57bc2608f098ce98007985e4&private=false
@@ -146,7 +146,7 @@ published     | If the topic is in a publishable state                          
 photo         | Object containing a set of image urls associated with the topic          | object
 user_id       | Id of the user who created the topic                                     | string with valid user id (not validated)
 private       |                                                                              | boolean
-application   | Application(s) to which the topic belongs. Defaults to `["rw"]`. Read more about this field [here](/reference.html#applications). | array of strings
+application   | Application(s) to which the topic belongs. Defaults to `["rw"]`. Read more about this field [here](/concepts.html#applications). | array of strings
 
 ```shell
 curl -X POST https://api.resourcewatch.org/v1/topics \
@@ -212,7 +212,7 @@ curl -X POST https://api.resourcewatch.org/v1/topics \
 In order to perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the topic
-- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
   
 When updating the `application` field of a topic, a user cannot add values not associated with their user account.
 

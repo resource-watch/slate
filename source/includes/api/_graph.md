@@ -1,6 +1,6 @@
 # Graph
 
-The following section details the endpoints you can use to interact with graph information about the RW API. If you are new to the RW API or want to learn more about what the RW API graph can do for you, we strongly encourage you to read the [graph concept](#graph) documentation first.
+The following section details the endpoints you can use to interact with graph information about the RW API. If you are new to the RW API or want to learn more about what the RW API graph can do for you, we strongly encourage you to read the [graph concept documentation](/concepts.html#graph) first.
 
 Before proceeding, let's look at some concepts that will be used across the graph endpoint documentation.
 
@@ -8,21 +8,21 @@ Before proceeding, let's look at some concepts that will be used across the grap
 
 Throughout this section, we'll refer multiple times to `resources`. Simply put, a `resource` is either a dataset, a widget, a layer, or a metadata entry. Graph nodes represent in a similar fashion these 4 types of RW API entity, so often we'll refer to resources instead, for convenience.
 
-We assume that, at this point, you are already familiar with the concepts of [dataset](#dataset), [layer](#layer), [widget](#widget) or [metadata](#metadata) (ideally you are familiar with the 4). If that's not the case, we strongly encourage you to learn about those concepts first, and we also recommend you take some time to explore and experiment using actual [dataset](#dataset6), [layer](#layer8), [widget](#widget9), or [metadata](#metadata12) endpoints before proceeding. The RW API Graph service builds on top of these concepts and empowers your use cases of those resources, so it should only be used by applications and users that are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.
+We assume that, at this point, you are already familiar with the concepts of [dataset](/concepts.html#dataset), [layer](/concepts.html#layer), [widget](/concepts.html#widget) or [metadata](/concepts.html#metadata) (ideally you are familiar with the 4). If that's not the case, we strongly encourage you to learn about those concepts first, and we also recommend you take some time to explore and experiment using actual [dataset](/reference.html#dataset), [layer](/reference.html#layer), [widget](/reference.html#widget), or [metadata](/reference.html#metadata10) endpoints before proceeding. The RW API Graph service builds on top of these concepts and empowers your use cases of those resources, so it should only be used by applications and users that are already comfortable with the basics, and want to take their knowledge of the RW API to the next level.
 
 In the context of the RW API Graph service, resources are represented as graph nodes. They can be associated (using graph edges) with concepts to create relationships of relevance between the two entities.
 
 ## What is a concept
 
-Similarly, we'll refer multiple times to `concepts`. A `concept` is a keyword used to describe a resource (e.g. `health`, `society`, `solar_power`, etc.). It shares some similarities with [tags](#vocabularies-and-tags), in the sense it can be associated with resources of different types (datasets, layers, or widgets).
+Similarly, we'll refer multiple times to `concepts`. A `concept` is a keyword used to describe a resource (e.g. `health`, `society`, `solar_power`, etc.). It shares some similarities with [tags](/reference.html#vocabularies-and-tags), in the sense it can be associated with resources of different types (datasets, layers, or widgets).
 
 As with resources, in the context of the RW API Graph service, concepts are represented as graph nodes. They can be associated (using graph edges) with resources to create relationships of relevance between the two entities.
 
 ## Bird's-eye view of the graph service
 
-As an API user, I'm sure you will be glad to hear that most of the management of graph entities is performed automatically. As you will discover by reading the sections on [creating](#creating-resources) or [deleting](#deleting-resources) graph resources, graph nodes for resources are automatically created and deleted when you create or delete your resources, respectively. This means that, as an API user, you are abstracted from these processes and the only thing you need to worry about is actually managing relationships between graph resources and concepts.
+As an API user, you will surely be glad to hear that most of the management of graph entities is performed automatically. As you will discover by reading the sections on [creating](/reference.html#creating-resources) or [deleting](/reference.html#deleting-resources) graph resources, graph nodes for resources are automatically created and deleted when you create or delete your resources, respectively. This means that, as an API user, you are abstracted from these processes and the only thing you need to worry about is actually managing relationships between graph resources and concepts.
 
-To do so, you will need to interact with [vocabulary endpoints](#vocabulary-and-tags), using a specific vocabulary called `knowledge_graph`. You can tag your resources using said vocabulary, and the tags you add will be added as graph concepts and associated with your resources. You can read more about this process in the section on [relationships between graph nodes and concepts](#relationships-between-graph-nodes-and-concepts). Some concepts have been pre-loaded into the graph service, and you can use them to associate your resources with widely-used concepts. However, you are also encouraged to create your own concepts - which, once again, is performed automatically when managing your associations using the vocabulary endpoints.
+To do so, you will need to interact with [vocabulary endpoints](/reference.html#vocabularies-and-tags), using a specific vocabulary called `knowledge_graph`. You can tag your resources using said vocabulary, and the tags you add will be added as graph concepts and associated with your resources. You can read more about this process in the section on [relationships between graph nodes and concepts](/reference.html#relationships-between-graph-nodes-and-concepts). Some concepts have been pre-loaded into the graph service, and you can use them to associate your resources with widely-used concepts. However, you are also encouraged to create your own concepts - which, once again, is performed automatically when managing your associations using the vocabulary endpoints.
 
 You may come across some hierarchical concepts in the following sections, such as "ancestors", "parent concepts" or "descendants". These were initially added with the intention of supporting hierarchy between graph concepts, but such features were not completed. As such, it is recommended that, for now, you ignore and do not rely on any type of hierarchy between graph concepts. This may, however, change in the future.
 
@@ -55,7 +55,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts
 
 **This endpoint does not return a paginated list - you will receive a full list of all the concepts available in the graph. Additionally, the returned response can only be filtered by application, not searched - which means that it's very unlikely that you will receive a reduced payload by using this endpoint. As such, you should avoid using this specific endpoint since it might harm the performance of your application, should the graph increase significantly in size. You can find alternative endpoints in the sections below that allow you to navigate the graph by similarity of concepts, which is the recommended approach to navigating the graph.**
 
-This endpoint returns the list of concepts available in the graph. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
+This endpoint returns the list of concepts available in the graph. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](/reference.html#graph-concept-reference) for details on each of the fields of the returned response.
 
 ### Filters
 
@@ -69,7 +69,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 
 ## List concepts for a dataset
 
@@ -110,7 +110,7 @@ curl -X GET https://api.resourcewatch.org/v1/graph/query/list-concepts/:dataset
 }
 ```
 
-This endpoint returns the list of relationships between the dataset with id provided in the URL path and concepts. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](#graph-relationship-reference) for details on each of the fields of the returned response.
+This endpoint returns the list of relationships between the dataset with id provided in the URL path and concepts. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](/reference.html#graph-relationship-reference) for details on each of the fields of the returned response.
 
 If the dataset id provided is not valid or not found, the response returned will contain an empty list in the `data` index.
 
@@ -126,7 +126,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 
 ## List concepts for multiple datasets
 
@@ -175,7 +175,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/find-by-ids \
 }
 ```
 
-This endpoint returns the list of relationships between the datasets with ids provided in the body of the POST request. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](#graph-relationship-reference) for details on each of the fields of the returned response.
+This endpoint returns the list of relationships between the datasets with ids provided in the body of the POST request. If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one graph relationship. Check out the [Graph relationship reference](/reference.html#graph-relationship-reference) for details on each of the fields of the returned response.
 
 ### Filters
 
@@ -189,7 +189,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 
 ### Errors for listing concepts for multiple datasets
 
@@ -238,7 +238,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/query/concepts-inferred \
 
 This endpoint lets API users discover concepts that have relationships in common with the list of concepts provided. You can use the GET version of the endpoint, providing the list of concepts as a comma-separated string query string parameter. Alternatively, you can use the POST version and provide the list of concepts in the `concepts` index of the POST request body.
 
-If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](#graph-concept-reference) for details on each of the fields of the returned response.
+If successful, the response will have status 200 OK, containing a list of elements in the `data` index, each containing the information about one concept. Check out the [Graph concept reference](/reference.html#graph-concept-reference) for details on each of the fields of the returned response.
 
 ### Filters
 
@@ -252,7 +252,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 
 ### Errors for listing concepts for multiple datasets
 
@@ -309,7 +309,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 
 ### Errors for querying similar datasets
 
@@ -372,7 +372,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 
 ### Errors for querying similar datasets
 
@@ -459,7 +459,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated with this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated with this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 depth        | Limits the depth of the graph search. | Number | 15
 
 ### Errors for searching datasets by concepts
@@ -517,7 +517,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 
 ### Errors for searching datasets by concepts and their synonyms
 
@@ -573,7 +573,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated to this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated to this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 
 ## Most viewed datasets
 
@@ -605,7 +605,7 @@ This endpoint returns a list of dataset sorted by the number of times these data
 
 If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property and the number of times the dataset was viewed in the `views` property.
 
-Note that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](#increment-dataset-view-count).
+Note that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](/reference.html#increment-dataset-view-count).
 
 ### Filters
 
@@ -625,7 +625,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated with this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated with this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
 
 ## Most viewed datasets by user
@@ -659,7 +659,7 @@ This endpoint returns a list of dataset sorted by the number of times these data
 
 If successful, this endpoint will return 200 OK, containing the list of sorted datasets in the `data` index of the response body. Each element of the list contains the dataset id in the `dataset` property and the number of times the dataset was viewed in the `views` property.
 
-As in the case of the `most-viewed` endpoint, please keep in mind that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](#increment-dataset-view-count).
+As in the case of the `most-viewed` endpoint, please keep in mind that the concept of view might differ from one application to another. In order to increase the view count of a dataset, an application has to explicitly increment the count for that dataset by calling the [increment view endpoint](/reference.html#increment-dataset-view-count).
 
 ### Filters
 
@@ -679,7 +679,7 @@ This endpoint supports the following filters as query string parameters:
 
 Filter       | Description                   | Type        | Default value
 ------------ | ----------------------------- | ----------- | ----------------
-application  | Applications associated with this concept - read more about this field [here](/reference.html#applications). | String | `"rw"`
+application  | Applications associated with this concept - read more about this field [here](/concepts.html#applications). | String | `"rw"`
 limit        | Limits the number of results returned in the response. | Number | No limit applied - all results are returned.
 
 ### Errors for getting most viewed datasets by user
@@ -808,7 +808,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dataset/:id/vocabulary/knowledge
 
 **The management of connections between resources and concepts is handled by vocabulary endpoints, using the vocabulary `"knowledge_graph"`.** Using this vocabulary, you can add tags to your dataset. These tags will be added as concepts, and one (or more, accordingly) graph edges will be created, establishing a connection between your resource and the provided tags.
 
-This section provides some examples of how you can use vocabulary endpoints to manage your resources' concepts. Keep in mind that you can always refer to the [vocabulary endpoint documentation](#vocabulary-and-tags) for more details on how to use these endpoints.
+This section provides some examples of how you can use vocabulary endpoints to manage your resources' concepts. Keep in mind that you can always refer to the [vocabulary endpoint documentation](/reference.html#vocabularies-and-tags) for more details on how to use these endpoints.
 
 On the examples on the side, you'll be able to understand that you can map the tags associated with a given resource with the tags associated with the `"knowledge_graph"` vocabulary for the same resource. You can use vocabulary's endpoints to create (if it doesn't exist yet), edit, or delete the tags associated with that resource. Those changes will be reflected in the concepts that are associated with that same resource.
 
@@ -816,7 +816,7 @@ Lastly, keep in mind that, despite the examples on the side refer to datasets, y
 
 ## Favorite relationships between graph nodes and users
 
-As in the case of managing relationships between graph nodes and concepts, **the management of favorite relationships between resources and users is handled by vocabulary endpoints.** Please refer to the [favorite endpoint documentation](#favorites) for more details on how to use these endpoints.
+As in the case of managing relationships between graph nodes and concepts, **the management of favorite relationships between resources and users is handled by vocabulary endpoints.** Please refer to the [favorite endpoint documentation](/reference.html#favorites) for more details on how to use these endpoints.
 
 ## Graph concept reference
 

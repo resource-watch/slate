@@ -2,11 +2,11 @@
 
 ## What are fields?
 
-Fields are the properties of a dataset your will find when querying its data, use when filtering data through [queries](#query), or visualise when rendering a [layer](#layer) or a [widget](#widget). 
+Fields are the properties of a dataset your will find when querying its data, use when filtering data through [queries](/concepts.html#query), or visualise when rendering a [layer](/concepts.html#layer) or a [widget](/concepts.html#widget). 
 
 Fields are part of a dataset, and are determined by the structure of data provided by the dataset creator. Each field also includes information about its data type, derived automatically by the dataset provider (check out the specifics of each provider in the sections below). If you are uploading your own datasets to the RW API, you don't have to do anything else for your dataset to be available through the fields endpoints - there's no additional data you have to provide. Keep in mind the endpoints described in the sections below are **read-only** - if you want to change your dataset's fields, you need to upload the dataset's data again.
 
-Fields are targeted at users consuming datasets available on the RW API, particularly if you want to build a flexible and scalable application. The fields endpoints aim at giving you a consistent and uniform view of the structure of data hosted in different [dataset providers](#dataset-providers), that would otherwise be served in a heterogeneous structure.
+Fields are targeted at users consuming datasets available on the RW API, particularly if you want to build a flexible and scalable application. The fields endpoints aim at giving you a consistent and uniform view of the structure of data hosted in different [dataset providers](/concepts.html#dataset-providers), that would otherwise be served in a heterogeneous structure.
 
 ## How to get the dataset fields
 
@@ -47,7 +47,7 @@ curl -X GET https://api.resourcewatch.org/v1/fields/<dataset-id>
 
 Once the dataset has been created and its status is set to `saved`, you will be able to use this endpoint to get details about a its fields. The resulting response contains two root fields
 
-- `tableName`: a string containing the table name, as stored in the dataset object. The value and function of this field will depend on the dataset's provider, and you can refer to the [dataset](#dataset) documentation for more details about this.
+- `tableName`: a string containing the table name, as stored in the dataset object. The value and function of this field will depend on the dataset's provider, and you can refer to the [dataset](/reference.html#dataset) documentation for more details about this.
 - `fields`: a key-value pair of field names and their respective details. 
 
 While the aim of this endpoint is to provide an homogeneous view of data stored in different systems, you will still encounter slight variations in data, depending on the underlying type of the dataset you're querying. The example response on the right illustrates the typical basic response structure: `tableName` with a string value, and a `fields` map that matches each field's name to a `type`. You'll find this structure throughout all responses, but you may also find additional details for each field, and the data types may vary in name. In the next sections we'll cover some of the specifics for each dataset type.

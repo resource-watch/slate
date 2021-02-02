@@ -89,7 +89,7 @@ published      | Filter dashboards by publishing status (true, false).          
 private        | Filter dashboards by private status (true, false).                                | Boolean
 user           | Filter dashboards by author user id.                                              | Text
 user.role      | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
-application    | The application to which the dashboard belongs. Read more about this field [here](/reference.html#applications). | Text (single value)
+application    | The application to which the dashboard belongs. Read more about this field [here](/concepts.html#applications). | Text (single value)
 is-highlighted | Filter dashboards by highlighted ones (true,false).                               | Boolean
 is-featured    | Filter dashboards by featured ones (true,false).                                  | Boolean
 author-title   | Filter dashboards by the title of the author of the dashboard.                    | Text
@@ -104,7 +104,7 @@ author-title   | Filter dashboards by the title of the author of the dashboard. 
 curl -X GET https://api.resourcewatch.org/v1/dashboard?page[number]=2&page[size]=25
 ```
 
-The Dashboards service adheres to the conventions defined in the [Pagination guidelines for the RW API](/reference.html#pagination), so we recommend reading that section for more details on how paginate your dashboards list.
+The Dashboards service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your dashboards list.
 
 ### Sorting
 
@@ -132,7 +132,7 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=-name,+slug
 curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=user.role
 ```
 
-The Dashboards service currently supports sorting using the `sort` query parameter. Sorting dashboards adheres to the conventions defined in the [Sorting guidelines for the RW API](/reference.html#sorting), so we strongly recommend reading that section before proceeding. In addition to all dashboard model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dashboard. Keep in mind that sorting by user data is restricted to ADMIN users.
+The Dashboards service currently supports sorting using the `sort` query parameter. Sorting dashboards adheres to the conventions defined in the [Sorting guidelines for the RW API](/concepts.html#sorting), so we strongly recommend reading that section before proceeding. In addition to all dashboard model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dashboard. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 ### Include related entities
 
@@ -316,7 +316,7 @@ curl -X POST https://api.resourcewatch.org/v1/dashboard \
 }
 ```
 
-When creating a dashboard, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Additionally, keep in mind that this endpoint implements role-based access control in accordance with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
+When creating a dashboard, the `application` field should be present and cannot contain any values that are not associated with the creating user's account. If an `application` value is not provided, `["rw"]` is used by default, and the process will fail if the user account does not belong to it. Additionally, keep in mind that this endpoint implements role-based access control in accordance with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 
 Supported fields:
 
@@ -332,7 +332,7 @@ private         | If the dashboard is private or publicly available.            
 production      | If the dashboard is available in the production environment.                 | boolean
 preproduction   | If the dashboard is available in the preproduction environment.              | boolean
 staging         | If the dashboard is available in the staging environment.                    | boolean
-application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`. Read more about this field [here](/reference.html#applications). | array of strings
+application     | Application(s) to which the dashboard belongs. Defaults to `["rw"]`. Read more about this field [here](/concepts.html#applications). | array of strings
 is-highlighted  | If this dashboard is highlighted (`true`/`false`). Defaults to `false`. Only accessible to users with `ADMIN` role. | boolean
 is-featured     | If this dashboard is featured (`true`/`false`). Defaults to `false`. Can only be set by user with `ADMIN` role. | boolean
 author-title    | The title of the author of the dashboard.                                    | any valid text
@@ -396,7 +396,7 @@ curl -X PATCH https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> \
 
 In order to perform this operation, the following conditions must be met:
 
-- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 - the user must be logged in and belong to the same application as the dashboard
 
 When updating the `application` field of a dashboard, a user cannot add values not associated with their user account.
@@ -413,7 +413,7 @@ curl -X DELETE https://api.resourcewatch.org/v1/dashboard/<id of the dashboard> 
 
 In order to perform this operation, the following conditions must be met:
 
-- the user must comply with [the RW API role-based access control guidelines](/reference.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 - the user must be logged in and belong to the same application as the dashboard
 
 ## Clone dashboard
