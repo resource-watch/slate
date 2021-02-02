@@ -13,7 +13,18 @@ includes:
   - tos
   - concept/intro
   - back
-  - concept/overview
+
+  - concept/behaviors_header
+  - concept/caching
+  - concept/sorting_filtering
+  - concept/pagination
+
+  - concept/concepts_header
+  - concept/applications
+  - concept/environments
+  - concept/user_roles
+
+  - concept/core_resources_header
   - concept/dataset
   - concept/query
   - concept/layer

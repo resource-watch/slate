@@ -14,7 +14,6 @@ includes:
   - api/intro
   - back
   - api/authentication
-  - api/contact
   - api/dataset
   - api/fields
   - api/query
@@ -39,6 +38,7 @@ includes:
   - api/user_management
   - api/microservices
   - api/troubleshooting
+  - api/contact
   - errors
 
 logo: logo-rw.png
