@@ -103,7 +103,7 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    sassc (2.4.0)
+    sassc (2.1.0)
       ffi (~> 1.9)
     servolux (0.13.0)
     sprockets (3.7.2)
@@ -133,9 +133,6 @@ DEPENDENCIES
 
 RUBY VERSION
    ruby 2.7.2p137
-
-RUBY VERSION
-   ruby 2.4.1p111
 
 BUNDLED WITH
    2.1.4
