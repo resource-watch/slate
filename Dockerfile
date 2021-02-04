@@ -1,15 +1,28 @@
-FROM ruby:2.4.1-stretch
-RUN apt-get update \
-    && apt-get upgrade --yes \
-    && apt-get install --yes \
-    nodejs \
-    && apt-get clean
-ADD source /app/source
-ADD Gemfile /app/Gemfile
-ADD config.rb /app/config.rb
-ADD Gemfile.lock /app/Gemfile.lock
-RUN gem install --no-ri --no-rdoc bundler execjs
-WORKDIR /app/source
-RUN bundle install
+FROM ruby:2.6-slim
+
+WORKDIR /srv/slate
+
+VOLUME /srv/slate/build
+VOLUME /srv/slate/source
+
 EXPOSE 4567
-CMD ["bundle", "exec", "middleman", "server"]
+
+COPY Gemfile .
+COPY Gemfile.lock .
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        nodejs \
+    && gem install bundler \
+    && bundle install \
+    && apt-get remove -y build-essential \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY . /srv/slate
+
+RUN chmod +x /srv/slate/slate.sh
+
+ENTRYPOINT ["/srv/slate/slate.sh"]
+CMD ["build"]

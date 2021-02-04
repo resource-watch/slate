@@ -17,5 +17,7 @@ includes:
 logo: logo-rw.png
 
 search: true
+
+code_clipboard: true
 ---
 
