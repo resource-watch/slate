@@ -1,5 +1,31 @@
 require 'nokogiri'
 
+def static_links()
+  links = [
+    {
+      href: 'index.html',
+      title: 'Home'
+    },
+    {
+      href: 'quickstart.html',
+      title: 'Quickstart'
+    },
+    {
+      href: 'concepts.html',
+      title: 'Concepts'
+    },
+    {
+      href: 'reference.html',
+      title: 'Reference'
+    },
+    {
+      href: 'tutorials.html',
+      title: 'Tutorials'
+    }
+  ]
+  links
+end
+
 def toc_data(page_content)
   html_doc = Nokogiri::HTML::DocumentFragment.parse(page_content)
 
