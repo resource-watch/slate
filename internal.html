@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html>
   <head>
@@ -6,111 +7,362 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>RW API Internal docs</title>
 
-    <style>
+    <style media="screen">
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
-.highlight, .highlight .w {
-  color: #f8f8f2;
-  background-color: #272822;
+.highlight .gh {
+  color: #999999;
 }
-.highlight .err {
-  color: #272822;
-  background-color: #f92672;
+.highlight .sr {
+  color: #f6aa11;
 }
-.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
   color: #75715e;
 }
 .highlight .cp {
-  color: #f4bf75;
+  color: #75715e;
 }
-.highlight .nt {
-  color: #f4bf75;
+.highlight .c1 {
+  color: #75715e;
 }
-.highlight .o, .highlight .ow {
-  color: #f8f8f2;
+.highlight .cs {
+  color: #75715e;
 }
-.highlight .p, .highlight .pi {
-  color: #f8f8f2;
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
+  color: #75715e;
 }
-.highlight .gi {
-  color: #a6e22e;
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
 }
 .highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s, .highlight .sa, .highlight .dl {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf, .highlight .fm {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv, .highlight .vm {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .nl {
   color: #f92672;
 }
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <style media="print">
+      * {
+        -webkit-transition:none!important;
+        transition:none!important;
+      }
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #586e75;
+}
+.highlight .err {
+  color: #002b36;
+  background-color: #dc322f;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs {
+  color: #657b83;
+}
+.highlight .cp {
+  color: #b58900;
+}
+.highlight .nt {
+  color: #b58900;
+}
+.highlight .o, .highlight .ow {
+  color: #93a1a1;
+}
+.highlight .p, .highlight .pi {
+  color: #93a1a1;
+}
+.highlight .gi {
+  color: #859900;
+}
+.highlight .gd {
+  color: #dc322f;
+}
 .highlight .gh {
-  color: #66d9ef;
-  background-color: #272822;
+  color: #268bd2;
+  background-color: #002b36;
   font-weight: bold;
 }
 .highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
-  color: #ae81ff;
+  color: #6c71c4;
 }
 .highlight .kc {
-  color: #fd971f;
+  color: #cb4b16;
 }
 .highlight .kt {
-  color: #fd971f;
+  color: #cb4b16;
 }
 .highlight .kd {
-  color: #fd971f;
+  color: #cb4b16;
 }
-.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
-  color: #a6e22e;
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #859900;
+}
+.highlight .sa {
+  color: #6c71c4;
 }
 .highlight .sr {
-  color: #a1efe4;
+  color: #2aa198;
 }
 .highlight .si {
-  color: #cc6633;
+  color: #d33682;
 }
 .highlight .se {
-  color: #cc6633;
+  color: #d33682;
 }
 .highlight .nn {
-  color: #f4bf75;
+  color: #b58900;
 }
 .highlight .nc {
-  color: #f4bf75;
+  color: #b58900;
 }
 .highlight .no {
-  color: #f4bf75;
+  color: #b58900;
 }
 .highlight .na {
-  color: #66d9ef;
+  color: #268bd2;
 }
-.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
-  color: #a6e22e;
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
+  color: #859900;
 }
 .highlight .ss {
-  color: #a6e22e;
+  color: #859900;
 }
     </style>
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
-      <script src="javascripts/all.js"></script>
+    <link href="stylesheets/screen-f112f4df.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print-4d023e20.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all-510caf58.js"></script>
+
   </head>
 
   <body class="internal rw" data-languages="[&quot;shell&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
-        <img src="images/navbar.png" alt="Navbar" />
+        <img src="images/navbar-cad8cdcb.png" alt="" />
       </span>
     </a>
-    <div class="tocify-wrapper">
-      <img src="images/logo-rw.png" alt="Logo rw" />
+    <div class="toc-wrapper">
+      <img src="images/logo-a42ba9eb.png" class="logo" alt="" />
         <div class="lang-selector">
               <a href="#" data-language-name="shell">cURL</a>
         </div>
+      <ul class="toc-list-h1">
+        <li>
+          <a href="/index.html" class="toc-h1 toc-link" data-title="Home">Home</a>
+        </li>
+        <li>
+          <a href="/quickstart.html" class="toc-h1 toc-link" data-title="Quickstart">Quickstart</a>
+        </li>
+        <li>
+          <a href="/concepts.html" class="toc-h1 toc-link" data-title="Concepts">Concepts</a>
+        </li>
+        <li>
+          <a href="/reference.html" class="toc-h1 toc-link" data-title="Reference">Reference</a>
+        </li>
+        <li>
+          <a href="/tutorials.html" class="toc-h1 toc-link" data-title="Tutorials">Tutorials</a>
+        </li>
+      </ul>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
         <ul class="search-results"></ul>
-      <div id="toc">
-      </div>
+      <ul id="toc" class="toc-list-h1">
+          <li>
+            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#dataset" class="toc-h1 toc-link" data-title="Dataset">Dataset</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#nexgddp" class="toc-h2 toc-link" data-title="NEXGDDP">NEXGDDP</a>
+                  </li>
+                  <li>
+                    <a href="#loca" class="toc-h2 toc-link" data-title="Loca">Loca</a>
+                  </li>
+                  <li>
+                    <a href="#bigquery" class="toc-h2 toc-link" data-title="BigQuery">BigQuery</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#layer" class="toc-h1 toc-link" data-title="Layer">Layer</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#updating-the-env-for-all-layers-for-a-dataset" class="toc-h2 toc-link" data-title="Updating the env for all layers for a dataset">Updating the env for all layers for a dataset</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#errors-for-updating-the-env-for-all-layers-for-a-dataset" class="toc-h3 toc-link" data-title="Errors for updating the env for all layers for a dataset">Errors for updating the env for all layers for a dataset</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#deleting-all-layers-for-a-dataset" class="toc-h2 toc-link" data-title="Deleting all layers for a dataset">Deleting all layers for a dataset</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#errors-for-deleting-all-layers-for-a-dataset" class="toc-h3 toc-link" data-title="Errors for deleting all layers for a dataset">Errors for deleting all layers for a dataset</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </li>
+      </ul>
         <ul class="toc-footer">
-            <li><a href='https://ui.resourcewatch.org'>Sign Up for a Developer Key</a></li>
+            <li><a href='/quickstart.html'>Getting started</a></li>
             <li><a href='https://github.com/resource-watch/doc-api'>Contribute to these docs</a></li>
             <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
@@ -118,22 +370,17 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="introduction">Introduction</h1>
-
+        <h1 id='introduction'>Introduction</h1>
 <p>Welcome to the Resource Watch API Internal Documentation</p>
-
-          <h1 id="dataset">Dataset</h1>
-
+<h1 id='dataset'>Dataset</h1>
 <p>Besides the dataset types documented on the core dataset docs, there are additional dataset types that are available to internal developers only.</p>
-
-<h3 id="nexgddp">NEXGDDP</h3>
-
+<h3 id='nexgddp'>NEXGDDP</h3>
 <blockquote>
 <p>Example of creating a dataset based on NEXGDDP data with the minimum fields required</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
 <span class="s1">'{
    "dataset": {
      "application": [
@@ -145,7 +392,7 @@
      "tableName": "tasmin/rcp45_decadal"
    }
  }'</span>
-</code></pre>
+</code></pre></div>
 <p>To create a dataset using NEXGDDP as data source, besides the common required fields, you must provide the following required data:</p>
 
 <table><thead>
@@ -156,41 +403,39 @@
 </tr>
 </thead><tbody>
 <tr>
-<td><code class="prettyprint">connectorType</code></td>
-<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
-<td style="text-align: right"><code class="prettyprint">rest</code></td>
+<td><code>connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code>rest</code>.</td>
+<td style="text-align: right"><code>rest</code></td>
 </tr>
 <tr>
-<td><code class="prettyprint">provider</code></td>
-<td style="text-align: center">The provider should be set to <code class="prettyprint">nexgddp</code>.</td>
-<td style="text-align: right"><code class="prettyprint">nexgddp</code></td>
+<td><code>provider</code></td>
+<td style="text-align: center">The provider should be set to <code>nexgddp</code>.</td>
+<td style="text-align: right"><code>nexgddp</code></td>
 </tr>
 <tr>
-<td><code class="prettyprint">tableName</code></td>
+<td><code>tableName</code></td>
 <td style="text-align: center"></td>
 <td style="text-align: right">tasmin/rcp45_decadal</td>
 </tr>
 </tbody></table>
 
-<p>This dataset type assumes that data is already present in WRI&rsquo;s Rasdaman server, and makes no attempt to put it there. It should be accessible via the <code class="prettyprint">tableName</code> specified in the request.</p>
+<p>This dataset type assumes that data is already present in WRI&#39;s Rasdaman server, and makes no attempt to put it there. It should be accessible via the <code>tableName</code> specified in the request.</p>
 
-<p>The RW API will use the information above to directly query the NEXGDDP dataset specified on the <code class="prettyprint">tableName</code> field that should live on WRI&rsquo;s Rasdaman server, whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+<p>The RW API will use the information above to directly query the NEXGDDP dataset specified on the <code>tableName</code> field that should live on WRI&#39;s Rasdaman server, whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
 
 <ul>
 <li>Any changes made to the data hosted on the Rasdaman server will be automatically reflected on the data served by the RW API for this dataset.</li>
 <li>If you restructure or delete your NEXGDDP dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
 </ul>
 
-<p>When creating a NEXGDDP dataset, the RW API will try to validate it by connecting to the corresponding dataset on the Rasdaman server - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
-
-<h3 id="loca">Loca</h3>
-
+<p>When creating a NEXGDDP dataset, the RW API will try to validate it by connecting to the corresponding dataset on the Rasdaman server - the result of this will determine if the dataset&#39;s status will be set to <code>saved</code> or <code>error</code>.</p>
+<h3 id='loca'>Loca</h3>
 <blockquote>
 <p>Example of creating a dataset based on Loca data with the minimum fields required</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>  -d <span class="se">\</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST https://api.resourcewatch.org/v1/dataset <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
 <span class="s1">'{
    "dataset": {
      "application": [
@@ -202,7 +447,7 @@
      "tableName": "loca_tasavg/rcp85_decadal"
    }
  }'</span>
-</code></pre>
+</code></pre></div>
 <p>To create a dataset using Loca as data source, besides the common required fields, you must provide the following required data:</p>
 
 <table><thead>
@@ -213,41 +458,39 @@
 </tr>
 </thead><tbody>
 <tr>
-<td><code class="prettyprint">connectorType</code></td>
-<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
-<td style="text-align: right"><code class="prettyprint">rest</code></td>
+<td><code>connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code>rest</code>.</td>
+<td style="text-align: right"><code>rest</code></td>
 </tr>
 <tr>
-<td><code class="prettyprint">provider</code></td>
-<td style="text-align: center">The provider should be set to <code class="prettyprint">loca</code>.</td>
-<td style="text-align: right"><code class="prettyprint">loca</code></td>
+<td><code>provider</code></td>
+<td style="text-align: center">The provider should be set to <code>loca</code>.</td>
+<td style="text-align: right"><code>loca</code></td>
 </tr>
 <tr>
-<td><code class="prettyprint">tableName</code></td>
+<td><code>tableName</code></td>
 <td style="text-align: center"></td>
 <td style="text-align: right">loca_tasavg/rcp85_decadal</td>
 </tr>
 </tbody></table>
 
-<p>This dataset type assumes that data is already present in WRI&rsquo;s Rasdaman server, and makes no attempt to put it there. It should be accessible via the <code class="prettyprint">tableName</code> specified in the request.</p>
+<p>This dataset type assumes that data is already present in WRI&#39;s Rasdaman server, and makes no attempt to put it there. It should be accessible via the <code>tableName</code> specified in the request.</p>
 
-<p>The RW API will use the information above to directly query the Loca dataset specified on the <code class="prettyprint">tableName</code> field that should live on WRI&rsquo;s Rasdaman server, whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
+<p>The RW API will use the information above to directly query the Loca dataset specified on the <code>tableName</code> field that should live on WRI&#39;s Rasdaman server, whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
 
 <ul>
 <li>Any changes made to the data hosted on the Rasdaman server will be automatically reflected on the data served by the RW API for this dataset.</li>
 <li>If you restructure or delete your Loca dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
 </ul>
 
-<p>When creating a Loca dataset, the RW API will try to validate it by connecting to the corresponding dataset on the Rasdaman server - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
-
-<h3 id="bigquery">BigQuery</h3>
-
+<p>When creating a Loca dataset, the RW API will try to validate it by connecting to the corresponding dataset on the Rasdaman server - the result of this will determine if the dataset&#39;s status will be set to <code>saved</code> or <code>error</code>.</p>
+<h3 id='bigquery'>BigQuery</h3>
 <blockquote>
 <p>Example of creating a dataset based on BigQuery data with the minimum fields required</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X POST <span class="s1">'https://api.resourcewatch.org/v1/dataset'</span> -d <span class="se">\</span>
--H <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>  <span class="se">\</span>
--H <span class="s1">'Content-Type: application/json'</span> -d <span class="se">\</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="s1">'https://api.resourcewatch.org/v1/dataset'</span> <span class="nt">-d</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;your-token&gt;'</span>  <span class="se">\</span>
+<span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
 <span class="s1">'{"
   dataset": {
     "name": "World Bank: Education Data. Contains key education statistics from a variety of sources to provide a look at global literacy, spending, and access",
@@ -257,7 +500,7 @@
     "application": ["rw"]
   }
 }'</span>
-</code></pre>
+</code></pre></div>
 <p>To create a dataset using BigQuery as data source, besides the common required fields, you must provide the following required data:</p>
 
 <table><thead>
@@ -268,23 +511,23 @@
 </tr>
 </thead><tbody>
 <tr>
-<td><code class="prettyprint">connectorType</code></td>
-<td style="text-align: center">The type of connector. Must be set to <code class="prettyprint">rest</code>.</td>
-<td style="text-align: right"><code class="prettyprint">rest</code></td>
+<td><code>connectorType</code></td>
+<td style="text-align: center">The type of connector. Must be set to <code>rest</code>.</td>
+<td style="text-align: right"><code>rest</code></td>
 </tr>
 <tr>
-<td><code class="prettyprint">provider</code></td>
-<td style="text-align: center">The provider should be set to <code class="prettyprint">bigquery</code>.</td>
-<td style="text-align: right"><code class="prettyprint">bigquery</code></td>
+<td><code>provider</code></td>
+<td style="text-align: center">The provider should be set to <code>bigquery</code>.</td>
+<td style="text-align: right"><code>bigquery</code></td>
 </tr>
 <tr>
-<td><code class="prettyprint">tableName</code></td>
-<td style="text-align: center">Dataset&rsquo;s reference in [owner:dataset.table] format</td>
+<td><code>tableName</code></td>
+<td style="text-align: center">Dataset&#39;s reference in [owner:dataset.table] format</td>
 <td style="text-align: right">[bigquery-public-data.world_bank_intl_education.international_education]</td>
 </tr>
 </tbody></table>
 
-<p>This dataset type assumes that data is already present on the location identified by the value in <code class="prettyprint">tableName</code>, and makes no attempt to put it there.</p>
+<p>This dataset type assumes that data is already present on the location identified by the value in <code>tableName</code>, and makes no attempt to put it there.</p>
 
 <p>The RW API will use the information above to directly query the BigQuery dataset specified above whenever this dataset is accessed on the RW API. This has a few implications that you should be aware of:</p>
 
@@ -293,27 +536,21 @@
 <li>If you restructure or delete your BigQuery dataset, the corresponding RW API dataset will be in an invalid state, and you should delete it.</li>
 </ul>
 
-<p>When creating a Loca dataset, the RW API will try to validate it by connecting to the corresponding dataset on BigQuery - the result of this will determine if the dataset&rsquo;s status will be set to <code class="prettyprint">saved</code> or <code class="prettyprint">error</code>.</p>
+<p>When creating a Loca dataset, the RW API will try to validate it by connecting to the corresponding dataset on BigQuery - the result of this will determine if the dataset&#39;s status will be set to <code>saved</code> or <code>error</code>.</p>
 
-<p><strong>Important</strong>: as BigQuery is billed by query, opening this connector to the world could have a large impact on the API&rsquo;s cost. As such, creating BigQuery datasets is restricted to specific users. </p>
-
-          <h1 id="layer">Layer</h1>
-
-<h2 id="updating-the-env-for-all-layers-for-a-dataset">Updating the env for all layers for a dataset</h2>
-
+<p><strong>Important</strong>: as BigQuery is billed by query, opening this connector to the world could have a large impact on the API&#39;s cost. As such, creating BigQuery datasets is restricted to specific users. </p>
+<h1 id='layer'>Layer</h1><h2 id='updating-the-env-for-all-layers-for-a-dataset'>Updating the env for all layers for a dataset</h2>
 <blockquote>
 <p>Example PATCH request that sets all layer for the given dataset to the defined env:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X PATCH <span class="s2">"https://api.resourcewatch.org/v1/layer/change-environment/&lt;dataset-id&gt;/&lt;env&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>
-</code></pre>
-<p>This endpoints updates the <code class="prettyprint">env</code> value of all layers associated with the given dataset id. It&rsquo;s only available to other microservices, and cannot be called directly by an API user. Its currently used when a dataset&rsquo;s <code class="prettyprint">env</code> value is updated.</p>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH <span class="s2">"https://api.resourcewatch.org/v1/layer/change-environment/&lt;dataset-id&gt;/&lt;env&gt;"</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>
+</code></pre></div>
+<p>This endpoints updates the <code>env</code> value of all layers associated with the given dataset id. It&#39;s only available to other microservices, and cannot be called directly by an API user. Its currently used when a dataset&#39;s <code>env</code> value is updated.</p>
 
-<p>The update process is not atomic. A successful request will return a 204 <code class="prettyprint">No content</code> response.</p>
-
-<h4 id="errors-for-updating-the-env-for-all-layers-for-a-dataset">Errors for updating the env for all layers for a dataset</h4>
-
+<p>The update process is not atomic. A successful request will return a 204 <code>No content</code> response.</p>
+<h4 id='errors-for-updating-the-env-for-all-layers-for-a-dataset'>Errors for updating the env for all layers for a dataset</h4>
 <table><thead>
 <tr>
 <th>Error code</th>
@@ -337,61 +574,57 @@
 <td>A dataset with the provided id does not exist.</td>
 </tr>
 </tbody></table>
-
-<h2 id="deleting-all-layers-for-a-dataset">Deleting all layers for a dataset</h2>
-
+<h2 id='deleting-all-layers-for-a-dataset'>Deleting all layers for a dataset</h2>
 <blockquote>
 <p>Example DELETE request that deletes all layers for a dataset:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer"</span> <span class="se">\</span>
--H <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
--H <span class="s2">"Content-Type: application/json"</span>
-</code></pre>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="s2">"https://api.resourcewatch.org/v1/dataset/&lt;dataset-id&gt;/layer"</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;microservice-token&gt;"</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>
+</code></pre></div>
 <blockquote>
 <p>Response:</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bd8a36df-2e52-4b2d-b7be-a48bdcd7c769"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Water stress"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Water-stress_7"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"water stress"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bd8a36df-2e52-4b2d-b7be-a48bdcd7c769"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"layer"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Water stress"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Water-stress_7"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"dataset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7fa6ec77-5ab0-43f4-9a4c-a3d19bed1e90"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"water stress"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
                     </span><span class="s2">"rw"</span><span class="w">
                 </span><span class="p">],</span><span class="w">
-                </span><span class="s2">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-                </span><span class="s2">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb06df2dc74d2ad054fb"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"layerConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-                </span><span class="s2">"legendConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-                </span><span class="s2">"interactionConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-                </span><span class="s2">"applicationConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-                </span><span class="s2">"staticImageConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-                </span><span class="s2">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-04T14:28:24.575Z"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-04T14:28:24.575Z"</span><span class="w">
+                </span><span class="nl">"iso"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb06df2dc74d2ad054fb"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"default"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"layerConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="nl">"legendConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="nl">"interactionConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="nl">"applicationConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="nl">"staticImageConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-04T14:28:24.575Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-06-04T14:28:24.575Z"</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">},</span><span class="w"> 
         </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoints allows deleting all layers for a given dataset id. It&rsquo;s only available to other microservices, and cannot be called directly by an API user. Its currently used when a dataset is deleted, and all its layers need to be deleted in the process.</p>
+</span></code></pre></div>
+<p>This endpoints allows deleting all layers for a given dataset id. It&#39;s only available to other microservices, and cannot be called directly by an API user. Its currently used when a dataset is deleted, and all its layers need to be deleted in the process.</p>
 
 <p>Like when deleting a single layer by id, deleting layers this way will also delete vocabulary tags and metadata associated with the layer, in a non-atomic way, and any failure while deleting those associated elements will also not be reflected on the response.</p>
 
-<p>Unlike when deleting a single layer, when deleting layers this way, the <code class="prettyprint">protected</code> value is ignored, and layers will be deleted even if its value is set to true.</p>
+<p>Unlike when deleting a single layer, when deleting layers this way, the <code>protected</code> value is ignored, and layers will be deleted even if its value is set to true.</p>
 
 <p>The process of deleting multiple layers is not atomic. Layers will be deleted using a random order, and a failure in deleting one of them will produce an error, but already deleted layers will not be rolled back.</p>
-
-<h4 id="errors-for-deleting-all-layers-for-a-dataset">Errors for deleting all layers for a dataset</h4>
-
+<h4 id='errors-for-deleting-all-layers-for-a-dataset'>Errors for deleting all layers for a dataset</h4>
 <table><thead>
 <tr>
 <th>Error code</th>

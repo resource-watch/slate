@@ -1,0 +1,515 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Quickstart - Resource Watch API</title>
+
+    <style media="screen">
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s, .highlight .sa, .highlight .dl {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf, .highlight .fm {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv, .highlight .vm {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #f92672;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <style media="print">
+      * {
+        -webkit-transition:none!important;
+        transition:none!important;
+      }
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #586e75;
+}
+.highlight .err {
+  color: #002b36;
+  background-color: #dc322f;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs {
+  color: #657b83;
+}
+.highlight .cp {
+  color: #b58900;
+}
+.highlight .nt {
+  color: #b58900;
+}
+.highlight .o, .highlight .ow {
+  color: #93a1a1;
+}
+.highlight .p, .highlight .pi {
+  color: #93a1a1;
+}
+.highlight .gi {
+  color: #859900;
+}
+.highlight .gd {
+  color: #dc322f;
+}
+.highlight .gh {
+  color: #268bd2;
+  background-color: #002b36;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #6c71c4;
+}
+.highlight .kc {
+  color: #cb4b16;
+}
+.highlight .kt {
+  color: #cb4b16;
+}
+.highlight .kd {
+  color: #cb4b16;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #859900;
+}
+.highlight .sa {
+  color: #6c71c4;
+}
+.highlight .sr {
+  color: #2aa198;
+}
+.highlight .si {
+  color: #d33682;
+}
+.highlight .se {
+  color: #d33682;
+}
+.highlight .nn {
+  color: #b58900;
+}
+.highlight .nc {
+  color: #b58900;
+}
+.highlight .no {
+  color: #b58900;
+}
+.highlight .na {
+  color: #268bd2;
+}
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
+  color: #859900;
+}
+.highlight .ss {
+  color: #859900;
+}
+    </style>
+    <link href="stylesheets/screen-f112f4df.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print-4d023e20.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all-510caf58.js"></script>
+
+  </head>
+
+  <body class="quickstart " data-languages="[&quot;shell&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar-cad8cdcb.png" alt="" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <img src="images/logo-a42ba9eb.png" class="logo" alt="" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="shell">cURL</a>
+        </div>
+      <ul class="toc-list-h1">
+        <li>
+          <a href="/index.html" class="toc-h1 toc-link" data-title="Home">Home</a>
+        </li>
+        <li>
+          <a href="/quickstart.html" class="toc-h1 toc-link" data-title="Quickstart">Quickstart</a>
+        </li>
+        <li>
+          <a href="/concepts.html" class="toc-h1 toc-link" data-title="Concepts">Concepts</a>
+        </li>
+        <li>
+          <a href="/reference.html" class="toc-h1 toc-link" data-title="Reference">Reference</a>
+        </li>
+        <li>
+          <a href="/tutorials.html" class="toc-h1 toc-link" data-title="Tutorials">Tutorials</a>
+        </li>
+      </ul>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <ul id="toc" class="toc-list-h1">
+          <li>
+            <a href="#resource-watch-api-quickstart" class="toc-h1 toc-link" data-title="Resource Watch API Quickstart">Resource Watch API Quickstart</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#1-make-a-sample-request-to-a-public-non-authenticated-endpoint" class="toc-h2 toc-link" data-title="1. Make a sample request to a public, non-authenticated endpoint">1. Make a sample request to a public, non-authenticated endpoint</a>
+                  </li>
+                  <li>
+                    <a href="#2-create-an-account-with-the-rw-api" class="toc-h2 toc-link" data-title="2. Create an account with the RW API">2. Create an account with the RW API</a>
+                  </li>
+                  <li>
+                    <a href="#3-obtain-your-jwt-for-authentication" class="toc-h2 toc-link" data-title="3. Obtain your JWT for authentication">3. Obtain your JWT for authentication</a>
+                  </li>
+                  <li>
+                    <a href="#4-make-a-sample-request-to-an-authenticated-endpoint" class="toc-h2 toc-link" data-title="4. Make a sample request to an authenticated endpoint">4. Make a sample request to an authenticated endpoint</a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+        <ul class="toc-footer">
+            <li><a href='/quickstart.html'>Getting started</a></li>
+            <li><a href='https://github.com/resource-watch/doc-api'>Contribute to these docs</a></li>
+            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <aside class="notice">
+  All use of the Resource Watch API is governed by the Resource Watch <a href="https://resourcewatch.org/terms-of-service" target="_blank">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements" target="_blank">API Attribution Requirements</a>.
+</aside>
+<h1 id='resource-watch-api-quickstart'>Resource Watch API Quickstart</h1>
+<p>This quickstart guide will get you up and running with the Resource Watch API. In it, you will:</p>
+
+<ol>
+<li><p>Make a sample request to a public, non-authenticated endpoint</p></li>
+<li><p>Create an account with the RW API</p></li>
+<li><p>Obtain your JSON Web Token for authentication</p></li>
+<li><p>Make a sample request to an authenticated endpoint</p></li>
+</ol>
+
+<p>After that, you&#39;ll be ready to go!</p>
+<h2 id='1-make-a-sample-request-to-a-public-non-authenticated-endpoint'>1. Make a sample request to a public, non-authenticated endpoint</h2>
+<blockquote>
+<p>Request the list of datasets that belong to the Resource Watch application</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/dataset?env=production&amp;application=rw"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>
+</code></pre></div>
+<blockquote>
+<p>Sample response (truncated)</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20aead6e-fef9-41c7-92c8-ea00edcae077"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dataset"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bio.030 Tiger Conservation Landscapes"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"slug"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tiger-Conservation-Landscapes-1490086842553"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tabular"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"subtitle"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"rw"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"attributesPath"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"connectorType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rest"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"featureservice"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58333dcfd9f39b189ca44c75"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"connectorUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://gis-gfw.wri.org/arcgis/rest/services/conservation/MapServer/3?f=pjson"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+        </span><span class="nl">"tableName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"conservationMapServer3"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"saved"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"published"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"overwrite"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"subscribable"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nl">"mainDateField"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"env"</span><span class="p">:</span><span class="w"> </span><span class="s2">"production"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"geoInfo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"protected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"legend"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"clonedHost"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nl">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"taskId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-02-15T12:20:35.446Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-09T16:41:50.251Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dataLastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"widgetRelevantProps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"tcl_name"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tcl_id"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"area_ha"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tx2_tcl"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"shape_Area"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"layerRelevantProps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"area_ha"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"shape"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"shape_Length"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"shape_Area"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tcl_name"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tcl_id"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"globalid"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tx2_tcl"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"gfwid"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"objectid"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?env=production&amp;application=rw&amp;page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?env=production&amp;application=rw&amp;page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?env=production&amp;application=rw&amp;page[number]=75&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?env=production&amp;application=rw&amp;page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?env=production&amp;application=rw&amp;page[number]=2&amp;page[size]=10"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"total-pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"total-items"</span><span class="p">:</span><span class="w"> </span><span class="mi">743</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>Most of the resources on the RW API are publicly available, and do not require any authentication. For example, to the right is a simple call to the <code>/dataset</code> endpoint, and it  returns the list of all of the datasets that are registered with the API as part of the Resource Watch application. In fact, if you go to the <a href="https://resourcewatch.org/data/explore">Resource Watch Explore page</a> and open the developer console, you will find this is very similar to the call that the Resource Watch application makes to populate the left sidebar with datasets.</p>
+
+<p>Note: When you make a request to a public endpoint, you <em>may</em> pass your JWT in the <code>Authorization</code> header, but it will not affect the response.</p>
+<h2 id='2-create-an-account-with-the-rw-api'>2. Create an account with the RW API</h2>
+<p>In order to make authenticated requests, you first need to create an account with the RW API. To do so, go to the <a href="https://api.resourcewatch.org/auth/login">login page</a> and register. You can log in using an existing Facebook, Google, or Apple account, or you can register with an email and password.</p>
+
+<p>If you create a new user account using an email and password, a confirmation link will be sent to the email address you provided. You must click this confirmation link in order to activate your account.</p>
+
+<p>After you login, you should see the following message in your browser:</p>
+
+<p><img src="images/authentication/auth-success-adaf1166.png" alt="Auth success" /></p>
+<h2 id='3-obtain-your-jwt-for-authentication'>3. Obtain your JWT for authentication</h2>
+<blockquote>
+<p>Sample response from <code>https://api.resourcewatch.org/auth/generate-token</code></p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJIUzI1NiIsInR5c..."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>The RW API uses <a href="https://tools.ietf.org/html/rfc7519">JSON Web Tokens</a> (JWTs) for authentication. Once you&#39;ve created an account and logged in, go to <a href="https://api.resourcewatch.org/auth/generate-token">https://api.resourcewatch.org/auth/generate-token</a> to get your token.</p>
+
+<p><strong>Warning</strong>: Treat this token like a password. Don&#39;t share it with anyone and store it in a safe place (like a password manager). If someone else gains access to your token, they&#39;ll be able to do anything that you would be able to do on the RW API, even without access to your Facebook/Google/Apple login or your email and password.</p>
+
+<p>Once generated, your token is valid until any of the user information (name, email, or associated <a href="concepts.html#applications">applications</a>) associated with your account changes. If your token becomes invalid, you can just log in via the browser and go to <a href="https://api.resourcewatch.org/auth/generate-token">https://api.resourcewatch.org/auth/generate-token</a> to generate a new token.</p>
+<h2 id='4-make-a-sample-request-to-an-authenticated-endpoint'>4. Make a sample request to an authenticated endpoint</h2>
+<blockquote>
+<p>Request your own user information</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/user/me"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre></div>
+<p>Now you&#39;re ready to make your first request!</p>
+
+<p>Try making the request you see on the right. Don&#39;t forget to replace <code>your token</code> with the JWT you generated in the previous step.</p>
+
+<p>In this example, you are requesting your own user information using the <a href="reference.html#get-the-current-user"><code>/auth/user/me</code> endpoint</a> of the API.</p>
+
+<blockquote>
+<p>Sample user information response</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.user@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"rw"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>Congratulations! You&#39;re ready to start using the RW API. To get more familiar with key concepts and features, move on the <a href="concepts.html">concept docs</a>.</p>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="shell">cURL</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>

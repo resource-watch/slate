@@ -1,0 +1,1262 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Concepts - Resource Watch API</title>
+
+    <style media="screen">
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s, .highlight .sa, .highlight .dl {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf, .highlight .fm {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv, .highlight .vm {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #f92672;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <style media="print">
+      * {
+        -webkit-transition:none!important;
+        transition:none!important;
+      }
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #586e75;
+}
+.highlight .err {
+  color: #002b36;
+  background-color: #dc322f;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs {
+  color: #657b83;
+}
+.highlight .cp {
+  color: #b58900;
+}
+.highlight .nt {
+  color: #b58900;
+}
+.highlight .o, .highlight .ow {
+  color: #93a1a1;
+}
+.highlight .p, .highlight .pi {
+  color: #93a1a1;
+}
+.highlight .gi {
+  color: #859900;
+}
+.highlight .gd {
+  color: #dc322f;
+}
+.highlight .gh {
+  color: #268bd2;
+  background-color: #002b36;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #6c71c4;
+}
+.highlight .kc {
+  color: #cb4b16;
+}
+.highlight .kt {
+  color: #cb4b16;
+}
+.highlight .kd {
+  color: #cb4b16;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #859900;
+}
+.highlight .sa {
+  color: #6c71c4;
+}
+.highlight .sr {
+  color: #2aa198;
+}
+.highlight .si {
+  color: #d33682;
+}
+.highlight .se {
+  color: #d33682;
+}
+.highlight .nn {
+  color: #b58900;
+}
+.highlight .nc {
+  color: #b58900;
+}
+.highlight .no {
+  color: #b58900;
+}
+.highlight .na {
+  color: #268bd2;
+}
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
+  color: #859900;
+}
+.highlight .ss {
+  color: #859900;
+}
+    </style>
+    <link href="stylesheets/screen-f112f4df.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print-4d023e20.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all-510caf58.js"></script>
+
+  </head>
+
+  <body class="concepts rw" data-languages="[&quot;shell&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar-cad8cdcb.png" alt="" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <img src="images/logo-a42ba9eb.png" class="logo" alt="" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="shell">cURL</a>
+        </div>
+      <ul class="toc-list-h1">
+        <li>
+          <a href="/index.html" class="toc-h1 toc-link" data-title="Home">Home</a>
+        </li>
+        <li>
+          <a href="/quickstart.html" class="toc-h1 toc-link" data-title="Quickstart">Quickstart</a>
+        </li>
+        <li>
+          <a href="/concepts.html" class="toc-h1 toc-link" data-title="Concepts">Concepts</a>
+        </li>
+        <li>
+          <a href="/reference.html" class="toc-h1 toc-link" data-title="Reference">Reference</a>
+        </li>
+        <li>
+          <a href="/tutorials.html" class="toc-h1 toc-link" data-title="Tutorials">Tutorials</a>
+        </li>
+      </ul>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <ul id="toc" class="toc-list-h1">
+          <li>
+            <a href="#resource-watch-api-concepts" class="toc-h1 toc-link" data-title="Resource Watch API Concepts">Resource Watch API Concepts</a>
+          </li>
+          <li>
+            <a href="#common-behaviors" class="toc-h1 toc-link" data-title="Common Behaviors">Common Behaviors</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#errors" class="toc-h2 toc-link" data-title="Errors">Errors</a>
+                  </li>
+                  <li>
+                    <a href="#caching" class="toc-h2 toc-link" data-title="Caching">Caching</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#3rd-party-http-caching" class="toc-h3 toc-link" data-title="3rd party HTTP caching">3rd party HTTP caching</a>
+                          </li>
+                          <li>
+                            <a href="#https-and-caching" class="toc-h3 toc-link" data-title="HTTPS and caching">HTTPS and caching</a>
+                          </li>
+                          <li>
+                            <a href="#how-to-detect-a-cached-response" class="toc-h3 toc-link" data-title="How to detect a cached response">How to detect a cached response</a>
+                          </li>
+                          <li>
+                            <a href="#cache-invalidation" class="toc-h3 toc-link" data-title="Cache invalidation">Cache invalidation</a>
+                          </li>
+                          <li>
+                            <a href="#which-services-rely-on-caching" class="toc-h3 toc-link" data-title="Which services rely on caching">Which services rely on caching</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#sorting-and-filtering" class="toc-h2 toc-link" data-title="Sorting and Filtering">Sorting and Filtering</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#sorting" class="toc-h3 toc-link" data-title="Sorting">Sorting</a>
+                              <ul class="toc-list-h4">
+                                  <li>
+                                    <a href="#which-services-comply-with-these-guidelines" class="toc-h4 toc-link" data-title="Which services comply with these guidelines">Which services comply with these guidelines</a>
+                                  </li>
+                              </ul>
+                          </li>
+                          <li>
+                            <a href="#filtering" class="toc-h3 toc-link" data-title="Filtering">Filtering</a>
+                              <ul class="toc-list-h4">
+                                  <li>
+                                    <a href="#which-services-comply-with-these-guidelines-2" class="toc-h4 toc-link" data-title="Which services comply with these guidelines">Which services comply with these guidelines</a>
+                                  </li>
+                              </ul>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#pagination" class="toc-h2 toc-link" data-title="Pagination">Pagination</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#structure-of-a-paginated-response" class="toc-h3 toc-link" data-title="Structure of a paginated response">Structure of a paginated response</a>
+                          </li>
+                          <li>
+                            <a href="#which-services-comply-with-these-guidelines" class="toc-h3 toc-link" data-title="Which services comply with these guidelines">Which services comply with these guidelines</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#common-concepts" class="toc-h1 toc-link" data-title="Common Concepts">Common Concepts</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#applications" class="toc-h2 toc-link" data-title="Applications">Applications</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#existing-applications" class="toc-h3 toc-link" data-title="Existing applications">Existing applications</a>
+                          </li>
+                          <li>
+                            <a href="#best-practices-for-the-application-field" class="toc-h3 toc-link" data-title="Best practices for the application field">Best practices for the application field</a>
+                          </li>
+                          <li>
+                            <a href="#which-services-comply-with-these-guidelines" class="toc-h3 toc-link" data-title="Which services comply with these guidelines">Which services comply with these guidelines</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#environments" class="toc-h2 toc-link" data-title="Environments">Environments</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#which-services-comply-with-these-guidelines" class="toc-h3 toc-link" data-title="Which services comply with these guidelines">Which services comply with these guidelines</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#user-roles" class="toc-h2 toc-link" data-title="User roles">User roles</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#role-based-access-control" class="toc-h3 toc-link" data-title="Role-based access control">Role-based access control</a>
+                          </li>
+                          <li>
+                            <a href="#how-to-change-the-role-of-an-user" class="toc-h3 toc-link" data-title="How to change the role of an user">How to change the role of an user</a>
+                          </li>
+                          <li>
+                            <a href="#which-services-comply-with-these-guidelines" class="toc-h3 toc-link" data-title="Which services comply with these guidelines">Which services comply with these guidelines</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#core-resources" class="toc-h1 toc-link" data-title="Core Resources">Core Resources</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#dataset" class="toc-h2 toc-link" data-title="Dataset">Dataset</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#dataset-providers" class="toc-h3 toc-link" data-title="Dataset providers">Dataset providers</a>
+                              <ul class="toc-list-h4">
+                                  <li>
+                                    <a href="#carto" class="toc-h4 toc-link" data-title="Carto">Carto</a>
+                                  </li>
+                                  <li>
+                                    <a href="#arcgis-feature-layer" class="toc-h4 toc-link" data-title="ArcGIS feature layer">ArcGIS feature layer</a>
+                                  </li>
+                                  <li>
+                                    <a href="#google-earth-engine" class="toc-h4 toc-link" data-title="Google Earth Engine">Google Earth Engine</a>
+                                  </li>
+                                  <li>
+                                    <a href="#web-map-services" class="toc-h4 toc-link" data-title="Web Map Services">Web Map Services</a>
+                                  </li>
+                                  <li>
+                                    <a href="#rasdaman-raster-data-manager" class="toc-h4 toc-link" data-title="Rasdaman (Raster Data Manager)">Rasdaman (Raster Data Manager)</a>
+                                  </li>
+                                  <li>
+                                    <a href="#nex-gddp" class="toc-h4 toc-link" data-title="NEX-GDDP">NEX-GDDP</a>
+                                  </li>
+                                  <li>
+                                    <a href="#bigquery" class="toc-h4 toc-link" data-title="BigQuery">BigQuery</a>
+                                  </li>
+                                  <li>
+                                    <a href="#loca" class="toc-h4 toc-link" data-title="Loca">Loca</a>
+                                  </li>
+                                  <li>
+                                    <a href="#comma-separated-values-csv" class="toc-h4 toc-link" data-title="Comma-Separated Values (CSV)">Comma-Separated Values (CSV)</a>
+                                  </li>
+                                  <li>
+                                    <a href="#tab-separated-values-tsv" class="toc-h4 toc-link" data-title="Tab-Separated Values (TSV)">Tab-Separated Values (TSV)</a>
+                                  </li>
+                                  <li>
+                                    <a href="#javascript-object-notation-json" class="toc-h4 toc-link" data-title="JavaScript Object Notation (JSON)">JavaScript Object Notation (JSON)</a>
+                                  </li>
+                                  <li>
+                                    <a href="#extensible-x-markup-language-xml" class="toc-h4 toc-link" data-title="Extensible (X) Markup Language (XML)">Extensible (X) Markup Language (XML)</a>
+                                  </li>
+                              </ul>
+                          </li>
+                          <li>
+                            <a href="#dataset-connector-type" class="toc-h3 toc-link" data-title="Dataset connector type">Dataset connector type</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#query" class="toc-h2 toc-link" data-title="Query">Query</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#all-queries-should-be-select-queries" class="toc-h3 toc-link" data-title="All queries should be <code>SELECT</code> queries">All queries should be <code>SELECT</code> queries</a>
+                          </li>
+                          <li>
+                            <a href="#not-all-sql-constructs-are-supported" class="toc-h3 toc-link" data-title="Not all SQL constructs are supported">Not all SQL constructs are supported</a>
+                          </li>
+                          <li>
+                            <a href="#some-operations-will-depend-on-the-provider-of-the-dataset-you-39-re-querying" class="toc-h3 toc-link" data-title="Some operations will depend on the provider of the dataset you're querying">Some operations will depend on the provider of the dataset you're querying</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#layer" class="toc-h2 toc-link" data-title="Layer">Layer</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#the-layer-does-not-interact-with-dataset-data" class="toc-h3 toc-link" data-title="The layer does not interact with dataset data">The layer does not interact with dataset data</a>
+                          </li>
+                          <li>
+                            <a href="#most-of-layer-fields-are-free-form" class="toc-h3 toc-link" data-title="Most of layer fields are free-form">Most of layer fields are free-form</a>
+                          </li>
+                          <li>
+                            <a href="#different-applications-and-rendering-tools-use-layers-in-different-ways" class="toc-h3 toc-link" data-title="Different applications and rendering tools use layers in different ways">Different applications and rendering tools use layers in different ways</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#widget" class="toc-h2 toc-link" data-title="Widget">Widget</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#widget-configuration-using-vega-grammar" class="toc-h3 toc-link" data-title="Widget configuration using Vega grammar">Widget configuration using Vega grammar</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#metadata" class="toc-h2 toc-link" data-title="Metadata">Metadata</a>
+                  </li>
+                  <li>
+                    <a href="#vocabularies-and-tags" class="toc-h2 toc-link" data-title="Vocabularies and tags">Vocabularies and tags</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#tags" class="toc-h3 toc-link" data-title="Tags">Tags</a>
+                          </li>
+                          <li>
+                            <a href="#vocabulary" class="toc-h3 toc-link" data-title="Vocabulary">Vocabulary</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#geostore" class="toc-h2 toc-link" data-title="Geostore">Geostore</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#geojson-object" class="toc-h3 toc-link" data-title="GeoJSON object">GeoJSON object</a>
+                          </li>
+                          <li>
+                            <a href="#what-are-geostores-used-for" class="toc-h3 toc-link" data-title="What are geostores used for?">What are geostores used for?</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#area-of-interest" class="toc-h2 toc-link" data-title="Area of Interest">Area of Interest</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#email-and-webhook-notifications" class="toc-h3 toc-link" data-title="Email and webhook notifications">Email and webhook notifications</a>
+                          </li>
+                          <li>
+                            <a href="#different-ways-of-defining-areas-of-interest" class="toc-h3 toc-link" data-title="Different ways of defining areas of interest">Different ways of defining areas of interest</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#graph" class="toc-h2 toc-link" data-title="Graph">Graph</a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+        <ul class="toc-footer">
+            <li><a href='/quickstart.html'>Getting started</a></li>
+            <li><a href='https://github.com/resource-watch/doc-api'>Contribute to these docs</a></li>
+            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <aside class="notice">
+  All use of the Resource Watch API is governed by the Resource Watch <a href="https://resourcewatch.org/terms-of-service" target="_blank">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements" target="_blank">API Attribution Requirements</a>.
+</aside>
+<h1 id='resource-watch-api-concepts'>Resource Watch API Concepts</h1>
+<p>This section of the documentation defines the key concepts of the RW API and how they interact with each other. It&#39;s divided into three sections:</p>
+
+<ol>
+<li><p><a href="#common-behaviors">Common Behaviors</a> details how the RW API approaches standard API behaviors like caching and pagination.</p></li>
+<li><p><a href="#common-concepts">Common Concepts</a> describes several API-specific conceptual entities that are used across multiple endpoints.</p></li>
+<li><p><a href="#core-resources">Core Resources</a> is a set of high-level descriptions of the key resources that the RW API manages. It&#39;s useful review the concept docs for a given resource before diving into the corresponding section in the <a href="reference.html">reference</a> documentation.</p></li>
+</ol>
+<p><a href="./">Back to the documentation homepage</a></p>
+<h1 id='common-behaviors'>Common Behaviors</h1>
+<p>This section covers common API behaviors implemented by various endpoints related to errors, caching, sorting, filtering, and pagination.</p>
+<h2 id='errors'>Errors</h2>
+<p>The following error codes are used across the API. Each endpoint also documents resource-specific error codes and associated messages in the <a href="reference.html">reference docs</a>.</p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request -- Your request is incomplete or contains errors.</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized -- Your JWT is missing or out of date.</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden -- You do not have permission to access this resource.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found -- The resource requested could not be found.</td>
+</tr>
+<tr>
+<td>409</td>
+<td>Conflict -- The resource requested is currently locked and cannot be edited.</td>
+</tr>
+<tr>
+<td>422</td>
+<td>Unprocessable -- The request cannot be processed. Certain required fields may be missing or incorrect.</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error -- The server encountered an error while processing your request. Try again later.</td>
+</tr>
+</tbody></table>
+<h2 id='caching'>Caching</h2>
+<p>HTTP caching is a technique that stores a copy of a given resource and serves it back when requested. When a cache has a requested resource in its store (also called a <em>cache hit</em>), it intercepts the request and returns its copy instead of re-computing it from the originating server. If the request is not yet stored in cache (also called <em>cache miss</em>), it is forwarded to the server responsible for handling it, the response is computed and stored in cache to serve future requests. This achieves several goals: it eases the load of the server that doesn’t need to serve all requests itself, and it improves performance by taking less time to transmit the resource back. You can read more about HTTP caching in the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching">Mozilla Developer Network docs on HTTP caching</a>.</p>
+
+<p>The RW API has a server-side, system-wide HTTP cache that may be used to cache your requests. Keep in mind that, in the context of the RW API, not all endpoints have caching enabled for them. You&#39;ll find a list below with the services which rely on caching in the RW API. If, as a developer, you&#39;d like your endpoints to benefit from caching, you need to explicitly implement it. Please refer to the <a href="developer.html#http-caching">developer docs on HTTP caching</a> for more details on how to implement caching for your API resources.</p>
+
+<p>The default cache time to live (TTL) applied to the responses stored in the RW API&#39;s cache is 3 days, but specific endpoints may specify a different expiration time for their responses. For the purposes of caching, only responses of GET requests with successful response codes (such as 200, 203, 204, or 302) are considered for caching. Also, for security reasons, authentication, authorization, or user related information contained in the HTTP request headers is never stored in cache. This is also the case for authenticated GET responses.</p>
+<h3 id='3rd-party-http-caching'>3rd party HTTP caching</h3>
+<p>Keep in mind that, besides the RW API cache, there might be other HTTP caches between your application and the RW API servers. These caches might be public (ie. your ISP&#39;s cache, or your local network&#39;s) or private (your browser&#39;s cache), and one or many may exist between you and the RW API infrastructure (which includes the RW API cache described here). The information detailed below describes the behavior of the RW API cache only, and illustrates how you, as a RW API user, would perceive it, were there no other caches at play. However, that may not always be true, and you may experience different behavior caused by these other caches. If you suspect this may be the case, you should:</p>
+
+<ul>
+<li>Disable any local cache you may have (for example, if you are using a browser to issue requests, you may need to explicitly disable the browser&#39;s built-in cache).</li>
+<li>Use HTTPS to bypass public HTTP caches.</li>
+</ul>
+<h3 id='https-and-caching'>HTTPS and caching</h3>
+<p>As you may or may not know, HTTPS - the secure variant of HTTP protocol - establishes a secure, encrypted connection between client (you) and server (the RW API). This architecture means that traditional public HTTP caches cannot be used, and are thus bypassed. However, the RW API HTTP cache operates within the RW API infrastructure, meaning it will still be used to cache and serve responses, even if you use an HTTPS connection.</p>
+<h3 id='how-to-detect-a-cached-response'>How to detect a cached response</h3>
+<blockquote>
+<p>Example cURL command with detailed header information:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-svo</span> /dev/null https://api.resourcewatch.org/v1/dataset
+</code></pre></div>
+<blockquote>
+<p>Example response of the command above including a MISS <code>x-cache</code> header:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>&lt; HTTP/2 200 
+&lt; content-type: application/json<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>utf-8
+&lt; server: nginx
+&lt; cache: dataset
+&lt; x-response-time: 37 ms
+&lt; accept-ranges: bytes
+&lt; <span class="nb">date</span>: Tue, 29 Dec 2020 15:44:18 GMT
+&lt; via: 1.1 varnish
+&lt; age: 0
+&lt; x-served-by: cache-mad22045-MAD
+&lt; x-cache: MISS
+&lt; x-cache-hits: 0
+&lt; x-timer: S1609256659.546595,VS0,VE426
+&lt; vary: Origin, Accept-Encoding
+&lt; content-length: 11555
+</code></pre></div>
+<blockquote>
+<p>Example response of the command above including a HIT <code>x-cache</code> header:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>&lt; HTTP/2 200 
+&lt; content-type: application/json<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>utf-8
+&lt; server: nginx
+&lt; cache: dataset
+&lt; x-response-time: 37 ms
+&lt; accept-ranges: bytes
+&lt; <span class="nb">date</span>: Tue, 29 Dec 2020 15:44:26 GMT
+&lt; via: 1.1 varnish
+&lt; age: 7
+&lt; x-served-by: cache-mad22039-MAD
+&lt; x-cache: HIT
+&lt; x-cache-hits: 1
+&lt; x-timer: S1609256666.390657,VS0,VE0
+&lt; vary: Origin, Accept-Encoding
+&lt; content-length: 11555
+</code></pre></div>
+<p>One of the most important things you should know about caching is how to detect if you are receiving a cached response or not. To do this, you should inspect the headers of RW API&#39;s responses, looking for a <code>x-cache</code> header. If it does not contain this header, it was not cached by the RW API system-wide cache. If it contains the <code>x-cache</code> header, it will have one of two values:</p>
+
+<ul>
+<li><code>MISS</code>, which means the resource you&#39;re trying to GET was not found in cache, and so a fresh response was served;</li>
+<li><code>HIT</code>, which means the resource you&#39;re trying to GET was found in cache and the cached response was served.</li>
+</ul>
+
+<p>You can read more about this and other cache-related headers used by the RW API in <a href="https://docs.fastly.com/en/guides/understanding-cache-hit-and-miss-headers-with-shielded-services">this link</a>.</p>
+
+<p><strong>Keep in mind that <a href="#3rd-party-http-caching">3rd party caches</a> might be present between your application and the RW API servers which can modify these headers.</strong></p>
+<h3 id='cache-invalidation'>Cache invalidation</h3>
+<p>One of the common hassles of caching is cache invalidation - how to tell a caching tool that a certain response it has stored is no longer valid, and needs to be recomputed.</p>
+
+<p>The RW API handles this internally and automatically for you. It has a built-in system that is able to invalidate specific cached responses, following a request that affects the output of said responses. This mechanism is rather complex, but you, as the RW API user don&#39;t really need to worry about it - you just need to be aware that the RW API cache will be invalidated automatically, so that you always get the correct, up to date information for your requests, even if they had been previously cached.</p>
+
+<p><strong>Keep in mind that <a href="#3rd-party-http-caching">3rd party caches</a> might be present between your application and the RW API servers, and their content may not be invalidated immediately.</strong></p>
+<h3 id='which-services-rely-on-caching'>Which services rely on caching</h3>
+<ul>
+<li><a href="reference.html#dataset">Dataset</a></li>
+<li><a href="reference.html#layer">Layer</a></li>
+<li><a href="reference.html#metadata10">Metadata</a></li>
+<li><a href="reference.html#vocabularies-and-tags">Vocabulary</a></li>
+<li><a href="reference.html#widget">Widgets</a></li>
+<li><a href="reference.html#query">Query</a> and <a href="reference.html#fields">Fields</a> also use cache, but with a TTL of 2 days</li>
+</ul>
+<h2 id='sorting-and-filtering'>Sorting and Filtering</h2><h3 id='sorting'>Sorting</h3>
+<blockquote>
+<p>Example request sorting by a single condition:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name
+</code></pre></div>
+<blockquote>
+<p>Example request sorting by multiple conditions:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>name,description
+</code></pre></div>
+<blockquote>
+<p>Example request sorting by multiple conditions, descending and ascending:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span><span class="nt">-name</span>,+description
+</code></pre></div>
+<p>As a rule of thumb, you can sort RW API resources using the <code>sort</code> query parameter. Usually, sorting can be performed using any field from the resource schema, so be sure to check each resource&#39;s model reference to find which fields can be used for sorting. Sorting by nested model fields is not generally supported, but may be implemented for particular resources. In some exceptional cases, you also have the possibility of sorting by fields that are not present in the resource model (e.g., when fetching datasets, you can sort by <code>user.name</code> and <code>user.role</code> to sort datasets by the name or role of the owner of the dataset) - be sure to check each resource&#39;s documentation to find out which additional sorting criteria you have available.</p>
+
+<p>Multiple sorting criteria can be used, separating them by commas. You can also specify the sorting order by prepending the criteria with either <code>-</code> for descending order or <code>+</code> for ascending order. By default, ascending order is assumed.</p>
+
+<p>Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the sorting mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on sorting.</p>
+<h4 id='which-services-comply-with-these-guidelines'>Which services comply with these guidelines</h4>
+<p>The following endpoints adhere to the Sorting conventions defined above:</p>
+
+<ul>
+<li><a href="reference.html#getting-all-user-areas">Get v2 areas endpoint</a></li>
+<li><a href="reference.html#get-user-areas">Get areas endpoint</a></li>
+<li><a href="reference.html#getting-collections-for-the-request-user">Get collections endpoint</a></li>
+<li><a href="reference.html#getting-all-dashboards">Get dashboards endpoint</a></li>
+<li><a href="reference.html#getting-all-datasets">Get datasets endpoint</a></li>
+<li><a href="reference.html#getting-all-layers">Get layers endpoint</a></li>
+<li><a href="reference.html#getting-all-metadata">Get metadata endpoint</a></li>
+<li><a href="reference.html#getting-all-widgets">Get widgets endpoint</a></li>
+</ul>
+<h3 id='filtering'>Filtering</h3>
+<blockquote>
+<p>Example request filtering using a single condition:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>viirs
+</code></pre></div>
+<blockquote>
+<p>Example request filtering using multiple conditions:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?name<span class="o">=</span>birds&amp;provider<span class="o">=</span>cartodb
+</code></pre></div>
+<blockquote>
+<p>Example request filtering by an array field using the <code>,</code> OR multi-value separator:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw,gfw
+</code></pre></div>
+<blockquote>
+<p>Example request filtering by an array field using the <code>@</code> AND multi-value separator:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw@gfw
+</code></pre></div>
+<p>Like in the case of sorting, most RW API resources allow filtering the returned results of list endpoints using query parameters. As a rule of thumb, you can use the API resource&#39;s fields as query parameter filters, as shown in the examples on the side. You can also combine different query parameters into a complex <code>and</code> logic filter. Note that you can achieve a logical <code>or</code> by passing a regular expression with two disjoint options, like this: <code>?name=&lt;substr_a&gt;|&lt;substr_b&gt;</code>.</p>
+
+<p>For string type fields, the filter you pass will be interpreted as a regular expression, <em>not</em> as a simple substring filter. This gives you greater flexibility in your search capabilities. However, it means that, if you intend to search by substring, you must escape any regex special characters in the string.</p>
+
+<p>Array fields (like the <code>application</code> field present in some of the API resources - read more about the <a href="concepts.html#applications">application field</a>) support more complex types of filtering. In such cases, you can use <code>,</code> as an <code>or</code> multi-value separator, or <code>@</code> as a multi-value, exact match separator.</p>
+
+<p>Object fields expect a boolean value when filtering, where <code>true</code> matches a non-empty object and <code>false</code> matches an empty object. Support for filtering by nested object fields varies for different API resource, so be sure to check the documentation of the API endpoint for more detailed information.</p>
+
+<p>Again, as in the case of sorting, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the filtering mechanisms. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on filtering and the available fields to use as query parameter filters.</p>
+<h4 id='which-services-comply-with-these-guidelines-2'>Which services comply with these guidelines</h4>
+<p>The following endpoints adhere to the Filtering conventions defined above:</p>
+
+<ul>
+<li><a href="reference.html#getting-all-datasets">Get all datasets endpoint</a></li>
+<li><a href="reference.html#getting-all-layers">Get all layers endpoint</a></li>
+<li><a href="reference.html#getting-all-widgets">Get all widgets endpoint</a></li>
+<li><a href="reference.html#getting-all-users">Get all users endpoint</a></li>
+</ul>
+<h2 id='pagination'>Pagination</h2>
+<blockquote>
+<p>Example request where default pagination is applied, returning one page of 10 elements (1st - 10th elements):</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset
+</code></pre></div>
+<blockquote>
+<p>Example request fetching the 3rd page of 10 elements (21st - 30th elements):</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?page[number]<span class="o">=</span>3
+</code></pre></div>
+<blockquote>
+<p>Example request fetching the 5th page of 20 elements (81st - 100th elements):</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?page[number]<span class="o">=</span>5&amp;page[size]<span class="o">=</span>20
+</code></pre></div>
+<p>Many times, when you&#39;re calling RW API&#39;s list endpoints, there will be a lot of results to return. Without pagination, a simple search could return hundreds or even thousands of elements, causing extraneous network traffic. For that reason, many services list their resources as pages, to make sure that not only responses are easier to handle, but also that services are scalable. Most paginated results have a built-in default limit of 10 elements, but we recommend you always explicitly set the limit parameter to ensure you know how many results per page you&#39;ll get. </p>
+
+<p>The pagination strategy used across the RW API relies on two query parameters:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+<th style="text-align: right">Type</th>
+<th style="text-align: right">Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>page[size]</code></td>
+<td>The number elements per page. <strong>Values above 100 are not officially supported.</strong></td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">10</td>
+</tr>
+<tr>
+<td><code>page[number]</code></td>
+<td>The page number.</td>
+<td style="text-align: right">Number</td>
+<td style="text-align: right">1</td>
+</tr>
+</tbody></table>
+
+<p>Keep in mind that, to work predictably, <strong>you must always specify sorting criteria when fetching paginated results</strong>. If sorting criteria is not provided, the overall order of the elements might change between requests. Pagination will still work, but the actual content of the pages might show missing and/or duplicate elements. Refer to the <a href="concepts.html#sorting">general sorting guidelines</a> and the sorting section for the RW API resource you&#39;re loading for details on sorting options available for that resource type.</p>
+
+<p>Once again, keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define and implement the pagination strategy. Because of this, the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on how to correctly paginate your list requests.</p>
+<h3 id='structure-of-a-paginated-response'>Structure of a paginated response</h3>
+<blockquote>
+<p>Example request where default pagination is applied:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset
+</code></pre></div>
+<blockquote>
+<p>Example paginated response:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=99&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"prev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/v1/dataset?page[number]=2&amp;page[size]=10"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"total-pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">99</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"total-items"</span><span class="p">:</span><span class="w"> </span><span class="mi">990</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>Paginated responses return a JSON object containing 3 data structures:</p>
+
+<ul>
+<li><code>data</code> is an array containing the actual list of elements which results from applying the pagination criteria specified in the <code>page[number]</code> and <code>page[size]</code> query parameters;</li>
+<li><code>links</code> is a helper object that provides shortcut URLs for commonly used pages, using the same criteria applied in the initial request:
+
+<ul>
+<li><code>self</code> contains the URL for the current page;</li>
+<li><code>first</code> contains the URL for the first page;</li>
+<li><code>last</code> contains the URL for the last page;</li>
+<li><code>prev</code> contains the URL for the previous page;</li>
+<li><code>next</code> contains the URL for the next page;</li>
+</ul></li>
+<li><code>meta</code> is an object containing information about the total amount of elements in the resource you are listing:
+
+<ul>
+<li><code>size</code> reflects the value used in the <code>page[size]</code> query parameter (or the default size of 10 if not provided);</li>
+<li><code>total-pages</code> contains the total number of pages, assuming the page size specified in the <code>page[size]</code> query parameter;</li>
+<li><code>total-items</code> contains the total number of items;</li>
+</ul></li>
+</ul>
+<h3 id='which-services-comply-with-these-guidelines'>Which services comply with these guidelines</h3>
+<p>The following endpoints adhere to the pagination conventions defined above:</p>
+
+<ul>
+<li><a href="reference.html#areas">Areas service</a></li>
+<li><a href="reference.html#areas-v2">Areas v2 service</a></li>
+<li><a href="reference.html#collections">Collections service</a></li>
+<li><a href="reference.html#dashboard">Dashboards service</a></li>
+<li><a href="reference.html#dataset">Datasets service</a></li>
+<li><a href="reference.html#layer">Layers service</a></li>
+<li><a href="reference.html#tasks">Tasks service</a></li>
+<li><a href="reference.html#user-management">Users service</a></li>
+<li><a href="reference.html#widget">Widgets service</a></li>
+</ul>
+<h1 id='common-concepts'>Common Concepts</h1>
+<p>Several important concepts cut across many different API resources. Knowing about these concepts is fundamental for a better understanding of how to interact with the RW API.</p>
+<h2 id='applications'>Applications</h2>
+<p>As you might come across while reading these docs, different applications and websites rely on the RW API as the principal source for their data. While navigating through the catalog of available datasets, you will find some datasets used by the <a href="https://resourcewatch.org/">Resource Watch website</a>, others used by <a href="https://www.globalforestwatch.org/">Global Forest Watch</a>. In many cases, applications even share the same datasets!</p>
+
+<p>To ensure the correct separation of content across the different applications that use the RW API, you will come across a field named <code>application</code> in many of the API&#39;s resources (such as datasets, layers, widgets, and others). Using this field, the RW API allows users to namespace every single resource, so that it&#39;s associated only with the applications that use it.</p>
+<h3 id='existing-applications'>Existing applications</h3>
+<p>Currently, the following applications are using the API as the principal source for their data:</p>
+
+<ul>
+<li>the <a href="https://resourcewatch.org/">Resource Watch website</a>, where the <code>application</code> field takes the value <code>rw</code>;</li>
+<li>the <a href="https://www.globalforestwatch.org/">Global Forest Watch website</a>, where the <code>application</code> field takes the value <code>gfw</code>;</li>
+<li>the <a href="https://prepdata.org/">Partnership for Resilience and Preparedness website</a>, where the <code>application</code> field takes the value <code>prep</code>;</li>
+<li>the <a href="https://www.wri.org/our-work/project/forest-atlases">Forest Atlases websites</a> for different countries of the world also rely on the RW API - in the case of these websites, the <code>application</code> field takes the value <code>forest-atlas</code>;</li>
+<li>the <a href="https://forestwatcher.globalforestwatch.org/">Forest Watcher mobile application</a>, where the <code>application</code> field takes the value <code>fw</code>;</li>
+</ul>
+
+<p>If you would like to see your application added to the list of applications supported by the RW API, please contact us.</p>
+<h3 id='best-practices-for-the-application-field'>Best practices for the application field</h3>
+<blockquote>
+<p>Fetching datasets for the Resource Watch application</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>rw
+</code></pre></div>
+<blockquote>
+<p>Fetching datasets for the Global Forest Watch application</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?application<span class="o">=</span>gfw
+</code></pre></div>
+<p>This section describes some best practices when using the <code>application</code> field. Please keep in mind that, since it is up to each RW API service to implement how this field is used, there might be some differences in the usage of this field between RW API services. Refer to each RW API resource or endpoint&#39;s documentation for more details on each specific case.</p>
+
+<p>As a rule of thumb, the <code>application</code> field is an array of strings, required when creating an RW API resource that uses it. You can edit the <code>application</code> values by editing the RW API resource you are managing. You can then use the <code>application</code> field as a query parameter filter to filter content specific to the given application (check some examples of the usage of the <code>application</code> field when fetching RW API datasets on the side).</p>
+
+<p><a href="reference.html#user-management">RW API users</a> also use the <code>application</code> field and can be associated with multiple applications. In this case, the <code>application</code> field is used to determine which applications a user manages (access management). As you&#39;ll be able to understand from reading <a href="concepts.html#user-roles">General notes on RW API users</a>, each user&#39;s <code>application</code> values are used to determine if a given user can administrate an RW API resource. Typically, to manipulate said RW API resource, that resource, and the user account, must have at least one overlapping value in the <code>application</code> field.</p>
+<h3 id='which-services-comply-with-these-guidelines'>Which services comply with these guidelines</h3>
+<p>Below you can find a list of RW API resources that use the <code>application</code> field:</p>
+
+<ul>
+<li><a href="reference.html#areas">Areas v1</a></li>
+<li><a href="reference.html#areas-v2">Areas v2</a></li>
+<li><a href="reference.html#collections">Collections</a></li>
+<li><a href="reference.html#dashboard">Dashboards</a></li>
+<li><a href="reference.html#dataset">Dataset</a></li>
+<li><a href="reference.html#graph">Graph</a></li>
+<li><a href="reference.html#layer8">Layer</a></li>
+<li><a href="reference.html#metadata10">Metadata</a></li>
+<li><a href="reference.html#subscriptions">Subscriptions</a></li>
+<li><a href="reference.html#topic">Topics</a></li>
+<li><a href="reference.html#user-management">Users</a></li>
+<li><a href="reference.html#vocabularies-and-tags">Vocabulary</a></li>
+<li><a href="reference.html#widget">Widgets</a></li>
+</ul>
+<h2 id='environments'>Environments</h2>
+<p>Certain RW API resources, like datasets, layers, or widgets, use the concept of <code>environment</code> (also called <code>env</code>) as a way to help you manage your data&#39;s lifecycle. The main goal of <code>environments</code> is to give you an easy way to separate data that is ready to be used in production-grade interactions from data that is still being improved on.</p>
+
+<p>When you create a new resource, like a dataset, it&#39;s given the <code>production</code> env value by default. Similarly, if you list datasets, there&#39;s an implicit default filter that only returns datasets whose <code>env</code> value is <code>production</code>. This illustrates two key concepts of <code>environments</code>:</p>
+
+<ul>
+<li>By default, when you create data on the RW API, it assumes it&#39;s in a production-ready state.</li>
+<li>By default, when you list resources from the RW API, it assumes you want only to see production-ready data.</li>
+</ul>
+
+<p>However, you may want to modify this behavior. For example, let&#39;s say you want to create a new widget on the RW API and experiment with different configuration options without displaying it publicly. To achieve this, you can set a different <code>environment</code> on your widget - for example, <code>test</code>. Or you may want to deploy a staging version of your application that also relies on the same RW API but displays a different set of resources. You can set those resources to use the <code>staging</code> environment and have your application load only that environment, or load both <code>production</code> and <code>staging</code> resources simultaneously. Keep in mind that <code>production</code> is the only &quot;special&quot; value for the <code>environment</code> field. Apart from it, the <code>environment</code> can take any value you want, without having any undesired side-effects.</p>
+
+<p>Resources that use <code>environment</code> can also be updated with a new <code>environment</code> value, so you can use it to control how your data is displayed. Refer to the documentation of each resource to learn how you can achieve this.</p>
+
+<p>It&#39;s worth pointing out that endpoints that retrieve a resource by id typically don&#39;t filter by <code>environment</code> - mostly only listing endpoints have different behavior depending on the requested <code>environment</code> value. Also worth noting is that this behavior may differ from resource to resource, and you should always refer to each endpoint&#39;s documentation for more details.</p>
+<h3 id='which-services-comply-with-these-guidelines'>Which services comply with these guidelines</h3>
+<ul>
+<li><a href="reference.html#dataset">Dataset</a></li>
+<li><a href="reference.html#graph">Graph</a></li>
+<li><a href="reference.html#layer">Layer</a></li>
+<li><a href="reference.html#subscriptions">Subscriptions</a></li>
+<li><a href="reference.html#widget">Widgets</a></li>
+</ul>
+<h2 id='user-roles'>User roles</h2>
+<p>RW API users have a role associated with it, defined in the <code>role</code> field of each user. You can check your own role by consulting your user information using the <a href="reference.html#get-the-current-user"><code>GET /users/me</code> endpoint</a> or getting a JSON Web Token and decoding its information. The <code>role</code> of the user is defined as a string, and it can take one of the following values:</p>
+
+<ul>
+<li><code>USER</code></li>
+<li><code>MANAGER</code></li>
+<li><code>ADMIN</code></li>
+</ul>
+<h3 id='role-based-access-control'>Role-based access control</h3>
+<blockquote>
+<p>Typical hierarchy for roles:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight plaintext"><code>USER (least privileges) &lt; MANAGER &lt; ADMIN (most privileges)
+</code></pre></div>
+<p>The role field is usually used across the RW API for controlling access to API resources. While not required nor enforced, typically user roles are used hierarchically, being <code>USER</code> the role with the least privileges, and <code>ADMIN</code> the one with most privileges. A common pattern you’ll find on some services is: </p>
+
+<ul>
+<li><code>USER</code> accounts can read (usually all data or just data owned by the user, depending on any privacy or security concerns in the service in question), but only create new resources; </li>
+<li><code>MANAGER</code> accounts can perform all of the <code>USER</code> actions, complemented with editing or deleting resources owned by them;</li>
+<li><code>ADMIN</code> accounts can do all of the above even for resources created by other users.</li>
+</ul>
+
+<p>Role-based access control is usually conjugated with the list of applications associated with the user: typically, in order to manipulate a given resource, that resource and the user account must have at least one overlapping application value. Read more about the application field and which services use it in the <a href="concepts.html#applications">Applications concept documentation</a>.</p>
+
+<p>Keep in mind that it’s up to each individual RW API service (dataset, widget, layer, etc) to define how they restrict or allow actions based on these or other factors, so the examples above may not be true for all cases. Refer to the documentation of each resource and endpoint for more details on restrictions they may have regarding user accounts and their properties.</p>
+<h3 id='how-to-change-the-role-of-an-user'>How to change the role of an user</h3>
+<p>Changing role of users is restricted to <code>ADMIN</code> users, so if you intend to upgrade your user role to a <code>MANAGER</code> or <code>ADMIN</code> role, please get in touch with one of the <code>ADMIN</code> users and request the change. If you are already an <code>ADMIN</code> user and you intend to change the role of another user, you can do so using the <a href="reference.html#update-another-user-39-s-account-details"><code>PATCH /users/:id</code> endpoint</a>.</p>
+<h3 id='which-services-comply-with-these-guidelines'>Which services comply with these guidelines</h3>
+<p>The following endpoints adhere to the user role conventions defined above:</p>
+
+<ul>
+<li><a href="reference.html#dashboard">Dashboards</a></li>
+<li><a href="reference.html#dataset">Datasets</a></li>
+<li><a href="reference.html#layer">Layers</a></li>
+<li><a href="reference.html#metadata10">Metadata</a></li>
+<li><a href="reference.html#widget">Widgets</a></li>
+</ul>
+<h1 id='core-resources'>Core Resources</h1>
+<p>This section provides high-level, conceptual descriptions of the core resources managed by the RW API. For details on how to interact with these resources, see the <a href="reference.html">Reference</a> documentation.</p>
+<h2 id='dataset'>Dataset</h2>
+<p>One of the Resource Watch API&#39;s (RW API) goals is to provide a common interface for interacting with data hosted in different sources and formats. A <strong>Dataset</strong> is the Resource Watch&#39;s API way of providing users with access to data, while trying to, as much as possible, abstract and standardise operations that would otherwise fall on the user&#39;s hands to figure out. It&#39;s one of the cornerstones that many other API features build upon - and those features can help you get even more out of your data!</p>
+
+<p><strong>Example</strong>: <em>A Resource Watch API dataset can represent data in a JSON file, hosted on <a href="https://carto.com/">Carto</a> or <a href="https://earthengine.google.com/">Google Earth Engine</a>, to name a few. However, when accessing that data, you don&#39;t have to learn 3 different technologies - the Resource Watch API gives you a single, unified query interface.</em></p>
+
+<p>On top of <strong>datasets</strong>, the RW API offers multiple resources that allow you to access data in multiple formats. These will be covered later in full detail, but as an example, here are some ways in which you can access and use datasets:</p>
+
+<ul>
+<li>the RW API allows you to create <strong>Widgets</strong>, graphic representations of data, which can be made interactive to meet your custom needs;</li>
+<li>if your data is georeferenced, you can use the <strong>Layers</strong> service to display data on informative maps;</li>
+<li>you can create <strong>Subscriptions</strong> associated with datasets, and be notified via email of significant updates;</li>
+<li>you can build your own <strong>Queries</strong> using a SQL-like syntax, and use the data to build your own custom visualizations.</li>
+<li>the <strong>Metadata</strong> service offers you a way to provide additional details about your data, like multi-language descriptions that will allow you to reach a broader audience</li>
+<li>the <strong>Geostore</strong> service allows you to access or save geometries, offering lots of useful tools when handling georeferenced datasets.</li>
+</ul>
+<h3 id='dataset-providers'>Dataset providers</h3>
+<p>Each dataset has a <strong>provider</strong> (json/carto/GEE/...) that must specified on creation - it&#39;s this value that tells the RW API how to handle different data providers and formats, so you don&#39;t have to. Below you&#39;ll find a list of the different providers supported:</p>
+<h4 id='carto'>Carto</h4>
+<p><a href="https://carto.com/">Carto</a> is an open, powerful, and intuitive map platform for discovering and predicting key insights underlying the location data in our world.</p>
+<h4 id='arcgis-feature-layer'>ArcGIS feature layer</h4>
+<p><a href="https://www.arcgis.com/index.html">ArcGIS</a> server is a complete, cloud-based mapping platform. You can learn more about ArcGIS <a href="https://www.arcgis.com/index.html">here</a>.</p>
+<h4 id='google-earth-engine'>Google Earth Engine</h4>
+<p><a href="https://earthengine.google.com/">Google Earth Engine</a> combines a multi-petabyte catalog of satellite imagery and geospatial datasets with planetary-scale analysis capabilities and makes it available for scientists, researchers, and developers to detect changes, map trends, and quantify differences on the Earth’s surface.</p>
+<h4 id='web-map-services'>Web Map Services</h4>
+<p><a href="https://docs.geoserver.org/stable/en/user/services/wms/index.html">WMS</a> connector provides access to data served through OGC WMS protocol standard.</p>
+<h4 id='rasdaman-raster-data-manager'>Rasdaman (Raster Data Manager)</h4>
+<p><a href="https://www.rasdaman.com/">Rasdaman</a> is a database with capabilities for storage, manipulation and retrieval of multidimensional arrays.</p>
+<h4 id='nex-gddp'>NEX-GDDP</h4>
+<p>The <a href="https://www.nasa.gov/nex">NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP)</a> dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model (GCM) runs conducted under the Coupled Model Intercomparison Project Phase 5 (CMIP5) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways (RCPs).</p>
+
+<p><em>Note: While you may find and use existing dataset of this type, creation of new NEX-GDDP based datasets is restricted to specific users.</em></p>
+<h4 id='bigquery'>BigQuery</h4>
+<p><a href="https://cloud.google.com/bigquery">BigQuery</a> is a serverless, highly scalable, and cost-effective cloud data warehouse designed to help you make informed decisions quickly, so you can transform your business with ease.</p>
+
+<p><em>Note: While you may find and use existing dataset of this type, creation of new BigQuery based datasets is restricted to specific users.</em></p>
+<h4 id='loca'>Loca</h4>
+<p><a href="http://loca.ucsd.edu/">LOCA</a>, which stands for Localized Constructed Analogs, is a technique for downscaling climate model projections of the future climate.</p>
+
+<p><em>Note: While you may find and use existing dataset of this type, creation of new LOCA based datasets is restricted to specific users.</em></p>
+<h4 id='comma-separated-values-csv'>Comma-Separated Values (CSV)</h4>
+<p>Data provided in the form of a Comma-Separated Values (CSV) document.</p>
+<h4 id='tab-separated-values-tsv'>Tab-Separated Values (TSV)</h4>
+<p>Data provided in the form of a Tab-Separated Values (TSV) document.</p>
+<h4 id='javascript-object-notation-json'>JavaScript Object Notation (JSON)</h4>
+<p>Data provided in the form of a JSON document.</p>
+<h4 id='extensible-x-markup-language-xml'>Extensible (X) Markup Language (XML)</h4>
+<p>Data provided in the form of a XML document.</p>
+<h3 id='dataset-connector-type'>Dataset connector type</h3>
+<p>Each dataset provider has an associated <strong>connector type</strong>, which you can determine using the table below. </p>
+
+<table><thead>
+<tr>
+<th>Connector type</th>
+<th>Providers</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>document</td>
+<td><code>csv</code>, <code>json</code>, <code>tsv</code>, <code>xml</code></td>
+</tr>
+<tr>
+<td>rest</td>
+<td><code>cartodb</code>, <code>featureservice</code>, <code>gee</code>, <code>bigquery</code>, <code>rasdaman</code>, <code>nexgddp</code>, <code>loca</code></td>
+</tr>
+<tr>
+<td>wms</td>
+<td><code>wms</code></td>
+</tr>
+</tbody></table>
+
+<p>The connector type reflects an important aspect of a dataset: where is the actual data kept, and how is it accessed:</p>
+
+<ul>
+<li><code>document</code> connector type: a dataset that uses this connector type has its data hosted on the RW API database. For example,   datasets with provider <code>json</code> are based on user provided JSON files, and have the <code>document</code> connector type. This means that, on dataset creation, the content of the provided JSON files is copied onto an internal RW API database, and future queries will get their data from that database - the actual JSON files are not used after the creation process is done.</li>
+<li><code>rest</code> connector type: a dataset that uses this connector type proxies the underlying service specified as <code>provider</code>. For example, a dataset that uses the provider <code>cartodb</code> has the connector type <code>rest</code>. This means that queries to that dataset will cause the API to query the carto URL provided, and pass the result to the user. Apart from temporary caches, the actual data is never kept on the RW API itself. The underlying carto table needs to exist and be accessible for the RW API dataset to work.</li>
+<li><code>wms</code> connector type: this connector type is used only for datasets that use the <code>wms</code> provider. The RW API does not access the data for these datasets. </li>
+</ul>
+<h2 id='query'>Query</h2>
+<p>In the previous section, we covered the concept of a RW API dataset which, in simple terms, is a way to tell the RW API that your data exists, and where. While cataloging datasets in a public repository is useful, making that data easily accessible is one of the main goals of the RW API. This is where <strong>queries</strong> come in.</p>
+
+<p>In the context of the RW API, a dataset query is very similar an <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> query would be to a database - it&#39;s a specially crafted statement that allows you to express what data you want, from which dataset, and with which structure. The RW API will use that query to get you the data you need, in the format you asked for, so that it&#39;s easy to use in the context of your applications. While it doesn&#39;t comply (nor does it attempt to) with any of the formal <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> specifications, RW API queries use a SQL-like syntax that will be very familiar to anyone who has worked with a relational database in the past. If that&#39;s not your case, there are many tutorials out there that will help you learn the basics in no time.</p>
+
+<p>Using this common, SQL-based syntax, RW API queries allow you to query its datasets using a common API and syntax, no matter where the actual underlying data is hosted. Querying a carto dataset is the same as querying a JSON document or a BigQuery table. This is one of the main goals of the RW API, and one of most valuable features we offer you, the end user - using a single tool and language, you can quickly query data from a wide range of sources, on a broad set of topics.</p>
+
+<p>The <a href="reference.html#query"><code>/query</code> reference documentation</a> goes into more detail on how you can submit your queries to the API, the specifics of more advanced operations and detailed limitations of querying the RW API but, for now, there are 3 high-level ideas that you should keep in mind:</p>
+<h3 id='all-queries-should-be-select-queries'>All queries should be <code>SELECT</code> queries</h3>
+<p>Querying in the RW API is meant to be used only to read data, not to manipulate it. If you have used SQL before, you know it can be used to modify data, but, as a rule of thumb, that&#39;s not the approach used in the RW API. If you&#39;d like to modify the data of a dataset, you should use the <a href="reference.html#updating-a-dataset">dataset update</a> endpoints instead. The only exception to this is for deleting data from document-based datasets - check <a href="reference.html#deleting-data-from-a-dataset">here</a> for more details.</p>
+<h3 id='not-all-sql-constructs-are-supported'>Not all SQL constructs are supported</h3>
+<p>If you&#39;ve used SQL in the past, you know how powerful (and complex) it can be. Things like nested queries or joins can be hard to use and even more to maintain, even without the added complexity of an environment where multiple data providers coexist. That&#39;s why the RW API limits its support to basic SQL syntax, so we can focus on delivering a tool that&#39;s simple and easy to use for most users. The <a href="reference.html#supported-sql-syntax-reference">supported SQL syntax reference</a> section reference docs go into more detail on what&#39;s supported and what&#39;s not, and will help you understand the specifics of what you can achieve with RW API queries.</p>
+<h3 id='some-operations-will-depend-on-the-provider-of-the-dataset-you-39-re-querying'>Some operations will depend on the provider of the dataset you&#39;re querying</h3>
+<p>Our goal is to provide a common querying interface across all datasets, independent of their provider. While we believe we&#39;ve achieved it in most cases, RW API queries can only be as powerful as the underling provider (and their own APIs) allows them to be. There are cases in which a given SQL construct or function is supported for a given provider, but not for another. The <a href="reference.html#supported-sql-syntax-reference">supported SQL syntax reference</a> reference docs has more details on these limitations, per provider.</p>
+<h2 id='layer'>Layer</h2>
+<p>Apart from the possibility of fetching data from multiple data sources using a common interface, the RW API provides you with features to help you visualize such data. A <strong>layer</strong> is one of the resources that you can use to help you make custom visualizations for your data, and they play a very important role when visualizing datasets that contain geospatial data.</p>
+
+<p>A layer is a visual specification of how the data of a dataset can be rendered and styled on a map. It stores data that will help your applications render dataset data as a map layer, using tools like <a href="https://leafletjs.com/">Leaflet</a>, <a href="https://docs.mapbox.com/mapbox-gl-js/api/">Mapbox GL JS</a> or <a href="https://github.com/Vizzuality/layer-manager">Layer Manager</a>. In this sense, it&#39;s important to emphasise that a layer object does not store the actual data to be represented - it instead stores the information that those rendering tools will use to render your data. Rephrasing it: the data should come from the dataset (through queries), while a layer provides the information about how that data is meant to be rendered by the corresponding rendering tool.</p>
+
+<p>In the <a href="reference.html#layer">layer endpoint documentation</a>, we&#39;ll go into more detail on how you can manage layers, as well as the existing limitations that you might run into when using layers. However, for now, there are 3 high-level ideas that you should keep in mind:</p>
+<h3 id='the-layer-does-not-interact-with-dataset-data'>The layer does not interact with dataset data</h3>
+<p>Layers store visual configurations needed for rendering styling a given dataset&#39;s data. However, they do not interact with the dataset data in any way. It is your responsibility, as a RW API user, to build the appropriate queries to retrieve the data that you want to display (read more about <a href="reference.html#dataset">datasets</a> or <a href="reference.html#query">how you can query datasets to obtain their data</a>). Remember, use layers as a complement of dataset queries, not a replacement.</p>
+<h3 id='most-of-layer-fields-are-free-form'>Most of layer fields are free-form</h3>
+<p>Many of the fields in the layer object are free-form, meaning the RW API does not apply any restriction to whatever is saved in those fields. This is great, because it allows for a very high level of flexibility for users, but has the downside of making it harder to document how to use layers. We tried our best to provide clear and consistent specifications for all the fields of a layer, but keep in mind that this high level of flexibility makes it harder to deliver a concrete description.</p>
+<h3 id='different-applications-and-rendering-tools-use-layers-in-different-ways'>Different applications and rendering tools use layers in different ways</h3>
+<p>At the moment, most applications using the layer endpoints have adapted layers to tailor fit their needs, taking advantage of the flexibility that free-form fields bring. This means that, when navigating through the catalog of available layers, you might run into very different ways of implementing and using layers. Once again, we will try our best to cover the different ways of using and managing layers, but keep in mind that there is currently no standard way of using layers.</p>
+
+<p>As layers are typically managed within the realm of a RW API based application, they typically contain data that covers the needs of that application&#39;s specific rendering tool. This again means that you may find varying structure in the data contained in a layer.</p>
+<h2 id='widget'>Widget</h2>
+<p>You have fetched your data from your <a href="reference.html#dataset">dataset</a> using <a href="reference.html#query">queries</a>. And you know how to build custom visualizations for geospatial data using <a href="reference.html#layer">layers</a>. Yet, sometimes you want to build a plain graphical representation of your data - whether it is geo-referenced or not: this is when <strong>widgets</strong> come in handy.</p>
+
+<p>A <strong>widget</strong> is a visual specification of how to style and render the data of a dataset (think pie, bar or line charts).</p>
+
+<p>As with layers, each widget has a single dataset associated with it, and a dataset can be associated with many widgets. You can represent the same data in different ways by creating different widgets for the same dataset. The same widget can store independent configuration values for each RW API based application. It can also contain the required configuration for rendering the same visualization using different rendering tools.</p>
+
+<p>However, this association between widgets and datasets is only for organizational purposes. As such, like in the case of layers, the widget itself does not interact with the dataset data. You can either use the widget&#39;s <code>queryUrl</code> field to store the query to get the widget&#39;s data or store it inside the free form <code>widgetConfig</code> object. In any of these cases, it is your responsibility as an API user to query the data that will be used for rendering the widget.</p>
+
+<p>In the <a href="reference.html#widget">widget endpoint documentation</a>, you can get into more detail on how you can manage widgets.</p>
+<h3 id='widget-configuration-using-vega-grammar'>Widget configuration using Vega grammar</h3>
+<p>As in the case of layers (where many fields are free-form), the RW API does not apply any restriction to the data saved in the widget configuration field (<code>widgetConfig</code>). This allows for a very high level of flexibility for users but has the downside of making it harder to document how to use widgets.</p>
+
+<p>However, the existing widgets&#39; standard approach for building widget configuration objects is using <a href="https://github.com/vega/vega">Vega grammar</a>. Vega is a visualization grammar, a declarative format for creating interactive visualization designs. You can then use a chart library that supports Vega grammar syntax (such as <a href="https://d3js.org/">d3.js</a>) to render the widget and get your graphical representation.</p>
+
+<p>Please note that, in any case, you can use whatever configuration format you wish since the <code>widgetConfig</code> field is free-form.</p>
+<h2 id='metadata'>Metadata</h2>
+<p>Understanding the context of data, empowering users to find and make informed decisions about its suitability is another important goal of the Resource Watch API (RW API). For example, a user may be looking to answer questions like, <em>&quot;Does this dataset provide information about tree cover in my region?&quot;</em>, <em>&quot;What are the physical units?&quot;</em>, <em>&quot;How was this measured?&quot;</em>, and <em>&quot;How should I provide proper attribution to the data provider?&quot;</em>.</p>
+
+<p>Answers to these questions can be stored in a resource&#39;s <a href="https://guides.ucf.edu/metadata/intrometadata">metadata</a>. By definition, metadata is always associated with another entity. In the context of the RW API, metadata objects will always contain information about either a <a href="reference.html#dataset">dataset</a>, a <a href="reference.html#layer">layer</a> or a <a href="reference.html#widget">widget</a>.</p>
+
+<p>Content-wise, the RW API aims to provide a good balance between structure and flexibility with its metadata service, providing a group of common fields you&#39;ll find on all metadata elements, as well as giving API users the tools to create metadata that meets the individual needs of their applications. Through a mix of both types of fields, these are some of the recommended information you should aim to provide when specifying the metadata for one of your resources:</p>
+
+<ul>
+<li><strong>Title/Name</strong> – Name given to the resource.</li>
+<li><strong>Description</strong> – A description of the resource.</li>
+<li><strong>Author</strong> – The entities or persons produced the data.</li>
+<li><strong>Source</strong> – Where the original data was sourced from, and how to access said source.</li>
+<li><strong>Contact information</strong> – A way to contact the author.</li>
+<li><strong>Schema</strong> – Description of the data structure, like column names, types, descriptions, etc.</li>
+<li><strong>License</strong> – Information about the rights held in and over the resource.</li>
+</ul>
+
+<p>As we&#39;ll see in further details when covering the metadata endpoints, a RW API metadata object has a few structured but optional fields to capture some of the general details described above, while also allowing you to specify your own custom fields for ease of extension and flexibility, should you want to provide additional levels of detail about your resources. It will also give you the tools to only specify a subset of the suggested elements above, should you decide to use that approach.</p>
+
+<p>Besides being associated with a single RW API resource (dataset, widget, or layer), metadata objects must also identify the language in which they are written, as well as the <a href="concepts.html#applications">application</a> they are associated with. This allows a single resource, say a dataset, to have its metadata translated into different languages, and be adjusted to meet the needs of different applications. We&#39;ll go into further details on these when we cover the metadata endpoints in their dedicated section.</p>
+<h2 id='vocabularies-and-tags'>Vocabularies and tags</h2>
+<p>Vocabularies and tags are the two central pillars of the RW API&#39;s tagging mechanism, so we&#39;ll be covering them together. These concepts can seem abstract at times, so it&#39;s important that you understand the concepts we&#39;ll describe here, before moving on to the documentation for the actual endpoints.</p>
+<h3 id='tags'>Tags</h3>
+<p>Let&#39;s start with an example: you are browsing some old files on your computer, and you run into your MP3 collection from when you were a teenager. You re-discover some great tunes from way back when, but you also rediscover how unorganized you were, so you decide to curate your music collection a bit, for old times sake. So, as you listen to those &quot;dusty&quot; files, you start adding keywords to each file, like &quot;rock&quot;, &quot;slow one&quot; or &quot;1996&quot;, that describe each song, and help you structure and organize your collection. You are adding <strong>tags</strong> to your files.</p>
+
+<p>Like in our example, a RW API tag is a simple word or a concept, that is used to describe a resource. In the RW API, a resource can be a dataset, a widget, or a layer (MP3 files currently not supported, sorry). While a tag can be whatever you want, they are most useful if they capture simple concepts that apply to multiple resources. So, while &quot;rock&quot;, &quot;slow one&quot; and &quot;1996&quot; are three good tags for your music collection, a tag like &quot;slow rock song from 1996&quot; is probably too specific, and wouldn&#39;t work well as a tag - we&#39;ll see why in a moment.</p>
+
+<p>Now that you have your tags in place, your music collection is starting to feel a lot more organized. You notice you can quickly group similar songs, and create playlists like &quot;pop songs&quot; or &quot;95s punk&quot;, and you can even use tags to find songs that match your current mood, that you didn&#39;t remember you had in your collection. Tags are really powerful to discover resources you didn&#39;t know existed - whether it&#39;s &quot;pop&quot; songs, &quot;deforestation&quot; datasets, or &quot;social inequality&quot; layers. </p>
+
+<p>RW API tags are shared by all users, meaning any user can discover your resources if they search by the tags you assigned to them. Similarly, you can use tags to discover resources created and tagged by other users, so it adds discoverability value both ways.</p>
+
+<p>However, in order to reach their full potential, tags need to be combined with another concept: vocabularies.</p>
+<h3 id='vocabulary'>Vocabulary</h3>
+<p>Let&#39;s go back to your music collection. As you realize tags are a powerful tool to curate your collection, you start adding more tags to your songs. Soon you realize that every file now has many many tags, and it&#39;s starting to become complicated to make sense of each of the 20 tags you&#39;ve now added to your songs - you&#39;re no longer sure if the &quot;1996&quot; refers to the year it was recorded, released, or remastered. You play songs tagged with &quot;brainstorm&quot; and start thinking about a way to solve this problem.</p>
+
+<p>You realize the problem you&#39;re facing could be solved by grouping tags in a way that identifies what they refer to. So, for example, you could have tag groups called &quot;year of release&quot;, &quot;instruments played&quot; or &quot;genre&quot;. Each song could use as many or as few tags from each tag group, and tags with the same name but belonging to different groups would effectively mean and be different things. When associating a tag with a song, you would need to identify which tag group that tag belongs to, to make it work. Finally, you realize that &quot;tag groups&quot; is a poor name, and decide to call it something else - <strong>vocabulary</strong>.</p>
+
+<p>As in our example above, RW API vocabularies are a way to group multiple tags in a way that makes it easier to organize them, while also giving them more meaning. When tagging a RW API resource, not only do you need to specify the tag values but also the vocabulary to which each tag belongs - giving context to your tags and making them more powerful and easier to understand. Like with tags, vocabularies are also shared by all RW API users, which benefits everyone in terms of discoverability.</p>
+<h2 id='geostore'>Geostore</h2>
+<p>Allowing users to interact with data in the context of geographic data structures, such as the boundaries of countries or the location of power plants, is an important goal of the Resource Watch API (RW API). For example a user maybe looking to answer questions like <em>&quot;How much tree cover is there in my region?&quot;</em> or <em>&quot;How many power-plants are situated on the coast?&quot;</em>.</p>
+
+<p>Both these questions imply defining the (geographical) boundaries of the question. In the case of regions these are often expressed as bounding polygons, however as seen in the examples above, geographic structures may also represent lines (such as the coast-line) or point (locations of power-plants). All of which are efficiently represented using the <a href="https://www.spatialpost.com/raster-vector-data-model/">Vector data model</a>.</p>
+
+<p>The Resource Watch API allows users to define custom vector data structures in <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format. It allows the storage of <a href="https://en.wikipedia.org/wiki/Simple_Features">simple geographical features</a>, and, being an extension of <a href="https://es.wikipedia.org/wiki/JSON">JSON</a>, its format is familiar to API users. In the context of the RW API, these custom geographical structures are called <strong>geostores</strong>. </p>
+<h3 id='geojson-object'>GeoJSON object</h3>
+<p>If you are not familiar with GeoJSON this <a href="https://developer.here.com/blog/an-introduction-to-geojson">article</a> gives a quick overview, for the brave you can also check out the <a href="https://geojson.org/">specifications</a>. Being an Open Standard most <a href="https://en.wikipedia.org/wiki/Geographic_information_system">GIS</a> support export of GeoJSON, for example <a href="https://en.wikipedia.org/wiki/QGIS">QGIS</a>. If you are creating your own GeoJSON objects the <a href="https://github.com/geojson/schema">JSON Schema docs describing the different GeoJSON object types</a> can be useful.</p>
+
+<p>Assuming you are now familiar with the basic structure of GeoJSON, next we will highlight some important considerations about how Geostore treats GeoJSON objects.</p>
+
+<ul>
+<li>GeoJSON objects are always stored and returned as a <code>FeatureCollection</code>; when creating a geostore using a <code>Feature</code> or <code>Geometry</code> it is always converted to a <code>FeatureCollection</code>.</li>
+<li>When creating a geostore from a <code>FeatureCollection</code> only the first <code>Feature</code> is stored, all other features are discarded with no warning.</li>
+<li>Geostore retains all <code>Feature</code> properties.</li>
+<li>All geometry types are accepted, except <code>GeometryCollection</code>.</li>
+<li>GeoJSON <a href="https://tools.ietf.org/html/rfc7946#section-4">only supports one geographic coordinate reference system [CRS]</a>, using the World Geodetic System 1984 (WGS 84) datum, with longitude and latitude units of decimal degrees. Other CRS are not supported. Geostore does not check for the validity of the coordinate CRS.</li>
+<li>During creation the GeoJSON geometry is checked for geometric validity and, if required, an attempt is made to repair the geometry (using <a href="https://postgis.net/docs/ST_MakeValid.html">ST_MakeValid</a>).</li>
+</ul>
+<h3 id='what-are-geostores-used-for'>What are geostores used for?</h3>
+<p>Geostores are a core part of many of the analysis and data provided by the API, and the primary way for defining geographical boundaries in the RW API.</p>
+
+<p>Using geostores, you can, for example, create areas of interest and get notified about deforestation and fire alerts in geographical areas of your interest. Using the <a href="https://www.globalforestwatch.org/">GFW website</a>, you can even draw a custom shape of your interest. This shape gets translated into a geostore, which you can then use to subscribe to deforestation and fire alerts.</p>
+
+<p>Additionally, you can query certain RW API datasets providing an ID of a geostore as a query parameter. This will restrict the returned data to the points that fit inside the geostore with ID provided. So you can directly query data specific to a geographic boundary identified by the geostore provided.</p>
+
+<p>The Geostore API also aims at providing a curated list of shapes for ISO country, GADM admin region, or protected areas from WDPA. These endpoints are used by other services in the API as the source of truth for geographic representations.</p>
+<h2 id='area-of-interest'>Area of Interest</h2>
+<p>Areas of interest are custom polygons representative of geographical regions that API users may have a particular interest on. Users can define their own custom Areas of Interest or select from predefined areas supported by the API, and can subscribe to deforestation alerts <a href="https://www.globalforestwatch.org/howto/webinars/webinar-glad-alerts.html">(GLAD alerts)</a> or fire alerts <a href="https://data.globalforestwatch.org/datasets/9ebf069428b140d59fc796fef2e1faa8">(VIIRS alerts)</a> that happen inside those areas. Areas of interest can be managed using the endpoints provided by the <a href="reference.html#areas-v2">Areas service</a>, while the subscription logic of notifying API users is handled by the <a href="reference.html#subscriptions">Subscriptions service</a>. Your areas of interest can also be managed by accessing your <a href="https://www.globalforestwatch.org/my-gfw/">MyGFW</a> account on the Global Forest Watch website.</p>
+<h3 id='email-and-webhook-notifications'>Email and webhook notifications</h3>
+<p>While creating an area, you have the option to subscribe to deforestation alerts (GLAD alerts), fire alerts (VIIRS fire alerts) and/or a monthly summary of both GLAD and VIIRS alerts in the area of interest defined. Each notification also has the option of being received by the API user as an email or a POST to a webhook URL.</p>
+
+<ul>
+<li>GLAD notifications are sent daily, starting after 10:00 AM (EST - Eastern Time).</li>
+<li>VIIRS notifications are sent daily, starting after 7:00 AM (EST - Eastern Time).</li>
+<li>Monthly summary notifications are sent monthly, starting after 11:00 AM (EST - Eastern Time) of the first day of every month.</li>
+</ul>
+<h3 id='different-ways-of-defining-areas-of-interest'>Different ways of defining areas of interest</h3>
+<p>Areas of interest can be defined in one of four ways. Keep in mind that all of these different methods of creating areas can also be used while logged in with your account on the <a href="https://www.globalforestwatch.org/">Global Forest Watch website</a>:</p>
+
+<ul>
+<li>by referencing a country, one of its regions, or a subregion within a region - countries are identified by their <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">ISO 3166-1 alpha-3 code</a>, and regions and subregions are identified by their respective GADM id, which can be obtained from <a href="https://gadm.org/data.html">the GADM dataset</a>.</li>
+<li>by referencing a specific protected area by the id of that area in the <a href="https://www.protectedplanet.net/">World Database on Protected Areas (WDPA)</a>.</li>
+<li>by referencing the ID and type of a land use area provided by different datasets - currently, the following land use datasets are supported: 
+
+<ul>
+<li><strong>mining</strong> for <a href="http://api.resourcewatch.org/v1/dataset/c2142922-84d9-4564-8216-a4867b9e48c5">mining areas</a>.</li>
+<li><strong>logging</strong> for <a href="https://wri-01.carto.com/tables/gfw_oil_palm/public/map">Congo Basin logging roads</a>. </li>
+<li><strong>oilpalm</strong> for <a href="https://wri-01.carto.com/tables/gfw_woodfiber/public/map">palm oil plantations</a>.</li>
+<li><strong>fiber</strong> for <a href="https://wri-01.carto.com/tables/osm_logging_roads/public/map">wood fiber plantations</a>.</li>
+</ul></li>
+<li>by creating a specific <a href="concepts.html#geostore">geostore</a> using the <a href="reference.html#create-a-geostore-object">geostore endpoint</a>, and using its ID.</li>
+</ul>
+
+<p>Read more on how to create areas using the different methods in the <a href="reference.html#creating-an-area">Areas v2 endpoints</a> section.</p>
+<h2 id='graph'>Graph</h2>
+<p>As you have read in the <a href="concepts.html#dataset">Dataset concept section</a>, one of the main goals of the RW API is to provide a common interface for interacting with data provided by a variety of services. However, given the number of datasets currently hosted in the RW API (2506 at the time of writing), it can be hard to find exactly what dataset you are looking for. It can even be overwhelming to navigate through the datasets list, due to the number of datasets available and the wide range of topics each dataset relates to.</p>
+
+<p>The RW API provides you different ways to search for the information you are looking for: from <a href="reference.html#search">searching datasets</a> by keyword and exploring <a href="reference.html#metadata10">dataset metadata</a>, to categorization through the use of <a href="#vocabularies-and-tags">vocabulary and tags</a>. However, none of these options is optimal when it comes to finding similar datasets, related to the ones you find relevant. This is where the Graph service comes to the rescue.</p>
+
+<p>Before jumping to the details of the RW API Graph service, you should be familiar with what a graph is. There are many resources available online for this purpose (e.g. <a href="https://en.wikipedia.org/wiki/Graph_(abstract_data_type)">the Wikipedia entry on graph</a>), but the main concept you must keep in mind is that a graph is a data structure consisting of a set of nodes and a set of edges. A <strong>node</strong> represents an abstract entity, and an <strong>edge</strong> is a connection between two nodes, representative of a relationship between those two nodes. </p>
+
+<p>In the context of the RW API&#39;s Graph service, nodes represent one of the following: </p>
+
+<ul>
+<li><a href="concepts.html#dataset">Datasets</a></li>
+<li><a href="concepts.html#layer">Layers</a></li>
+<li><a href="concepts.html#widget">Widgets</a></li>
+<li><a href="concepts.html#metadata">Metadata</a></li>
+<li><strong>Users</strong></li>
+<li><strong>Concepts</strong></li>
+</ul>
+
+<p>Edges define relationships of different types between the different types of graph nodes. Relationships can be detailed and specific (for instance, defining a favorite relationship between a dataset and user), but they can also be more generic, establishing a connection between a resource and a concept.</p>
+
+<p>Using the Graph service, you will be able to explore RW API&#39;s datasets from a concept perspective. You will be able to:</p>
+
+<ul>
+<li>find datasets related to broad concepts such as <code>solar_energy</code> or <code>water_stress</code>;</li>
+<li>find datasets related to specific properties of the dataset&#39;s data like <code>vector</code> or <code>raster</code>;</li>
+<li>find datasets related to a given dataset;</li>
+<li>infer concepts from a given list of concepts;</li>
+</ul>
+
+<p>The RW API Graph service enables you to build powerful applications, where you can easily and more humanly navigate through your datasets. It gives you the possibility of focusing on topics and concepts each dataset is related to, building UIs geared towards navigation by similarity as opposed to simple datasets list. A great example of the usage of the Graph service is <a href="https://resourcewatch.org/data/explore">Resource Watch&#39;s Explore page</a>.</p>
+
+<p>Head to the <a href="reference.html#graph">graph endpoint documentation</a> for more details on how you can leverage concepts and relationships to enhance your datasets.</p>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="shell">cURL</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>

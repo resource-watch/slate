@@ -1,113 +1,393 @@
+
 <!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>RW API Tutorials</title>
+    <title>Tutorials - Resource Watch API</title>
 
-    <style>
+    <style media="screen">
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
-.highlight, .highlight .w {
-  color: #f8f8f2;
-  background-color: #272822;
+.highlight .gh {
+  color: #999999;
 }
-.highlight .err {
-  color: #272822;
-  background-color: #f92672;
+.highlight .sr {
+  color: #f6aa11;
 }
-.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
   color: #75715e;
 }
 .highlight .cp {
-  color: #f4bf75;
+  color: #75715e;
 }
-.highlight .nt {
-  color: #f4bf75;
+.highlight .c1 {
+  color: #75715e;
 }
-.highlight .o, .highlight .ow {
-  color: #f8f8f2;
+.highlight .cs {
+  color: #75715e;
 }
-.highlight .p, .highlight .pi {
-  color: #f8f8f2;
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
+  color: #75715e;
 }
-.highlight .gi {
-  color: #a6e22e;
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
 }
 .highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s, .highlight .sa, .highlight .dl {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf, .highlight .fm {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv, .highlight .vm {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .nl {
   color: #f92672;
 }
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <style media="print">
+      * {
+        -webkit-transition:none!important;
+        transition:none!important;
+      }
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #586e75;
+}
+.highlight .err {
+  color: #002b36;
+  background-color: #dc322f;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs {
+  color: #657b83;
+}
+.highlight .cp {
+  color: #b58900;
+}
+.highlight .nt {
+  color: #b58900;
+}
+.highlight .o, .highlight .ow {
+  color: #93a1a1;
+}
+.highlight .p, .highlight .pi {
+  color: #93a1a1;
+}
+.highlight .gi {
+  color: #859900;
+}
+.highlight .gd {
+  color: #dc322f;
+}
 .highlight .gh {
-  color: #66d9ef;
-  background-color: #272822;
+  color: #268bd2;
+  background-color: #002b36;
   font-weight: bold;
 }
 .highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
-  color: #ae81ff;
+  color: #6c71c4;
 }
 .highlight .kc {
-  color: #fd971f;
+  color: #cb4b16;
 }
 .highlight .kt {
-  color: #fd971f;
+  color: #cb4b16;
 }
 .highlight .kd {
-  color: #fd971f;
+  color: #cb4b16;
 }
-.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
-  color: #a6e22e;
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #859900;
+}
+.highlight .sa {
+  color: #6c71c4;
 }
 .highlight .sr {
-  color: #a1efe4;
+  color: #2aa198;
 }
 .highlight .si {
-  color: #cc6633;
+  color: #d33682;
 }
 .highlight .se {
-  color: #cc6633;
+  color: #d33682;
 }
 .highlight .nn {
-  color: #f4bf75;
+  color: #b58900;
 }
 .highlight .nc {
-  color: #f4bf75;
+  color: #b58900;
 }
 .highlight .no {
-  color: #f4bf75;
+  color: #b58900;
 }
 .highlight .na {
-  color: #66d9ef;
+  color: #268bd2;
 }
-.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
-  color: #a6e22e;
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
+  color: #859900;
 }
 .highlight .ss {
-  color: #a6e22e;
+  color: #859900;
 }
     </style>
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
-      <script src="javascripts/all.js"></script>
+    <link href="stylesheets/screen-f112f4df.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print-4d023e20.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all-510caf58.js"></script>
+
   </head>
 
   <body class="tutorials rw" data-languages="[]">
     <a href="#" id="nav-button">
       <span>
         NAV
-        <img src="images/navbar.png" alt="Navbar" />
+        <img src="images/navbar-cad8cdcb.png" alt="" />
       </span>
     </a>
-    <div class="tocify-wrapper">
-      <img src="images/logo-rw.png" alt="Logo rw" />
+    <div class="toc-wrapper">
+      <img src="images/logo-a42ba9eb.png" class="logo" alt="" />
+      <ul class="toc-list-h1">
+        <li>
+          <a href="/index.html" class="toc-h1 toc-link" data-title="Home">Home</a>
+        </li>
+        <li>
+          <a href="/quickstart.html" class="toc-h1 toc-link" data-title="Quickstart">Quickstart</a>
+        </li>
+        <li>
+          <a href="/concepts.html" class="toc-h1 toc-link" data-title="Concepts">Concepts</a>
+        </li>
+        <li>
+          <a href="/reference.html" class="toc-h1 toc-link" data-title="Reference">Reference</a>
+        </li>
+        <li>
+          <a href="/tutorials.html" class="toc-h1 toc-link" data-title="Tutorials">Tutorials</a>
+        </li>
+      </ul>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
         <ul class="search-results"></ul>
-      <div id="toc">
-      </div>
+      <ul id="toc" class="toc-list-h1">
+          <li>
+            <a href="#resource-watch-api-tutorials" class="toc-h1 toc-link" data-title="Resource Watch API Tutorials">Resource Watch API Tutorials</a>
+          </li>
+          <li>
+            <a href="#mapbox-webmap-quickstart" class="toc-h1 toc-link" data-title="Mapbox Webmap Quickstart">Mapbox Webmap Quickstart</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#purpose" class="toc-h2 toc-link" data-title="Purpose">Purpose</a>
+                  </li>
+                  <li>
+                    <a href="#pre-requirements" class="toc-h2 toc-link" data-title="Pre-requirements">Pre-requirements</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#background-on-datasets-queries-layers" class="toc-h3 toc-link" data-title="Background on Datasets, Queries, Layers">Background on Datasets, Queries, Layers</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                    <a href="#software-specification" class="toc-h2 toc-link" data-title="Software specification">Software specification</a>
+                  </li>
+                  <li>
+                    <a href="#initial-document-structure" class="toc-h2 toc-link" data-title="Initial document structure">Initial document structure</a>
+                  </li>
+                  <li>
+                    <a href="#getting-dataset-metadata" class="toc-h2 toc-link" data-title="Getting dataset metadata">Getting dataset metadata</a>
+                  </li>
+                  <li>
+                    <a href="#adding-raster-tiles-to-the-map" class="toc-h2 toc-link" data-title="Adding raster tiles to the map">Adding raster tiles to the map</a>
+                  </li>
+                  <li>
+                    <a href="#next-steps" class="toc-h2 toc-link" data-title="Next Steps">Next Steps</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#geometry-analysis" class="toc-h1 toc-link" data-title="Geometry Analysis">Geometry Analysis</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#purpose" class="toc-h2 toc-link" data-title="Purpose">Purpose</a>
+                  </li>
+                  <li>
+                    <a href="#pre-requirements" class="toc-h2 toc-link" data-title="Pre-requirements">Pre-requirements</a>
+                  </li>
+                  <li>
+                    <a href="#software-specification" class="toc-h2 toc-link" data-title="Software specification">Software specification</a>
+                  </li>
+                  <li>
+                    <a href="#initial-document-structure" class="toc-h2 toc-link" data-title="Initial document structure">Initial document structure</a>
+                  </li>
+                  <li>
+                    <a href="#vector-tiles-of-protected-areas" class="toc-h2 toc-link" data-title="Vector tiles of protected areas">Vector tiles of protected areas</a>
+                  </li>
+                  <li>
+                    <a href="#accessing-vector-attributes" class="toc-h2 toc-link" data-title="Accessing vector attributes">Accessing vector attributes</a>
+                  </li>
+                  <li>
+                    <a href="#querying-a-table" class="toc-h2 toc-link" data-title="Querying a table">Querying a table</a>
+                  </li>
+                  <li>
+                    <a href="#dynamic-queries-at-runtime" class="toc-h2 toc-link" data-title="Dynamic queries at runtime">Dynamic queries at runtime</a>
+                  </li>
+                  <li>
+                    <a href="#next-steps" class="toc-h2 toc-link" data-title="Next Steps">Next Steps</a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
         <ul class="toc-footer">
-            <li><a href='https://ui.resourcewatch.org'>Sign Up for a Developer Key</a></li>
+            <li><a href='/quickstart.html'>Getting started</a></li>
             <li><a href='https://github.com/resource-watch/doc-api'>Contribute to these docs</a></li>
             <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
@@ -115,14 +395,13 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="introduction">Introduction</h1>
-
-<p>This documentation hosts guided tutorials and how-to&rsquo;s for building products and analyes with the Resource Watch API and other technology.</p>
-
-          <h1 id="mapbox-webmap-quickstart">Mapbox Webmap Quickstart</h1>
-
-<h2 id="purpose">Purpose</h2>
-
+        <aside class="notice">
+  All use of the Resource Watch API is governed by the Resource Watch <a href="https://resourcewatch.org/terms-of-service" target="_blank">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements" target="_blank">API Attribution Requirements</a>.
+</aside>
+<h1 id='resource-watch-api-tutorials'>Resource Watch API Tutorials</h1>
+<p>This documentation hosts guided tutorials and how-to&#39;s for building products and analyes with the Resource Watch API and other technology.</p>
+<p><a href="./">Back to the documentation homepage</a></p>
+<h1 id='mapbox-webmap-quickstart'>Mapbox Webmap Quickstart</h1><h2 id='purpose'>Purpose</h2>
 <p>This is a quickstart tutorial for the API.
 It is intended for web developers who are evaluating or using the API.
 This tutorial does not provide best practices in respect to web development, but it does represent a quick demonstration that should be widely accessible.</p>
@@ -135,17 +414,15 @@ While information in the API responses may be useful on its own, a key benefit i
 <p>Over the course of this tutorial you will develop a simple web application that is capable of:</p>
 
 <ul>
-<li>interacting with the HTTP-based API to retrieve this information using the <a href="https://resource-watch.github.io/doc-api/index-rw.html#what-is-a-dataset"><code class="prettyprint">/dataset</code> endpoint</a>.</li>
+<li>interacting with the HTTP-based API to retrieve this information using the <a href="reference.html#what-is-a-dataset"><code>/dataset</code> endpoint</a>.</li>
 <li>displaying raster tiles in a webmap run by <a href="https://docs.mapbox.com/mapbox-gl-js/api/">Mapbox GL JS</a></li>
 <li>showing metadata about the raster dataset being displayed</li>
 </ul>
-
-<h2 id="pre-requirements">Pre-requirements</h2>
-
+<h2 id='pre-requirements'>Pre-requirements</h2>
 <p>This tutorial will interact with the RW-API, but will not require any authentication since the interactions will be read-only from publicly visible datasets.
 You should be informed about the Resource Watch <a href="https://resourcewatch.org/terms-of-service">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements">API Attribution Requirements</a> before using the API.</p>
 
-<p>This tutorial requires a <a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/">Mapbox Access Token</a> with a <a href="https://docs.mapbox.com/accounts/overview/tokens/#scopes">token scope</a> of <code class="prettyprint">styles:read</code> to render the basemap.
+<p>This tutorial requires a <a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/">Mapbox Access Token</a> with a <a href="https://docs.mapbox.com/accounts/overview/tokens/#scopes">token scope</a> of <code>styles:read</code> to render the basemap.
 If you are WRI staff it may be possible to obtain a token by contacting Ethan Roday.
 Commercial vendors and outside organizations may need to provide their own accounts.
 Individuals should consider signing up for a Mapbox account and learning what options they have.</p>
@@ -156,40 +433,38 @@ Individuals should consider signing up for a Mapbox account and learning what op
 <li>a text editor suitable for writing HTML/JS/CSS</li>
 <li>a modern web browser with Javascript enabled and developer tools familiarity</li>
 </ul>
-
-<h3 id="background-on-datasets-queries-layers">Background on Datasets, Queries, Layers</h3>
-
+<h3 id='background-on-datasets-queries-layers'>Background on Datasets, Queries, Layers</h3>
 <p>There are a variety of types of data that are integrated into the RW API, covering many topics, domains, and containing all the peculiar characteristics and conventions of the communities that produced these digital artifacts.
 The API is also fairly flexible towards accommodating the different needs between <em>small data</em> that may be the result of a limited case study and the <em>big data</em> of spatiotemporal data cubes or the unbounded potential of external API providers.</p>
 
-<p>Let&rsquo;s quickly review some of the concepts used in the API before jumping into the tutorial.
-You can find deeper and more tailored information in the <a href="https://resource-watch.github.io/doc-api/index-rw.html#concepts">concepts documentation</a>.</p>
+<p>Let&#39;s quickly review some of the concepts used in the API before jumping into the tutorial.
+You can find deeper and more tailored information in the <a href="reference.html#concepts">concepts documentation</a>.</p>
 
 <p>A <strong>Dataset</strong> essentially describes where information is being held.
-Datasets are exposed through the <code class="prettyprint">/dataset/&lt;id&gt;</code> endpoint as a JSON response.
+Datasets are exposed through the <code>/dataset/&lt;id&gt;</code> endpoint as a JSON response.
 This JSON has a flexible schema which can be inferred based on two required properties:</p>
 
 <ul>
-<li>the first, <code class="prettyprint">connectorType</code>, which describes the access pattern to the information
+<li>the first, <code>connectorType</code>, which describes the access pattern to the information
 
 <ul>
-<li><code class="prettyprint">connectorType: document</code> if taking from the &ldquo;internal&rdquo; database of uploaded files</li>
-<li><code class="prettyprint">connectorType: rest</code> if performing external API calls to HTTP endpoints</li>
-<li><code class="prettyprint">connectorType: wms</code> if performing external Web Mapping Service calls</li>
+<li><code>connectorType: document</code> if taking from the &quot;internal&quot; database of uploaded files</li>
+<li><code>connectorType: rest</code> if performing external API calls to HTTP endpoints</li>
+<li><code>connectorType: wms</code> if performing external Web Mapping Service calls</li>
 </ul></li>
-<li>the second, <code class="prettyprint">provider</code>, for which there are constrained possibilities based on the <code class="prettyprint">connectorType</code>
+<li>the second, <code>provider</code>, for which there are constrained possibilities based on the <code>connectorType</code>
 
 <ul>
-<li>e.g. <code class="prettyprint">csv</code>, <code class="prettyprint">json</code> are uploaded <code class="prettyprint">document</code>s in the &ldquo;internal&rdquo; database</li>
-<li>e.g. <code class="prettyprint">cartodb</code> and <code class="prettyprint">gee</code> are external <code class="prettyprint">rest</code>ful APIs</li>
+<li>e.g. <code>csv</code>, <code>json</code> are uploaded <code>document</code>s in the &quot;internal&quot; database</li>
+<li>e.g. <code>cartodb</code> and <code>gee</code> are external <code>rest</code>ful APIs</li>
 </ul></li>
 </ul>
 
-<p>The full table mapping <code class="prettyprint">provider</code>s to <code class="prettyprint">connectorType</code>s is located in the <a href="https://resource-watch.github.io/doc-api/index-rw.html#dataset-connector-type">main API documentation</a>.</p>
+<p>The full table mapping <code>provider</code>s to <code>connectorType</code>s is located in the <a href="reference.html#dataset-connector-type">main API documentation</a>.</p>
 
 <p>Based on these two properties, the Dataset JSON object will contain many other top-level properties that collectively provide all that is needed to declare where the <em>real data</em> is being held and how to access it.</p>
 
-<p>The <code class="prettyprint">/query</code> API endpoint utilizes all this information about the Dataset behind the scenes to expose the <em>real data</em> without the developer needing to perform the speciality interfacing with all the providers that might be supplying data for a particular project or webpage.
+<p>The <code>/query</code> API endpoint utilizes all this information about the Dataset behind the scenes to expose the <em>real data</em> without the developer needing to perform the speciality interfacing with all the providers that might be supplying data for a particular project or webpage.
 Queries are supportive of some analytical functionality including filtering and aggregating.
 Thoughtfully-prepared datasets, carefully crafted queries, and the routing of logic through the API can get you quite far towards capable applications.</p>
 
@@ -204,13 +479,13 @@ Layer information is highly free-form and purpose-defined for a specific applica
 <li>A particular query is performed and filters the earthquake events to only those occurring within some distance of South America in the past week.
 
 <ul>
-<li>This query is still returning information in the same structural form as the original global &amp; monthly scope - let&rsquo;s say a table of comma-delimited text.</li>
+<li>This query is still returning information in the same structural form as the original global &amp; monthly scope - let&#39;s say a table of comma-delimited text.</li>
 </ul></li>
 <li>A Layer may be created that:
 
 <ul>
 <li>references how to perform the query above (full URL of query call)</li>
-<li>has a title called &ldquo;Weekly View of South American Earthquakes&rdquo;</li>
+<li>has a title called &quot;Weekly View of South American Earthquakes&quot;</li>
 <li>includes a configuration description for how a webmap could:
 
 <ul>
@@ -222,42 +497,38 @@ Layer information is highly free-form and purpose-defined for a specific applica
 <li>To display this webmap, a webpage needs to:
 
 <ul>
-<li>call the <code class="prettyprint">/layer</code> endpoint</li>
-<li>call the referenced <code class="prettyprint">/query</code> endpoint to get the data</li>
+<li>call the <code>/layer</code> endpoint</li>
+<li>call the referenced <code>/query</code> endpoint to get the data</li>
 <li>pass the query response data and the webmap configuration from the Layer into the webmap library</li>
 </ul></li>
 </ul>
 
 <p>With the flexible Layer definitions, all configuration can be saved server-side, so the front-end work only requires linking the API responses to the technologies that implement the complex features.</p>
 
-<p>The scope of the current tutorial will not cover the <code class="prettyprint">/query</code> endpoint, but such content will be made available in the future.</p>
-
-<h2 id="software-specification">Software specification</h2>
-
+<p>The scope of the current tutorial will not cover the <code>/query</code> endpoint, but such content will be made available in the future.</p>
+<h2 id='software-specification'>Software specification</h2>
 <p>The specification for the webapp is:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>(A)  Display a large, interactive, Mapbox GL JS map
+<div class="highlight"><pre class="highlight plaintext"><code>(A)  Display a large, interactive, Mapbox GL JS map
 
 (B)  Display some metadata/description for some data next to the map
 
 (C)  Show the raster tile layer for this data on the map
 
 (D)  Utilize the RW API to obtain the information needed for (B), (C)
-</code></pre>
-<h2 id="initial-document-structure">Initial document structure</h2>
-
-<p>A basic &ldquo;Hello World&rdquo; setup for getting Mapbox GL JS online is given below.
+</code></pre></div><h2 id='initial-document-structure'>Initial document structure</h2>
+<p>A basic &quot;Hello World&quot; setup for getting Mapbox GL JS online is given below.
 This will ensure your Mapbox token is working and there is a basic foundation for the webpage.</p>
 
-<p>Each section in this tutorial has a corresponding &ldquo;finished&rdquo; version <a href="https://github.com/resource-watch/doc-api/tree/master/extra/tutorial_content/webdev_mapbox_quickstart">available on GitHub</a>, which may be helpful if errors are encountered along the way.
-This tutorial will have a single HTML file across all steps, but the associated javascript file (<code class="prettyprint">tutorial-index.js</code>) will be changing at each step.</p>
+<p>Each section in this tutorial has a corresponding &quot;finished&quot; version <a href="https://github.com/resource-watch/doc-api/tree/master/extra/tutorial_content/webdev_mapbox_quickstart">available on GitHub</a>, which may be helpful if errors are encountered along the way.
+This tutorial will have a single HTML file across all steps, but the associated javascript file (<code>tutorial-index.js</code>) will be changing at each step.</p>
 
-<p>Copy the below text into a file called <code class="prettyprint">index.html</code> inside a directory for this tutorial.
-It will be assumed this file is called <code class="prettyprint">index.html</code> throughout the tutorial, but there is no strict requirement for this.</p>
+<p>Copy the below text into a file called <code>index.html</code> inside a directory for this tutorial.
+It will be assumed this file is called <code>index.html</code> throughout the tutorial, but there is no strict requirement for this.</p>
 
 <div class="center-column"></div>
-<pre class="highlight html"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
 <span class="nt">&lt;head&gt;</span>
   <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span> <span class="nt">/&gt;</span>
@@ -317,33 +588,33 @@ Hello (part of the) World
   <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"tutorial-index.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;/body&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
-</code></pre>
+</code></pre></div>
 <p>This file establishes the following properties to the document:</p>
 
 <ul>
-<li>in <code class="prettyprint">&lt;body&gt;</code>, establish a top-level container, and two children containers <code class="prettyprint">metadata-container</code> and <code class="prettyprint">map</code></li>
-<li>in <code class="prettyprint">&lt;head&gt;&lt;style&gt;</code>, set a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout">CSS grid layout</a> on the top-level container, making the children align to a grid that is two columns wide</li>
-<li>in <code class="prettyprint">&lt;head&gt;&lt;style&gt;</code>, establish grid row dimensions, including a minimum and maximum height, letting metadata content overflow via a vertical scroll bar</li>
-<li>in <code class="prettyprint">&lt;head&gt;</code>, fetch the Mapbox JS and CSS assets</li>
+<li>in <code>&lt;body&gt;</code>, establish a top-level container, and two children containers <code>metadata-container</code> and <code>map</code></li>
+<li>in <code>&lt;head&gt;&lt;style&gt;</code>, set a <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout">CSS grid layout</a> on the top-level container, making the children align to a grid that is two columns wide</li>
+<li>in <code>&lt;head&gt;&lt;style&gt;</code>, establish grid row dimensions, including a minimum and maximum height, letting metadata content overflow via a vertical scroll bar</li>
+<li>in <code>&lt;head&gt;</code>, fetch the Mapbox JS and CSS assets</li>
 </ul>
 
-<p>You should also see that a local script is imported in <code class="prettyprint">&lt;body&gt;</code>.
-Copy the following into a file called <code class="prettyprint">tutorial-index.js</code> next to the HTML file you established above.</p>
+<p>You should also see that a local script is imported in <code>&lt;body&gt;</code>.
+Copy the following into a file called <code>tutorial-index.js</code> next to the HTML file you established above.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM</span>
 <span class="c1">// https://account.mapbox.com</span>
-<span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="s1">'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****'</span><span class="p">;</span>
+<span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">YOUR KEY HERE -- PROBABLY STARTS WITH pk.****</span><span class="dl">'</span><span class="p">;</span>
 
 
 <span class="c1">// initiate a new map by passing an object describing a config</span>
 <span class="c1">// for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/</span>
-<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">Map</span><span class="p">({</span>
+<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nb">Map</span><span class="p">({</span>
     <span class="c1">// id of div that will hold map</span>
-    <span class="na">container</span><span class="p">:</span> <span class="s1">'map'</span><span class="p">,</span>
+    <span class="na">container</span><span class="p">:</span> <span class="dl">'</span><span class="s1">map</span><span class="dl">'</span><span class="p">,</span>
 
     <span class="c1">// one of the existing mapbox map styles</span>
-    <span class="na">style</span><span class="p">:</span> <span class="s1">'mapbox://styles/mapbox/light-v10'</span><span class="p">,</span>
+    <span class="na">style</span><span class="p">:</span> <span class="dl">'</span><span class="s1">mapbox://styles/mapbox/light-v10</span><span class="dl">'</span><span class="p">,</span>
 
     <span class="c1">// zoom in (greater = smaller area displayed)</span>
     <span class="na">zoom</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
@@ -352,19 +623,17 @@ Copy the following into a file called <code class="prettyprint">tutorial-index.j
     <span class="na">center</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 <span class="p">});</span>
 
-</code></pre>
-<p>This script initializes an interactive web map on the <code class="prettyprint">&lt;div id=&quot;map&quot;&gt;</code> element.</p>
+</code></pre></div>
+<p>This script initializes an interactive web map on the <code>&lt;div id=&quot;map&quot;&gt;</code> element.</p>
 
-<p>Upon replacing <code class="prettyprint">mapboxgl.accessToken</code> with your access token, this file should be saved and the HTML opened in a web browser.</p>
+<p>Upon replacing <code>mapboxgl.accessToken</code> with your access token, this file should be saved and the HTML opened in a web browser.</p>
 
 <p>You should see a webpage that looks something like this:</p>
 
-<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-hello-world.png" alt="Image of basic webpage, with a title, some text on the left, and a large map zoomed to central Africa on the right" /></p>
+<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-hello-world-6960d5db.png" alt="Image of basic webpage, with a title, some text on the left, and a large map zoomed to central Africa on the right" /></p>
 
 <p>If you are not seeing a map check the web developer console.</p>
-
-<h2 id="getting-dataset-metadata">Getting dataset metadata</h2>
-
+<h2 id='getting-dataset-metadata'>Getting dataset metadata</h2>
 <p>In this section the API will be used to obtain some structured information about a dataset.
 In the immediate, this information will be displayed on the left side of the webpage in the metadata pane.
 Later some of the information will be extracted and used in combination with the webmap.</p>
@@ -372,23 +641,23 @@ Later some of the information will be extracted and used in combination with the
 <p>The remaining work in this tutorial will use the following Dataset ID, which describes a dataset of tree cover loss (TCL).</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="nx">datasetId</span> <span class="o">=</span> <span class="s1">'b584954c-0d8d-40c6-859c-f3fdf3c2c5df'</span><span class="p">;</span>
-</code></pre>
-<p>Datasets are accessed through the <code class="prettyprint">/dataset/&lt;id&gt;</code> endpoint.
-As described earlier in the <a href="#background-on-datasets-queries-layers">background information</a> a Dataset holds information about where &ldquo;real data&rdquo; is being held.
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="nx">datasetId</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">b584954c-0d8d-40c6-859c-f3fdf3c2c5df</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div>
+<p>Datasets are accessed through the <code>/dataset/&lt;id&gt;</code> endpoint.
+As described earlier in the <a href="#background-on-datasets-queries-layers">background information</a> a Dataset holds information about where &quot;real data&quot; is being held.
 To obtain how to <em>style</em> the information and put it on a webmap requires accessing a Layer.
-Here we will be taking advantage of the ability to expand the API response by using the <code class="prettyprint">?includes=</code> URL parameter, which will simultaneously return associatiated Layers, Metadata, or Widgets as specified.
+Here we will be taking advantage of the ability to expand the API response by using the <code>?includes=</code> URL parameter, which will simultaneously return associatiated Layers, Metadata, or Widgets as specified.
 In this web application we are making a call to the following URL:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/dataset/b584954c-0d8d-40c6-859c-f3fdf3c2c5df/?includes=layer,metadata
-</code></pre>
+<div class="highlight"><pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/dataset/b584954c-0d8d-40c6-859c-f3fdf3c2c5df/?includes=layer,metadata
+</code></pre></div>
 <p>You may want to copy that URL into your own browser window or use curl, wget, or similar to evaluate the response before proceeding to implementing this for the webpage.</p>
 
 <p>The response looks something like this:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>{
+<div class="highlight"><pre class="highlight plaintext"><code>{
   "data": {
     "id": "b584954c-0d8d-40c6-859c-f3fdf3c2c5df",
     "type": "dataset",
@@ -411,28 +680,28 @@ In this web application we are making a call to the following URL:</p>
             "provider": "tilelayer",
             // ...
 
-</code></pre>
+</code></pre></div>
 <p>There is much to investigate in this response, but you can see that there is both Dataset- and Layer-relevant content.
-Not appending the <code class="prettyprint">?includes=layer,metadata</code> parameter will result in a comparatively smaller response, take a look!</p>
+Not appending the <code>?includes=layer,metadata</code> parameter will result in a comparatively smaller response, take a look!</p>
 
-<p>Now let&rsquo;s implement this for the webpage and get the response on screen.
+<p>Now let&#39;s implement this for the webpage and get the response on screen.
 In a real development scenario smaller pieces of the response would probably be extracted and rendered into individual HTML elements.
-For now we are going to just dump the response into a <code class="prettyprint">&lt;pre&gt;</code> element to view it all.</p>
+For now we are going to just dump the response into a <code>&lt;pre&gt;</code> element to view it all.</p>
 
-<p>Modify <code class="prettyprint">tutorial-index.js</code> to the following complete script:</p>
+<p>Modify <code>tutorial-index.js</code> to the following complete script:</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM</span>
 <span class="c1">// https://account.mapbox.com</span>
-<span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="s1">'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****'</span><span class="p">;</span>
+<span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">YOUR KEY HERE -- PROBABLY STARTS WITH pk.****</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="c1">// declare an async function that calls an API endpoint for dataset metadata</span>
 <span class="c1">// takes one parameter</span>
 <span class="c1">//   (uuid) the Dataset ID</span>
 <span class="c1">// returns an object interpreted from the JSON response</span>
-<span class="kr">const</span> <span class="nx">callApiDatasetMetadata</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">uuid</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">callApiDatasetMetadata</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">uuid</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// fetch the API endpoint (GET request)</span>
-    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">'https://api.resourcewatch.org/v1/dataset/'</span> <span class="o">+</span> <span class="nx">uuid</span> <span class="o">+</span> <span class="s1">'?includes=layer,metadata'</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://api.resourcewatch.org/v1/dataset/</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">uuid</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">?includes=layer,metadata</span><span class="dl">'</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`HTTP error! status: </span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
     <span class="p">}</span>
@@ -442,12 +711,12 @@ For now we are going to just dump the response into a <code class="prettyprint">
 
 <span class="c1">// initiate a new map by passing an object describing a config</span>
 <span class="c1">// for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/</span>
-<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">Map</span><span class="p">({</span>
+<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nb">Map</span><span class="p">({</span>
     <span class="c1">// id of div that will hold map</span>
-    <span class="na">container</span><span class="p">:</span> <span class="s1">'map'</span><span class="p">,</span>
+    <span class="na">container</span><span class="p">:</span> <span class="dl">'</span><span class="s1">map</span><span class="dl">'</span><span class="p">,</span>
 
     <span class="c1">// one of the existing mapbox map styles</span>
-    <span class="na">style</span><span class="p">:</span> <span class="s1">'mapbox://styles/mapbox/light-v10'</span><span class="p">,</span>
+    <span class="na">style</span><span class="p">:</span> <span class="dl">'</span><span class="s1">mapbox://styles/mapbox/light-v10</span><span class="dl">'</span><span class="p">,</span>
 
     <span class="c1">// zoom in (greater = smaller area displayed)</span>
     <span class="na">zoom</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
@@ -458,67 +727,65 @@ For now we are going to just dump the response into a <code class="prettyprint">
 
 
 <span class="c1">// run the API call once the map is loaded (API call is asnyc)</span>
-<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'load'</span><span class="p">,</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">load</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// declare the Dataset ID</span>
-    <span class="kr">const</span> <span class="nx">datasetId</span> <span class="o">=</span> <span class="s1">'b584954c-0d8d-40c6-859c-f3fdf3c2c5df'</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">datasetId</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">b584954c-0d8d-40c6-859c-f3fdf3c2c5df</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// fetch remote dataset metadata</span>
-    <span class="kr">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetId</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetId</span><span class="p">);</span>
     <span class="c1">// display the response metadata</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'metadata'</span><span class="p">).</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">metadata</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">metadata</span><span class="dl">'</span><span class="p">).</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">metadata</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 <span class="p">});</span>
-</code></pre>
+</code></pre></div>
 <p>The changes above did the following:</p>
 
 <ul>
 <li>register a callback function that will be executed once the map is intially loaded</li>
-<li>supply a hard-coded <code class="prettyprint">datasetId</code>, a string reference to a known Dataset, in this callback</li>
-<li>declare <code class="prettyprint">callApiDatasetMetadata(datasetId)</code> as a function to get an API response</li>
-<li>call <code class="prettyprint">callApiDatasetMetadata</code> on map load, and set the metadata panel content based on this response</li>
+<li>supply a hard-coded <code>datasetId</code>, a string reference to a known Dataset, in this callback</li>
+<li>declare <code>callApiDatasetMetadata(datasetId)</code> as a function to get an API response</li>
+<li>call <code>callApiDatasetMetadata</code> on map load, and set the metadata panel content based on this response</li>
 </ul>
 
 <p>Reload in the browser to see the updated metadata panel, which should look like:</p>
 
-<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-api-response.png" alt="Image of the webpage, with the same large map on the right, but now with the left panel full of text." /></p>
+<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-api-response-086c17a3.png" alt="Image of the webpage, with the same large map on the right, but now with the left panel full of text." /></p>
 
 <p>For the next step, some of the dataset information will be extracted and utilized.
 You already know the part of the response with the Layer content describes how this data can be used or rendered by applications.
 See if you can gain any intuition into what type of information is held in the Layer specifications for this particular Dataset.</p>
-
-<h2 id="adding-raster-tiles-to-the-map">Adding raster tiles to the map</h2>
-
+<h2 id='adding-raster-tiles-to-the-map'>Adding raster tiles to the map</h2>
 <p>In this section raster tiles will be added to the map.
 The API response that was previously retrieved will serve as the source of the tile layer URL.</p>
 
-<p>Mapbox expects a raster tile layer to be supplied as a URL in the form <code class="prettyprint">https://example.com/path/to/pngdir/{x}/{y}/{z}</code>.
-The URL representation describes a set of square images located at cartesian positions (<code class="prettyprint">x</code>, <code class="prettyprint">y</code>) on a grid determined by a set of zoom levels (<code class="prettyprint">z</code>).
+<p>Mapbox expects a raster tile layer to be supplied as a URL in the form <code>https://example.com/path/to/pngdir/{x}/{y}/{z}</code>.
+The URL representation describes a set of square images located at cartesian positions (<code>x</code>, <code>y</code>) on a grid determined by a set of zoom levels (<code>z</code>).
 This URL is expressed with templating semantics which are fairly ubiquitous across web map and tile-serving applications, but Mapbox specifically requires the TileJSON specification when working with <a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/">tile sources</a>.</p>
 
 <p>The API response obtained earlier contains a reference to a tile layer and a URL, which for your own benefit should be found within the metadata by skimming the contents.
 If you are unable to find it, look within the following hierarchy address:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>.data.attributes.layer[0].attributes.layerConfig.source.tiles[0]
-</code></pre>
-<p>Datasets and Layers accessed through the API are not guaranteed to have the same structuring of their <code class="prettyprint">layerConfig</code> object, which means there may be a need to investigate each dataset in a more comprehensive way than is being demonstrated here.
+<div class="highlight"><pre class="highlight plaintext"><code>.data.attributes.layer[0].attributes.layerConfig.source.tiles[0]
+</code></pre></div>
+<p>Datasets and Layers accessed through the API are not guaranteed to have the same structuring of their <code>layerConfig</code> object, which means there may be a need to investigate each dataset in a more comprehensive way than is being demonstrated here.
 Since this is a tutorial, some of this logic is going to be hardcoded for now.</p>
 
 <p>For the given dataset, you will see a tile layer URL that looks like:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.7/tcd_{thresh}/{z}/{x}/{y}.png
-</code></pre>
-<p>This URL is close to what is needed by Mapbox, but there is a templated component <code class="prettyprint">{thresh}</code> which will not be suitable for Mapbox to consume.
+<div class="highlight"><pre class="highlight plaintext"><code>https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.7/tcd_{thresh}/{z}/{x}/{y}.png
+</code></pre></div>
+<p>This URL is close to what is needed by Mapbox, but there is a templated component <code>{thresh}</code> which will not be suitable for Mapbox to consume.
 In this case, URL is templated beyond what is expected by the application and may be troublesome.
-By browsing the <code class="prettyprint">layer</code> object in the API response it is possible to find some additional attributes for how the layer parameters are configured.
+By browsing the <code>layer</code> object in the API response it is possible to find some additional attributes for how the layer parameters are configured.
 For this specific case, there is a parameterization array at the address</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>.data.attributes.layer[0].attributes.layerConfig.params_config
-</code></pre>
+<div class="highlight"><pre class="highlight plaintext"><code>.data.attributes.layer[0].attributes.layerConfig.params_config
+</code></pre></div>
 <p>That parameterization array looks like:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>...
+<div class="highlight"><pre class="highlight plaintext"><code>...
 "params_config": [
   {
     "default": 30,
@@ -527,14 +794,14 @@ For this specific case, there is a parameterization array at the address</p>
   }
 ],
 ...
-</code></pre>
+</code></pre></div>
 <p>By using this parameterization data, the URL can be transformed into compliance with Mapbox GL.</p>
 
-<p>Update the javascript file with the following three functions and a new version of the <code class="prettyprint">map.on(&#39;load&#39;)</code> callback.
+<p>Update the javascript file with the following three functions and a new version of the <code>map.on(&#39;load&#39;)</code> callback.
 A description is located after this code block.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// ...</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// ...</span>
 <span class="c1">// const callApiDatasetMetadata = async (uuid) =&gt; {</span>
 <span class="c1">// ...</span>
 
@@ -544,17 +811,17 @@ A description is located after this code block.</p>
 <span class="c1">// takes one parameter</span>
 <span class="c1">//   (obj) the API response data</span>
 <span class="c1">// returns a string representing a templated URL, ready to be used by webmaps</span>
-<span class="kr">const</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// drill down to get a useful object</span>
-    <span class="kr">const</span> <span class="nx">layerConfig</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layer'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layerConfig'</span><span class="p">];</span>
+    <span class="kd">const</span> <span class="nx">layerConfig</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">[</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">layer</span><span class="dl">'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">layerConfig</span><span class="dl">'</span><span class="p">];</span>
     <span class="c1">// get the URL template parameters</span>
-    <span class="kr">const</span> <span class="nx">defaultParams</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="s1">'params_config'</span><span class="p">];</span>
+    <span class="kd">const</span> <span class="nx">defaultParams</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="dl">'</span><span class="s1">params_config</span><span class="dl">'</span><span class="p">];</span>
 
     <span class="c1">// get the full templated URL</span>
-    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="s1">'source'</span><span class="p">][</span><span class="s1">'tiles'</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="dl">'</span><span class="s1">source</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">tiles</span><span class="dl">'</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
     <span class="c1">// substitute default parameters iteratively</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">param</span> <span class="nx">of</span> <span class="nx">defaultParams</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'{'</span> <span class="o">+</span> <span class="nx">param</span><span class="p">[</span><span class="s1">'key'</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'}'</span><span class="p">,</span> <span class="nx">param</span><span class="p">[</span><span class="s1">'default'</span><span class="p">].</span><span class="nx">toString</span><span class="p">());</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">param</span> <span class="k">of</span> <span class="nx">defaultParams</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">'</span><span class="s1">{</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">param</span><span class="p">[</span><span class="dl">'</span><span class="s1">key</span><span class="dl">'</span><span class="p">]</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">}</span><span class="dl">'</span><span class="p">,</span> <span class="nx">param</span><span class="p">[</span><span class="dl">'</span><span class="s1">default</span><span class="dl">'</span><span class="p">].</span><span class="nx">toString</span><span class="p">());</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nx">url</span><span class="p">;</span>
 <span class="p">}</span>
@@ -564,8 +831,8 @@ A description is located after this code block.</p>
 <span class="c1">// takes one parameter</span>
 <span class="c1">//   (obj) the API response data from `callApiDatasetMetadata`</span>
 <span class="c1">// returns a string</span>
-<span class="kr">const</span> <span class="nx">getLayerSlug</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layer'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'slug'</span><span class="p">];</span>
+<span class="kd">const</span> <span class="nx">getLayerSlug</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">layer</span><span class="dl">'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">slug</span><span class="dl">'</span><span class="p">];</span>
 <span class="p">}</span>
 
 <span class="c1">// declare a function that can add a raster tile layer to a Mapbox map</span>
@@ -573,22 +840,22 @@ A description is located after this code block.</p>
 <span class="c1">//   (mapVar) the Mapbox map object</span>
 <span class="c1">//   (title) a string identifier for the source and layer</span>
 <span class="c1">//   (url) the raster tile URL to add to the map</span>
-<span class="kr">const</span> <span class="nx">addTileLayerToMap</span> <span class="o">=</span> <span class="p">(</span><span class="nx">mapVar</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">addTileLayerToMap</span> <span class="o">=</span> <span class="p">(</span><span class="nx">mapVar</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// need to first add a source</span>
     <span class="nx">mapVar</span><span class="p">.</span><span class="nx">addSource</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="p">{</span>
-        <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'raster'</span><span class="p">,</span>
-        <span class="s1">'tiles'</span><span class="p">:</span> <span class="p">[</span>
+        <span class="dl">'</span><span class="s1">type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">raster</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">tiles</span><span class="dl">'</span><span class="p">:</span> <span class="p">[</span>
             <span class="nx">url</span>
         <span class="p">],</span>
-        <span class="s1">'tilesize'</span><span class="p">:</span> <span class="mi">256</span>
+        <span class="dl">'</span><span class="s1">tilesize</span><span class="dl">'</span><span class="p">:</span> <span class="mi">256</span>
     <span class="p">});</span>
     <span class="c1">// then add the layer, referencing the source</span>
     <span class="nx">mapVar</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">({</span>
-        <span class="s1">'id'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
-        <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'raster'</span><span class="p">,</span>
-        <span class="s1">'source'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
-        <span class="s1">'paint'</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">'raster-opacity'</span><span class="p">:</span> <span class="mi">1</span>  <span class="c1">// let mapbox baselayer peak through</span>
+        <span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">raster</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">source</span><span class="dl">'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">paint</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+            <span class="dl">'</span><span class="s1">raster-opacity</span><span class="dl">'</span><span class="p">:</span> <span class="mi">1</span>  <span class="c1">// let mapbox baselayer peak through</span>
         <span class="p">}</span>
     <span class="p">});</span>
 <span class="p">}</span>
@@ -600,51 +867,45 @@ A description is located after this code block.</p>
 
 
 <span class="c1">// run the API call once the map is loaded (API call is asnyc)</span>
-<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'load'</span><span class="p">,</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">load</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// declare the Dataset ID</span>
-    <span class="kr">const</span> <span class="nx">datasetId</span> <span class="o">=</span> <span class="s1">'b584954c-0d8d-40c6-859c-f3fdf3c2c5df'</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">datasetId</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">b584954c-0d8d-40c6-859c-f3fdf3c2c5df</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// fetch remote dataset metadata</span>
-    <span class="kr">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetId</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">metadata</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetId</span><span class="p">);</span>
     <span class="c1">// display the response metadata</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'metadata'</span><span class="p">).</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">metadata</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">metadata</span><span class="dl">'</span><span class="p">).</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">metadata</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
     <span class="c1">// get an identifier</span>
-    <span class="kr">const</span> <span class="nx">slug</span> <span class="o">=</span> <span class="nx">getLayerSlug</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">slug</span> <span class="o">=</span> <span class="nx">getLayerSlug</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
     <span class="c1">// get the tile layer URL from full API response data</span>
-    <span class="kr">const</span> <span class="nx">tileLayerUrl</span> <span class="o">=</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">tileLayerUrl</span> <span class="o">=</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span><span class="p">(</span><span class="nx">metadata</span><span class="p">);</span>
     <span class="c1">// add a layer to the map</span>
     <span class="nx">addTileLayerToMap</span><span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="nx">slug</span><span class="p">,</span> <span class="nx">tileLayerUrl</span><span class="p">);</span>
 <span class="p">});</span>
 
-</code></pre>
+</code></pre></div>
 <p>The changes above did the following:</p>
 
 <ul>
-<li>add a function <code class="prettyprint">getTileLayerUrlForTreeCoverLoss</code> to obtain a well-formed tile URL</li>
-<li>add a function <code class="prettyprint">getLayerSlug</code> to obtain a short identifier the tile layer of interest</li>
-<li>add a function <code class="prettyprint">addTileLayerToMap</code> to handle the two-part source and layer definition process</li>
-<li>update the <code class="prettyprint">map.on(&#39;load&#39;)</code> callback with more steps executed after the initial API call</li>
+<li>add a function <code>getTileLayerUrlForTreeCoverLoss</code> to obtain a well-formed tile URL</li>
+<li>add a function <code>getLayerSlug</code> to obtain a short identifier the tile layer of interest</li>
+<li>add a function <code>addTileLayerToMap</code> to handle the two-part source and layer definition process</li>
+<li>update the <code>map.on(&#39;load&#39;)</code> callback with more steps executed after the initial API call</li>
 </ul>
 
 <p>Once again reload the browser and see the tile layer now on the map.</p>
 
-<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-raster-tile-layer.png" alt="Image of the webpage, with the same left panel full of text, but now with a new layer on the map - the tree cover loss dataset." /></p>
-
-<h2 id="next-steps">Next Steps</h2>
-
+<p><img src="images/tutorials/webdev_mapbox_quickstart/webmap-raster-tile-layer-72f974a7.png" alt="Image of the webpage, with the same left panel full of text, but now with a new layer on the map - the tree cover loss dataset." /></p>
+<h2 id='next-steps'>Next Steps</h2>
 <p>At this point the tutorial can be considered complete - the software specification is being met and hopefully enough of the concepts have been introduced to develop a general image of integrating API-retrieved information into a simple webapp.</p>
 
 <p>While this tutorial utilized hand-written HTML, JS, CSS, transforming the logic into other frameworks such as React should be relatively simple if there is already familiarity in that space.
 Some wrappers and React components for working with Mapbox GL JS already exist, including <a href="https://github.com/visgl/react-map-gl">react-map-gl</a> and <a href="https://github.com/Vizzuality/layer-manager">Vizzuality/layer-manager</a>.</p>
-
-          <h1 id="geometry-analysis">Geometry Analysis</h1>
-
-<h2 id="purpose">Purpose</h2>
-
-<p>This tutorial intends to demonstrate a realistic example of how the <code class="prettyprint">/query</code> API endpoint is used within a web application.
-The <code class="prettyprint">/query</code> endpoint is used to <em>access actual data points, get real numeric values for a subset of the full data, or interact with the proxied database</em>.
+<h1 id='geometry-analysis'>Geometry Analysis</h1><h2 id='purpose'>Purpose</h2>
+<p>This tutorial intends to demonstrate a realistic example of how the <code>/query</code> API endpoint is used within a web application.
+The <code>/query</code> endpoint is used to <em>access actual data points, get real numeric values for a subset of the full data, or interact with the proxied database</em>.
 Queries extract information from the database and are how you get to the real data.
 Queries are <strong>not</strong> how you get metadata about layers or datasets.
-The calls to <code class="prettyprint">/query</code> in this example will be refined with SQL statements like <code class="prettyprint">SELECT &lt;columns&gt; WHERE &lt;conditions&gt;</code> that filter and transform the full dataset to only what is needed for the specific task.</p>
+The calls to <code>/query</code> in this example will be refined with SQL statements like <code>SELECT &lt;columns&gt; WHERE &lt;conditions&gt;</code> that filter and transform the full dataset to only what is needed for the specific task.</p>
 
 <p>The example will utilize three sources of information, reflecting the distributed nature of how information and derivative datasets are owned, stored, and transformed by different entities.</p>
 
@@ -659,46 +920,40 @@ The calls to <code class="prettyprint">/query</code> in this example will be ref
 <p>Over the course of this tutorial you will develop a simple web application that is capable of:</p>
 
 <ul>
-<li>interacting with the HTTP-based API to retrieve metadata and catalog information using the <a href="https://resource-watch.github.io/doc-api/index-rw.html#what-is-a-dataset"><code class="prettyprint">/dataset</code> endpoint</a>.</li>
+<li>interacting with the HTTP-based API to retrieve metadata and catalog information using the <a href="reference.html#what-is-a-dataset"><code>/dataset</code> endpoint</a>.</li>
 <li>displaying raster and vector tiles in a webmap run by <a href="https://docs.mapbox.com/mapbox-gl-js/api/">Mapbox GL JS</a></li>
-<li>dynamically querying a hosted database with the <a href="https://resource-watch.github.io/doc-api/index-rw.html#querying-datasets"><code class="prettyprint">/query</code> endpoint</a></li>
+<li>dynamically querying a hosted database with the <a href="reference.html#querying-datasets"><code>/query</code> endpoint</a></li>
 </ul>
-
-<h2 id="pre-requirements">Pre-requirements</h2>
-
+<h2 id='pre-requirements'>Pre-requirements</h2>
 <p>This tutorial will interact with the RW-API, but will not require any authentication since the interactions will be read-only from publicly visible datasets.
 You should be informed about the Resource Watch <a href="https://resourcewatch.org/terms-of-service">Terms of Service</a> and <a href="https://resourcewatch.org/api-attribution-requirements">API Attribution Requirements</a> before using the API.</p>
 
-<p>This tutorial requires a <a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/">Mapbox Access Token</a> with a <a href="https://docs.mapbox.com/accounts/overview/tokens/#scopes">token scope</a> of <code class="prettyprint">styles:read</code> to render the basemap.</p>
+<p>This tutorial requires a <a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/">Mapbox Access Token</a> with a <a href="https://docs.mapbox.com/accounts/overview/tokens/#scopes">token scope</a> of <code>styles:read</code> to render the basemap.</p>
 
 <p>It is also advised to review the quickstart tutorial, which introduces some of the topics relevant to using the API.</p>
-
-<h2 id="software-specification">Software specification</h2>
-
+<h2 id='software-specification'>Software specification</h2>
 <p>The specification for the webapp is:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>(A)  Display a large, interactive, Mapbox GL JS map
+<div class="highlight"><pre class="highlight plaintext"><code>(A)  Display a large, interactive, Mapbox GL JS map
 
 (B)  Display a raster layer of Tree Cover Loss (TCL)
 
 (C)  Display a vector geometry layer of Protected Places (WDPA)
 
 (D)  Use the /query API endpoint to perform a dynamic data lookup for each WDPA geometry
-</code></pre>
-<h2 id="initial-document-structure">Initial document structure</h2>
-
-<p>A basic &ldquo;Hello World&rdquo; setup for getting Mapbox GL JS online is given below.
+</code></pre></div><h2 id='initial-document-structure'>Initial document structure</h2>
+<p>A basic &quot;Hello World&quot; setup for getting Mapbox GL JS online is given below.
 This will ensure your Mapbox token is working and there is a basic foundation for the webpage.
 This material is covered in the quickstart tutorial, but have a look over the script to jog your memory - some function names have changed, but most should be familiar.</p>
 
-<p>Each section in this tutorial has a corresponding &ldquo;finished&rdquo; version <a href="https://github.com/resource-watch/doc-api/tree/master/extra/tutorial_content/webdev_geometry_analysis">available on GitHub</a>, which may be helpful if errors are encountered along the way.
-This tutorial will have a single HTML file across all steps, but the associated javascript file (<code class="prettyprint">tutorial-index.js</code>) will be changing at each step.</p>
+<p>Each section in this tutorial has a corresponding &quot;finished&quot; version <a href="https://github.com/resource-watch/doc-api/tree/master/extra/tutorial_content/webdev_geometry_analysis">available on GitHub</a>, which may be helpful if errors are encountered along the way.
+This tutorial will have a single HTML file across all steps, but the associated javascript file (<code>tutorial-index.js</code>) will be changing at each step.</p>
 
-<p>Copy the below text into a file called <code class="prettyprint">index.html</code> inside a directory for this tutorial.</p>
+<p>Copy the below text into a file called <code>index.html</code> inside a directory for this tutorial.</p>
 
 <div class="center-column"></div>
-<pre class="highlight html"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<div class="highlight"><pre class="highlight html tab-html"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
 <span class="nt">&lt;head&gt;</span>
   <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span> <span class="nt">/&gt;</span>
@@ -741,24 +996,24 @@ This tutorial will have a single HTML file across all steps, but the associated 
   <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"tutorial-index.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;/body&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
-</code></pre>
-<p>This will establish a single top-level container called <code class="prettyprint">map-container</code> and one child called <code class="prettyprint">map</code>.</p>
+</code></pre></div>
+<p>This will establish a single top-level container called <code>map-container</code> and one child called <code>map</code>.</p>
 
-<p>Next to <code class="prettyprint">index.html</code> create a file called <code class="prettyprint">tutorial-index.js</code>, and copy the following script.
+<p>Next to <code>index.html</code> create a file called <code>tutorial-index.js</code>, and copy the following script.
 Change your Mapbox access token.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM // https://account.mapbox.com</span>
-<span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="s1">'YOUR KEY HERE -- PROBABLY STARTS WITH pk.****'</span><span class="p">;</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// TO MAKE THE MAP APPEAR YOU MUST ADD YOUR ACCESS TOKEN FROM // https://account.mapbox.com</span>
+<span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">accessToken</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">YOUR KEY HERE -- PROBABLY STARTS WITH pk.****</span><span class="dl">'</span><span class="p">;</span>
 
 
 <span class="c1">// declare an async function that calls an API endpoint for dataset metadata</span>
 <span class="c1">// takes one parameter</span>
 <span class="c1">//   (uuid) the Dataset ID</span>
 <span class="c1">// returns an object interpreted from the JSON response</span>
-<span class="kr">const</span> <span class="nx">callApiDatasetMetadata</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">uuid</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">callApiDatasetMetadata</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">uuid</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// fetch the API endpoint (GET request)</span>
-    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">'https://api.resourcewatch.org/v1/dataset/'</span> <span class="o">+</span> <span class="nx">uuid</span> <span class="o">+</span> <span class="s1">'?includes=layer,metadata'</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://api.resourcewatch.org/v1/dataset/</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">uuid</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">?includes=layer,metadata</span><span class="dl">'</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`HTTP error! status: </span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
     <span class="p">}</span>
@@ -771,17 +1026,17 @@ Change your Mapbox access token.</p>
 <span class="c1">// takes one parameter</span>
 <span class="c1">//   (obj) the API response data</span>
 <span class="c1">// returns a string representing a templated URL, ready to be used by webmaps</span>
-<span class="kr">const</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// drill down to get a useful object</span>
-    <span class="kr">const</span> <span class="nx">layerConfig</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layer'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layerConfig'</span><span class="p">];</span>
+    <span class="kd">const</span> <span class="nx">layerConfig</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">[</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">layer</span><span class="dl">'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">layerConfig</span><span class="dl">'</span><span class="p">];</span>
     <span class="c1">// get the URL template parameters</span>
-    <span class="kr">const</span> <span class="nx">defaultParams</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="s1">'params_config'</span><span class="p">];</span>
+    <span class="kd">const</span> <span class="nx">defaultParams</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="dl">'</span><span class="s1">params_config</span><span class="dl">'</span><span class="p">];</span>
 
     <span class="c1">// get the full templated URL</span>
-    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="s1">'source'</span><span class="p">][</span><span class="s1">'tiles'</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">layerConfig</span><span class="p">[</span><span class="dl">'</span><span class="s1">source</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">tiles</span><span class="dl">'</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
     <span class="c1">// substitute default parameters iteratively</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">param</span> <span class="nx">of</span> <span class="nx">defaultParams</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'{'</span> <span class="o">+</span> <span class="nx">param</span><span class="p">[</span><span class="s1">'key'</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'}'</span><span class="p">,</span> <span class="nx">param</span><span class="p">[</span><span class="s1">'default'</span><span class="p">].</span><span class="nx">toString</span><span class="p">());</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">param</span> <span class="k">of</span> <span class="nx">defaultParams</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">'</span><span class="s1">{</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">param</span><span class="p">[</span><span class="dl">'</span><span class="s1">key</span><span class="dl">'</span><span class="p">]</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">}</span><span class="dl">'</span><span class="p">,</span> <span class="nx">param</span><span class="p">[</span><span class="dl">'</span><span class="s1">default</span><span class="dl">'</span><span class="p">].</span><span class="nx">toString</span><span class="p">());</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nx">url</span><span class="p">;</span>
 <span class="p">}</span>
@@ -791,8 +1046,8 @@ Change your Mapbox access token.</p>
 <span class="c1">// takes one parameter</span>
 <span class="c1">//   (obj) the API response data from `callApiDatasetMetadata`</span>
 <span class="c1">// returns a string</span>
-<span class="kr">const</span> <span class="nx">getTreeCoverLossSlug</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layer'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'slug'</span><span class="p">];</span>
+<span class="kd">const</span> <span class="nx">getTreeCoverLossSlug</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">layer</span><span class="dl">'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">slug</span><span class="dl">'</span><span class="p">];</span>
 <span class="p">}</span>
 
 
@@ -801,23 +1056,23 @@ Change your Mapbox access token.</p>
 <span class="c1">//   (mapVar) the Mapbox map object</span>
 <span class="c1">//   (title) a string identifier for the source and layer</span>
 <span class="c1">//   (url) the raster tile URL to add to the map</span>
-<span class="kr">const</span> <span class="nx">addRasterTileLayerToMap</span> <span class="o">=</span> <span class="p">(</span><span class="nx">mapVar</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">addRasterTileLayerToMap</span> <span class="o">=</span> <span class="p">(</span><span class="nx">mapVar</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// need to first add a source</span>
     <span class="nx">mapVar</span><span class="p">.</span><span class="nx">addSource</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="p">{</span>
-    <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'raster'</span><span class="p">,</span>
-    <span class="s1">'tiles'</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">'</span><span class="s1">type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">raster</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">tiles</span><span class="dl">'</span><span class="p">:</span> <span class="p">[</span>
         <span class="nx">url</span>
     <span class="p">],</span>
-    <span class="s1">'tilesize'</span><span class="p">:</span> <span class="mi">256</span>
+    <span class="dl">'</span><span class="s1">tilesize</span><span class="dl">'</span><span class="p">:</span> <span class="mi">256</span>
     <span class="p">});</span>
     <span class="c1">// then add the layer, referencing the source</span>
     <span class="nx">mapVar</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">({</span>
-    <span class="s1">'id'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
-    <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'raster'</span><span class="p">,</span>
-    <span class="s1">'source'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
-    <span class="s1">'paint'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'raster-opacity'</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>  <span class="c1">// let mapbox baselayer peak through</span>
-            <span class="s1">'raster-hue-rotate'</span><span class="p">:</span> <span class="mi">180</span>
+    <span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">raster</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">source</span><span class="dl">'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">paint</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">raster-opacity</span><span class="dl">'</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>  <span class="c1">// let mapbox baselayer peak through</span>
+            <span class="dl">'</span><span class="s1">raster-hue-rotate</span><span class="dl">'</span><span class="p">:</span> <span class="mi">180</span>
     <span class="p">}</span>
     <span class="p">});</span>
 <span class="p">}</span>
@@ -826,11 +1081,11 @@ Change your Mapbox access token.</p>
 
 <span class="c1">// initiate a new map by passing an object describing a config</span>
 <span class="c1">// for more info see: https://docs.mapbox.com/mapbox-gl-js/api/map/</span>
-<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">Map</span><span class="p">({</span>
+<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nb">Map</span><span class="p">({</span>
     <span class="c1">// id of div that will hold map</span>
-    <span class="na">container</span><span class="p">:</span> <span class="s1">'map'</span><span class="p">,</span>
+    <span class="na">container</span><span class="p">:</span> <span class="dl">'</span><span class="s1">map</span><span class="dl">'</span><span class="p">,</span>
     <span class="c1">// one of the existing mapbox map styles</span>
-    <span class="na">style</span><span class="p">:</span> <span class="s1">'mapbox://styles/mapbox/light-v10'</span><span class="p">,</span>
+    <span class="na">style</span><span class="p">:</span> <span class="dl">'</span><span class="s1">mapbox://styles/mapbox/light-v10</span><span class="dl">'</span><span class="p">,</span>
     <span class="c1">// zoom in (greater = smaller area displayed)</span>
     <span class="na">zoom</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="c1">// longitude, latitude of the map center</span>
@@ -839,30 +1094,28 @@ Change your Mapbox access token.</p>
 
 
 <span class="c1">// add the data layers once the map is loaded (API calls are asnyc)</span>
-<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'load'</span><span class="p">,</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">load</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
 
     <span class="c1">// LOAD TREE COVER LOSS RASTER TILES</span>
     <span class="c1">// declare the Dataset ID for Tree Cover Loss</span>
-    <span class="kr">const</span> <span class="nx">datasetIdForTCL</span> <span class="o">=</span> <span class="s1">'b584954c-0d8d-40c6-859c-f3fdf3c2c5df'</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">datasetIdForTCL</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">b584954c-0d8d-40c6-859c-f3fdf3c2c5df</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// fetch remote dataset metadata</span>
-    <span class="kr">const</span> <span class="nx">metadataForTCL</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetIdForTCL</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">metadataForTCL</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetIdForTCL</span><span class="p">);</span>
     <span class="c1">// get an identifier for the Tree Cover Loss raster tiles</span>
-    <span class="kr">const</span> <span class="nx">slugForTCL</span> <span class="o">=</span> <span class="nx">getTreeCoverLossSlug</span><span class="p">(</span><span class="nx">metadataForTCL</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">slugForTCL</span> <span class="o">=</span> <span class="nx">getTreeCoverLossSlug</span><span class="p">(</span><span class="nx">metadataForTCL</span><span class="p">);</span>
     <span class="c1">// get the raster tile layer URL from full API response data</span>
-    <span class="kr">const</span> <span class="nx">tileLayerUrlForTCL</span> <span class="o">=</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span><span class="p">(</span><span class="nx">metadataForTCL</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">tileLayerUrlForTCL</span> <span class="o">=</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span><span class="p">(</span><span class="nx">metadataForTCL</span><span class="p">);</span>
     <span class="c1">// add the Tree Cover Loss raster layer to the map</span>
     <span class="nx">addRasterTileLayerToMap</span><span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="nx">slugForTCL</span><span class="p">,</span> <span class="nx">tileLayerUrlForTCL</span><span class="p">);</span>
 
 <span class="p">});</span>
-</code></pre>
-<p>Open <code class="prettyprint">index.html</code> in a web browser and see a webpage that looks something like this:</p>
+</code></pre></div>
+<p>Open <code>index.html</code> in a web browser and see a webpage that looks something like this:</p>
 
-<p><img src="images/tutorials/webdev_geometry_analysis/webmap-initial-setup.png" alt="Image of basic webpage, with a title, a large map zoomed to central Africa, and a green and black map depicting tree cover loss" /></p>
+<p><img src="images/tutorials/webdev_geometry_analysis/webmap-initial-setup-d63bfce5.png" alt="Image of basic webpage, with a title, a large map zoomed to central Africa, and a green and black map depicting tree cover loss" /></p>
 
 <p>If you are not seeing a map check the web developer console.</p>
-
-<h2 id="vector-tiles-of-protected-areas">Vector tiles of protected areas</h2>
-
+<h2 id='vector-tiles-of-protected-areas'>Vector tiles of protected areas</h2>
 <p>Next step is to add the polygons of protected areas, which warrants a short aside before adding it to the map.</p>
 
 <p>This example is going to use the <a href="https://www.protectedplanet.net/c/world-database-on-protected-areas">World Database on Protected Areas (WDPA)</a>, which contains GIS-ready data on areas protected as nature reserves, parks, natural areas, and other categories of preservation.
@@ -879,22 +1132,22 @@ Vector tiles can have more than one <em>layer</em>, for example a street layer a
 <p>For WDPA, the dataset ID that will be used is:</p>
 
 <div class='center-column'></div>
-<pre class="highlight plaintext"><code>a8360d91-06af-4f2d-bd61-4e50c8687ad8
-</code></pre>
+<div class="highlight"><pre class="highlight plaintext"><code>a8360d91-06af-4f2d-bd61-4e50c8687ad8
+</code></pre></div>
 <p>Check out this dataset and metadata by making an API request to </p>
 
 <div class='center-column'></div>
-<pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/dataset/a8360d91-06af-4f2d-bd61-4e50c8687ad8?includes=layer,metadata
-</code></pre>
+<div class="highlight"><pre class="highlight plaintext"><code>https://api.resourcewatch.org/v1/dataset/a8360d91-06af-4f2d-bd61-4e50c8687ad8?includes=layer,metadata
+</code></pre></div>
 <p>You can also use the developer console on the active webpage to do this through the function</p>
 
 <div class='center-column'></div>
-<pre class="highlight javascript"><code><span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="s1">'a8360d91-06af-4f2d-bd61-4e50c8687ad8'</span><span class="p">)</span>
-</code></pre>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="dl">'</span><span class="s1">a8360d91-06af-4f2d-bd61-4e50c8687ad8</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div>
 <p>The data retrieved should look like:</p>
 
 <div class='center-column'></div>
-<pre class="highlight plaintext"><code>{
+<div class="highlight"><pre class="highlight plaintext"><code>{
   "data": {
     "id": "a8360d91-06af-4f2d-bd61-4e50c8687ad8",
     "type": "dataset",
@@ -935,23 +1188,23 @@ Vector tiles can have more than one <em>layer</em>, for example a street layer a
     }
   }
 }
-</code></pre>
-<p>Vector tiles typically are specified with a URL template structure such as <code class="prettyprint">http://path.to/tile/directory/{z}/{y}/{x}</code> or similar.
-Just like with the raster tile layer already on the map, you can drill into <code class="prettyprint">[&#39;data&#39;][&#39;attributes&#39;][&#39;layer&#39;][0][&#39;attributes&#39;][&#39;layerConfig&#39;][&#39;source&#39;][&#39;tiles&#39;][0]</code> to find this templated URL.
-Fortunately for this URL there are no additional templated parameters that need to be replaced before it is ready to use (see the <code class="prettyprint">getTileLayerUrlForTreeCoverLoss</code> function for such a case).
-In the script additions presented below the entire <code class="prettyprint">source</code> object is extracted, as it contains the necessary specifications for adding a vector tile layer in Mapbox.</p>
+</code></pre></div>
+<p>Vector tiles typically are specified with a URL template structure such as <code>http://path.to/tile/directory/{z}/{y}/{x}</code> or similar.
+Just like with the raster tile layer already on the map, you can drill into <code>[&#39;data&#39;][&#39;attributes&#39;][&#39;layer&#39;][0][&#39;attributes&#39;][&#39;layerConfig&#39;][&#39;source&#39;][&#39;tiles&#39;][0]</code> to find this templated URL.
+Fortunately for this URL there are no additional templated parameters that need to be replaced before it is ready to use (see the <code>getTileLayerUrlForTreeCoverLoss</code> function for such a case).
+In the script additions presented below the entire <code>source</code> object is extracted, as it contains the necessary specifications for adding a vector tile layer in Mapbox.</p>
 
-<p>Add the following functions to <code class="prettyprint">tutorial-index.js</code> before the <code class="prettyprint">MAIN SCRIPT ACTIVITY</code> comment.</p>
+<p>Add the following functions to <code>tutorial-index.js</code> before the <code>MAIN SCRIPT ACTIVITY</code> comment.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// declare a function that returns the Mapbox-ready vector tile URL template</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// declare a function that returns the Mapbox-ready vector tile URL template</span>
 <span class="c1">// (example.com/{x}/{y}/{z}) from the response object returned by `callApiDatasetMetadata`</span>
 <span class="c1">// takes one parameter</span>
 <span class="c1">//   (obj) the API response data</span>
 <span class="c1">// returns an object representing a vector source, ready to be used by map.addSource().</span>
-<span class="kr">const</span> <span class="nx">getTileLayerSourceForWDPAGeometries</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">getTileLayerSourceForWDPAGeometries</span> <span class="o">=</span> <span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// drill down to get a useful object</span>
-    <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layer'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'attributes'</span><span class="p">][</span><span class="s1">'layerConfig'</span><span class="p">][</span><span class="s1">'source'</span><span class="p">];</span>
+    <span class="k">return</span> <span class="nx">obj</span><span class="p">[</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">layer</span><span class="dl">'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="dl">'</span><span class="s1">attributes</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">layerConfig</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">source</span><span class="dl">'</span><span class="p">];</span>
 <span class="p">}</span>
 
 
@@ -961,63 +1214,63 @@ In the script additions presented below the entire <code class="prettyprint">sou
 <span class="c1">//   (title) a string identifier for the source and layer</span>
 <span class="c1">//   (source) the vector tile source to add to the map</span>
 <span class="c1">//   (layer) layer name in the vector tile - any vector tile can hold many different layers</span>
-<span class="kr">const</span> <span class="nx">addVectorTileLayerToMap</span> <span class="o">=</span> <span class="p">(</span><span class="nx">mapVar</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">source</span><span class="p">,</span> <span class="nx">layer</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">addVectorTileLayerToMap</span> <span class="o">=</span> <span class="p">(</span><span class="nx">mapVar</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">source</span><span class="p">,</span> <span class="nx">layer</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// need to first add a source</span>
     <span class="nx">mapVar</span><span class="p">.</span><span class="nx">addSource</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="nx">source</span><span class="p">);</span>
     <span class="c1">// then add the layer, referencing the source</span>
     <span class="nx">mapVar</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">({</span>
-    <span class="s1">'id'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
-    <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'fill'</span><span class="p">,</span>
-    <span class="s1">'source'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
-    <span class="s1">'source-layer'</span><span class="p">:</span> <span class="nx">layer</span><span class="p">,</span>
-        <span class="s1">'paint'</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">'fill-opacity'</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
-            <span class="s1">'fill-color'</span><span class="p">:</span> <span class="s1">'#A6CEE3'</span>
+    <span class="dl">'</span><span class="s1">id</span><span class="dl">'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">fill</span><span class="dl">'</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">source</span><span class="dl">'</span><span class="p">:</span> <span class="nx">title</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">source-layer</span><span class="dl">'</span><span class="p">:</span> <span class="nx">layer</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">paint</span><span class="dl">'</span><span class="p">:</span> <span class="p">{</span>
+            <span class="dl">'</span><span class="s1">fill-opacity</span><span class="dl">'</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
+            <span class="dl">'</span><span class="s1">fill-color</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#A6CEE3</span><span class="dl">'</span>
         <span class="p">}</span>
     <span class="p">});</span>
 <span class="p">}</span>
-</code></pre>
-<p>Also modify the <code class="prettyprint">map.on(&#39;load&#39;)</code> call to add this vector tile layer to the map.</p>
+</code></pre></div>
+<p>Also modify the <code>map.on(&#39;load&#39;)</code> call to add this vector tile layer to the map.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'load'</span><span class="p">,</span> <span class="nx">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">load</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
 
     <span class="c1">// LOAD TREE COVER LOSS RASTER TILES</span>
     <span class="c1">// declare the Dataset ID for Tree Cover Loss</span>
-    <span class="kr">const</span> <span class="nx">datasetIdForTCL</span> <span class="o">=</span> <span class="s1">'b584954c-0d8d-40c6-859c-f3fdf3c2c5df'</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">datasetIdForTCL</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">b584954c-0d8d-40c6-859c-f3fdf3c2c5df</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// fetch remote dataset metadata</span>
-    <span class="kr">const</span> <span class="nx">metadataForTCL</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetIdForTCL</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">metadataForTCL</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetIdForTCL</span><span class="p">);</span>
     <span class="c1">// get an identifier for the Tree Cover Loss raster tiles</span>
-    <span class="kr">const</span> <span class="nx">slugForTCL</span> <span class="o">=</span> <span class="nx">getTreeCoverLossSlug</span><span class="p">(</span><span class="nx">metadataForTCL</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">slugForTCL</span> <span class="o">=</span> <span class="nx">getTreeCoverLossSlug</span><span class="p">(</span><span class="nx">metadataForTCL</span><span class="p">);</span>
     <span class="c1">// get the raster tile layer URL from full API response data</span>
-    <span class="kr">const</span> <span class="nx">tileLayerUrlForTCL</span> <span class="o">=</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span><span class="p">(</span><span class="nx">metadataForTCL</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">tileLayerUrlForTCL</span> <span class="o">=</span> <span class="nx">getTileLayerUrlForTreeCoverLoss</span><span class="p">(</span><span class="nx">metadataForTCL</span><span class="p">);</span>
     <span class="c1">// add the Tree Cover Loss raster layer to the map</span>
     <span class="nx">addRasterTileLayerToMap</span><span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="nx">slugForTCL</span><span class="p">,</span> <span class="nx">tileLayerUrlForTCL</span><span class="p">);</span>
 
     <span class="c1">// LOAD WDPA GEOMETRIES VECTOR TILES</span>
     <span class="c1">// declare the Dataset ID for WDPA Geometries</span>
-    <span class="kr">const</span> <span class="nx">datasetIdForWDPAGeometries</span> <span class="o">=</span> <span class="s1">'a8360d91-06af-4f2d-bd61-4e50c8687ad8'</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">datasetIdForWDPAGeometries</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">a8360d91-06af-4f2d-bd61-4e50c8687ad8</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// fetch remote dataset metadata</span>
-    <span class="kr">const</span> <span class="nx">metadataForWDPAGeometries</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetIdForWDPAGeometries</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">metadataForWDPAGeometries</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callApiDatasetMetadata</span><span class="p">(</span><span class="nx">datasetIdForWDPAGeometries</span><span class="p">);</span>
     <span class="c1">// get the source information, including the vector tile URL, for WDPA Geometries</span>
-    <span class="kr">const</span> <span class="nx">sourceForWDPAGeometries</span> <span class="o">=</span> <span class="nx">getTileLayerSourceForWDPAGeometries</span><span class="p">(</span><span class="nx">metadataForWDPAGeometries</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">sourceForWDPAGeometries</span> <span class="o">=</span> <span class="nx">getTileLayerSourceForWDPAGeometries</span><span class="p">(</span><span class="nx">metadataForWDPAGeometries</span><span class="p">);</span>
     <span class="c1">// add the WDPA vector tile layer to the map</span>
-    <span class="nx">addVectorTileLayerToMap</span><span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="s1">'wdpa-tile-cache'</span><span class="p">,</span> <span class="nx">sourceForWDPAGeometries</span><span class="p">,</span> <span class="s1">'wdpa_protected_areas_201909'</span><span class="p">);</span>
+    <span class="nx">addVectorTileLayerToMap</span><span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="dl">'</span><span class="s1">wdpa-tile-cache</span><span class="dl">'</span><span class="p">,</span> <span class="nx">sourceForWDPAGeometries</span><span class="p">,</span> <span class="dl">'</span><span class="s1">wdpa_protected_areas_201909</span><span class="dl">'</span><span class="p">);</span>
 
 <span class="p">});</span>
-</code></pre>
+</code></pre></div>
 <p>The additions here enable similar functionality as already exists for the raster tile layer.
 The dataset is fetched, partial information is extracted, and a small set of configuration parameters are specified to link the tool to the remote filestore.</p>
 
-<p>In the execution of <code class="prettyprint">addVectorTileLayerToMap(map, title, source, layer)</code> in the <code class="prettyprint">map.on(&#39;load&#39;)</code> callback the last parameter <code class="prettyprint">layer</code> is known ahead of time - this is not stored in the metadata and must be supplied by other means.
-For a vector tile with only one layer, it is possible to inspect a <code class="prettyprint">*.mvt</code> file with a text editor and look for likely layer names near the front of the file.
-Utilities such as <a href="https://gdal.org/programs/ogrinfo.html"><code class="prettyprint">ogrinfo</code></a> can also be employed to list layers, which is more direct than inspecting the binary file.</p>
+<p>In the execution of <code>addVectorTileLayerToMap(map, title, source, layer)</code> in the <code>map.on(&#39;load&#39;)</code> callback the last parameter <code>layer</code> is known ahead of time - this is not stored in the metadata and must be supplied by other means.
+For a vector tile with only one layer, it is possible to inspect a <code>*.mvt</code> file with a text editor and look for likely layer names near the front of the file.
+Utilities such as <a href="https://gdal.org/programs/ogrinfo.html"><code>ogrinfo</code></a> can also be employed to list layers, which is more direct than inspecting the binary file.</p>
 
-<p>Here is the result of running <code class="prettyprint">hexdump wdpa_tmp.mvt -C -n 256</code>, which in the right column shows an ASCII interpretation of the file.
-After 8 bytes (<code class="prettyprint">...(x...</code>) the layer name is declared (<code class="prettyprint">wdpa_protected_areas_201909</code>), and following that are the names of the attributes/fields for that layer.</p>
+<p>Here is the result of running <code>hexdump wdpa_tmp.mvt -C -n 256</code>, which in the right column shows an ASCII interpretation of the file.
+After 8 bytes (<code>...(x...</code>) the layer name is declared (<code>wdpa_protected_areas_201909</code>), and following that are the names of the attributes/fields for that layer.</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>00000000  1a a9 ae 28 78 02 0a 1b  77 64 70 61 5f 70 72 6f  |...(x...wdpa_pro|
+<div class="highlight"><pre class="highlight plaintext"><code>00000000  1a a9 ae 28 78 02 0a 1b  77 64 70 61 5f 70 72 6f  |...(x...wdpa_pro|
 00000010  74 65 63 74 65 64 5f 61  72 65 61 73 5f 32 30 31  |tected_areas_201|
 00000020  39 30 39 28 80 20 1a 06  77 64 70 61 69 64 1a 08  |909(. ..wdpaid..|
 00000030  77 64 70 61 5f 70 69 64  1a 06 70 61 5f 64 65 66  |wdpa_pid..pa_def|
@@ -1033,36 +1286,34 @@ After 8 bytes (<code class="prettyprint">...(x...</code>) the layer name is decl
 000000d0  61 74 75 73 1a 09 73 74  61 74 75 73 5f 79 72 1a  |atus..status_yr.|
 000000e0  08 67 6f 76 5f 74 79 70  65 1a 08 6f 77 6e 5f 74  |.gov_type..own_t|
 000000f0  79 70 65 1a 09 6d 61 6e  67 5f 61 75 74 68 1a 09  |ype..mang_auth..
-</code></pre>
-<p>Here is the output of <code class="prettyprint">ogrinfo wdpa_tmp.mvt</code>:</p>
+</code></pre></div>
+<p>Here is the output of <code>ogrinfo wdpa_tmp.mvt</code>:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>INFO: Open of `wdpa_tmp.mvt'
+<div class="highlight"><pre class="highlight plaintext"><code>INFO: Open of `wdpa_tmp.mvt'
       using driver `MVT' successful.
 1: wdpa_protected_areas_201909 (Multi Polygon)
-</code></pre>
+</code></pre></div>
 <p>Reload in the browser to see the updated map, which should look like:</p>
 
-<p><img src="images/tutorials/webdev_geometry_analysis/webmap-with-vector-tiles.png" alt="Image of the webpage, with the same large map, but now with many semi-transparent white polygons representing the WDPA data." /></p>
+<p><img src="images/tutorials/webdev_geometry_analysis/webmap-with-vector-tiles-5a37f938.png" alt="Image of the webpage, with the same large map, but now with many semi-transparent white polygons representing the WDPA data." /></p>
 
 <p>Pan around the map, zoom in and out, and watch the vector tiles load remotely or from the cache of already-seen tiles.</p>
 
 <p>For the next step, interaction will be added to the polygons.
 Currently if you click on a WDPA geometry nothing happens - it is as though these vectors are just painted on top of the raster tile.
 From the above hexdump, and from not-listed-here information, it is known that the vector data has associated attributes, and we are going to display that.
-In future steps this groundwork set us up to use some of that information for calls to the <code class="prettyprint">/query</code> endpoint.</p>
-
-<h2 id="accessing-vector-attributes">Accessing vector attributes</h2>
-
+In future steps this groundwork set us up to use some of that information for calls to the <code>/query</code> endpoint.</p>
+<h2 id='accessing-vector-attributes'>Accessing vector attributes</h2>
 <p>As mentioned in the above section, vector tiles hold both geometry and attributes associated with each feature.
 All features within the same vector tile layer will have the same set of attribute fields.
 In this section, some of these attribute fields will be used in a popup that is displayed whenever a user clicks on a polygon.</p>
 
-<p>From the hexdump in the previous section, you can see the names of the fields associated with the <code class="prettyprint">wdpa_protected_areas_201909</code> layer, including <code class="prettyprint">wdpaid</code>, <code class="prettyprint">name</code>, <code class="prettyprint">desig</code>, <code class="prettyprint">status_yr</code>, and many more.
-The full set of attributes is described in the <a href="https://www.protectedplanet.net/system/comfy/cms/files/files/000/000/203/original/WDPA_WDOECM_Manual_1_6.pdf">WDPA User Manual</a>, or the quick list without descriptions can be obtained easily with <code class="prettyprint">ogrinfo -so wdpa_tmp.mvt wdpa_protected_areas_201909</code>:</p>
+<p>From the hexdump in the previous section, you can see the names of the fields associated with the <code>wdpa_protected_areas_201909</code> layer, including <code>wdpaid</code>, <code>name</code>, <code>desig</code>, <code>status_yr</code>, and many more.
+The full set of attributes is described in the <a href="https://www.protectedplanet.net/system/comfy/cms/files/files/000/000/203/original/WDPA_WDOECM_Manual_1_6.pdf">WDPA User Manual</a>, or the quick list without descriptions can be obtained easily with <code>ogrinfo -so wdpa_tmp.mvt wdpa_protected_areas_201909</code>:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>Layer name: wdpa_protected_areas_201909
+<div class="highlight"><pre class="highlight plaintext"><code>Layer name: wdpa_protected_areas_201909
 Geometry: Multi Polygon
 Feature Count: 2737
 Extent: (0.000000, 0.000000) - (4096.000000, 4096.000000)
@@ -1098,72 +1349,70 @@ sub_loc: String (0.0)
 parent_iso: String (0.0)
 iso3: String (0.0)
 geostore_id: String (0.0)
-</code></pre>
+</code></pre></div>
 <p>To enable a popup with some of this information, add the following to the javascript file, above the start of the main script execution.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// declare a function that returns an HTML string to be displayed</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// declare a function that returns an HTML string to be displayed</span>
 <span class="c1">// in the popup on a vector element.</span>
 <span class="c1">// takes one parameter:</span>
 <span class="c1">//   (f) an element of the vector tile</span>
-<span class="kr">const</span> <span class="nx">popupContentForWDPA</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">popupContentForWDPA</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// WDPA identifier string</span>
-    <span class="kr">const</span> <span class="nx">wdpaId</span> <span class="o">=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="s1">'wdpaid'</span><span class="p">];</span>
+    <span class="kd">const</span> <span class="nx">wdpaId</span> <span class="o">=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="dl">'</span><span class="s1">wdpaid</span><span class="dl">'</span><span class="p">];</span>
     <span class="c1">// start assembling the string of HTML that will be displayed</span>
     <span class="c1">// first make a hyperlink to a details page for this geometry (external site)</span>
-    <span class="kd">let</span> <span class="nx">content</span> <span class="o">=</span> <span class="s1">'&lt;span&gt;name: '</span> <span class="o">+</span> 
-                     <span class="s1">'&lt;a target="_blank" '</span> <span class="o">+</span> 
-                        <span class="s1">'href="https://protectedplanet.net/'</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span> <span class="s1">'" &gt;'</span> <span class="o">+</span> 
-                           <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="s1">'&lt;/a&gt;&lt;/span&gt;'</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">content</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">&lt;span&gt;name: </span><span class="dl">'</span> <span class="o">+</span> 
+                     <span class="dl">'</span><span class="s1">&lt;a target="_blank" </span><span class="dl">'</span> <span class="o">+</span> 
+                        <span class="dl">'</span><span class="s1">href="https://protectedplanet.net/</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">" &gt;</span><span class="dl">'</span> <span class="o">+</span> 
+                           <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">]</span> <span class="o">+</span>
+                  <span class="dl">'</span><span class="s1">&lt;/a&gt;&lt;/span&gt;</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// add the identifier, since that is being used it should also be displayed</span>
-    <span class="nx">content</span> <span class="o">+=</span> <span class="s1">'&lt;br&gt;&lt;span&gt;wdpaid: '</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span> <span class="s1">'&lt;/span&gt;'</span><span class="p">;</span>
+    <span class="nx">content</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">&lt;br&gt;&lt;span&gt;wdpaid: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">&lt;/span&gt;</span><span class="dl">'</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">content</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
+</code></pre></div>
 <p>and the following at the end of the file, after the map has been loaded.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// When a click event occurs on a feature in the WDPA vector layer,</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// When a click event occurs on a feature in the WDPA vector layer,</span>
 <span class="c1">// open a popup at the location of the click.</span>
-<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="s1">'wdpa-tile-cache'</span><span class="p">,</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">wdpa-tile-cache</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// get the features underneath the clicked point</span>
-    <span class="kr">const</span> <span class="nx">features</span> <span class="o">=</span> <span class="nx">map</span><span class="p">.</span><span class="nx">queryRenderedFeatures</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">point</span><span class="p">,</span> <span class="p">{</span><span class="na">layers</span><span class="p">:</span> <span class="p">[</span><span class="s1">'wdpa-tile-cache'</span><span class="p">]});</span>
+    <span class="kd">const</span> <span class="nx">features</span> <span class="o">=</span> <span class="nx">map</span><span class="p">.</span><span class="nx">queryRenderedFeatures</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">point</span><span class="p">,</span> <span class="p">{</span><span class="na">layers</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">wdpa-tile-cache</span><span class="dl">'</span><span class="p">]});</span>
     <span class="c1">// create a popup at the clicked point</span>
     <span class="k">new</span> <span class="nx">mapboxgl</span><span class="p">.</span><span class="nx">Popup</span><span class="p">()</span>
     <span class="p">.</span><span class="nx">setLngLat</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">lngLat</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">setHTML</span><span class="p">(</span><span class="nx">await</span> <span class="nx">popupContentForWDPA</span><span class="p">(</span><span class="nx">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>  <span class="c1">// use first feature if many selected</span>
+    <span class="p">.</span><span class="nx">setHTML</span><span class="p">(</span><span class="k">await</span> <span class="nx">popupContentForWDPA</span><span class="p">(</span><span class="nx">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>  <span class="c1">// use first feature if many selected</span>
     <span class="p">.</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
 <span class="p">});</span>
 
 
 <span class="c1">// Change the cursor to a pointer when the mouse is over the WDPA layer.</span>
-<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'mouseenter'</span><span class="p">,</span> <span class="s1">'wdpa-tile-cache'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">map</span><span class="p">.</span><span class="nx">getCanvas</span><span class="p">().</span><span class="nx">style</span><span class="p">.</span><span class="nx">cursor</span> <span class="o">=</span> <span class="s1">'pointer'</span><span class="p">;</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">mouseenter</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">wdpa-tile-cache</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">map</span><span class="p">.</span><span class="nx">getCanvas</span><span class="p">().</span><span class="nx">style</span><span class="p">.</span><span class="nx">cursor</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">pointer</span><span class="dl">'</span><span class="p">;</span>
 <span class="p">});</span>
 
 
 <span class="c1">// Change it back to a pointer when it leaves.</span>
-<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'mouseleave'</span><span class="p">,</span> <span class="s1">'wdpa-tile-cache'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">map</span><span class="p">.</span><span class="nx">getCanvas</span><span class="p">().</span><span class="nx">style</span><span class="p">.</span><span class="nx">cursor</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">mouseleave</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">wdpa-tile-cache</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">map</span><span class="p">.</span><span class="nx">getCanvas</span><span class="p">().</span><span class="nx">style</span><span class="p">.</span><span class="nx">cursor</span> <span class="o">=</span> <span class="dl">''</span><span class="p">;</span>
 <span class="p">});</span>
-</code></pre>
-<p>The function <code class="prettyprint">popupContentForWDPA</code> simply returns the HTML that will be used within the popup.
+</code></pre></div>
+<p>The function <code>popupContentForWDPA</code> simply returns the HTML that will be used within the popup.
 There are two entries in the HTML string:</p>
 
 <ul>
-<li>the <code class="prettyprint">name</code> of the area, which is hyperlinked to this entry on the <a href="protectedplanet.net">protectedplanet.net</a> website using the <code class="prettyprint">wdpaid</code> property to construct the URL.</li>
-<li>the <code class="prettyprint">wdpaid</code>, a unique identifier for the protected area.</li>
+<li>the <code>name</code> of the area, which is hyperlinked to this entry on the <a href="protectedplanet.net">protectedplanet.net</a> website using the <code>wdpaid</code> property to construct the URL.</li>
+<li>the <code>wdpaid</code>, a unique identifier for the protected area.</li>
 </ul>
 
 <p>There is no necessity for this to be an async function currently, but in later steps async will be needed, so this is laying the groundwork.</p>
 
 <p>The three calls at the end of the file exist to register functions with map events, importantly when a WDPA geometry is clicked, a popup will appear where the click occurred and display the two pieces of information described above.</p>
 
-<p>In the next section the <code class="prettyprint">/query</code> endpoint will be discussed.</p>
-
-<h2 id="querying-a-table">Querying a table</h2>
-
+<p>In the next section the <code>/query</code> endpoint will be discussed.</p>
+<h2 id='querying-a-table'>Querying a table</h2>
 <p>For the current example, the WDPA vector geometries has no <em>awareness</em> of the tree cover loss values that are being displayed underneath them.
 There is no simple way to do spatial statistics on the raster tiles - as you should recall, the raster tiles are pre-rendered RGB versions of a much larger and complex dataset.
 The process for making the tiles is <em>lossy</em> - there is no way to recover the <em>true values</em> for tree cover loss from these rendered images.
@@ -1171,36 +1420,36 @@ But we do, in fact, need to display tree cover loss values for the protected are
 Future tutorials will demonstrate <em>on-the-fly analysis</em>, but for now a more simple method will be employed.</p>
 
 <p>Here we will use a pre-computed lookup table to connect WDPA geometries with tree cover loss metrics.
-This table and its rows will be accessed through the <code class="prettyprint">/query</code> endpoint using basic SQL functionality to <em>query</em> a table and extract useable information.
-This section of the tutorial will introduce the basics of the <code class="prettyprint">/query</code> endpoint, describe the table being queried, and demonstrate how real queries look.</p>
+This table and its rows will be accessed through the <code>/query</code> endpoint using basic SQL functionality to <em>query</em> a table and extract useable information.
+This section of the tutorial will introduce the basics of the <code>/query</code> endpoint, describe the table being queried, and demonstrate how real queries look.</p>
 
-<p>Let&rsquo;s begin with looking at the <a href="https://resource-watch.github.io/doc-api/index-rw.html#querying-datasets"><code class="prettyprint">/query</code> endpoint reference</a>.
+<p>Let&#39;s begin with looking at the <a href="reference.html#querying-datasets"><code>/query</code> endpoint reference</a>.
 You should read over the section for a comprehensive understanding.
 Below is a condensed version with the critical bits.</p>
 
-<p>The <code class="prettyprint">/query</code> endpoint is used primarily in conjuction with the <code class="prettyprint">?sql=...</code> URL parameter, which defines the query to be performed using a basic subset of SQL.
-All queries should be <code class="prettyprint">SELECT</code>s, since they are <em>reading</em> the information and not <em>updating</em> the table.
-In practice, queries are likely to have the traditional form of <code class="prettyprint">SELECT .... FROM .... WHERE ....</code>.
+<p>The <code>/query</code> endpoint is used primarily in conjuction with the <code>?sql=...</code> URL parameter, which defines the query to be performed using a basic subset of SQL.
+All queries should be <code>SELECT</code>s, since they are <em>reading</em> the information and not <em>updating</em> the table.
+In practice, queries are likely to have the traditional form of <code>SELECT .... FROM .... WHERE ....</code>.
 The query construction will impact the structure of the returned information - you can get a single value, a list of values, or something looking like a table depending on what you request.
-The response is by default a JSON-deserializable string, but with the <code class="prettyprint">?format={json|csv}</code> parameter that can be changed.</p>
+The response is by default a JSON-deserializable string, but with the <code>?format={json|csv}</code> parameter that can be changed.</p>
 
 <p>The dataset ID for pre-computed tree cover loss within WDPA geometries is given below.
 This will be used throughout this section and the next section, where the queries will be included in the web application.
 For this section the queries will be made through the terminal or with the URL bar in your web browser.</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>lookupTableId = 'a4d92f66-83f4-40f9-9d70-17297ef90e63';
-</code></pre>
+<div class="highlight"><pre class="highlight plaintext"><code>lookupTableId = 'a4d92f66-83f4-40f9-9d70-17297ef90e63';
+</code></pre></div>
 <p>Look at the Dataset by sending a GET request to:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>http://api.resourcewatch.org/v1/dataset/a4d92f66-83f4-40f9-9d70-17297ef90e63
-</code></pre>
-<p>The <code class="prettyprint">legend</code> object in the response holds information about the structure and schema of the table.
+<div class="highlight"><pre class="highlight plaintext"><code>http://api.resourcewatch.org/v1/dataset/a4d92f66-83f4-40f9-9d70-17297ef90e63
+</code></pre></div>
+<p>The <code>legend</code> object in the response holds information about the structure and schema of the table.
 Look over the column names, organized by data type.</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>{                                                                                                
+<div class="highlight"><pre class="highlight plaintext"><code>{                                                                                                
   ...
   "legend": {
     "date": [],
@@ -1254,16 +1503,16 @@ Look over the column names, organized by data type.</p>
   ...
 }
 
-</code></pre>
-<p>Let&rsquo;s issue a basic query to get all fields (columns) for five rows, so we have an opportunity to look at the information in the table:</p>
+</code></pre></div>
+<p>Let&#39;s issue a basic query to get all fields (columns) for five rows, so we have an opportunity to look at the information in the table:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>http://api.resourcewatch.org/v1/query/?sql=SELECT * FROM a4d92f66-83f4-40f9-9d70-17297ef90e63 LIMIT 5
-</code></pre>
+<div class="highlight"><pre class="highlight plaintext"><code>http://api.resourcewatch.org/v1/query/?sql=SELECT * FROM a4d92f66-83f4-40f9-9d70-17297ef90e63 LIMIT 5
+</code></pre></div>
 <p>The response should look something like:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>{
+<div class="highlight"><pre class="highlight plaintext"><code>{
   "data": [
     {
       "wdpa_protected_area__id": 555531125,
@@ -1301,28 +1550,28 @@ Look over the column names, organized by data type.</p>
   ],
   ...
 }
-</code></pre>
+</code></pre></div>
 <p>Most of these fields are not needed for our current pursuit of associating tree cover loss with a WDPA geometry.
 Some are very useful for that purpose, however:</p>
 
 <ul>
-<li><code class="prettyprint">wdpa_protected_area__id</code>: the identifier for a WDPA protected area</li>
-<li><code class="prettyprint">umd_tree_cover_loss__year</code>: the year of a record (row)</li>
-<li><code class="prettyprint">umd_tree_cover_density__threshold</code>: the threshold of tree density for a record (row)</li>
-<li><code class="prettyprint">umd_tree_cover_loss__ha</code>: the amount of forest loss in hectares for a record (row)</li>
+<li><code>wdpa_protected_area__id</code>: the identifier for a WDPA protected area</li>
+<li><code>umd_tree_cover_loss__year</code>: the year of a record (row)</li>
+<li><code>umd_tree_cover_density__threshold</code>: the threshold of tree density for a record (row)</li>
+<li><code>umd_tree_cover_loss__ha</code>: the amount of forest loss in hectares for a record (row)</li>
 </ul>
 
-<p>We will use these in the future for the web application, but let&rsquo;s quickly try out another query that utilizes more of the SQL capabilities.</p>
+<p>We will use these in the future for the web application, but let&#39;s quickly try out another query that utilizes more of the SQL capabilities.</p>
 
-<p>Let&rsquo;s say you want to get an aggregated value for tree cover loss over a certain country.</p>
+<p>Let&#39;s say you want to get an aggregated value for tree cover loss over a certain country.</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>http://api.resourcewatch.org/v1/query/?sql=SELECT SUM(umd_tree_cover_loss__ha) AS total_loss FROM a4d92f66-83f4-40f9-9d70-17297ef90e63 WHERE wdpa_protected_area__iso='BRA' AND umd_tree_cover_loss__year=2015 AND umd_tree_cover_density__threshold=30
-</code></pre>
+<div class="highlight"><pre class="highlight plaintext"><code>http://api.resourcewatch.org/v1/query/?sql=SELECT SUM(umd_tree_cover_loss__ha) AS total_loss FROM a4d92f66-83f4-40f9-9d70-17297ef90e63 WHERE wdpa_protected_area__iso='BRA' AND umd_tree_cover_loss__year=2015 AND umd_tree_cover_density__threshold=30
+</code></pre></div>
 <p>The return should look like:</p>
 
 <div class="center-column"></div>
-<pre class="highlight plaintext"><code>{
+<div class="highlight"><pre class="highlight plaintext"><code>{
   "data": [
     {
       "total_loss": 266476.8886672246
@@ -1330,13 +1579,13 @@ Some are very useful for that purpose, however:</p>
   ],
   ...
 }
-</code></pre>
+</code></pre></div>
 <p>This query used:</p>
 
 <ul>
-<li>the <code class="prettyprint">SUM</code> function to aggregate a numeric field (<code class="prettyprint">umd_tree_cover_loss__year</code>)</li>
-<li>the <code class="prettyprint">AS</code> assigner to give a meaningful label to output field</li>
-<li>the <code class="prettyprint">WHERE</code> modifier to construct a clause that filters the rows
+<li>the <code>SUM</code> function to aggregate a numeric field (<code>umd_tree_cover_loss__year</code>)</li>
+<li>the <code>AS</code> assigner to give a meaningful label to output field</li>
+<li>the <code>WHERE</code> modifier to construct a clause that filters the rows
 
 <ul>
 <li>the country must be Brasil (ISO code BRA)</li>
@@ -1347,92 +1596,88 @@ Some are very useful for that purpose, however:</p>
 
 <p>Try to define more queries and explore the data a bit before moving to the next section.
 When aggregating values always remember to subselect in a meaningful way to get meaningful output values.
-In the above query it is important to supply a threshold in the <code class="prettyprint">WHERE</code> clause, otherwise there is the potential for double counting (or multi-counting) the same lost forest (50% threshold fully encompasses the values for the 30% threshold).</p>
+In the above query it is important to supply a threshold in the <code>WHERE</code> clause, otherwise there is the potential for double counting (or multi-counting) the same lost forest (50% threshold fully encompasses the values for the 30% threshold).</p>
+<h2 id='dynamic-queries-at-runtime'>Dynamic queries at runtime</h2>
+<p>Now that we have experience with writing queries, let&#39;s integrate that into the web application.</p>
 
-<h2 id="dynamic-queries-at-runtime">Dynamic queries at runtime</h2>
-
-<p>Now that we have experience with writing queries, let&rsquo;s integrate that into the web application.</p>
-
-<p>Let&rsquo;s start with writing a function to do the querying.
+<p>Let&#39;s start with writing a function to do the querying.
 As a reminder of our intention, we are trying to get a measure of tree cover loss associated with a single WDPA geometry.</p>
 
 <p>Add this function above the main script execution.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// declare an async function that calls an API endpoint for querying.</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// declare an async function that calls an API endpoint for querying.</span>
 <span class="c1">// this uses a pre-computed table that links WDPA identifiers to tree cover loss values.</span>
 <span class="c1">// takes three parameters</span>
 <span class="c1">//   (wdpaId) integer; the WDPA geometry ID, which uniquely identifies a protected area</span>
 <span class="c1">//   (year) integer; the year of interest {2001 - 2019}</span>
 <span class="c1">//   (threshold) integer; the tree cover loss threshold {10, 15, 20, 25, 30, 50, 75}</span>
 <span class="c1">// returns an object interpreted from the JSON response</span>
-<span class="kr">const</span> <span class="nx">callApiQueryWDPATreeCoverLoss</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">wdpaId</span><span class="p">,</span> <span class="nx">year</span><span class="p">,</span> <span class="nx">threshold</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">callApiQueryWDPATreeCoverLoss</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">wdpaId</span><span class="p">,</span> <span class="nx">year</span><span class="p">,</span> <span class="nx">threshold</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">//construct the query</span>
-    <span class="kr">const</span> <span class="nx">queryDatasetId</span> <span class="o">=</span> <span class="s1">'a4d92f66-83f4-40f9-9d70-17297ef90e63'</span><span class="p">;</span>
-    <span class="kr">const</span> <span class="nx">sqlQuery</span> <span class="o">=</span> <span class="s1">'https://api.resourcewatch.org/v1/query/'</span> <span class="o">+</span> 
-             <span class="s1">'?sql=SELECT SUM(umd_tree_cover_loss__ha) AS tcl_ha '</span> <span class="o">+</span>
-                      <span class="s1">'FROM '</span> <span class="o">+</span> <span class="nx">queryDatasetId</span> <span class="o">+</span> 
-                  <span class="s1">' WHERE wdpa_protected_area__id='</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span>
-                  <span class="s1">' AND umd_tree_cover_loss__year='</span> <span class="o">+</span> <span class="nx">year</span> <span class="o">+</span> 
-                      <span class="s1">' AND umd_tree_cover_density__threshold='</span> <span class="o">+</span> <span class="nx">threshold</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">queryDatasetId</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">a4d92f66-83f4-40f9-9d70-17297ef90e63</span><span class="dl">'</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">sqlQuery</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">https://api.resourcewatch.org/v1/query/</span><span class="dl">'</span> <span class="o">+</span> 
+             <span class="dl">'</span><span class="s1">?sql=SELECT SUM(umd_tree_cover_loss__ha) AS tcl_ha </span><span class="dl">'</span> <span class="o">+</span>
+                      <span class="dl">'</span><span class="s1">FROM </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">queryDatasetId</span> <span class="o">+</span> 
+                  <span class="dl">'</span><span class="s1"> WHERE wdpa_protected_area__id=</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span>
+                  <span class="dl">'</span><span class="s1"> AND umd_tree_cover_loss__year=</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">year</span> <span class="o">+</span> 
+                      <span class="dl">'</span><span class="s1"> AND umd_tree_cover_density__threshold=</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">threshold</span><span class="p">;</span>
     <span class="c1">// fetch the API endpoint (GET request)</span>
-    <span class="kr">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">sqlQuery</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">sqlQuery</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`HTTP error! status: </span><span class="p">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="c1">// convert response to JS object</span>
     <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
 <span class="p">}</span>
-</code></pre>
+</code></pre></div>
 <p>Reload the webpage and try this function with the developer console.</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="nx">await</span> <span class="nx">callApiQueryWDPATreeCoverLoss</span><span class="p">(</span><span class="mi">40811</span><span class="p">,</span> <span class="mi">2019</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
-</code></pre>
-<p>Now let&rsquo;s extract this information and get it into the popup.
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">callApiQueryWDPATreeCoverLoss</span><span class="p">(</span><span class="mi">40811</span><span class="p">,</span> <span class="mi">2019</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+</code></pre></div>
+<p>Now let&#39;s extract this information and get it into the popup.
 In the below function you will see there are some additional metrics being inserted as well.</p>
 
-<p>Delete the existing <code class="prettyprint">popupContentForWDPA</code> function and replace it with the following:</p>
+<p>Delete the existing <code>popupContentForWDPA</code> function and replace it with the following:</p>
 
 <div class="center-column"></div>
-<pre class="highlight javascript"><code><span class="c1">// declare a function that returns a string to be displayed</span>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// declare a function that returns a string to be displayed</span>
 <span class="c1">// in the popup on a vector element.</span>
 <span class="c1">// takes one parameter:</span>
 <span class="c1">//   (e) an element of the vector tile</span>
-<span class="kr">const</span> <span class="nx">popupContentForWDPA</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="kd">const</span> <span class="nx">popupContentForWDPA</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">f</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="c1">// subtract marine area from total area and convert from square km to hectare</span>
-    <span class="kd">let</span> <span class="nx">landAreaHectare</span> <span class="o">=</span> <span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="s1">'rep_area'</span><span class="p">]</span> <span class="o">-</span> <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="s1">'rep_m_area'</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">landAreaHectare</span> <span class="o">=</span> <span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="dl">'</span><span class="s1">rep_area</span><span class="dl">'</span><span class="p">]</span> <span class="o">-</span> <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="dl">'</span><span class="s1">rep_m_area</span><span class="dl">'</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
     <span class="c1">// WDPA identifier will be used to query the TCL data table</span>
-    <span class="kd">let</span> <span class="nx">wdpaId</span> <span class="o">=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="s1">'wdpaid'</span><span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">wdpaId</span> <span class="o">=</span> <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="dl">'</span><span class="s1">wdpaid</span><span class="dl">'</span><span class="p">];</span>
     <span class="c1">// get the Tree Cover Loss area, which is returned in units of hectare</span>
-    <span class="kd">let</span> <span class="nx">tclResponse</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">callApiQueryWDPATreeCoverLoss</span><span class="p">(</span><span class="nx">wdpaId</span><span class="p">,</span> <span class="mi">2019</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">tclResponse</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callApiQueryWDPATreeCoverLoss</span><span class="p">(</span><span class="nx">wdpaId</span><span class="p">,</span> <span class="mi">2019</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span>
 
     <span class="c1">// start assembling the string of HTML that will be displayed</span>
     <span class="c1">// first make a hyperlink to a details page for this geometry (external site)</span>
-    <span class="kd">let</span> <span class="nx">content</span> <span class="o">=</span> <span class="s1">'&lt;span&gt;name: '</span> <span class="o">+</span> 
-                     <span class="s1">'&lt;a target="_blank" '</span> <span class="o">+</span> 
-                        <span class="s1">'href="https://protectedplanet.net/'</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span> <span class="s1">'" &gt;'</span> <span class="o">+</span> 
-                           <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="s1">'&lt;/a&gt;&lt;/span&gt;'</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">content</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">&lt;span&gt;name: </span><span class="dl">'</span> <span class="o">+</span> 
+                     <span class="dl">'</span><span class="s1">&lt;a target="_blank" </span><span class="dl">'</span> <span class="o">+</span> 
+                        <span class="dl">'</span><span class="s1">href="https://protectedplanet.net/</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">" &gt;</span><span class="dl">'</span> <span class="o">+</span> 
+                           <span class="nx">f</span><span class="p">.</span><span class="nx">properties</span><span class="p">[</span><span class="dl">'</span><span class="s1">name</span><span class="dl">'</span><span class="p">]</span> <span class="o">+</span>
+                  <span class="dl">'</span><span class="s1">&lt;/a&gt;&lt;/span&gt;</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// add the identifier, since that is being used it should also be displayed</span>
-    <span class="nx">content</span> <span class="o">+=</span> <span class="s1">'&lt;br&gt;&lt;span&gt;wdpaid: '</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span> <span class="s1">'&lt;/span&gt;'</span><span class="p">;</span>
+    <span class="nx">content</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">&lt;br&gt;&lt;span&gt;wdpaid: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">wdpaId</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">&lt;/span&gt;</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// add the land area, truncating to two digits past the decimal</span>
-    <span class="nx">content</span> <span class="o">+=</span> <span class="s1">'&lt;br&gt;&lt;span&gt;land area (ha): '</span> <span class="o">+</span> <span class="nx">landAreaHectare</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'&lt;/span&gt;'</span><span class="p">;</span>
+    <span class="nx">content</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">&lt;br&gt;&lt;span&gt;land area (ha): </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">landAreaHectare</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">&lt;/span&gt;</span><span class="dl">'</span><span class="p">;</span>
     <span class="c1">// add the TCL area, truncating to two digits past the decimal</span>
-    <span class="nx">content</span> <span class="o">+=</span> <span class="s1">'&lt;br&gt;&lt;span&gt;2019 TCL area (ha): '</span> <span class="o">+</span> <span class="nx">tclResponse</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'tcl_ha'</span><span class="p">].</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'&lt;/span&gt;'</span><span class="p">;</span>
+    <span class="nx">content</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">&lt;br&gt;&lt;span&gt;2019 TCL area (ha): </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">tclResponse</span><span class="p">[</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="dl">'</span><span class="s1">tcl_ha</span><span class="dl">'</span><span class="p">].</span><span class="nx">toFixed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">&lt;/span&gt;</span><span class="dl">'</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">content</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-<p>With the popup now able to display the tree cover loss for each polygon, let&rsquo;s reload the webpage and try it out!</p>
+</code></pre></div>
+<p>With the popup now able to display the tree cover loss for each polygon, let&#39;s reload the webpage and try it out!</p>
 
-<p><img src="images/tutorials/webdev_geometry_analysis/webmap-final-popup.png" alt="Image of the webmap, with a title, a large map zoomed to central Africa, a green and black map depicting tree cover loss, white polygons for WDPA features, and a popup with information about a selected polygon." /></p>
-
-<h2 id="next-steps">Next Steps</h2>
-
-<p>The <code class="prettyprint">/query</code> endpoint is <em>the method</em> for getting the real data.
+<p><img src="images/tutorials/webdev_geometry_analysis/webmap-final-popup-3fbe244b.png" alt="Image of the webmap, with a title, a large map zoomed to central Africa, a green and black map depicting tree cover loss, white polygons for WDPA features, and a popup with information about a selected polygon." /></p>
+<h2 id='next-steps'>Next Steps</h2>
+<p>The <code>/query</code> endpoint is <em>the method</em> for getting the real data.
 The use of SQL-like functionality enables basic types of filtering, subselection, and aggregation to produce usable information.
 There are of course limitations and not all SQL functionality is available, notably the <em>relational</em> aspect that some may expect.
-The <code class="prettyprint">/query</code> endpoint does not support <code class="prettyprint">JOIN</code>s and has very limited support for nested queries or subqueries.</p>
+The <code>/query</code> endpoint does not support <code>JOIN</code>s and has very limited support for nested queries or subqueries.</p>
 
 <p>Future tutorials will discuss on-the-fly analyses, which will bypass the need for pre-computed tables.
 On-the-fly analysis allows for rasters to be <em>queried</em> and analyzed with vector geometries, including those that are drawn by the user or not known ahead of time.</p>
