@@ -12,7 +12,7 @@ This service has two endpoints:
 
 This endpoint expects a URL as a query parameter and generates a pdf containing a rendered version of that page: 
 
-```
+```shell
 curl -X GET \
   'http://api.resourcewatch.org/v1/webshot/pdf?url=http://google.com&filename=my-google-screenshoz.pdf' \
   -H 'Authorization: Bearer <your-token>' \
@@ -35,7 +35,7 @@ This endpoint generates a thumbnail image for the provided widget and stores it 
 This endpoint does not validate the existence of the widget - you will not get a 404 HTTP error if you provided a non-existent widget id. 
 </aside>
 
-```
+```shell
 curl -X POST \
   http://api.resourcewatch.org/v1/webshot/widget/7b540186-9a9f-4e13-a6e8-f38e64fab2e1/thumbnail \
   -H 'Authorization: Bearer <your-token>' \

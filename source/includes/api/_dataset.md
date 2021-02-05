@@ -2,18 +2,18 @@
 
 ## What is a dataset?
 
-If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the [dataset concept](#dataset) documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you.
+If you are new to the RW API, or want to learn more about the concept of a dataset, we strongly encourage you to read the [dataset concept](/concepts.html#dataset) documentation first. It gives you a brief and clear description of what a dataset is, and what it can do for you.
 
-Once you've read that section, you can come back here to learn more details about using the RW API's datasets feature. The RW API is home to many datasets uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you. These datasets contain a lot of information about a wide range of topics that you may want to learn about or build on top of. To find out more about finding and accessing the datasets already available on the RW API, check out the documentation on [getting datasets](#getting-all-datasets). A nice, visual way to explore existing datasets is by using the [Resource Watch](https://resourcewatch.org/) website. 
+Once you've read that section, you can come back here to learn more details about using the RW API's datasets feature. The RW API is home to many datasets uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you. These datasets contain a lot of information about a wide range of topics that you may want to learn about or build on top of. To find out more about finding and accessing the datasets already available on the RW API, check out the documentation on [getting datasets](/reference.html#getting-all-datasets). A nice, visual way to explore existing datasets is by using the [Resource Watch](https://resourcewatch.org/) website. 
 
-You can also [create you own datasets](#creating-a-dataset) on the RW API, if you'd like to share your data with the world, or 
+You can also [create you own datasets](/reference.html#creating-a-dataset) on the RW API, if you'd like to share your data with the world, or 
  if you are looking to use the RW API and its features to gain insights into your data.
 
 ## Getting all datasets
 
 This endpoint will allow you to get the list of the datasets available in the API, and it's a great place for new users to start exploring the RW API. By default, this endpoint will give you a paginated list of 10 datasets. In the sections below, we'll explore how you can customize this endpoint call to match your needs. 
 
-For a detailed description of each field, check out the [Dataset reference](#dataset-reference) section.
+For a detailed description of each field, check out the [Dataset reference/reference.html#dataset-reference) section.
 
 > Getting a list of datasets
 
@@ -84,7 +84,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset
 curl -X GET https://api.resourcewatch.org/v1/dataset?page[number]=2&page[size]=25
 ```
 
-The Dataset service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your datasets list.
+The Dataset service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your datasets list.
 
 ### Search
 
@@ -99,7 +99,7 @@ The dataset service offers a simple yet powerful search mechanism that will help
 - The dataset name.
 - The dataset's metadata name.
 - The dataset's metadata description.
-- The [relational graph](#graph) node list.
+- The [relational graph](/reference.html#graph) node list.
 
 
 ### Filters
@@ -116,9 +116,9 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?name=birds&provider=cartodb
 curl -X GET https://api.resourcewatch.org/v1/dataset?vocabulary[legacy]=umd
 ```
 
-The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you'll find in a dataset itself (which you can learn more about in the [Dataset reference](#dataset-reference) section), while others are convenience filters for things like user role or favourites.
+The dataset list provides a wide range of parameters that you can use to tailor your dataset listing. Most of these parameters reflect fields you'll find in a dataset itself (which you can learn more about in the [Dataset reference](/reference.html#dataset-reference) section), while others are convenience filters for things like user role or favourites.
 
-Filtering datasets adheres to the conventions defined in the [Filter guidelines for the RW API](/index-rw.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you can use the following fields as filters supported by the dataset list endpoint:
+Filtering datasets adheres to the conventions defined in the [Filter guidelines for the RW API](/concepts.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you can use the following fields as filters supported by the dataset list endpoint:
 
 Filter         | Description                                                                  | Type        | Expected values
 -------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------
@@ -126,12 +126,12 @@ name           | Filter returned datasets by the name of the dataset.           
 slug           | Filter returned datasets by the slug of the dataset.                         | String      | any valid text
 type           | Filter returned datasets by dataset type.                                    | String      | any valid text
 subtitle       | Filter returned datasets by dataset subtitle.                                | String      | any valid text
-application    | Applications associated to this dataset. Read more about this field [here](/index-rw.html#applications). | Array       | any valid text
+application    | Applications associated to this dataset. Read more about this field [here](/concepts.html#applications). | Array       | any valid text
 applicationConfig | If the dataset has `applicationConfig` data (i.e. contains a non-empty object in the `applicationConfig` field) | Boolean | `true` or `false`
 dataPath       |                                                                              | String      | any valid text
 attributesPath |                                                                              | String      | any valid text
 connectorType  | Filter returned datasets by the type of connector used.                      | String      | `rest`, `document` or `wms`
-provider       | Dataset provider this include inner connectors and 3rd party ones            | String      | [Check the available providers when creating a dataset](index-rw.html#creating-a-dataset)
+provider       | Dataset provider this include inner connectors and 3rd party ones            | String      | [Check the available providers when creating a dataset](/reference.html#creating-a-dataset)
 connectorUrl   |                                                                              | String      | any valid text
 sources        |                                                                              | Array       | any valid text
 tableName      |                                                                              | String      | any valid text
@@ -141,7 +141,7 @@ overwrite      | If the data can be overwritten (only for being able to make dat
 errorMessage   | If this dataset is in `error` state, this field may contain additional details about the error. | String      | any valid text
 mainDateField  |                                                                              | String      | any valid text
 published      | If the dataset is published or not.                                          | Boolean     | `true`or `false`
-env            | Environment to which the dataset belongs. Multiple values can be combined using `,` as a separator. Does not support regexes. Read more about this field in the [Environments concept section](/index-rw.html#environments). | String      | any valid text. Defaults to `production`. 
+env            | Environment to which the dataset belongs. Multiple values can be combined using `,` as a separator. Does not support regexes. Read more about this field in the [Environments concept section](/concepts.html#environments). | String      | any valid text. Defaults to `production`. 
 geoInfo        | If it contains interceptable geographical info                               | Boolean     | `true`or `false`
 protected      | If the dataset is protected.                                                 | Boolean     | `true`or `false`
 taskId         | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets | String      | any valid text
@@ -174,7 +174,7 @@ subscribable   | If the dataset is subscribable (i.e. contains a non-empty objec
 user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | String      | `ADMIN`, `MANAGER` or `USER`
 vocabulary[name]| Filter returned datasets by vocabulary tags. Does not support regexes.       | String      | any valid text
 collection     | Filter returned datasets collection id. Does not support regexes.            | String      | any valid text
-favourite      | Filter by favourited datasets. See [this section](#favorites) for more info. Does not support regexes. | String      | any valid text
+favourite      | Filter by favourited datasets. See [this section](/reference.html#favorites) for more info. Does not support regexes. | String      | any valid text
 
 ### Sorting
 
@@ -204,7 +204,7 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=-name,+description
 curl -X GET https://api.resourcewatch.org/v1/dataset?sort=user.role
 ```
 
-The Dataset service currently supports sorting using the `sort` query parameter. Sorting dataset adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Dataset reference](#dataset-reference) section for a detailed description of the fields you can use when sorting. In addition to all dataset model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dataset. Keep in mind that sorting by user data is restricted to ADMIN users.
+The Dataset service currently supports sorting using the `sort` query parameter. Sorting dataset adheres to the conventions defined in the [Sorting guidelines for the RW API](/concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Dataset reference](/reference.html#dataset-reference) section for a detailed description of the fields you can use when sorting. In addition to all dataset model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dataset. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 #### Special sorting criteria
 
@@ -355,7 +355,7 @@ curl -X GET "https://api.resourcewatch.org/v1/dataset/Timber-Production-RDC"
 
 If you know the id or the `slug` of a dataset, then you can access it directly. Both id and `slug` are case-sensitive.
 
-Using this endpoint, you can also [include entities associated with the dataset](#include-entities-associated-with-the-datasets), in the same way you do when loading multiple datasets. 
+Using this endpoint, you can also [include entities associated with the dataset](/reference.html/#include-entities-associated-with-the-datasets), in the same way you do when loading multiple datasets. 
 
 > Getting a dataset by its including its relationships:
 
@@ -426,13 +426,13 @@ So you are ready to create your first dataset on the RW API? Great, welcome aboa
 
 Before creating a dataset, there are a few things you must know and do:
 
-- In order to be able to create a dataset, you need to be [authenticated](#authentication).
-- Depending on your user account's role, you may have permission to create a dataset but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- In order to be able to create a dataset, you need to be [authenticated](/reference.html#authentication).
+- Depending on your user account's role, you may have permission to create a dataset but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 - All data uploaded to the RW API will be publicly visible and available to other users. 
 
-The first thing to consider when creating a dataset is where your data currently is - this will determine the [Dataset provider](#dataset-providers) you will need to use and, with it, a set of things you need to take into account - we'll cover each provider in detail shortly. When building your request to the RW API to create your dataset, you will need to take into account both the general details that follow, plus the details for the `provider` you are using. Be sure to review both sections when creating your datasets, to avoid any pitfalls.
+The first thing to consider when creating a dataset is where your data currently is - this will determine the [Dataset provider](/concepts.html#dataset-providers) you will need to use and, with it, a set of things you need to take into account - we'll cover each provider in detail shortly. When building your request to the RW API to create your dataset, you will need to take into account both the general details that follow, plus the details for the `provider` you are using. Be sure to review both sections when creating your datasets, to avoid any pitfalls.
 
-Creating a dataset is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [dataset reference](#dataset-reference) section, but the minimum field list you must specify for all datasets is:
+Creating a dataset is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [dataset reference](/reference.html#dataset-reference) section, but the minimum field list you must specify for all datasets is:
 
 
 - name
@@ -442,10 +442,10 @@ Creating a dataset is done using a POST request and passing the relevant data as
 
 Additionally, depending on the data provider you will be using, other fields may be required - we'll cover those in detail in each provider's specific documentation.
 
-A successful dataset creation request will return a 200 HTTP code, and the dataset details as stored on the RW API. PAy special attention to the `id` or the `slug`, as those will allow you to [access your dataset](#getting-a-dataset-by-id-or-slug) later.
+A successful dataset creation request will return a 200 HTTP code, and the dataset details as stored on the RW API. PAy special attention to the `id` or the `slug`, as those will allow you to [access your dataset](/reference.html#getting-a-dataset-by-id-or-slug) later.
 
 
-**There's one aspect of the dataset creation process that you need to keep in mind: it is an asynchronous process.** This means that a successful call to the create dataset endpoint will *start* the process, but the dataset may not be immediately available to be used. The `status` field will tell you if the dataset creation process is in progress (status set to `pending`), if something went wrong (`failed`, in which case the `errorMessage` field will have a short description of what went wrong) or if the dataset is available to be used (when status is `saved`). The amount of time it takes for a newly created dataset to go from `pending` to `saved` depends on the provider and amount of data. Just keep in mind that you need to wait for the status to be set to `saved` before starting to use your datasets. You should [check your dataset](#getting-a-dataset-by-id-or-slug) manually to see when the `status` is updated.
+**There's one aspect of the dataset creation process that you need to keep in mind: it is an asynchronous process.** This means that a successful call to the create dataset endpoint will *start* the process, but the dataset may not be immediately available to be used. The `status` field will tell you if the dataset creation process is in progress (status set to `pending`), if something went wrong (`failed`, in which case the `errorMessage` field will have a short description of what went wrong) or if the dataset is available to be used (when status is `saved`). The amount of time it takes for a newly created dataset to go from `pending` to `saved` depends on the provider and amount of data. Just keep in mind that you need to wait for the status to be set to `saved` before starting to use your datasets. You should [check your dataset](/reference.html#getting-a-dataset-by-id-or-slug) manually to see when the `status` is updated.
 
 #### Errors for creating a dataset
 
@@ -454,7 +454,7 @@ Error code     | Error message  | Description
 400            | `<field>`: `<field>` can not be empty | Your are missing a required field value.
 400            | `<field>`: empty or invalid `<field>` | The provided value for `<field>` is invalid. This is usually happens if an invalid value type is provided, but certain fields use more advanced validation rules, that may produce this error message if validation fails (ie: on a carto dataset, the `connectorUrl` must contain a valid carto URL). 
 400            | provider: must be valid <list of valid providers> | Your `provider` value is invalid. The `<list of valid providers>` will contain the list of providers that are supported for the `connectorType` you specified.
-401            | Unauthorized  | You are not authenticated. If creating a BigQuery dataset, you may also see this message if you are authenticated. Refer to the [BigQuery documentation](#bigquery49) for more details.
+401            | Unauthorized  | You are not authenticated. If creating a BigQuery dataset, you may also see this message even if you are authenticated. Refer to the [BigQuery documentation](/concepts.html#bigquery) for more details.
 403            | Forbidden - User does not have access to this dataset's application  | You are trying to create a dataset with one or more `application` values that are not associated with your user account. 
 
 ### Carto datasets
@@ -686,7 +686,7 @@ When creating a document based dataset, you have multiple ways of providing your
 
 The data passed in `sources` or `connectorUrl` must be available on a publicly accessible URLs, specified in the `sources` array field or the `connectorUrl` single value field. The URLs must be an accessible CSV, TSV or XML file, non-compressed - zip, tar, tar.gz, etc are not supported. `sources` allows you to specify multiple URLs for a single dataset, provided all files have the same format and data structure. This is particularly useful when creating very large datasets, as it will allow the creation process to be parallelized. No warranties are provided about the order in which the files or their parts are imported.
 
-*Notice: If you want to create a dataset from a file you have, but that it's not available on a public URL, check out our docs for [uploading a dataset](#uploading-a-dataset).*
+*Notice: If you want to create a dataset from a file you have, but that it's not available on a public URL, check out our docs for [uploading a dataset](/reference.html#uploading-a-dataset-file).*
 
   
 Unlike with other dataset types, when the dataset is created, the data is copied from the provided source into the API's internal Elasticsearch instance, which is the source used for subsequent queries or other operations. This has a few implications that you should be aware of:
@@ -698,9 +698,9 @@ Unlike with other dataset types, when the dataset is created, the data is copied
 
 *Notice: When creating a document-based dataset, if any of the fields has a numerical name (for example, column: `3`), a string named `col_` will be appended to the beginning of the name of the column. This way, an uploaded column named `3` will become `col_3`.*
 
-*Tip: If you want to periodically and automatically update your document based dataset with new data, check out the [dataset automatic synchronization](#dataset-automatic-synchronization) functionality.*
+*Tip: If you want to periodically and automatically update your document based dataset with new data, check out the [dataset automatic synchronization](/reference.html#dataset-automatic-synchronization) functionality.*
 
-When creating a document-based dataset, the RW API will start a complex process that copies your data into the API's internal database, and perform certain indexing actions. This process is called a **Task**, and is given a `taskId` that is stored on the dataset's field with the same name. Depending on the size of your dataset, this may take from a few seconds to a few hours to complete. The result of this import process will determine if the dataset's status will be set to `saved` or `error`. You can follow this process by using the `taskId` value with the [Tasks API](#get-a-single-task).
+When creating a document-based dataset, the RW API will start a complex process that copies your data into the API's internal database, and perform certain indexing actions. This process is called a **Task**, and is given a `taskId` that is stored on the dataset's field with the same name. Depending on the size of your dataset, this may take from a few seconds to a few hours to complete. The result of this import process will determine if the dataset's status will be set to `saved` or `error`. You can follow this process by using the `taskId` value with the [Tasks API](/reference.html#get-a-single-task).
 
 #### Using the legend fields to define field types
 
@@ -789,7 +789,7 @@ If your file is up to 4MB in size, you can upload it to the API by using the `up
 This endpoint accepts a file in the "dataset" field of your POST request, and a `provider` that matches your file type and extension. 
 The supported formats/extensions are: csv, json, tsv, xml, tif, tiff and geo.tiff.
 The request uploads the file to the API, and returns a specially crafted `connectorUrl` value, and a list of fields found in your file.
-With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](#document-based-datasets-json-csv-tsv-or-xml).
+With this data, you can create a document type dataset by passing it to the `connectorUrl` value of a [new document type dataset](/reference.html#document-based-datasets-json-csv-tsv-or-xml).
 
 #### Errors for upload a dataset file
 
@@ -826,7 +826,7 @@ When making these changes, be mindful that some of these fields are critical to 
 There are other endpoints documented in this page that allow you to perform certain update-like operations (ie. update data on a document-type dataset), so refer to those first before using this endpoint. 
 Also important to keep in mind is the fact that this endpoint does not perform validation on things like `connectorUrl`/`sources` URLs.
 
-All the fields in the [dataset reference](#dataset-reference) can be modified, except the following:
+All the fields in the [dataset reference](/reference.html#dataset-reference) can be modified, except the following:
 
 - `slug`
 - `userId`
@@ -845,7 +845,7 @@ When passing new values for Object type fields, the new value will fully overwri
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the dataset
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 
 Use this endpoint when:
 
@@ -912,7 +912,7 @@ In order to perform these operation, the following conditions must be met:
 
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 - the user must have at least one overlapping application with the ones associated with the dataset.
 
 While they ultimately achieve a very similar end result, concatenate and append rely on different internal processes, each with its own characteristics.
@@ -933,7 +933,7 @@ sources      | List of URLs from which to source data                           
 data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
 dataPath     | Path to the data in a JSON file-based datasets                    | String |            '' | No
 
-*Tip: If you want to periodically and automatically concatenate data to your document based dataset, check out the [dataset automatic synchronization](#dataset-automatic-synchronization) functionality.*
+*Tip: If you want to periodically and automatically concatenate data to your document based dataset, check out the [dataset automatic synchronization](/reference.html#dataset-automatic-synchronization) functionality.*
         
 Use this endpoint when:
 
@@ -943,7 +943,7 @@ Use this endpoint when:
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
-401            | Dataset is not in saved status   | The dataset's `status` value is not set to `saved`. Refer to [dataset reference](#dataset-reference) for more details on this field and its values.
+401            | Dataset is not in saved status   | The dataset's `status` value is not set to `saved`. Refer to [dataset reference](/reference.html#dataset-reference) for more details on this field and its values.
 401            | Unauthorized   | You need to be logged in to be able to update a dataset.
 403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset).
 403            | Forbidden      | You are trying to update a dataset with one or more `application` values that are not associated with your user account. 
@@ -989,7 +989,7 @@ In order to perform this operation, the following conditions must be met:
 
 - the dataset's `overwrite` property must be set to `true`.
 - the dataset's `status` property must be set to `saved`.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 - the user must have at least one overlapping application with the ones associated with the dataset.
 
 Here's a more detailed description of the request's body fields:
@@ -999,15 +999,15 @@ Field        |                        Description                               
 provider     | Dataset provider this include inner connectors and 3rd party ones | String | A valid dataset provider | Yes
 sources      | List of URLs from which to source data                            |  Array |     URL array | Yes, unless JSON data is provided using the `data` field
 data         | JSON DATA only for json connector if connectorUrl not present     |  Array |    [{},{},{}] | Yes for JSON if `sources` is not present
-legend       | The schema of the new data. If none is provided, a guessing mechanism will be used. The existing `legend` value of the dataset will be ignored and overwritten in all `overwrite` operations. See [the legend section](#legend) above for more details.                                                | Object |               |       No
+legend       | The schema of the new data. If none is provided, a guessing mechanism will be used. The existing `legend` value of the dataset will be ignored and overwritten in all `overwrite` operations. See [the legend section](/reference.html#using-the-legend-fields-to-define-field-types) above for more details.                                                | Object |               |       No
 
-*Tip: If you want to periodically and automatically overwrite the data on your document based dataset, check out the [dataset automatic synchronization](#dataset-automatic-synchronization) functionality.*
+*Tip: If you want to periodically and automatically overwrite the data on your document based dataset, check out the [dataset automatic synchronization](/reference.html#dataset-automatic-synchronization) functionality.*
 
 #### Errors for overwriting data for a document based dataset
 
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
-401            | Dataset is not in saved status   | The dataset's `status` value is not set to `saved`. Refer to [dataset reference](#dataset-reference) for more details on this field and its values.
+401            | Dataset is not in saved status   | The dataset's `status` value is not set to `saved`. Refer to [dataset reference](/reference.html#dataset-reference) for more details on this field and its values.
 401            | Unauthorized   | You need to be logged in to be able to update a dataset.
 403            | Forbidden      | You need to either have the `ADMIN` role, or have role `MANAGER` and be the dataset's owner (through the `userId` field of the dataset).
 403            | Forbidden      | You are trying to update a dataset with one or more `application` values that are not associated with your user account. 
@@ -1046,7 +1046,7 @@ This endpoint allows you to create a new, json based dataset, from the result of
 In order to perform this operation, the following conditions must be met:
 
 - the user must belong to the applications specified in the request body.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 
 The request requires two fields to be present:
 
@@ -1055,8 +1055,8 @@ The request requires two fields to be present:
 
 Additionally, you can optionally specify these fields:
 
-- `legend`: field structure and type of the new dataset. Refer to [dataset reference](#dataset-reference) for more details.
-- `applicationConfig`: application-specific configuration. Refer to [dataset reference](#dataset-reference) for more details. If not provided, it will be copied from the original dataset.
+- `legend`: field structure and type of the new dataset. Refer to [dataset reference](/reference.html#dataset-reference) for more details.
+- `applicationConfig`: application-specific configuration. Refer to [dataset reference](/reference.html#dataset-reference) for more details. If not provided, it will be copied from the original dataset.
 - `published`: if the user has `ADMIN` role, they can set this value to `true`. 
 
 
@@ -1073,7 +1073,7 @@ For the fields in the following list, values will be copied from the original da
 - `overwrite`
 - `published`: if the user has role `ADMIN` and does not explicitly set `published` to `true` on the request body, this value is inherited. Otherwise, it's set to `false`.
 
-Datasets created through a cloning operation will have a specific `clonedHost` object, with additional data. Refer to [dataset reference](#dataset-reference) for more details on the content of this field. 
+Datasets created through a cloning operation will have a specific `clonedHost` object, with additional data. Refer to [dataset reference](/reference.html#dataset-reference) for more details on the content of this field. 
 
 The dataset cloning requests accepts an optional `full` boolean query parameter that, when set to `true`, will clone of vocabulary-related data and metadata from the original dataset to the new one.
 
@@ -1100,7 +1100,7 @@ In order to delete a dataset, the following conditions must be met:
 
 - the dataset's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the dataset
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
 
 > Example request for deleting a dataset
 
@@ -1145,17 +1145,17 @@ curl -X POST https://api.resourcewatch.org/v1/dataset \
 
 Certain datasets contain data that evolves frequently over time, and you, as the creator of this dataset, what to ensure that it's up-to-date. As we've seen before, if your data is hosted on one of the supported 3rd party data providers, like Carto or Arcgis, your data will be proxied, so users of the RW API will always see the latest version of your data. However, if you uploaded your data from a file, your data is copied to the RW API database at the time of the dataset's creation, so keeping it up-to-date requires a different approach. It's with scenario in mind that the RW API offers the automatic synchronization mechanism.
 
-The automatic synchronization mechanism is available for document based datasets only, and you can configure it when [creating](#creating-a-dataset) or [updating](#updating-the-fields-of-a-dataset) a dataset. When enabled, it will schedule an automatic, periodic task, that will update your document based dataset's data, based on data from an URL you provide. This means that, once configured, you just have to make sure the automatic synchronization mechanism can find the newest version of the data at the specified URL, and the RW API will take care of the actual data update process for you.
+The automatic synchronization mechanism is available for document based datasets only, and you can configure it when [creating](/reference.html#creating-a-dataset) or [updating](/reference.html#updating-the-fields-of-a-dataset) a dataset. When enabled, it will schedule an automatic, periodic task, that will update your document based dataset's data, based on data from an URL you provide. This means that, once configured, you just have to make sure the automatic synchronization mechanism can find the newest version of the data at the specified URL, and the RW API will take care of the actual data update process for you.
 
 To configure automatic synchronization on dataset creation or update, you need to pass a `sync` object on your calls to the respective endpoints, next to the other fields. See the included example for a clearer idea of how creating a dataset with automatic synchronization looks like.
 
 There are 3 fields, all required, that you need to specify inside the `sync` object:
 
-- `action`: choose either `concat` or `overwrite`. See more details above about [concatenating](#concatenate-and-append-data-to-a-document-based-dataset) and [overwriting](#overwrite-data-for-a-document-based-dataset) dataset data. Append operations, as documented in the section above, is not supported.
+- `action`: choose either `concat` or `overwrite`. See more details above about [concatenating](/reference.html#concatenate-and-append-data-to-a-document-based-dataset) and [overwriting](/reference.html#overwrite-data-for-a-document-based-dataset) dataset data. Append operations, as documented in the section above, is not supported.
 - `cronPattern`: [cron](https://en.wikipedia.org/wiki/Cron) expression representing when and how frequently the synchronization process should take place. The host executing these tasks use UTC timezone.
 - `url`: publicly available URL from where the automatic synchronization mechanism will load the data to replace/concatenate to your dataset. 
 
-Internally, the automatic synchronization mechanism will call either the [dataset concatenation](#concatenate-and-append-data-to-a-document-based-dataset) or [dataset overwrite](#overwrite-data-for-a-document-based-dataset) endpoint. 
+Internally, the automatic synchronization mechanism will call either the [dataset concatenation](/reference.html#concatenate-and-append-data-to-a-document-based-dataset) or [dataset overwrite](/reference.html#overwrite-data-for-a-document-based-dataset) endpoint. 
 If that internal request fails - for example, if `overwrite` is set to `false` - the sync process will fail silently. 
 If you have the `ADMIN` role, you can use the `/v1/task` endpoint to see scheduled tasks and their error output, but otherwise this failure will be invisible to end users.
 
@@ -1183,7 +1183,7 @@ Flushes the cache for the specified dataset. Take into account that only the dat
 In order to flush a dataset's cache, the following conditions must be met:
 
 - the user must be logged in.
-- the user must comply with [the RW API role-based access control guidelines](/index-rw.html#role-based-access-control).  
+- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).  
   
 #### Errors for flushing a dataset's cache
 
@@ -1237,7 +1237,7 @@ name                    | String         | Yes                  |               
 slug                    | String         | Yes (autogenerated)  |                            | Slug of the dataset. Auto generated on creation. Cannot be modified by users.        
 type                    | String         | No                   | null                       | Type of the dataset.                                                         
 subtitle                | String         | No                   | null                       | Subtitle of the dataset.                                                     
-application             | Array          | Yes                  |                            | Applications associated with this dataset. Read more about this field [here](/index-rw.html#applications).
+application             | Array          | Yes                  |                            | Applications associated with this dataset. Read more about this field [here](/concepts.html#applications).
 applicationConfig       | Object         | No                   |                            | Key-value storage of application-specific data. Use the `application` value as key and a JSON Object as the value to store complex, extensible data. | Object      
 dataPath                | String         | No                   | null                       | Path to the data in a JSON file-based datasets.                              
 attributesPath          | String         | No                   | null                       |                                                                              
@@ -1252,14 +1252,14 @@ overwrite               | Boolean        | No                   | false         
 errorMessage            | String         | No                   | null                       | If this dataset is in `error` state, this field may contain additional details about the error. 
 mainDateField           | String         | No                   | null                       |                                                                                
 published               | Boolean        | Yes                  | true                       | If the dataset is published or not.                                               
-env                     | String         | Yes                  | production                 | Environment to which the dataset belongs. Read more about this field in the [Environments concept section](/index-rw.html#environments).                                    
+env                     | String         | Yes                  | production                 | Environment to which the dataset belongs. Read more about this field in the [Environments concept section](/concepts.html#environments).                                    
 geoInfo                 | Boolean        | Yes                  | false                      | If it contains interceptable geographical info                                    
 protected               | Boolean        | Yes                  | false                      | If the dataset is protected. A protected dataset cannot be deleted.               
 taskId                  | String         | No                   | null                       | Id of the latest task associated with this dataset. Typically only present in `document` connectorType datasets      
-subscribable            | Object         | No                   |                            | Information about the dataset being subscribable for alerts. More info about this can be found on the [Subscriptions](#subscriptions) section of the docs. 
+subscribable            | Object         | No                   |                            | Information about the dataset being subscribable for alerts. More info about this can be found on the [Subscriptions](/reference.html#subscriptions) section of the docs. 
 legend.lat              | String         | No                   |                            | Dataset field representing a latitude value.                                      
 legend.long             | String         | No                   |                            | Dataset field representing a longitude value.                                
-legend.*                | Array          | No                   |                            | Different keys corresponding to data types. Each key may have an array of strings, referencing dataset fields that match that data type. Used functionally for document-based datasets, but may also be set by the user as reference for other types. See [this section](#using-the-legend-fields-to-define-field-types) for more details.
+legend.*                | Array          | No                   |                            | Different keys corresponding to data types. Each key may have an array of strings, referencing dataset fields that match that data type. Used functionally for document-based datasets, but may also be set by the user as reference for other types. See [this section](/reference.html#using-the-legend-fields-to-define-field-types) for more details.
 clonedHost.hostProvider | String         | No                   |                            | When cloning a dataset, this will retain the `provider` value of the original dataset.       
 clonedHost.hostUrl      | String         | No                   |                            | When cloning a dataset, this will retain the `connectorUrl` value of the original dataset.      
 clonedHost.hostId       | String         | No                   |                            | When cloning a dataset, this will retain the `Id` value of the original dataset.        

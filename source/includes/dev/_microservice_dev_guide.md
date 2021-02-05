@@ -8,7 +8,7 @@ Control Tower, which is mentioned throughout these docs, will be replaced soon w
 
 ## Microservice overview
 
-As described in the [API Architecture](#api-architecture) section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API's core microservices are built using [nodejs](https://nodejs.org), with [Python](https://www.python.org/) and [Rails](https://rubyonrails.org/) being distant 2nd and 3rd respectively. New microservices being developed should respect this hierarchy when it comes to choosing a development language, and the adoption of a different stack should be validated with the remaining development team members beforehand.
+As described in the [API Architecture](/developer.html#api-architecture) section, microservices are small web applications that expose a REST API through a web server. This means that microservices can be built using any programming language, just as long as it supports HTTP communication. In practical terms, most of this API's core microservices are built using [nodejs](https://nodejs.org), with [Python](https://www.python.org/) and [Rails](https://rubyonrails.org/) being distant 2nd and 3rd respectively. New microservices being developed should respect this hierarchy when it comes to choosing a development language, and the adoption of a different stack should be validated with the remaining development team members beforehand.
 
 In this whole section, we will use code examples from the [Dataset microservice](https://github.com/resource-watch/dataset/), which is built using nodejs. We will discuss the general principles, which should apply to all implementations, as well as implementation details, which may apply to your scenario if you are also using nodejs, or that may not apply if you are using something else.
 
@@ -56,6 +56,12 @@ All microservices can be executed in two ways: natively or using [Docker](https:
 The first step will be getting the source code from [Github](https://github.com/resource-watch/dataset/) to your computer using the [Git](https://git-scm.com/) CLI (or equivalent). 
 
 ```shell
+git clone https://github.com/resource-watch/dataset.git 
+```
+
+Or, if you prefer, you can use:
+
+```shell
 git clone git@github.com:resource-watch/dataset.git
 ```
 
@@ -94,9 +100,9 @@ The microservice's `README` may specify additional dependencies you need to inst
 
 Besides these dependencies, microservices may also depend on the Control Tower gateway, and other microservices: 
 
-- As we'll cover in the [Registering on Control Tower section](#registering-on-control-tower), on bootstrap, a microservice will register itself in Control Tower so it can expose its endpoints to the public facing API - but this behavior can be disabled, as we'll see in a moment.
+- As we'll cover in the [Registering on Control Tower section](/developer.html#registering-on-control-tower), on bootstrap, a microservice will register itself in Control Tower so it can expose its endpoints to the public facing API - but this behavior can be disabled, as we'll see in a moment.
 - Microservices expect user data to be provided by Control Tower in a specific format - a workaround for this is passing this data yourself when calling your microservice endpoints
-- [Requests to other microservices](#requests-to-other-microservices) are routed through Control Tower, so if the endpoints you will be developing rely on other microservices, you need to set up both Control Tower and those microservices locally.
+- [Requests to other microservices](/developer.html#requests-to-other-microservices) are routed through Control Tower, so if the endpoints you will be developing rely on other microservices, you need to set up both Control Tower and those microservices locally.
 - Control Tower implements certain endpoints related to user management, which may also be required by the endpoints you'll be working on.
 
 If your endpoint does not rely on other microservices, and you don't rely on or can spoof the user data provided by Control Tower, you can set the `CT_REGISTER_MODE` environment variable to a value other than `auto` to disable the automatic registration on startup, thus removing the dependency on Control Tower. However, this is not recommended, as using Control Tower will have your development environment resemble the production setup, thus potentially highlighting any issues you may otherwise miss.
@@ -182,6 +188,12 @@ See right for how to run tests for microservices in different languages. You can
 The first step will be getting the source code from [Github](https://github.com/resource-watch/dataset/) to your computer using the [Git](https://git-scm.com/) CLI (or equivalent). 
 
 ```shell
+git clone https://github.com/resource-watch/dataset.git 
+```
+
+Or, if you prefer, you can use:
+
+```shell
 git clone git@github.com:resource-watch/dataset.git
 ```
 
@@ -257,7 +269,7 @@ When you want to submit a change to the code of one of the microservices, you sh
 - Maintain/increase the code coverage value reported by Code Climate.
 - Briefly describe the changes you're doing in a `CHANGELOG.md` entry and, if these are public-facing, do a PR to the [RW API documentation repository](github.com/resource-watch/doc-api).
 
-At this stage, and even if your tests pass locally, they may fail when executed in Travis. We recommend running them again if this happens, to see if any [hiccup](https://whatis.techtarget.com/definition/hiccup) occurred. If that's not the case, look into the Travis logs to learn more. Unfortunately, the reasons for these are diverse. It can be related to env vars defined inside the `.travis.yml` file, missing or incorrectly configured dependencies, differences in packages between your local environment and Travis', etc. At the time of writing, and by default which can be overridden, Travis uses Ubuntu and is configured to [use native execution](#using-native-execution) when running tests, so using that very same approach locally may get you closer to the source of the problem you're experiencing. Travis' output log will usually help you identify what's happening, and get you closer to a solution.
+At this stage, and even if your tests pass locally, they may fail when executed in Travis. We recommend running them again if this happens, to see if any [hiccup](https://whatis.techtarget.com/definition/hiccup) occurred. If that's not the case, look into the Travis logs to learn more. Unfortunately, the reasons for these are diverse. It can be related to env vars defined inside the `.travis.yml` file, missing or incorrectly configured dependencies, differences in packages between your local environment and Travis', etc. At the time of writing, and by default which can be overridden, Travis uses Ubuntu and is configured to [use native execution](/developer.html#using-native-execution) when running tests, so using that very same approach locally may get you closer to the source of the problem you're experiencing. Travis' output log will usually help you identify what's happening, and get you closer to a solution.
 
 Once reviewed by a peer, your changes will be merged and will be ready for deployment to one of the live environments.
 
@@ -297,7 +309,7 @@ Deployments need to be triggered manually, on a per-microservice and per-branch 
 - All code deployed this way is made public through Docker Hub. If you have sensitive information in your codebase, and are using a Github private repository but are deploying using this approach, your information is NOT kept private.
 - When deploying to production, most microservices will have an additional step at the end of the `Jenkinsfile` execution, which will require a human to explicitly click a link at the end of the Jenkins build log to trigger a deployment to the cluster. This is made intentionally so that deployment to the production environment are explicit and intentional, and are not triggered by accident.
 
-While it's rare, tests ran by Jenkins at this stage may also fail, preventing your deployment. In these cases, refer to the Jenkins build log for details, which most of the times can be reproduced locally [running your tests using Docker](#running-the-tests69). If your Jenkins log mentions issues related with disk capacity or network address assignment problems, please reach out to someone with access to the Jenkins VMs and ask for a [docker system prune](https://docs.docker.com/engine/reference/commandline/system_prune/).
+While it's rare, tests ran by Jenkins at this stage may also fail, preventing your deployment. In these cases, refer to the Jenkins build log for details, which most of the times can be reproduced locally [running your tests using Docker](/developer.html#running-the-tests69). If your Jenkins log mentions issues related with disk capacity or network address assignment problems, please reach out to someone with access to the Jenkins VMs and ask for a [docker system prune](https://docs.docker.com/engine/reference/commandline/system_prune/).
 
 
 ## Infrastructure configuration
@@ -352,14 +364,14 @@ To create an SSH tunnel under a unix-based system, you'll need to run a command 
 
 Access to databases (to extract a dump for testing, for example) depends on how said database service is configured. At the time of writing, some database services run as AWS managed services, while other live inside the Kubernetes cluster, as Kubernetes services. 
 
-For database services provided by AWS managed services, the only necessary steps are the ones covered previously on the [Infrastructure access](#infrastructure-access) section. After that, you should be able to reach the host of the database service, per details provided by the service itself. You may also need authentication details for a specific service, which you may find either on the Terraform configuration, the Kubernetes secrets files or AWS secret storage.
+For database services provided by AWS managed services, the only necessary steps are the ones covered previously on the [Infrastructure access](/developer.html#infrastructure-access) section. After that, you should be able to reach the host of the database service, per details provided by the service itself. You may also need authentication details for a specific service, which you may find either on the Terraform configuration, the Kubernetes secrets files or AWS secret storage.
 
 For access to database services running as a Kubernetes service, you'll need Kubernetes access (which we will cover next). Once you have that configured, you should configure a [Kubernetes port forward](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) to map said service to a port of your local host. Access credentials are typically available on the Kubernetes secrets files.
 
 
 #### Kubernetes access
 
-The RW API runs in a AWS EKS Kubernetes cluster, which can be accessed using the [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) command line tool, which you should install on your computer. You also need the elements previously covered in the [Infrastructure access](#infrastructure-access) section, so be sure that your AWS CLI is installed and configured, and that you have a way to communicate with the infrastructure's inner elements.
+The RW API runs in a AWS EKS Kubernetes cluster, which can be accessed using the [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) command line tool, which you should install on your computer. You also need the elements previously covered in the [Infrastructure access](/developer.html#infrastructure-access) section, so be sure that your AWS CLI is installed and configured, and that you have a way to communicate with the infrastructure's inner elements.
 
 To configure `kubectl`, you will need some details that are specific to the kubernetes cluster you're trying to access. Said details are available as the output of the `terraform apply` command that's executed by Github Actions for the [AWS Terraform project](https://github.com/resource-watch/api-infrastructure/tree/production/terraform). Be mindful that, amongst those details, is the URL through which `kubectl` should contact the Kubernetes control plane. Given that you are using an SSH tunnel, you should:
 
@@ -394,7 +406,7 @@ With your code live on one of the clusters, you should now proceed to testing it
 - Test the assumptions you used for behavior of other microservices - E2E testing mocks other microservices, so this may be the first time your code is running alongside real instances of other microservices.
 - Clean up after your tests - if you created a bunch of test data, do your best to delete it once you're done. This is particularly important if you are testing something in the production environment, as that test data may be visible to real world users. Cleaning up in staging is also highly recommended.
 
-If you are implementing a new endpoint and it's mission critical to the RW API or one of the applications it powers, you may want to add a [API smoke test](#api-smoke-tests) to ensure that any issue affecting its availability is detected and reported. Refer to that section of the docs for more details.
+If you are implementing a new endpoint and it's mission critical to the RW API or one of the applications it powers, you may want to add a [API smoke test](/developer.html#api-smoke-tests) to ensure that any issue affecting its availability is detected and reported. Refer to that section of the docs for more details.
 
 ## Microservice internal architecture - nodejs
 
@@ -500,7 +512,7 @@ We'll use the nodejs library as reference and example in the following sections,
 
 ### Registering on Control Tower
 
-The first feature provided by these libraries, and that a microservice must perform, is registering on Control Tower. Most of the details of this process can be found on [Control Tower's documentation](#microservice-registration-process), which you should read at this point if you haven't already.
+The first feature provided by these libraries, and that a microservice must perform, is registering on Control Tower. Most of the details of this process can be found on [Control Tower's documentation](/developer.html#microservice-registration-process), which you should read at this point if you haven't already.
 
 ```javascript
 // dataset microservice registration example
@@ -602,7 +614,7 @@ As explained above, although the call is ultimately to another microservice, the
 
 Another thing you'll notice is that this call depends on preexisting configuration stored in the `this.options` property. These configuration options are stored within the object during the Control Tower registration process, meaning you should not attempt to make a call to another microservice unless you have previously registered your microservice on Control Tower. Keep in mind that this is a restriction of this particular integration library, and not of Control Tower itself - a different implementation could do internal requests to microservices through Control Tower without being registered as a microservice.
 
-In some scenarios, while developing, it's not practical to run all the microservices your logic depend on on your development computer. The [Writing end-to-end tests](#writing-end-to-end-tests) section has some details about writing tests for your code, including how you can mock such calls, so you don't have to run the actual dependencies.
+In some scenarios, while developing, it's not practical to run all the microservices your logic depend on on your development computer. The [Writing end-to-end tests](/developer.html#writing-end-to-end-tests) section has some details about writing tests for your code, including how you can mock such calls, so you don't have to run the actual dependencies.
 
 ## Docker
 
@@ -806,7 +818,7 @@ Current nodejs based microservices rely on [Chai](https://www.chaijs.com/) and [
 
 Different microservices and endpoint will have different requirements when it comes to testing, but the great majority of endpoints can be tested using simple variations of these steps. There are some additional considerations you should take into account when testing:
 
-- The example above creates an actual dataset, meaning a MongoDB (or equivalent mocks) need to exist. For MongoDB specifically, our approach so far has been to use a real MongoDB instance, and running the tests on a separate database (´dataset-tests´ for example), aiming for isolation. Other microservices (for example, those relying on Elasticsearch) use mocks instead. Mocking usually leads to faster execution times, but can be troublesome to properly code. Use whichever alternative is best for you, and refer to the [Data layer](#data-layer) section for examples of microservices that use (and test with) different tools.
+- The example above creates an actual dataset, meaning a MongoDB (or equivalent mocks) need to exist. For MongoDB specifically, our approach so far has been to use a real MongoDB instance, and running the tests on a separate database (´dataset-tests´ for example), aiming for isolation. Other microservices (for example, those relying on Elasticsearch) use mocks instead. Mocking usually leads to faster execution times, but can be troublesome to properly code. Use whichever alternative is best for you, and refer to the [Data layer](/developer.html#data-layer) section for examples of microservices that use (and test with) different tools.
 - Nock has a [feature that blocks all HTTP requests](https://github.com/nock/nock#enabledisable-real-http-requests), which is useful to ensure your code or tests are not relying on an external service without you being aware - just be sure to whitelist your own IP, otherwise the HTTP call your test makes to your microservice will fail too.
 - Tests must be idempotent, and execute without assuming order. For example, running a test that first tests an insert, and then using the inserted element to test a delete would be a bad practice. Instead, your insert test should clean up its data once it's done, and the delete test should prepopulate the database before actually trying to delete it. A corollary of this is that you should be able to run your tests multiple times, back-to-back, without that affecting the results.
 
@@ -818,7 +830,7 @@ While not required, most microservices use [code coverage](https://en.wikipedia.
 
 The previous section covers an example of how a test looks like. Depending on your microservice technology stack, you have different ways of running your tests - in the case of the Dataset microservice, tests are executed using [yarn](https://yarnpkg.com/). 
 
-However, to standardise test execution, you should also create a [docker compose](https://docs.docker.com/compose/) file that runs your tests (and their dependencies). This docker compose configuration should use the [existing docker file](#docker) set up previously, unless that's not possible.
+However, to standardise test execution, you should also create a [docker compose](https://docs.docker.com/compose/) file that runs your tests (and their dependencies). This docker compose configuration should use the [existing docker file](/developer.html#docker) set up previously, unless that's not possible.
 
 Here's an example of [one of these files](https://github.com/resource-watch/dataset/blob/ab23e379362680e9899ac8f191589988f0b7c1cd/docker-compose-test.yml). These will be particularly useful down the line, but also convenient for running tests locally.
 
@@ -863,6 +875,16 @@ At the beginning of each deploy process, you may also see an confirmation input 
 
 One thing worth noting is that the docker images generated using this method are publicly available on dockerhub. Be careful not to store any sensitive data in them, as it will be available to anyone.
 
+#### Getting access to Jenkins
+
+Each environment (`dev`, `staging`, `production`) has its own Jenkins server:
+
+- [Jenkins for the dev environment](https://jenkins.aws-dev.resourcewatch.org)
+- [Jenkins for the staging environment](https://jenkins.aws-staging.resourcewatch.org)
+- [Jenkins for the production environment](https://jenkins.aws-prod.resourcewatch.org)
+
+If you need an account in one of these environments (for example to approve a deployment in production), contact ethan.roday@wri.org.
+
 ### Kubernetes configuration
 
 Most microservice have a [Kubernetes configuration folder](https://github.com/resource-watch/dataset/tree/develop/k8s), typically containing 3 folders:
@@ -904,7 +926,7 @@ Overall, the README should be targeted at developers that may need to run, test 
 
 ### Functional documentation
 
-Documentation describing the business logic implemented by your microservice should go in the [RW API Documentation](/) page. The documentation is available [on this Github repository](https://github.com/resource-watch/doc-api/) and its README includes instructions on how to use it and contribute.
+Documentation describing the business logic implemented by your microservice should go in the [RW API reference documentation](/reference.html) page. The documentation is available [on this Github repository](https://github.com/resource-watch/doc-api/) and its README includes instructions on how to use it and contribute.
 
 Documentation is a key component of a successful API, so when altering public-facing behavior on the RW API, you must update the documentation accordingly, so that RW API users out there can be aware of the changes you made.
 

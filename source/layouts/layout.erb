@@ -14,6 +14,15 @@ License for the specific language governing permissions and limitations
 under the License.
 %>
 <% language_tabs = current_page.data.language_tabs || [] %>
+<% page_content = yield %>
+<%
+  if current_page.data.includes
+    current_page.data.includes.each do |include|
+      page_content += partial("includes/#{include}")
+    end
+  end
+%>
+
 <!doctype html>
 <html>
   <head>
@@ -22,8 +31,14 @@ under the License.
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title><%= current_page.data.title || "API Documentation" %></title>
 
-    <style>
-      <%= Rouge::Themes::Base16::Monokai.render(:scope => '.highlight') %>
+    <style media="screen">
+      <%= Rouge::Themes::MonokaiSublimeSlate.render(:scope => '.highlight') %>
+    </style>
+    <style media="print">
+      * {
+        transition:none!important;
+      }
+      <%= Rouge::Themes::Base16::Solarized.render(:scope => '.highlight') %>
     </style>
     <%= stylesheet_link_tag :screen, media: :screen %>
     <%= stylesheet_link_tag :print, media: :print %>
@@ -31,6 +46,12 @@ under the License.
       <%= javascript_include_tag  "all" %>
     <% else %>
       <%= javascript_include_tag  "all_nosearch" %>
+    <% end %>
+
+    <% if current_page.data.code_clipboard %>
+    <script>
+      $(function() { setupCodeCopy(); });
+    </script>
     <% end %>
   </head>
 
@@ -41,8 +62,8 @@ under the License.
         <%= image_tag('navbar.png') %>
       </span>
     </a>
-    <div class="tocify-wrapper">
-      <%= image_tag current_page.data.logo %>
+    <div class="toc-wrapper">
+      <%= image_tag "logo.png", class: 'logo' %>
       <% if language_tabs.any? %>
         <div class="lang-selector">
           <% language_tabs.each do |lang| %>
@@ -54,14 +75,63 @@ under the License.
           <% end %>
         </div>
       <% end %>
+      <ul class="toc-list-h1">
+        <li>
+          <a href="/index.html" class="toc-h1 toc-link" data-title="Home">Home</a>
+        </li>
+        <li>
+          <a href="/quickstart.html" class="toc-h1 toc-link" data-title="Quickstart">Quickstart</a>
+        </li>
+        <li>
+          <a href="/concepts.html" class="toc-h1 toc-link" data-title="Concepts">Concepts</a>
+        </li>
+        <li>
+          <a href="/reference.html" class="toc-h1 toc-link" data-title="Reference">Reference</a>
+        </li>
+        <li>
+          <a href="/tutorials.html" class="toc-h1 toc-link" data-title="Tutorials">Tutorials</a>
+        </li>
+      </ul>
       <% if current_page.data.search %>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
         <ul class="search-results"></ul>
       <% end %>
-      <div id="toc">
-      </div>
+      <ul id="toc" class="toc-list-h1">
+        <% toc_data(page_content).each do |h1| %>
+          <li>
+            <a href="#<%= h1[:id] %>" class="toc-h1 toc-link" data-title="<%= h1[:title] %>"><%= h1[:content] %></a>
+            <% if h1[:children].length > 0 %>
+              <ul class="toc-list-h2">
+                <% h1[:children].each do |h2| %>
+                  <li>
+                    <a href="#<%= h2[:id] %>" class="toc-h2 toc-link" data-title="<%= h2[:title] %>"><%= h2[:content] %></a>
+                    <% if h2[:children].length > 0 %>
+                      <ul class="toc-list-h3">
+                        <% h2[:children].each do |h3| %>
+                          <li>
+                            <a href="#<%= h3[:id] %>" class="toc-h3 toc-link" data-title="<%= h3[:content] %>"><%= h3[:content] %></a>
+                            <% if h3[:children].length > 0 %>
+                              <ul class="toc-list-h4">
+                                <% h3[:children].each do |h4| %>
+                                  <li>
+                                    <a href="#<%= h4[:id] %>" class="toc-h4 toc-link" data-title="<%= h4[:content] %>"><%= h4[:content] %></a>
+                                  </li>
+                                <% end %>
+                              </ul>
+                            <% end %>
+                          </li>
+                        <% end %>
+                      </ul>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
       <% if current_page.data.toc_footers %>
         <ul class="toc-footer">
           <% current_page.data.toc_footers.each do |footer| %>
@@ -73,10 +143,7 @@ under the License.
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <%= yield %>
-        <% current_page.data.includes && current_page.data.includes.each do |include| %>
-          <%= partial "includes/#{include}" %>
-        <% end %>
+        <%= page_content %>
       </div>
       <div class="dark-box">
         <% if language_tabs.any? %>

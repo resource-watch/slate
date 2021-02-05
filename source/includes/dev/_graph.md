@@ -1,6 +1,6 @@
 # Graph
 
-The interaction with some of the graph endpoints is restricted to other RW API services - the following sections describe these endpoints. Keep in mind user-facing graph endpoints are described in detail in the [graph endpoint documentation](/index-rw.html#graph). The [graph concept docs](/index-rw.html#concepts) might also be a useful resource for learning what the RW API graph is and what it has to offer you.
+The interaction with some of the graph endpoints is restricted to other RW API services - the following sections describe these endpoints. Keep in mind user-facing graph endpoints are described in detail in the [graph endpoint documentation](/reference.html#graph). The [graph concept docs](/concepts.html#graph) might also be a useful resource for learning what the RW API graph is and what it has to offer you.
 
 ## Creating dataset graph nodes
 
@@ -77,7 +77,7 @@ curl -X POST https://api.resourcewatch.org/v1/graph/metadata/:resourceType/:idRe
 -H "Content-Type: application/json"
 ```
 
-This endpoint creates a graph node for the metadata with id provided in the URL path. As you might have come across in the [Metadata endpoint documentation](#metadata12), metadata is always associated with either a dataset, layer, or widget. So, when creating a graph node for a metadata entry, you must also provide the resource type (dataset, layer, or widget) and its corresponding id. 
+This endpoint creates a graph node for the metadata with id provided in the URL path. As you might have come across in the [Metadata endpoint documentation](/reference.html#metadata10), metadata is always associated with either a dataset, layer, or widget. So, when creating a graph node for a metadata entry, you must also provide the resource type (dataset, layer, or widget) and its corresponding id. 
 
 Calling this endpoint will also create a graph edge connecting the newly created metadata graph node to the graph node for the resource (dataset, layer, or widget) associated with it.
 
@@ -248,7 +248,7 @@ This endpoint deletes the graph edge associated with the resource identified in 
 curl -X DELETE https://api.resourcewatch.org/v1/graph/:resourceType/:idResource/associate?application=gfw
 ```
 
-You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/index-rw.html#applications).
+You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/concepts.html#applications).
 
 ### Errors for associating concepts with graph nodes
 
@@ -303,7 +303,7 @@ This endpoint deletes the graph edge representative of a favorite relationship b
 curl -X DELETE https://api.resourcewatch.org/v1/graph/favourite/:resourceType/:idResource/:userId?application=gfw
 ```
 
-You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/index-rw.html#applications).
+You can use the query parameter `application` to specify the application of the graph edge to be deleted by this request. You can find out more information about this field [here](/concepts.html#applications).
 
 ### Errors for associating concepts with graph nodes
 

@@ -4,11 +4,11 @@ Apart from the possibility of fetching data from multiple data sources using a c
 
 A layer is a visual specification of how the data of a dataset can be rendered and styled on a map. It stores data that will help your applications render dataset data as a map layer, using tools like [Leaflet](https://leafletjs.com/), [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/) or [Layer Manager](https://github.com/Vizzuality/layer-manager). In this sense, it's important to emphasise that a layer object does not store the actual data to be represented - it instead stores the information that those rendering tools will use to render your data. Rephrasing it: the data should come from the dataset (through queries), while a layer provides the information about how that data is meant to be rendered by the corresponding rendering tool.
 
-In the [layer endpoint documentation](#layer8), we'll go into more detail on how you can manage layers, as well as the existing limitations that you might run into when using layers. However, for now, there are 3 high-level ideas that you should keep in mind:
+In the [layer endpoint documentation](/reference.html#layer), we'll go into more detail on how you can manage layers, as well as the existing limitations that you might run into when using layers. However, for now, there are 3 high-level ideas that you should keep in mind:
 
 ### The layer does not interact with dataset data
 
-Layers store visual configurations needed for rendering styling a given dataset's data. However, they do not interact with the dataset data in any way. It is your responsibility, as a RW API user, to build the appropriate queries to retrieve the data that you want to display (read more about [datasets](#dataset) or [how you can query datasets to obtain their data](#query)). Remember, use layers as a complement of dataset queries, not a replacement.
+Layers store visual configurations needed for rendering styling a given dataset's data. However, they do not interact with the dataset data in any way. It is your responsibility, as a RW API user, to build the appropriate queries to retrieve the data that you want to display (read more about [datasets](/reference.html#dataset) or [how you can query datasets to obtain their data](/reference.html#query)). Remember, use layers as a complement of dataset queries, not a replacement.
 
 ### Most of layer fields are free-form
 

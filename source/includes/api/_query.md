@@ -1,8 +1,8 @@
 # Query
 
-In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query. If you are new to the RW API, or want to learn more about the concept of a querying datasets, we strongly encourage you to read the [query concept](#query) documentation first. It gives you a brief and clear description of what a query is, and what it is useful for.
+In order to retrieve data from datasets, you can send queries to the API using a syntax very similar to SQL. Using these endpoints, you can also download the results of a particular query. If you are new to the RW API, or want to learn more about the concept of a querying datasets, we strongly encourage you to read the [query concept](/concepts.html#query) documentation first. It gives you a brief and clear description of what a query is, and what it is useful for.
 
-*Please note that some SQL features might not be supported. Check [here](/index-rw.html#supported-sql-syntax-reference) for a reference of the SQL features' support for each dataset provider.*
+*Please note that some SQL features might not be supported. Check [here](/reference.html#supported-sql-syntax-reference) for a reference of the SQL features' support for each dataset provider.*
 
 ## Querying datasets
 
@@ -17,13 +17,13 @@ In order to query a dataset, you'll need two pieces of information:
 - The id of the dataset you're trying to query.
 - The SQL query that represents the data you are trying to retrieve.
 
-The [dataset documentation](#dataset6) covers different ways that you can use to browse the existing dataset catalog or upload your own, all of which will give you the details of a dataset, including the dataset id you'll need to query it.
+The [dataset documentation](/reference.html#dataset) covers different ways that you can use to browse the existing dataset catalog or upload your own, all of which will give you the details of a dataset, including the dataset id you'll need to query it.
 
 The SQL query will have to be custom built by you to fit your needs, but a good starting point for newcomers would be something like `SELECT * FROM <dataset.tableName> limit 10`.
 
 *Notice: the `limit` parameter restricts our results to 10 rows, and is not required. However, for our learning purposes, this is useful, as it keeps the API responses small and fast.*
 
-Most of the SQL query is up to you to define, based on your needs and the [support provided for the dataset type you are using](#supported-sql-syntax-reference). The `FROM` clause, however, does use a special value - the dataset's `tableName` value, which you can also get from the [dataset documentation](#dataset6) described above.
+Most of the SQL query is up to you to define, based on your needs and the [support provided for the dataset type you are using](/reference.html#supported-sql-syntax-reference). The `FROM` clause, however, does use a special value - the dataset's `tableName` value, which you can also get from the [dataset documentation](reference.html/#dataset) described above.
 
 > Example endpoint for executing a query:
 
@@ -81,7 +81,7 @@ The following table describes the response body fields:
 | data  | Array | Array of objects that correspond to the result of the query execution. The data structure varies according to `SELECT` clause of your query, or the structure of dataset being queried.
 | meta  | Object | Object with metadata regarding the query executed.
 | meta.cloneUrl | Object | Object with information for creating a new dataset from the current query execution.
-| meta.cloneUrl.http_method | String | The HTTP method that should be used for the request to create a new dataset from the current query execution. Read the documentation on [cloning a dataset](#cloning-a-dataset) for more info.
+| meta.cloneUrl.http_method | String | The HTTP method that should be used for the request to create a new dataset from the current query execution. Read the documentation on [cloning a dataset](/reference.html#cloning-a-dataset) for more info.
 | meta.cloneUrl.url | String | The API endpoint path that should be used for the request to create a new dataset from the current query execution.
 | meta.cloneUrl.body | Object | The body request data that should be provided for creating a new dataset from the current query execution.
 
@@ -126,7 +126,7 @@ Query parameter        | Description                                            
 sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String | Yes |
 format                 | The format of the returned response. By default, JSON format is assumed (`json`), but you can also request the response as CSV (`csv`), in which case the returned response will contain the CSV contents of the response. **This parameter will only be considered for document-based datasets.** | String | No |
 freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | Boolean | No |
-geostore               | Read more about the geostore query parameter [here](/index-rw.html#filter-query-results-by-geostore). | String | No |
+geostore               | Read more about the geostore query parameter [here](/reference.html#filter-query-results-by-geostore). | String | No |
 
 #### Filter query results by geostore
 
@@ -136,7 +136,7 @@ geostore               | Read more about the geostore query parameter [here](/in
 curl -i -X GET 'https://api.resourcewatch.org/v1/query/1d7085f7-11c7-4eaf-a29a-5a4de57d010e?sql=SELECT * FROM dis_001_significant_earthquakes LIMIT 5&geostore=972c24e1da2c2baacc7572ee9501abdc'
 ```
 
-Some dataset providers support receiving a `geostore` query parameter. When providing this parameter, you can request geo-referenced data that fits within the bounding box of the geostore with id provided. You can obtain the id of the geostore using the [RW API Geostore API](#geostore). If the data is not geo-referenced, or if the dataset provider does not support the `geostore` query parameter, it will be ignored.
+Some dataset providers support receiving a `geostore` query parameter. When providing this parameter, you can request geo-referenced data that fits within the bounding box of the geostore with id provided. You can obtain the id of the geostore using the [RW API Geostore API](/reference.html#geostore). If the data is not geo-referenced, or if the dataset provider does not support the `geostore` query parameter, it will be ignored.
 
 The following providers support this parameter:
 
@@ -225,7 +225,7 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/download/<dataset.id>?sql=SELEC
 curl -i -X GET 'https://api.resourcewatch.org/v1/download/098b33df-6871-4e53-a5ff-b56a7d989f9a?sql=SELECT cartodb_id, iso, name_0, name_1, type_1 FROM gadm28_adm1 limit 10'
 ```
 
-The download endpoint allows you to download the results of the execution of a query over a dataset. This endpoint is greatly based on the [query datasets](index-rw.html#querying-datasets) endpoint, so we strongly suggest you read that section of the documentation.
+The download endpoint allows you to download the results of the execution of a query over a dataset. This endpoint is greatly based on the [query datasets](/reference.html#querying-datasets) endpoint, so we strongly suggest you read that section of the documentation.
 
 **Note: Some dataset providers do not support downloading query results. You can download query results for the following dataset providers:**
 
@@ -240,13 +240,13 @@ Like when querying datasets, in order to download the results of the execution o
 - The id of the dataset you're trying to download the query execution results.
 - The SQL query that represents the data you are trying to download.
 
-The [dataset documentation](#dataset6) covers different ways that you can use to browse the existing dataset catalog or upload your own, all of which will give you the details of a dataset, including the dataset id you'll need to query it.
+The [dataset documentation](reference.html/#dataset) covers different ways that you can use to browse the existing dataset catalog or upload your own, all of which will give you the details of a dataset, including the dataset id you'll need to query it.
 
 The SQL query will have to be custom built by you to fit your needs, but a good starting point for newcomers would be something like `SELECT * FROM <dataset.tableName> limit 10`.
 
 *Notice: the `limit` parameter restricts our results to 10 rows, and is not required. However, for our learning purposes, this is useful, as it keeps the API responses small and fast.*
 
-As with the query endpoint, the `FROM` clause should reference the dataset's `tableName` value, which you can also get from the [dataset documentation](#dataset6) described above. And also, don't forget that you can check the [support provided for the dataset type you are using](#supported-sql-syntax-reference) if you are having trouble writing your SQL query.
+As with the query endpoint, the `FROM` clause should reference the dataset's `tableName` value, which you can also get from the [dataset documentation](reference.html/#dataset) described above. And also, don't forget that you can check the [support provided for the dataset type you are using](/reference.html#supported-sql-syntax-reference) if you are having trouble writing your SQL query.
 
 ### Download response body
 
@@ -329,9 +329,9 @@ You can use the following query parameters to customize the output of the downlo
 Query parameter        | Description                                                                  | Type        | Required |
 ---------------------- | ---------------------------------------------------------------------------- | ----------- | -------- |
 sql                    | The SQL query to be executed. This parameter changes the data returned in the query response body. | String | Yes |
-format                 | The format of the returned response. By default, CSV format is assumed (`csv`), but you can also request the response as JSON (`json`). Check the section on the [download endpoint response body](index-rw.html#download-response-body) for some examples of how the `format` query parameter can be used. | String | No |
+format                 | The format of the returned response. By default, CSV format is assumed (`csv`), but you can also request the response as JSON (`json`). Check the section on the [download endpoint response body](/reference.html#download-response-body) for some examples of how the `format` query parameter can be used. | String | No |
 freeze                 | The `freeze` parameter, when provided as `true`, will create a file with the results of the execution of the query and return the URL for that file. **Please note that you should be authenticated in order to request freezing the results of query executions.** | Boolean | No |
-geostore               | Read more about the geostore query parameter [here](/index-rw.html#filter-download-results-by-geostore). | String | No |
+geostore               | Read more about the geostore query parameter [here](/reference.html#filter-download-results-by-geostore). | String | No |
 
 #### Filter download results by geostore
 
@@ -341,7 +341,7 @@ geostore               | Read more about the geostore query parameter [here](/in
 curl -i -X GET 'https://api.resourcewatch.org/v1/download/1d7085f7-11c7-4eaf-a29a-5a4de57d010e?sql=SELECT * FROM dis_001_significant_earthquakes LIMIT 5&geostore=972c24e1da2c2baacc7572ee9501abdc'
 ```
 
-Some dataset providers support receiving a `geostore` query parameter. When providing this parameter, you can request geo-referenced data that fits within the bounding box of the geostore with id provided. You can obtain the id of the geostore using the [RW API Geostore API](/index-rw.html#geostore). If the data is not geo-referenced, or if the dataset provider does not support the `geostore` query parameter, it will be ignored.
+Some dataset providers support receiving a `geostore` query parameter. When providing this parameter, you can request geo-referenced data that fits within the bounding box of the geostore with id provided. You can obtain the id of the geostore using the [RW API Geostore API](/reference.html#geostore). If the data is not geo-referenced, or if the dataset provider does not support the `geostore` query parameter, it will be ignored.
 
 The following providers support this parameter:
 
@@ -355,7 +355,7 @@ The following providers support this parameter:
 
 ### Alternative ways for downloading query execution results
 
-As in the case of [querying datasets](index-rw.html#alternative-ways-for-querying-datasets), there are some alternative ways that you can use for downloading query execution results. While the GET request described above is the recommended way of downloading query results, there are other ways to download query results that may be more suited for specific use cases.
+As in the case of [querying datasets](/reference.html#alternative-ways-for-querying-datasets), there are some alternative ways that you can use for downloading query execution results. While the GET request described above is the recommended way of downloading query results, there are other ways to download query results that may be more suited for specific use cases.
 
 #### Using the dataset slug instead of the id
 
@@ -424,7 +424,7 @@ curl -i -X GET 'https://api.resourcewatch.org/v1/query/:dataset_id?sql=DELETE FR
 curl -i -X GET 'https://api.resourcewatch.org/v1/query/:dataset_id?sql=DELETE FROM index_bf86b945c4ec41d2b5b7af00f3f61423 WHERE x = "y"'
 ```
 
-Write queries such as `INSERT` or `UPDATE` are not supported in the RW API. You can use dataset endpoints to [append](/index-rw.html#concatenate-and-append-data-to-a-document-based-dataset) or [overwrite](/index-rw.html#overwrite-data-for-a-document-based-dataset) a given dataset's data, but you cannot use SQL to write data into the datasets.
+Write queries such as `INSERT` or `UPDATE` are not supported in the RW API. You can use dataset endpoints to [append](/reference.html#concatenate-and-append-data-to-a-document-based-dataset) or [overwrite](/reference.html#overwrite-data-for-a-document-based-dataset) a given dataset's data, but you cannot use SQL to write data into the datasets.
 
 Most providers do not support `DELETE` queries either. However, in the case of **document-based datasets** (i.e. where the `connectorType` is `document`), you can delete the dataset's data via SQL `DELETE` query. Executing a `DELETE` query requires authentication, and additionally, one of the following conditions must be met:
 

@@ -1,15 +1,16 @@
 ---
-title: RW API Developer docs
+title: Developer Docs - Resource Watch API
 app: rw
 language_tabs:
   - shell: cURL
 
 toc_footers:
-  - <a href='https://ui.resourcewatch.org'>Sign Up for a Developer Key</a>
+  - <a href='/quickstart.html'>Getting started</a>
   - <a href='https://github.com/resource-watch/doc-api'>Contribute to these docs</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
+  - tos
   - dev/introduction
   - dev/architecture
   - dev/control_tower
@@ -19,7 +20,7 @@ includes:
   - dev/microservice_reference
   - dev/smoke_tests
   - dev/query_transformations
-  - api/microservices
+  - dev/microservices
   - dev/areas_notification_emails
   - dev/subscriptions
   - dev/graph

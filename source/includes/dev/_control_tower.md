@@ -272,7 +272,7 @@ curl -X GET \
 
 #### POST `/microservice/`
 
-This is the endpoint used by microservices to register on Control Tower. You can find a detailed analysis of its syntax in the [previous section](#api-proxy-router)
+This is the endpoint used by microservices to register on Control Tower. You can find a detailed analysis of its syntax in the [previous section](/developer.html#api-proxy-router)
 
 #### DELETE `/microservice/:id`
 

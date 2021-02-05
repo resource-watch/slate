@@ -17,9 +17,9 @@ Here:
 
 Over the course of this tutorial you will develop a simple web application that is capable of:
 
-- interacting with the HTTP-based API to retrieve metadata and catalog information using the [`/dataset` endpoint](https://resource-watch.github.io/doc-api/index-rw.html#what-is-a-dataset).
+- interacting with the HTTP-based API to retrieve metadata and catalog information using the [`/dataset` endpoint](/reference.html#what-is-a-dataset).
 - displaying raster and vector tiles in a webmap run by [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)
-- dynamically querying a hosted database with the [`/query` endpoint](https://resource-watch.github.io/doc-api/index-rw.html#querying-datasets)
+- dynamically querying a hosted database with the [`/query` endpoint](/reference.html#querying-datasets)
 
 
 ## Pre-requirements
@@ -561,7 +561,7 @@ Here we will use a pre-computed lookup table to connect WDPA geometries with tre
 This table and its rows will be accessed through the `/query` endpoint using basic SQL functionality to _query_ a table and extract useable information.
 This section of the tutorial will introduce the basics of the `/query` endpoint, describe the table being queried, and demonstrate how real queries look.
 
-Let's begin with looking at the [`/query` endpoint reference](https://resource-watch.github.io/doc-api/index-rw.html#querying-datasets).
+Let's begin with looking at the [`/query` endpoint reference](/reference.html#querying-datasets).
 You should read over the section for a comprehensive understanding.
 Below is a condensed version with the critical bits.
 

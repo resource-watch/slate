@@ -23,7 +23,7 @@ The graph above illustrates the dependencies between different microservices as 
 
 The microservices above do not depend on any of the other microservices.
 
-It's worth noting that most microservices depend on Control Tower and functionality implicitly offered by it - for example, Control Tower will automatically pass to the microservice the details of the user, should the original HTTP request come with a valid JWT token.
+It's worth noting that most microservices depend on Control Tower and functionality implicitly offered by it - for example, Control Tower will automatically pass to the microservice the details of the user, should the original HTTP request come with a valid JSON Web Token.
 
 ## Data layer dependencies
 

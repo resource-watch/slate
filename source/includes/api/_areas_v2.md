@@ -1,6 +1,6 @@
 # Areas v2
 
-Before reading any further, please ensure you have read the [Areas of Interest concept documentation](#area) first. It gives you a brief and clear description of what an Area of Interest is and what it can do for you. 
+Before reading any further, please ensure you have read the [Areas of Interest concept documentation](/concepts.html#area-of-interest) first. It gives you a brief and clear description of what an Area of Interest is and what it can do for you. 
 
 Once you've read that section, you can come back here to learn more details about using the RW API's Areas service. Areas of Interest are used by the [Global Forest Watch website](https://www.globalforestwatch.org/) to subscribe to notifications on deforestation and fire alerts inside a particular areas you might be interest in. The sections below describe in detail how you can use the endpoints provided by RW API's [Areas service](https://github.com/gfw-api/gfw-area) to define your own geographic areas of interest.
 
@@ -8,15 +8,15 @@ Once you've read that section, you can come back here to learn more details abou
 
 v2 areas are an upgrade in the functionality of the Areas service, and provide you with an easier-to-use interface for creating Areas of Interest. Features such as the notification of alerts inside your Area of Interest **are only available in v2 endpoints**.
 
-Up until v2 areas endpoints were available, you could create Areas of Interest, but you could not define deforestation or fire alerts for your areas. In order to do that, you would need to manually [create a subscription that referenced your Area of Interest](/index-rw.html#subscribing-to-an-area-of-interest). Not only that, but you also needed to manage this interaction between Areas of Interest and Subscriptions by yourself. 
+Up until v2 areas endpoints were available, you could create Areas of Interest, but you could not define deforestation or fire alerts for your areas. In order to do that, you would need to manually [create a subscription that referenced your Area of Interest](/reference.html#subscribing-to-an-area-of-interest). Not only that, but you also needed to manage this interaction between Areas of Interest and Subscriptions by yourself. 
 
-v2 areas endpoints were built with the intention of automating this interaction between areas and subscriptions, thus merging together [**v1 areas of interest**](/index-rw.html#areas) and [**subscriptions**](/index-rw.html#subscriptions). In practice, this means that, if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints. This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
+v2 areas endpoints were built with the intention of automating this interaction between areas and subscriptions, thus merging together [**v1 areas of interest**](/reference.html#areas) and [**subscriptions**](/reference.html#subscriptions). In practice, this means that, if your users already had v1 areas or subscriptions previously created, they will show up as v2 areas when requesting data from the v2 endpoints. This also means that, if your application was already using either subscriptions or v1 areas, you can safely transition into v2 areas while keeping the legacy v1 areas and subscriptions that your users have created.
 
 Throughout the sections below, you'll be able to find **Implementation details** sections that dive deeper into how this synchronization between Areas and Subscriptions is performed on each particular case.
 
 ## Interaction between Areas and Subscriptions
 
-As it was stated in the paragraphs above, you can use v2 endpoint to create Areas of Interest and subscribe to deforestation of fire alerts. These subscriptions (and the associated emails or webhook notifications) are handled by the [Subscriptions service](/index-rw.html#subscriptions). This means in practice that each Area might have a Subscription associated. If this is the case, the Area's `subscriptionId` property will contain the id of the associated Subscription from the Subscriptions service.
+As it was stated in the paragraphs above, you can use v2 endpoint to create Areas of Interest and subscribe to deforestation of fire alerts. These subscriptions (and the associated emails or webhook notifications) are handled by the [Subscriptions service](/reference.html#subscriptions). This means in practice that each Area might have a Subscription associated. If this is the case, the Area's `subscriptionId` property will contain the id of the associated Subscription from the Subscriptions service.
 
 This interaction between Areas and Subscriptions is transparent for the API users, meaning that you don't need to worry about creating, updating or deleting the subscriptions associated to your areas - this happens automatically, taken into account the Area properties.
 
@@ -61,7 +61,7 @@ curl -X GET https://api.resourcewatch.org/v2/area
 }
 ```
 
-The `/v2/areas` endpoint returns all the areas of interest associated with the user who made the request. For a detailed description of each field, check out the [Area reference](#area-reference) section.
+The `/v2/areas` endpoint returns all the areas of interest associated with the user who made the request. For a detailed description of each field, check out the [Area reference](/reference.html/#area-reference) section.
 
 ### Pagination
 
@@ -71,7 +71,7 @@ The `/v2/areas` endpoint returns all the areas of interest associated with the u
 curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25
 ```
 
-The Areas v2 service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
+The Areas v2 service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
 
 In the specific case of the Areas v2 service, the default value for the `page[size]` query parameter is 100, instead of 10. However, this default value will be reduced to 10 in future releases, so (as recommended in the pagination guidelines), you should not rely on the default page size and always provide a value tailored to your needs.
 
@@ -112,7 +112,7 @@ curl -X GET "https://api.resourcewatch.org/v2/area?sort=name,status"
 curl -X GET "https://api.resourcewatch.org/v2/area?sort=-name,+status"
 ```
 
-The Areas v2 service currently supports sorting using the `sort` query parameter. Sorting v2 areas adheres to the conventions defined in the [Sorting guidelines for the RW API](/index-rw.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Area reference](#area-reference) section for a detailed description of the fields you can use when sorting.
+The Areas v2 service currently supports sorting using the `sort` query parameter. Sorting v2 areas adheres to the conventions defined in the [Sorting guidelines for the RW API](/concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Area reference](/reference.html#area-reference) section for a detailed description of the fields you can use when sorting.
 
 ### Errors for getting user areas
 
@@ -180,7 +180,7 @@ curl -X GET https://api.resourcewatch.org/v2/area?all=true
 
 The same `/v2/areas` endpoint, used to retrieve all of the logged user's areas, can be used to retrieve ALL areas (for all users). To trigger this behavior, all you need to do is provide the `all=true` flag as a query parameter - **keep in mind this option will only be taken into account for ADMIN users** (i.e. if the logged user is not an ADMIN, the `all=true` flag is ignored and the logged user's areas are returned).
 
-For a detailed description of each field, check out the [Area reference](#area-reference) section.
+For a detailed description of each field, check out the [Area reference](/reference.html#area-reference) section.
 
 ### Pagination
 
@@ -190,7 +190,7 @@ For a detailed description of each field, check out the [Area reference](#area-r
 curl -X GET https://api.resourcewatch.org/v2/area?page[number]=2&page[size]=25&all=true
 ```
 
-The Areas v2 service adheres to the conventions defined in the [Pagination guidelines for the RW API](/index-rw.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
+The Areas v2 service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your areas list.
 
 ### Filters
 
@@ -204,7 +204,7 @@ The filters for this endpoint are the same as the `/v2/areas` endpoint described
 
 Field       |             Description                                                                                                                          | Type    | Example    |
 ----------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | ------: | ---------: |
-application | Filter results by the application associated with the areas. Read more about this field [here](/index-rw.html#applications).                                                                                    | String  | 'gfw'      |
+application | Filter results by the application associated with the areas. Read more about this field [here](/concepts.html#applications).                                                                                    | String  | 'gfw'      |
 status      | Filter results by the status of the area.                                                                                                        | String  | 'saved'    |
 public      | Filter results by the privacy status of the area.                                                                                                | Boolean | true       |
 all         | Return all the areas instead of just the areas associated with user of the request. This filter will only be taken into account for ADMIN users. | Boolean | true       |
@@ -330,17 +330,17 @@ curl -X POST https://api.resourcewatch.org/v2/area
 }
 ```
 
-Use this endpoint to create new areas. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section.
+Use this endpoint to create new areas. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](/reference.html/#area-reference) section.
 
 Keep in mind that you should provide one of the following when creating an area:
 
-* `geostore` with the id of a geostore object obtained from [RW API's Geostore service](/index-rw.html#geostore16), if you are creating an area that references a geostore;
+* `geostore` with the id of a geostore object obtained from [RW API's Geostore service](/reference.html#geostore), if you are creating an area that references a geostore;
 * `geostoreDataApi` with the id of a geostore object obtained from the GFW Data API, as an alternative way to create an area that references a geostore;
 * `wdpaid` with the id of a protected area if you are creating an area that references a protected area;
 * `iso` object with a valid country/region/subregion if you are creating an area that references an admin country/region/subregion;
 * `use` object with valid id and name of a land use concessioned area, if you are creating an area that references a land use area.
 
-Please check the [Area model reference](/index-rw.html#area-reference) for details on what values each field is expected to provide.
+Please check the [Area model reference](/reference.html#area-reference) for details on what values each field is expected to provide.
 
 According to multiple factors (including the `geostore` that is associated with the area, if the area subscribes to `fireAlerts`, `deforestationAlerts`, etc.), there might be a period of time in which the data for the area is being generated. While that is the case, the area will have `status` set to `'pending'`. Once the area data is ready, the `status` of the area will be updated to `'saved'`.
 
@@ -424,15 +424,15 @@ curl -X PATCH https://api.resourcewatch.org/v2/area/:id
 }
 ```
 
-Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](#area-reference) section. Keep in mind that you must provide one of the following when updating an area:
+Use this endpoint to update an existing area. For a detailed description of each field that can be provided in the body of the request, check out the [Area reference](/reference.html/#area-reference) section. Keep in mind that you must provide one of the following when updating an area:
 
-* `geostore` with the id of a geostore object obtained from [RW API's Geostore service](/index-rw.html#geostore16), if you are updating an area that references a geostore;
+* `geostore` with the id of a geostore object obtained from [RW API's Geostore service](/reference.html#geostore), if you are updating an area that references a geostore;
 * `geostoreDataApi` with the id of a geostore object obtained from the GFW Data API, as an alternative way to update an area that references a geostore;
 * `wdpaid` with the id of a protected area if you are updating an area that references a protected area;
 * `iso` object with a valid country/region/subregion if you are updating an area that references an admin country/region/subregion;
 * `use` object with valid id and name of a land use concessioned area, if you are updating an area that references a land use area.
 
-Please check the [Area model reference](/index-rw.html#area-reference) for details on what values each field is expected to provide.
+Please check the [Area model reference](/reference.html#area-reference) for details on what values each field is expected to provide.
 
 ### Errors for updating an area
 
@@ -610,7 +610,7 @@ Field name     | Type    | Required            | Default value | Description |
 id             | String  | Yes (autogenerated) |               | Unique Id of the area. Auto generated on creation. Cannot be modified by users.    
 name           | String  | No                  |               | Name of the area.
 application    | String  | Yes                 | 'gfw'         | The application this area belongs to.  
-geostore       | String  | No                  |               | If this area references a geostore obtained from [RW API's Geostore service](/index-rw.html#geostore16), the id of that geostore will be saved in this field.     
+geostore       | String  | No                  |               | If this area references a geostore obtained from [RW API's Geostore service](/reference.html#geostore), the id of that geostore will be saved in this field.     
 geostoreDataApi| String  | No                  |               | If this area references a geostore obtained from the GFW Data API, the id of that geostore will be saved in this field.     
 wdpaId         | String  | No                  |               | If this area references a WDPA, the id of the WDPA will be saved in this field.     
 userId         | String  | Yes (autopopulated) |               | Id of the user who owns the area. Set automatically on creation. Cannot be modified by users.
