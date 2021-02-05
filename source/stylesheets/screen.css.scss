@@ -464,6 +464,12 @@ html, body {
       code {
         white-space: nowrap;
       }
+      /* Allow forcing code to wrap in tables */
+      .code-wrap {
+        code {
+          white-space: normal;
+        }
+      }
     }
 
     th {

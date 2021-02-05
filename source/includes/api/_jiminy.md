@@ -155,11 +155,16 @@ Likewise with `query` and `download` endpoints, you can either provide the SQL a
 
 For a successful response, the response body is a JSON object containing a single index `data`, which describes the type of charts that can be obtained from the query provided. The following fields are usually present in the `data` object:
 
+<!---
+<span class="code-wrap">...</span> below forces the code the wrap. Without this, the table is horrendously wide.
+See line 467 in screen.css.scss
+-->
+
 Field     | Type  | Description | Example
 --------- | ----- | ----------- | ---------
-data.general | Array | An array of distinct charts that can be used to represent the data of the query. | `["bar", "pie"]`
-data.byColumns | Object | An object where the keys are the columns provided in the SQL query. For each the, its value is an array with the names of the charts that might be used to represent the data from the column in the key. | `{ "iso": ["bar", "pie"], "name_0": ["bar", "pie"] },`
-data.byType | Object | An object where the keys are all the charts supported by Jiminy. The values will contain the column names of the query execution that might be used to display the chart type in the key. If the chart type was not included in the `data.general` field of the response body, its content will likely be empty. | `{ "bar": { "general": ["iso", "name_0", "name_1", "type_1"], "columns": { "iso": [], "name_0": [], "name_1": [], "type_1": [] } } }`
+data.general | Array | An array of distinct charts that can be used to represent the data of the query. | <span class="code-wrap">`["bar", "pie"]`</span>
+data.byColumns | Object | An object where the keys are the columns provided in the SQL query. For each the, its value is an array with the names of the charts that might be used to represent the data from the column in the key. | <span class="code-wrap">`{ "iso": ["bar", "pie"], "name_0": ["bar", "pie"] },`</span>
+data.byType | Object | An object where the keys are all the charts supported by Jiminy. The values will contain the column names of the query execution that might be used to display the chart type in the key. If the chart type was not included in the `data.general` field of the response body, its content will likely be empty. | <span class="code-wrap">`{ "bar": { "general": ["iso", "name_0", "name_1", "type_1"], "columns": { "iso": [], "name_0": [], "name_1": [], "type_1": [] } } }`</span>
 
 ## Jiminy execution errors
 
