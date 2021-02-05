@@ -17,6 +17,8 @@ Throughout the docs, you'll find references to a `Authorization: Bearer <your-to
 
 # How these docs are organized
 
+The docs are organized into four sections, described below. You can always navigate between the sections using the links at the top of the left sidebar.
+
 ## Getting Started
 
 The [quickstart guide](/quickstart.html) will get you up and running with the RW API. In it, you will learn how to create an account, get your JSON Web Token for authentication, and make a test request.
