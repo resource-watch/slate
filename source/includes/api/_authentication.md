@@ -2,7 +2,7 @@
 
 Most RW API endpoints are public, but some actions require user authentication. Each endpoint's documentation will specify whether authentication is required and under whate conditions.
 
-The RW API uses JSON Web Tokens to authenticate requests. Check out the [Quickstart Guide](/quickstart.html) for instructions on how to create an account and generate a token.
+The RW API uses JSON Web Tokens to authenticate requests. Check out the [Quickstart Guide](quickstart.html) for instructions on how to create an account and generate a token.
 
 Authentication is performed using bearer auth. For all authenticated requests, you must provide your JWT using the header `Authorization: Bearer <your token>`.
 

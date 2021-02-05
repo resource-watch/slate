@@ -2,21 +2,21 @@
 
 ## What is metadata?
 
-If you are new to the RW API, or want to learn more about the concept of metadata, we strongly encourage you to read the [metadata concept](/concepts.html#metadata) documentation first. It gives you a brief and clear description of what metadata is, and why it is useful.
+If you are new to the RW API, or want to learn more about the concept of metadata, we strongly encourage you to read the [metadata concept](concepts.html#metadata) documentation first. It gives you a brief and clear description of what metadata is, and why it is useful.
 
-Once you've read that section, you can come back here to learn more details about using the RW API Metadata feature, which aims to provide summary information about [Datasets](/concepts.html#dataset), [Layers](/concepts.html#layer), and [Widgets](/concepts.html#widget).
+Once you've read that section, you can come back here to learn more details about using the RW API Metadata feature, which aims to provide summary information about [Datasets](concepts.html#dataset), [Layers](concepts.html#layer), and [Widgets](concepts.html#widget).
 
-[Metadata objects](/reference.html#metadata-objects) describe things like the name, spatial and temporal coverage, usage rights, and contact information of datasets as well as their associated layers and widgets, uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you.
+[Metadata objects](reference.html#metadata-objects) describe things like the name, spatial and temporal coverage, usage rights, and contact information of datasets as well as their associated layers and widgets, uploaded by [WRI](https://www.wri.org/), its partner organizations, or by API users like you.
 
 They are particularly useful for allowing users to find relevant datasets, layers and widgets, understand their context, and for providing useful extra information, such as descriptions, licensing, and citations.
 
 ***As such, if you really want people to be able to use your datasets, widgets or layers, it is crucial that it has metadata!***
 
-To find out more about accessing metadata objects already available on the RW API, check out the documentation on [getting metadata objects](/reference.html#getting-metadata). If you'd like to share your data with the world, you can also [create your own metadata](/reference.html#creating-metadata) on the RW API, as well as [update](/reference.html#updating-metadata) and [delete](/reference.html#deleting-metadata) existing metadata objects.
+To find out more about accessing metadata objects already available on the RW API, check out the documentation on [getting metadata objects](reference.html#getting-metadata). If you'd like to share your data with the world, you can also [create your own metadata](reference.html#creating-metadata) on the RW API, as well as [update](reference.html#updating-metadata) and [delete](reference.html#deleting-metadata) existing metadata objects.
 
 ## Metadata objects
 
-RW API's [approach to metadata](/concepts.html#metadata) is designed to offer flexibility; both in terms of the information contained and languages. Hence, when working with metadata objects it is important to understand a few key concepts. 
+RW API's [approach to metadata](concepts.html#metadata) is designed to offer flexibility; both in terms of the information contained and languages. Hence, when working with metadata objects it is important to understand a few key concepts. 
 
 The first of which is that metadata objects contain information about another RW API entity - a dataset, a layer or a widget. Thus, each metadata object belongs to a single `resource`, identified by its `type` and `id`. As this `type` + `id` pair directly or indirectly (as widgets and layers themselves are associated with a dataset) references a dataset, and for convenience, each metadata object also has the dataset identifier to which it's associated.
 
@@ -24,7 +24,7 @@ Another important concept to keep in mind is that each metadata object concerns 
 
 Building on top of the two concepts above, it's important to highlight that while each resource can have multiple metadata, it cannot have multiple metadata for the same combination of `language` and `application`. For example, metadata about a tree cover dataset for the [Global Forest Watch](https://www.globalforestwatch.org/) application might be available in both English and Spanish (each a different metadata object), and these may be different compared to metadata objects in the same languages associated with [Resource Watch](https://resourcewatch.org/) application. This example would then represent a total of 4 different metadata objects, all associated with the same dataset.
 
-When it comes to its internal structure, metadata objects have a balance of structured and free-format fields that promote a common base across all objects, while allowing different applications and use cases to have their own specific structure and details. You can learn more about the available fields in the [metadata reference](/reference.html#metadata-reference) section.
+When it comes to its internal structure, metadata objects have a balance of structured and free-format fields that promote a common base across all objects, while allowing different applications and use cases to have their own specific structure and details. You can learn more about the available fields in the [metadata reference](reference.html#metadata-reference) section.
 
 Last but not least, it's important to keep in mind that the behavior of metadata objects and endpoints aims to be, as much as possible, independent from the target resource it references. In the detailed endpoint documentation below we'll cover the different endpoints in depth, and highlight the differences in behavior when handling different resource types, but you can safely assume that, for most of it, behavior described for a type of resource will be the same for all 3 types.
 
@@ -36,7 +36,7 @@ As covered above, each metadata object directly concerns a single dataset, widge
 
 There are 2 main ways to retrieve metadata objects from the RW API: using the "get all" endpoint (and optionally adding some filters), or loading metadata by their resource id (either a single element at a time, or multiple in one go) and type.
  
-Remembering that each resource [may have many metadata objects](/reference.html#metadata-objects) associated with it. In general, you will usually want to use the filter parameters `application` and `language`, which may be one or many of valid RW API applications and languages.
+Remembering that each resource [may have many metadata objects](reference.html#metadata-objects) associated with it. In general, you will usually want to use the filter parameters `application` and `language`, which may be one or many of valid RW API applications and languages.
  
 ### Getting all metadata
 
@@ -98,7 +98,7 @@ This endpoint will allow you to get the list of the metadata available in the AP
 
 It's worth pointing out that, unlike other similar endpoints on the RW API, this endpoint does NOT have pagination by default. If you query it without any of the optional parameters, you will get a list of all metadata objects for all datasets, widgets and layers. This is strongly discouraged, and **you should not rely on this behavior** - when using this endpoint, you should aim to use a combination of parameters to narrow down your response pool. You should also **expect a future update to this endpoint to introduce pagination** on all responses, so try to keep this in mind when using this endpoint on your application.
 
-For a detailed description of each field, check out the [Metadata reference](/reference.html#metadata-reference) section.
+For a detailed description of each field, check out the [Metadata reference](reference.html#metadata-reference) section.
 
 In the sections below, we’ll explore the optional parameters supported by this, which we strongly recommend you use.
 
@@ -156,7 +156,7 @@ curl -X GET https://api.resourcewatch.org/v1/metadata?sort=name,description
 curl -X GET https://api.resourcewatch.org/v1/metadata?sort=-name,+description
 ```
 
-The Metadata service currently supports sorting using the `sort` query parameter. Sorting metadata adheres to the conventions defined in the [Sorting guidelines for the RW API](/concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Metadata reference](reference.html/#metadata-reference) section for a detailed description of the fields you can use when sorting.
+The Metadata service currently supports sorting using the `sort` query parameter. Sorting metadata adheres to the conventions defined in the [Sorting guidelines for the RW API](concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Metadata reference](reference.html/#metadata-reference) section for a detailed description of the fields you can use when sorting.
 
 
 ### Getting metadata for a dataset, layer or widget
@@ -560,7 +560,7 @@ Also keep in mind that, when updating object type fields, your new value will ov
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the metadata that's being updated 
-- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](concepts.html#role-based-access-control).
 
 ### Errors for updating metadata
 
@@ -631,7 +631,7 @@ A successful cloning will return a list of all metadata created in this process.
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the metadata that's being updated 
-- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](concepts.html#role-based-access-control).
 
 ### Errors for cloning metadata
 
@@ -707,7 +707,7 @@ The metadata delete endpoint allows you to delete a single metadata at a time, p
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the metadata that's being deleted
-- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](concepts.html#role-based-access-control).
 
 ### Errors for deleting metadata
 
@@ -730,7 +730,7 @@ Field name              | Type           | Required             | Default value 
 ----------------------- | -------------- | -------------------- |----------------------------| ---------------------------------------------------------------------------- 
 id                      | String         | Yes (autogenerated)  |                            | Unique Id of the metadata. Auto generated on creation. Cannot be modified by users.   
 dataset                 | String         | Yes                  |                            | Id of the dataset to which the metadata object corresponds. Set on metadata creation, cannot be modified.   
-application             | Array          | Yes                  |                            | Applications associated with this metadata. Read more about this field [here](/concepts.html#applications).
+application             | Array          | Yes                  |                            | Applications associated with this metadata. Read more about this field [here](concepts.html#applications).
 resource.id             | String         | Yes                  |                            | Id of the resource associated with the metadata.                                                         
 resource.type           | String         | Yes                  |                            | Type of the resource associated with the metadata.                                                         
 userId                  | String         | Yes (autopopulated)  |                            | Id of the user who created the metadata. Set automatically on creation. Cannot be modified by users.

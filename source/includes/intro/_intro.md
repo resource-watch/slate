@@ -13,7 +13,7 @@ The RW API is [HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) 
 
 For readability, URLs and query parameters in this documentation may be displayed without escaping/encoding, but be sure to encode your URLs before issuing a request to the API, or it may produce undesired results. If you are using the RW API to build your own application, there's probably a library out there that does this for you automatically.
 
-Throughout the docs, you'll find references to a `Authorization: Bearer <your-token>` HTTP header. You can find more details about tokens in the [authentication](/reference.html#authentication) section, or by following the [quickstart guide](/quickstart.html).
+Throughout the docs, you'll find references to a `Authorization: Bearer <your-token>` HTTP header. You can find more details about tokens in the [authentication](reference.html#authentication) section, or by following the [quickstart guide](quickstart.html).
 
 # How these docs are organized
 
@@ -21,21 +21,21 @@ The docs are organized into four sections, described below. You can always navig
 
 ## Getting Started
 
-The [quickstart guide](/quickstart.html) will get you up and running with the RW API. In it, you will learn how to create an account, get your JSON Web Token for authentication, and make a test request.
+The [quickstart guide](quickstart.html) will get you up and running with the RW API. In it, you will learn how to create an account, get your JSON Web Token for authentication, and make a test request.
   
 If you're new to the API, this is the place to start!
 
 ## Concepts
 
-[Concepts](/concepts.html) discusses the key features of the RW API at a high level, providing motivation and background for individual features and how they work together. It also discusses common API-wide behaviors, such as caching, sorting, filtering, and pagination.
+[Concepts](concepts.html) discusses the key features of the RW API at a high level, providing motivation and background for individual features and how they work together. It also discusses common API-wide behaviors, such as caching, sorting, filtering, and pagination.
 
 ## Reference
 
-[Reference](/reference.html) provides detailed technical reference for each RW API endpoint, including the description of the endpoint's behavior, request and response schema, and error codes.
+[Reference](reference.html) provides detailed technical reference for each RW API endpoint, including the description of the endpoint's behavior, request and response schema, and error codes.
 
 ## Tutorials
 
-[Tutorials](/tutorials.html) are step-by-step guides to solving specific problems using the RW API. This is the newest section of the docs and is currently under development, so check back regularly for new tutorials!
+[Tutorials](tutorials.html) are step-by-step guides to solving specific problems using the RW API. This is the newest section of the docs and is currently under development, so check back regularly for new tutorials!
 
 # Get in touch!
 

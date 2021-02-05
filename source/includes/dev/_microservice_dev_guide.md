@@ -926,7 +926,7 @@ Overall, the README should be targeted at developers that may need to run, test 
 
 ### Functional documentation
 
-Documentation describing the business logic implemented by your microservice should go in the [RW API reference documentation](/reference.html) page. The documentation is available [on this Github repository](https://github.com/resource-watch/doc-api/) and its README includes instructions on how to use it and contribute.
+Documentation describing the business logic implemented by your microservice should go in the [RW API reference documentation](reference.html) page. The documentation is available [on this Github repository](https://github.com/resource-watch/doc-api/) and its README includes instructions on how to use it and contribute.
 
 Documentation is a key component of a successful API, so when altering public-facing behavior on the RW API, you must update the documentation accordingly, so that RW API users out there can be aware of the changes you made.
 

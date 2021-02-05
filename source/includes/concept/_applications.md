@@ -34,22 +34,22 @@ This section describes some best practices when using the `application` field. P
 
 As a rule of thumb, the `application` field is an array of strings, required when creating an RW API resource that uses it. You can edit the `application` values by editing the RW API resource you are managing. You can then use the `application` field as a query parameter filter to filter content specific to the given application (check some examples of the usage of the `application` field when fetching RW API datasets on the side).
 
-[RW API users](/reference.html#user-management) also use the `application` field and can be associated with multiple applications. In this case, the `application` field is used to determine which applications a user manages (access management). As you'll be able to understand from reading [General notes on RW API users](/concepts.html#user-roles), each user's `application` values are used to determine if a given user can administrate an RW API resource. Typically, to manipulate said RW API resource, that resource, and the user account, must have at least one overlapping value in the `application` field.
+[RW API users](reference.html#user-management) also use the `application` field and can be associated with multiple applications. In this case, the `application` field is used to determine which applications a user manages (access management). As you'll be able to understand from reading [General notes on RW API users](concepts.html#user-roles), each user's `application` values are used to determine if a given user can administrate an RW API resource. Typically, to manipulate said RW API resource, that resource, and the user account, must have at least one overlapping value in the `application` field.
 
 ### Which services comply with these guidelines
 
 Below you can find a list of RW API resources that use the `application` field:
 
-* [Areas v1](/reference.html#areas)
-* [Areas v2](/reference.html#areas-v2)
-* [Collections](/reference.html#collections)
-* [Dashboards](/reference.html#dashboard)
-* [Dataset](/reference.html#dataset)
-* [Graph](/reference.html#graph)
-* [Layer](/reference.html#layer8)
-* [Metadata](/reference.html#metadata10)
-* [Subscriptions](/reference.html#subscriptions)
-* [Topics](/reference.html#topic)
-* [Users](/reference.html#user-management)
-* [Vocabulary](/reference.html#vocabularies-and-tags)
-* [Widgets](/reference.html#widget)
+* [Areas v1](reference.html#areas)
+* [Areas v2](reference.html#areas-v2)
+* [Collections](reference.html#collections)
+* [Dashboards](reference.html#dashboard)
+* [Dataset](reference.html#dataset)
+* [Graph](reference.html#graph)
+* [Layer](reference.html#layer8)
+* [Metadata](reference.html#metadata10)
+* [Subscriptions](reference.html#subscriptions)
+* [Topics](reference.html#topic)
+* [Users](reference.html#user-management)
+* [Vocabulary](reference.html#vocabularies-and-tags)
+* [Widgets](reference.html#widget)

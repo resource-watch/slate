@@ -14,7 +14,7 @@ While information in the API responses may be useful on its own, a key benefit i
 
 Over the course of this tutorial you will develop a simple web application that is capable of:
 
-- interacting with the HTTP-based API to retrieve this information using the [`/dataset` endpoint](/reference.html#what-is-a-dataset).
+- interacting with the HTTP-based API to retrieve this information using the [`/dataset` endpoint](reference.html#what-is-a-dataset).
 - displaying raster tiles in a webmap run by [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)
 - showing metadata about the raster dataset being displayed
 
@@ -41,7 +41,7 @@ The API is also fairly flexible towards accommodating the different needs betwee
 
 
 Let's quickly review some of the concepts used in the API before jumping into the tutorial.
-You can find deeper and more tailored information in the [concepts documentation](/reference.html#concepts).
+You can find deeper and more tailored information in the [concepts documentation](reference.html#concepts).
 
 A **Dataset** essentially describes where information is being held.
 Datasets are exposed through the `/dataset/<id>` endpoint as a JSON response.
@@ -55,7 +55,7 @@ This JSON has a flexible schema which can be inferred based on two required prop
     - e.g. `csv`, `json` are uploaded `document`s in the "internal" database
     - e.g. `cartodb` and `gee` are external `rest`ful APIs
 
-The full table mapping `provider`s to `connectorType`s is located in the [main API documentation](/reference.html#dataset-connector-type).
+The full table mapping `provider`s to `connectorType`s is located in the [main API documentation](reference.html#dataset-connector-type).
 
 Based on these two properties, the Dataset JSON object will contain many other top-level properties that collectively provide all that is needed to declare where the _real data_ is being held and how to access it.
 

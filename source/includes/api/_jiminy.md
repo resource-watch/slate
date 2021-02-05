@@ -24,13 +24,13 @@ curl -X GET 'https://api.resourcewatch.org/v1/jiminy?sql=SELECT iso, name_0, nam
 -H "Content-Type: application/json"
 ```
 
-The `jiminy` endpoint of the RW API makes use of the [Jiminy](https://github.com/vizzuality/jiminy) library in order to infer which type of charts can be obtained from a the execution of a SQL query on a given dataset. For a better understanding of this endpoint, it is recommended to read beforehand on how to [query datasets](/reference.html#querying-datasets).
+The `jiminy` endpoint of the RW API makes use of the [Jiminy](https://github.com/vizzuality/jiminy) library in order to infer which type of charts can be obtained from a the execution of a SQL query on a given dataset. For a better understanding of this endpoint, it is recommended to read beforehand on how to [query datasets](reference.html#querying-datasets).
 
 To use this endpoint and infer the charts that you can build from a result set, you must provide a valid SQL query. This query should contain the name of the columns for which you want to infer the chart types - the usage of the wildcard selector (`SELECT *`) in the SQL query is not supported by this endpoint.
 
 **Note: You must set a limit value to the SQL query provided. If you do not set it and the dataset contains a lot of data, this endpoint will try to obtain all data at once, which can result in performance issues.**
 
-Likewise with `query` and `download` endpoints, you can either provide the SQL as query param in a GET request, or in the body of the request as a POST request - read more [here](/reference.html#alternative-ways-for-querying-datasets). Using the GET request is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same `jiminy` endpoint call will see a great performance increase, even if they are made by a different application or client. Alternatively, you can also call the `jiminy` endpoint using a POST request. POST requests are not cached, so you will not benefit from these speed improvements. However, GET requests can sometimes hit URL length restrictions, should your SQL query string be too long. Using a POST request is the recommended solution for these cases.
+Likewise with `query` and `download` endpoints, you can either provide the SQL as query param in a GET request, or in the body of the request as a POST request - read more [here](reference.html#alternative-ways-for-querying-datasets). Using the GET request is the recommended approach, as it allows HTTP caching of your result - subsequent requests for the same `jiminy` endpoint call will see a great performance increase, even if they are made by a different application or client. Alternatively, you can also call the `jiminy` endpoint using a POST request. POST requests are not cached, so you will not benefit from these speed improvements. However, GET requests can sometimes hit URL length restrictions, should your SQL query string be too long. Using a POST request is the recommended solution for these cases.
 
 ## Jiminy response body
 

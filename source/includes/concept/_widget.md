@@ -1,6 +1,6 @@
 ## Widget
 
-You have fetched your data from your [dataset](/reference.html#dataset) using [queries](/reference.html#query). And you know how to build custom visualizations for geospatial data using [layers](/reference.html#layer). Yet, sometimes you want to build a plain graphical representation of your data - whether it is geo-referenced or not: this is when **widgets** come in handy.
+You have fetched your data from your [dataset](reference.html#dataset) using [queries](reference.html#query). And you know how to build custom visualizations for geospatial data using [layers](reference.html#layer). Yet, sometimes you want to build a plain graphical representation of your data - whether it is geo-referenced or not: this is when **widgets** come in handy.
 
 A **widget** is a visual specification of how to style and render the data of a dataset (think pie, bar or line charts).
 
@@ -8,7 +8,7 @@ As with layers, each widget has a single dataset associated with it, and a datas
 
 However, this association between widgets and datasets is only for organizational purposes. As such, like in the case of layers, the widget itself does not interact with the dataset data. You can either use the widget's `queryUrl` field to store the query to get the widget's data or store it inside the free form `widgetConfig` object. In any of these cases, it is your responsibility as an API user to query the data that will be used for rendering the widget.
 
-In the [widget endpoint documentation](/reference.html#widget), you can get into more detail on how you can manage widgets.
+In the [widget endpoint documentation](reference.html#widget), you can get into more detail on how you can manage widgets.
 
 ### Widget configuration using Vega grammar
 

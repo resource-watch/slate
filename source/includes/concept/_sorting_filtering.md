@@ -30,14 +30,14 @@ Keep in mind that it’s up to each individual RW API service (dataset, widget, 
 
 The following endpoints adhere to the Sorting conventions defined above:
 
-* [Get v2 areas endpoint](/reference.html#getting-all-user-areas)
-* [Get areas endpoint](/reference.html#get-user-areas)
-* [Get collections endpoint](/reference.html#getting-collections-for-the-request-user)
-* [Get dashboards endpoint](/reference.html#getting-all-dashboards)
-* [Get datasets endpoint](/reference.html#getting-all-datasets)
-* [Get layers endpoint](/reference.html#getting-all-layers)
-* [Get metadata endpoint](/reference.html#getting-all-metadata)
-* [Get widgets endpoint](/reference.html#getting-all-widgets)
+* [Get v2 areas endpoint](reference.html#getting-all-user-areas)
+* [Get areas endpoint](reference.html#get-user-areas)
+* [Get collections endpoint](reference.html#getting-collections-for-the-request-user)
+* [Get dashboards endpoint](reference.html#getting-all-dashboards)
+* [Get datasets endpoint](reference.html#getting-all-datasets)
+* [Get layers endpoint](reference.html#getting-all-layers)
+* [Get metadata endpoint](reference.html#getting-all-metadata)
+* [Get widgets endpoint](reference.html#getting-all-widgets)
 
 ### Filtering
 
@@ -69,7 +69,7 @@ Like in the case of sorting, most RW API resources allow filtering the returned 
 
 For string type fields, the filter you pass will be interpreted as a regular expression, _not_ as a simple substring filter. This gives you greater flexibility in your search capabilities. However, it means that, if you intend to search by substring, you must escape any regex special characters in the string.
 
-Array fields (like the `application` field present in some of the API resources - read more about the [application field](/concepts.html#applications)) support more complex types of filtering. In such cases, you can use `,` as an `or` multi-value separator, or `@` as a multi-value, exact match separator.
+Array fields (like the `application` field present in some of the API resources - read more about the [application field](concepts.html#applications)) support more complex types of filtering. In such cases, you can use `,` as an `or` multi-value separator, or `@` as a multi-value, exact match separator.
 
 Object fields expect a boolean value when filtering, where `true` matches a non-empty object and `false` matches an empty object. Support for filtering by nested object fields varies for different API resource, so be sure to check the documentation of the API endpoint for more detailed information.
 
@@ -79,7 +79,7 @@ Again, as in the case of sorting, keep in mind that it’s up to each individual
 
 The following endpoints adhere to the Filtering conventions defined above:
 
-* [Get all datasets endpoint](/reference.html#getting-all-datasets)
-* [Get all layers endpoint](/reference.html#getting-all-layers)
-* [Get all widgets endpoint](/reference.html#getting-all-widgets)
-* [Get all users endpoint](/reference.html#getting-all-users)
+* [Get all datasets endpoint](reference.html#getting-all-datasets)
+* [Get all layers endpoint](reference.html#getting-all-layers)
+* [Get all widgets endpoint](reference.html#getting-all-widgets)
+* [Get all users endpoint](reference.html#getting-all-users)

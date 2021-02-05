@@ -2,7 +2,7 @@
 
 ## What is a widget?
 
-In a nutshell, a RW API widget is a toolset to help you render your data in a visually more appealing way. The [widget concept documentation](/concepts.html#widget) will give you a more detailed description of this, and we encourage you to read it before proceeding. We also recommend you take a look at our section about [Vega](/reference.html#widget-configuration-using-vega-grammar) if you plan on reusing existing widgets or upload widgets that are reusable by other users. The RW API does not require you to use Vega, but we highly recommend that you do, as it's the technology used by many of the widgets you'll find on the RW API.
+In a nutshell, a RW API widget is a toolset to help you render your data in a visually more appealing way. The [widget concept documentation](concepts.html#widget) will give you a more detailed description of this, and we encourage you to read it before proceeding. We also recommend you take a look at our section about [Vega](reference.html#widget-configuration-using-vega-grammar) if you plan on reusing existing widgets or upload widgets that are reusable by other users. The RW API does not require you to use Vega, but we highly recommend that you do, as it's the technology used by many of the widgets you'll find on the RW API.
 
 
 ## Getting all widgets
@@ -212,7 +212,7 @@ Besides the required `ids` array, your request body may optionally include a `ap
 - Use a comma separated list, like `rw,prep`, if you want to show only widgets that have `rw` or `prep` as one of their applications.
 - Note that the the filters do not need to match on the full application list. For example, the filters `rw,prep` and `rw@prep` will both match a widget with the application list `["rw", "prep", "gfw"]`.
 
-Please note that, unlike [getting all widgets](/reference.html#getting-all-widgets) or [getting all widgets for a dataset](/reference.html#getting-all-widgets-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](/reference.html#pagination129), [filtering](/reference.html#filters130) or [sorting](/reference.html#sorting131) or [including related entities](/reference.html#include-entities-associated-with-the-widgets) described in their respective sections.
+Please note that, unlike [getting all widgets](reference.html#getting-all-widgets) or [getting all widgets for a dataset](reference.html#getting-all-widgets-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](reference.html#pagination129), [filtering](reference.html#filters130) or [sorting](reference.html#sorting131) or [including related entities](reference.html#include-entities-associated-with-the-widgets) described in their respective sections.
 
 
 ### Pagination
@@ -223,7 +223,7 @@ Please note that, unlike [getting all widgets](/reference.html#getting-all-widge
 curl -X GET "https://api.resourcewatch.org/v1/widget?page[number]=2&page[size]=25"
 ```
 
-The Widgets service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your widgets list.
+The Widgets service adheres to the conventions defined in the [Pagination guidelines for the RW API](concepts.html#pagination), so we recommend reading that section for more details on how paginate your widgets list.
 
 ### Filters
 
@@ -259,7 +259,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?env=staging"
 curl -X GET "https://api.resourcewatch.org/v1/widget?app=rw@prep"
 ```
 
-The widget list endpoint provides a wide range of filters that you can use to tailor your widget listing. Filtering widgets adheres to the conventions defined in the [Filter guidelines for the RW API](/concepts.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you'll be able to use the great majority of the widget fields you'll find on the [widget reference](/reference.html#widget-reference), with the following exceptions:
+The widget list endpoint provides a wide range of filters that you can use to tailor your widget listing. Filtering widgets adheres to the conventions defined in the [Filter guidelines for the RW API](concepts.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you'll be able to use the great majority of the widget fields you'll find on the [widget reference](reference.html#widget-reference), with the following exceptions:
 
 - `id`
 - `userName`
@@ -267,8 +267,8 @@ The widget list endpoint provides a wide range of filters that you can use to ta
 
 Additionally, you can use the following filters:
 
-- `collection`: filters by a [collection](/reference.html#collections) id. Requires being authenticated.
-- `favourite`: if any value is defined for this query param, only the widgets set by the user as [favorites](/reference.html#favorites) will be returned. Requires being authenticated.
+- `collection`: filters by a [collection](reference.html#collections) id. Requires being authenticated.
+- `favourite`: if any value is defined for this query param, only the widgets set by the user as [favorites](reference.html#favorites) will be returned. Requires being authenticated.
 
 ### Sorting
 
@@ -296,7 +296,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?sort=-name,+slug"
 curl -X GET "https://api.resourcewatch.org/v1/widget?sort=user.role"
 ```
 
-The Widget service currently supports sorting using the `sort` query parameter. Sorting widgets adheres to the conventions defined in the [Sorting guidelines for the RW API](/concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Widget reference](/reference.html#widget-reference) section for a detailed description of the fields you can use when sorting. In addition to all widget model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the widget. Keep in mind that sorting by user data is restricted to ADMIN users.
+The Widget service currently supports sorting using the `sort` query parameter. Sorting widgets adheres to the conventions defined in the [Sorting guidelines for the RW API](concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Widget reference](reference.html#widget-reference) section for a detailed description of the fields you can use when sorting. In addition to all widget model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the widget. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 ### Include entities associated with the widgets
 
@@ -304,7 +304,7 @@ When loading widget data, you can optionally pass an `includes` query argument t
 
 #### Vocabulary
 
-Loads related [vocabularies](/reference.html#vocabularies-and-tags). If none are found, an empty array is returned.
+Loads related [vocabularies](reference.html#vocabularies-and-tags). If none are found, an empty array is returned.
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?includes=vocabulary"
@@ -709,12 +709,12 @@ The widget service assumes these values are URLs, and will append your custom qu
 - If the value already has a `?` character present, your custom query parameters will be appended with `&` preceding them. 
 - If no `?` is present, the first custom query parameter will be appended with a `?`, and the following with a `&` before them.
 
-This overwrite will only happen if a previous value already existed for the respective field. Also, keep in mind that these changes will NOT be persisted to the database, and will only affect the current request's response. You can combine these custom query parameters with an [overwritten query url](/reference.html#overwrite-the-query-url-of-a-widget-response), as seen on the included example.
+This overwrite will only happen if a previous value already existed for the respective field. Also, keep in mind that these changes will NOT be persisted to the database, and will only affect the current request's response. You can combine these custom query parameters with an [overwritten query url](reference.html#overwrite-the-query-url-of-a-widget-response), as seen on the included example.
 
 
 ### Include entities associated with the widget
 
-You can load related `user`, `vocabulary` and `metadata` data in the same request. See [this section](/reference.html#include-entities-associated-with-the-widgets) for more details.
+You can load related `user`, `vocabulary` and `metadata` data in the same request. See [this section](reference.html#include-entities-associated-with-the-widgets) for more details.
 
 
 ## Creating a widget
@@ -779,17 +779,17 @@ In this section we'll guide you through the process of creating a widget in the 
 
 Before creating a widget, there are a few things you must know and do:
 
-- In order to be able to create a widget, you need to be [authenticated](/reference.html#authentication).
-- Depending on your user account's role, you may have permission to create a widget but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
+- In order to be able to create a widget, you need to be [authenticated](reference.html#authentication).
+- Depending on your user account's role, you may have permission to create a widget but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](concepts.html#role-based-access-control).
 - The widgets you create on the RW API will be publicly visible and available to other users.
 
-Creating a widget is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [widget reference](/reference.html#widget-reference) section, but the minimum field list you must specify for all widgets is:
+Creating a widget is done using a POST request and passing the relevant data as body files. The supported body fields are as defined on the [widget reference](reference.html#widget-reference) section, but the minimum field list you must specify for all widgets is:
 
 - name
 - application
 - dataset - which can be specified either through the URL or the POST body.
 
-The widget service was built to be very flexible, and not be restricted to specific widget rendering libraries or tools. While we recommend using [Vega](/reference.html#widget-configuration-using-vega-grammar), it's up to you to decide which library to use, and how to save your custom data within a widget's `widgetConfig` field. While there is no hard limit on this, widgets that rely on excessively large `widgetConfig` objects have been known to cause issues, so we recommend being mindful of this.
+The widget service was built to be very flexible, and not be restricted to specific widget rendering libraries or tools. While we recommend using [Vega](reference.html#widget-configuration-using-vega-grammar), it's up to you to decide which library to use, and how to save your custom data within a widget's `widgetConfig` field. While there is no hard limit on this, widgets that rely on excessively large `widgetConfig` objects have been known to cause issues, so we recommend being mindful of this.
 
 
 #### Widget thumbnails
@@ -869,9 +869,9 @@ curl -X PATCH "https://api.resourcewatch.org/v1/widget/<widget_id_or_slug>" \
 }
 ```
 
-The update widget endpoint allows you to modify the details of an existing widget. As noted on the [widget concept](/concepts.html#widget) documentation, the widget object stores the details of how widget is meant to be rendered, but may not contain the actual data. As such, if you are looking to update the data that's being displayed on your widget, this is probably not the endpoint you're looking for - you may want to [update your dataset](/reference.html#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
+The update widget endpoint allows you to modify the details of an existing widget. As noted on the [widget concept](concepts.html#widget) documentation, the widget object stores the details of how widget is meant to be rendered, but may not contain the actual data. As such, if you are looking to update the data that's being displayed on your widget, this is probably not the endpoint you're looking for - you may want to [update your dataset](reference.html#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
 
-Unless specified otherwise in their description, all the fields present in the [widget reference](/reference.html#widget-reference) section can be updated using this endpoint. When passing new values for Object type fields, like `widgetConfig`, the new value will fully overwrite the previous one. It’s up to you, as an API user, to build any merging logic into your application.
+Unless specified otherwise in their description, all the fields present in the [widget reference](reference.html#widget-reference) section can be updated using this endpoint. When passing new values for Object type fields, like `widgetConfig`, the new value will fully overwrite the previous one. It’s up to you, as an API user, to build any merging logic into your application.
 
 To perform this operation, the following conditions must be met:
 
@@ -882,7 +882,7 @@ To perform this operation, the following conditions must be met:
 
 #### Widget thumbnails
 
-When a widget is updated, a new thumbnail is generated. Refer to [this section](/reference.html#widget-thumbnails) for details on this process. 
+When a widget is updated, a new thumbnail is generated. Refer to [this section](reference.html#widget-thumbnails) for details on this process. 
 
 #### Errors for updating a widget
 
@@ -1010,7 +1010,7 @@ curl -X POST "https://api.resourcewatch.org/v1/dataset/<dataset-id>/widget/<widg
 
 #### Widget thumbnails
 
-When a widget is cloned, a new thumbnail is generated. Refer to [this section](/reference.html#widget-thumbnails) for details on this process.
+When a widget is cloned, a new thumbnail is generated. Refer to [this section](reference.html#widget-thumbnails) for details on this process.
 
 
 #### Errors for cloning a widget
@@ -1077,7 +1077,7 @@ In order to delete a widget, the following conditions must be met:
 
 - the widget's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the widget.
-- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](concepts.html#role-based-access-control).
 
 ## Widget reference
 
@@ -1098,9 +1098,9 @@ sourceUrl               | String         | No                   |               
 authors                 | String         | No                   |                            | Author or authors of the data displayed on the widget, as it's meant to be displayed to the end user.
 queryUrl                | String         | No                   |                            | URL of the RW API query or external URL containing the data displayed on the widget
 thumbnailUrl            | String         | No                   |                            | URL of a example thumbnail of the rendered widget.
-env                     | String         | Yes                  | production                 | Environment to which the widget belongs. Read more about this field in the [Environments concept section](/concepts.html#environments).
+env                     | String         | Yes                  | production                 | Environment to which the widget belongs. Read more about this field in the [Environments concept section](concepts.html#environments).
 widgetConfig            | Object         | No                   |                            | Schema-less object meant to host widget behavior configuration.
-application             | Array          | Yes                  |                            | Applications associated with this widget. Read more about this field [here](/concepts.html#applications).
+application             | Array          | Yes                  |                            | Applications associated with this widget. Read more about this field [here](concepts.html#applications).
 layerId                 | String         | No                   |                            | Id of the layer to which the widget corresponds.  
 verified                | Boolean        | Yes                  | false                      | 
 default                 | Boolean        | No                   | false                      | If the widget should be used as the dataset's default widget.

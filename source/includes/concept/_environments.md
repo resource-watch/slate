@@ -15,8 +15,8 @@ It's worth pointing out that endpoints that retrieve a resource by id typically 
 
 ### Which services comply with these guidelines
 
-* [Dataset](/reference.html#dataset)
-* [Graph](/reference.html#graph)
-* [Layer](/reference.html#layer)
-* [Subscriptions](/reference.html#subscriptions)
-* [Widgets](/reference.html#widget)
+* [Dataset](reference.html#dataset)
+* [Graph](reference.html#graph)
+* [Layer](reference.html#layer)
+* [Subscriptions](reference.html#subscriptions)
+* [Widgets](reference.html#widget)

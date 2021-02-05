@@ -1,1 +1,1 @@
-[Back to the documentation homepage](/index.html)
+[Back to the documentation homepage](index.html)

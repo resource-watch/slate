@@ -84,9 +84,9 @@ The RW API handles this internally and automatically for you. It has a built-in 
 
 ### Which services rely on caching
 
-* [Dataset](/reference.html#dataset)
-* [Layer](/reference.html#layer)
-* [Metadata](/reference.html#metadata10)
-* [Vocabulary](/reference.html#vocabularies-and-tags)
-* [Widgets](/reference.html#widget)
-* [Query](/reference.html#query) and [Fields](/reference.html#fields) also use cache, but with a TTL of 2 days
+* [Dataset](reference.html#dataset)
+* [Layer](reference.html#layer)
+* [Metadata](reference.html#metadata10)
+* [Vocabulary](reference.html#vocabularies-and-tags)
+* [Widgets](reference.html#widget)
+* [Query](reference.html#query) and [Fields](reference.html#fields) also use cache, but with a TTL of 2 days

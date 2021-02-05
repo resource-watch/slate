@@ -1,6 +1,6 @@
 ## Errors
 
-The following error codes are used across the API. Each endpoint also documents resource-specific error codes and associated messages in the [reference docs](/reference.html).
+The following error codes are used across the API. Each endpoint also documents resource-specific error codes and associated messages in the [reference docs](reference.html).
 
 Error Code | Meaning
 ---------- | -------

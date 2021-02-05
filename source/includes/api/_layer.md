@@ -2,14 +2,14 @@
 
 ## What is a layer?
 
-By now, you are probably already familiar with [datasets](/concepts.html#dataset) and [querying](/concepts.html#query) them (if you are not, now is a good time to get up to speed on those). Many of the datasets you'll find on the RW API - and perhaps the datasets you are uploading too - contain georeferenced information. If that's the case, then you may want to render your data as a web map layer, and the RW API's *layer* endpoints can help you with that.
+By now, you are probably already familiar with [datasets](concepts.html#dataset) and [querying](concepts.html#query) them (if you are not, now is a good time to get up to speed on those). Many of the datasets you'll find on the RW API - and perhaps the datasets you are uploading too - contain georeferenced information. If that's the case, then you may want to render your data as a web map layer, and the RW API's *layer* endpoints can help you with that.
 
-As we've seen in the [layer concept docs](/concepts.html#layer), a RW API layer may store data in different formats, depending on the needs of its author. This is done using the several open format fields a layer has. To keep this documentation easy to understand, we'll spit our approach to layers into two sections:
+As we've seen in the [layer concept docs](concepts.html#layer), a RW API layer may store data in different formats, depending on the needs of its author. This is done using the several open format fields a layer has. To keep this documentation easy to understand, we'll spit our approach to layers into two sections:
 
 - We'll first discuss the details of the endpoints that allow you to [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) layers, without focusing on the actual data contained in it.
 - In an future version of these docs, we'll dive deeper into some of the most common structures used to store data in the layer's open format fields.
 
-After viewing the documentation below, consider looking at the [webmap tutorial](/tutorials.html#mapbox-webmap-quickstart) for a step-by-step guide to rendering an actual layer on a web application.
+After viewing the documentation below, consider looking at the [webmap tutorial](tutorials.html#mapbox-webmap-quickstart) for a step-by-step guide to rendering an actual layer on a web application.
 
 
 ## Getting all layers
@@ -98,7 +98,7 @@ This endpoint allows you to list existing layers and their properties. The resul
 curl -X GET "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer"
 ```
 
-When handling layers, it's common to want to limit results to those layers associated with a given dataset. Besides the [filters](/reference.html#filters92) covered below, there's an additional convenience endpoint to get the layers associated with a dataset, as shown in this example. 
+When handling layers, it's common to want to limit results to those layers associated with a given dataset. Besides the [filters](reference.html#filters92) covered below, there's an additional convenience endpoint to get the layers associated with a dataset, as shown in this example. 
  
 
 ### Getting all layers for multiple datasets
@@ -262,7 +262,7 @@ Besides the required `ids` array, your request body may optionally include a `ap
 - Use a @ separated list, like `rw@prep`, if you want to show only layers that have both `rw` and `prep` as their applications.
 - Note that the the filters do not need to match on the full application list. For example, the filters `rw,prep` and `rw@prep` will both match a layer with the application list `["rw", "prep", "gfw"]`.
 
-Please note that, unlike [getting all layers](/reference.html#getting-all-layers) or [getting all layers for a dataset](/reference.html#getting-all-layers-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination91), [filtering](#filters92) or [sorting](#sorting93) or [including related entities](/reference.html#include-entities-associated-with-the-layers) described in their respective sections.
+Please note that, unlike [getting all layers](reference.html#getting-all-layers) or [getting all layers for a dataset](reference.html#getting-all-layers-for-a-dataset), this endpoint does not come with paginated results, nor does it support [pagination](#pagination91), [filtering](#filters92) or [sorting](#sorting93) or [including related entities](reference.html#include-entities-associated-with-the-layers) described in their respective sections.
  
 
 ### Pagination
@@ -273,7 +273,7 @@ Please note that, unlike [getting all layers](/reference.html#getting-all-layers
 curl -X GET "https://api.resourcewatch.org/v1/layer?page[number]=2&page[size]=25"
 ```
 
-The Layers service adheres to the conventions defined in the [Pagination guidelines for the RW API](/concepts.html#pagination), so we recommend reading that section for more details on how paginate your layers list.
+The Layers service adheres to the conventions defined in the [Pagination guidelines for the RW API](concepts.html#pagination), so we recommend reading that section for more details on how paginate your layers list.
 
 ### Filters
 
@@ -309,7 +309,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?env=staging"
 curl -X GET "https://api.resourcewatch.org/v1/layer?app=rw"
 ```
 
-The layer list endpoint provides a wide range of filters that you can use to tailor your layer listing. Filtering layers adheres to the conventions defined in the [Filter guidelines for the RW API](/concepts.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you will be able to use the great majority of the layer fields you'll find on the [layer reference](/reference.html#layer-reference) section, with the following exceptions:
+The layer list endpoint provides a wide range of filters that you can use to tailor your layer listing. Filtering layers adheres to the conventions defined in the [Filter guidelines for the RW API](concepts.html#filtering), so we strongly recommend reading that section before proceeding. In addition to these conventions, you will be able to use the great majority of the layer fields you'll find on the [layer reference](reference.html#layer-reference) section, with the following exceptions:
 
 - `id`
 - `userName`
@@ -318,8 +318,8 @@ The layer list endpoint provides a wide range of filters that you can use to tai
 
 Additionally, you can use the following filters:
 
-- `collection`: filters by a [collection](/reference.html#collections) id. Requires being authenticated.
-- `favourite`: if defined, only the layers set by the user as [favorites](/reference.html#favorites) will be returned. Requires being authenticated.
+- `collection`: filters by a [collection](reference.html#collections) id. Requires being authenticated.
+- `favourite`: if defined, only the layers set by the user as [favorites](reference.html#favorites) will be returned. Requires being authenticated.
 
 ### Sorting
 
@@ -347,7 +347,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?sort=-name,+slug"
 curl -X GET "https://api.resourcewatch.org/v1/layer?sort=user.role"
 ```
 
-The Layer service currently supports sorting using the `sort` query parameter. Sorting layer adheres to the conventions defined in the [Sorting guidelines for the RW API](/concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Layer reference](/reference.html#layer-reference) section for a detailed description of the fields you can use when sorting. In addition to all layer model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the layer. Keep in mind that sorting by user data is restricted to ADMIN users.
+The Layer service currently supports sorting using the `sort` query parameter. Sorting layer adheres to the conventions defined in the [Sorting guidelines for the RW API](concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Layer reference](reference.html#layer-reference) section for a detailed description of the fields you can use when sorting. In addition to all layer model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the layer. Keep in mind that sorting by user data is restricted to ADMIN users.
 
 ### Include entities associated with the layers
 
@@ -431,7 +431,7 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?includes=vocabulary"
 }
 ```
 
-Loads all vocabulary entities associated with each layer. Internally this uses the [`dataset/<dataset_id>/layer/<layer_id>/vocabulary`](/reference.html#getting-all-vocabularies-and-tags-for-a-resource) endpoint, and thus it's affected by its behavior - particularly, only vocabularies associated with the `rw` application will be listed. There's currently no way to modify this behavior.
+Loads all vocabulary entities associated with each layer. Internally this uses the [`dataset/<dataset_id>/layer/<layer_id>/vocabulary`](reference.html#getting-all-vocabularies-and-tags-for-a-resource) endpoint, and thus it's affected by its behavior - particularly, only vocabularies associated with the `rw` application will be listed. There's currently no way to modify this behavior.
 
 
 
@@ -591,7 +591,7 @@ If you know the id or the `slug` of a layer, then you can access it directly. Bo
 
 ### Include entities associated with the layer
 
-You can load related `user` and `vocabulary` data in the same request. See [this section](/reference.html#include-entities-associated-with-the-layers) for more details.
+You can load related `user` and `vocabulary` data in the same request. See [this section](reference.html#include-entities-associated-with-the-layers) for more details.
 
 
 ## Creating a layer
@@ -651,21 +651,21 @@ In this section we'll guide you through the process of creating a layer in the R
 
 Before creating a layer, there are a few things you must know and do:
 
-- In order to be able to create a layer, you need to be [authenticated](/reference.html#authentication).
-- Depending on your user account's role, you may have permission to create a layer but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
+- In order to be able to create a layer, you need to be [authenticated](reference.html#authentication).
+- Depending on your user account's role, you may have permission to create a layer but not delete it afterwards - read more about this in [the RW API role-based access control guidelines](concepts.html#role-based-access-control).
 - The layers you create on the RW API will be publicly visible and available to other users.
 
-Creating a layer is done using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [layer reference](/reference.html#layer-reference) section, but the minimum field list you must specify for all layers is:
+Creating a layer is done using a POST request and passing the relevant data as body fields. The supported body fields are as defined on the [layer reference](reference.html#layer-reference) section, but the minimum field list you must specify for all layers is:
 
 - name
 - description 
 - application
 
-There's also a dependency on a dataset id, as it is required to build the POST URL. As noted on the [layer concept](/concepts.html#layer) documentation, a layer is meant to hold the rendering details of a layer, but not the actual data - that should be part of the dataset. While this is not enforced - it's up to your rendering tool to load the data, and it can do it from a RW API dataset or from anywhere else - it's common and best practice to have the data for a layer be sourced from the dataset that's associated with it.
+There's also a dependency on a dataset id, as it is required to build the POST URL. As noted on the [layer concept](concepts.html#layer) documentation, a layer is meant to hold the rendering details of a layer, but not the actual data - that should be part of the dataset. While this is not enforced - it's up to your rendering tool to load the data, and it can do it from a RW API dataset or from anywhere else - it's common and best practice to have the data for a layer be sourced from the dataset that's associated with it.
 
-When a layer is created, a [vocabulary tag](/reference.html#vocabularies-and-tags) for it is automatically created, associated with the dataset tag.
+When a layer is created, a [vocabulary tag](reference.html#vocabularies-and-tags) for it is automatically created, associated with the dataset tag.
 
-The layer service was built to be very flexible, and not be restricted to specific layer rendering libraries or tools. This gives you the freedom to use virtually any rendering technology you want, but it also means you'll have to make additional decisions on how to structure your data into the different open format fields provided by a RW API layer. In a future release of these docs, we'll show you some examples of how existing applications use different rendering tools with the layer endpoints, to give you an idea on how you can structure your own data, and also as a way to help you get started creating your first layers for your own custom applications. Until then, the [tutorials section of the documentation](/tutorials.html) shows an example of how existing raster tile layers may be structured and how the information in the layer response can be utilized by a third-party visualization library.
+The layer service was built to be very flexible, and not be restricted to specific layer rendering libraries or tools. This gives you the freedom to use virtually any rendering technology you want, but it also means you'll have to make additional decisions on how to structure your data into the different open format fields provided by a RW API layer. In a future release of these docs, we'll show you some examples of how existing applications use different rendering tools with the layer endpoints, to give you an idea on how you can structure your own data, and also as a way to help you get started creating your first layers for your own custom applications. Until then, the [tutorials section of the documentation](tutorials.html) shows an example of how existing raster tile layers may be structured and how the information in the layer response can be utilized by a third-party visualization library.
 
 #### Errors for creating a layer
 
@@ -676,7 +676,7 @@ Error code     | Error message  | Description
 401            | Unauthorized   | You are not authenticated.
 403            | Forbidden      | You are trying to create a layer with one or more `application` values that are not associated with your user account. 
 404            | Dataset not found | The provided dataset id does not exist. 
-404            | Error: StatusCodeError: 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset not found\"}]} | The provided dataset exists but is not present on the [graph](/reference.html#graph).
+404            | Error: StatusCodeError: 404 - {\"errors\":[{\"status\":404,\"detail\":\"Dataset not found\"}]} | The provided dataset exists but is not present on the [graph](reference.html#graph).
 
 ## Updating a layer
 
@@ -691,14 +691,14 @@ curl -X PATCH "https://api.resourcewatch.org/v1/dataset/<dataset-id>/layer/<laye
 }'
 ```
 
-The update layer endpoint allows you to modify the details of an existing layer. As noted on the [layer concept](/concepts.html#layer) documentation, the layer object stores the details of how layer is meant to be rendered, but does not contain the actual data. As such, if you are looking to update the data that's being displayed on your map, this is probably not the endpoint you're looking for - you may want to [update your dataset](/reference.html#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
+The update layer endpoint allows you to modify the details of an existing layer. As noted on the [layer concept](concepts.html#layer) documentation, the layer object stores the details of how layer is meant to be rendered, but does not contain the actual data. As such, if you are looking to update the data that's being displayed on your map, this is probably not the endpoint you're looking for - you may want to [update your dataset](reference.html#updating-a-dataset) instead. Use this endpoint if you want to modify things like legend details, color schemes, etc - this will depend on your rendering implementation. 
 
-Unless specified otherwise in their description, all the fields present in the [layer reference](/reference.html#layer-reference) section can be updated using this endpoint. When passing new values for Object type fields, the new value will fully overwrite the previous one. It’s up to you, as an API user, to build any merging logic into your application.
+Unless specified otherwise in their description, all the fields present in the [layer reference](reference.html#layer-reference) section can be updated using this endpoint. When passing new values for Object type fields, the new value will fully overwrite the previous one. It’s up to you, as an API user, to build any merging logic into your application.
 
 To perform this operation, the following conditions must be met:
 
 - the user must be logged in and belong to the same application as the layer
-- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](concepts.html#role-based-access-control).
 
 #### Errors for updating a layer
 
@@ -763,7 +763,7 @@ In order to delete a layer, the following conditions must be met:
 
 - the layer's `protected` property must be set to `false`.
 - the user must be logged in and belong to the same application as the layer.
-- the user must comply with [the RW API role-based access control guidelines](/concepts.html#role-based-access-control).
+- the user must comply with [the RW API role-based access control guidelines](concepts.html#role-based-access-control).
 
 #### Errors for deleting a layer
 
@@ -789,7 +789,7 @@ name                    | String         | Yes                  |               
 dataset                 | String         | Yes                  |                            | Id of the dataset to which the layer corresponds. Set on layer creation, cannot be modified.   
 slug                    | String         | Yes (autogenerated)  |                            | Slug of the layer. Auto generated on creation. Cannot be modified by users.  
 description             | String         | No                   |                            | User defined description of the layer.   
-application             | Array          | Yes                  |                            | Applications associated with this layer. Read more about this field [here](/concepts.html#applications).
+application             | Array          | Yes                  |                            | Applications associated with this layer. Read more about this field [here](concepts.html#applications).
 iso                     | Array          | No                   |                            | List of ISO3 codes of the countries that relate to the layer. If empty (or contains a single element: 'global') then the layer is a global layer.
 provider                | String         | No                   |                            | Layer provider. It typically identifies the source service for the data displayed in the layer.
 type                    | String         | No                   |                            | Layer type.
@@ -797,7 +797,7 @@ userId                  | String         | Yes (autopopulated)  |               
 default                 | Boolean        | No                   | false                      | If the layer should be used as the dataset's default layer.
 protected               | Boolean        | Yes                  | false                      | If the layer is protected. A protected layer cannot be deleted.               
 published               | Boolean        | Yes                  | true                       | If the layer is published or not.                                               
-env                     | String         | Yes                  | production                 | Environment to which the layer belongs. Read more about this field in the [Environments concept section](/concepts.html#environments).
+env                     | String         | Yes                  | production                 | Environment to which the layer belongs. Read more about this field in the [Environments concept section](concepts.html#environments).
 applicationConfig       | Object         | No                   |                            | Schema-less object meant to host application-specific data or behavior configuration.
 layerConfig             | Object         | No                   |                            | Schema-less object meant to define layer specific data, like source of data, styling and animation settings.
 legendConfig            | Object         | No                   |                            | Schema-less object meant to define how a layer legend should be represented visually.
@@ -814,9 +814,9 @@ updatedAt               | Date           | No (autogenerated)   | <current date>
 
 Contextual layers are a simpler version of RW API layers, focused on supporting raster or vector layers that can be intersected with map coordinates. Unlike RW API layers, contextual layers support out-of-the-box downloading layer tiles from a remote tile URL pattern set in the contextual layer itself.
 
-Also, another significant difference between layers and contextual layers is that layers, despite being owned by users, cannot be private - if you create layers, any other RW API user will be able to see them when they [get all layers](/reference.html#getting-all-layers). Contextual layers are, by default, private. However, you can also set your contextual layers to be publicly accessible by other users, if you choose to do so.
+Also, another significant difference between layers and contextual layers is that layers, despite being owned by users, cannot be private - if you create layers, any other RW API user will be able to see them when they [get all layers](reference.html#getting-all-layers). Contextual layers are, by default, private. However, you can also set your contextual layers to be publicly accessible by other users, if you choose to do so.
 
-Another thing you should keep in mind is that, aside from being owned by users, contextual layers can be owned by teams - a separate RW API entity that groups users, assigning some of them a `manager` profile (not to be confused with the [`MANAGER` user role](/concepts.html#user-roles)). If owned by a team, the contextual layer can be fetched or edited by any of the team members, not only by the creator of the contextual layer. Additionally, the contextual layer can also be deleted by a team manager aside from the owner of the contextual layer. Unfortunately, documentation for team endpoints is not up-to-date, so it can be hard to understand how you can interact with teams or use them to create contextual layers. However, for the time being, just keep in mind that contextual layers can be owned by teams, not only by users.
+Another thing you should keep in mind is that, aside from being owned by users, contextual layers can be owned by teams - a separate RW API entity that groups users, assigning some of them a `manager` profile (not to be confused with the [`MANAGER` user role](concepts.html#user-roles)). If owned by a team, the contextual layer can be fetched or edited by any of the team members, not only by the creator of the contextual layer. Additionally, the contextual layer can also be deleted by a team manager aside from the owner of the contextual layer. Unfortunately, documentation for team endpoints is not up-to-date, so it can be hard to understand how you can interact with teams or use them to create contextual layers. However, for the time being, just keep in mind that contextual layers can be owned by teams, not only by users.
 
 Contextual layers are mostly used by the [Forest Watcher mobile application](https://forestwatcher.globalforestwatch.org/), so for more information about contextual layer use cases, please check out the FW app or reach out to a member of the FW team.
 
@@ -920,7 +920,7 @@ curl -X POST "https://api.resourcewatch.org/v1/contextual-layer" \
 
 RW API contextual layers can be associated with either a user or a team. This section details the information you need to provide to create a contextual layer associated with a user. This endpoint is available to all registered API users.
 
-You can create a contextual layer by calling a POST request, passing the relevant data as body fields. The supported body fields are defined in the [contextual layer reference](/reference.html#contextual-layer-reference) section, but the required fields you must provide are `name` and `url`.
+You can create a contextual layer by calling a POST request, passing the relevant data as body fields. The supported body fields are defined in the [contextual layer reference](reference.html#contextual-layer-reference) section, but the required fields you must provide are `name` and `url`.
 
 #### Errors for creating a contextual layer for a user
 
@@ -968,7 +968,7 @@ curl -X POST "https://api.resourcewatch.org/v1/contextual-layer/team/:teamId" \
 
 RW API contextual layers can be associated with either a user or a team. This section details the information you need to provide to create a contextual layer associated with a team. This endpoint is available to all registered API users.
 
-You can create a contextual layer by calling a POST request, passing the relevant data as body fields. The supported body fields are defined on the [contextual layer reference](/reference.html#contextual-layer-reference) section, but the required fields you must provide are `name` and `url`.
+You can create a contextual layer by calling a POST request, passing the relevant data as body fields. The supported body fields are defined on the [contextual layer reference](reference.html#contextual-layer-reference) section, but the required fields you must provide are `name` and `url`.
 
 #### Errors for creating a contextual layer for a team
 
@@ -1016,7 +1016,7 @@ curl -X PATCH "https://api.resourcewatch.org/v1/contextual-layer/:layerId" \
 
 To update the details of an existing contextual layer (either created for a user or a team), you should issue a PATCH request. This endpoint is available to all registered API users. 
 
-Keep in mind that, as in the case of creating a contextual layer, you must provide at least `name` and `url` in all update contextual layer requests. Remember that you can check the [contextual layer reference](/reference.html#contextual-layer-reference) section for the list of fields available.
+Keep in mind that, as in the case of creating a contextual layer, you must provide at least `name` and `url` in all update contextual layer requests. Remember that you can check the [contextual layer reference](reference.html#contextual-layer-reference) section for the list of fields available.
 
 Updating contextual layers also has some caveats:
 

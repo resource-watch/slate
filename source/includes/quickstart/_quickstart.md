@@ -126,7 +126,7 @@ The RW API uses [JSON Web Tokens](https://tools.ietf.org/html/rfc7519) (JWTs) fo
 
 **Warning**: Treat this token like a password. Don't share it with anyone and store it in a safe place (like a password manager). If someone else gains access to your token, they'll be able to do anything that you would be able to do on the RW API, even without access to your Facebook/Google/Apple login or your email and password.
 
-Once generated, your token is valid until any of the user information (name, email, or associated [applications](/concepts.html#applications)) associated with your account changes. If your token becomes invalid, you can just log in via the browser and go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
+Once generated, your token is valid until any of the user information (name, email, or associated [applications](concepts.html#applications)) associated with your account changes. If your token becomes invalid, you can just log in via the browser and go to [https://api.resourcewatch.org/auth/generate-token](https://api.resourcewatch.org/auth/generate-token) to generate a new token.
 
 ## 4. Make a sample request to an authenticated endpoint
 
@@ -142,7 +142,7 @@ Now you're ready to make your first request!
 
 Try making the request you see on the right. Don't forget to replace `your token` with the JWT you generated in the previous step.
 
-In this example, you are requesting your own user information using the [`/auth/user/me` endpoint](/reference.html#get-the-current-user) of the API.
+In this example, you are requesting your own user information using the [`/auth/user/me` endpoint](reference.html#get-the-current-user) of the API.
 
 > Sample user information response
 
@@ -163,4 +163,4 @@ In this example, you are requesting your own user information using the [`/auth/
 }
 ```
 
-Congratulations! You're ready to start using the RW API. To get more familiar with key concepts and features, move on the [concept docs](/concepts.html).
+Congratulations! You're ready to start using the RW API. To get more familiar with key concepts and features, move on the [concept docs](concepts.html).
