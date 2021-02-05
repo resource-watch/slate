@@ -175,6 +175,25 @@ html, body {
     font-size: 12px;
   }
 
+  .toc-list-h3 {
+    background-color: $nav-subitem-bg;
+  }
+  
+  .toc-h3 {
+    padding-left: $nav-padding + $nav-padding + $nav-indent;
+    font-size: 12px;
+  }
+  
+  .toc-list-h4 {
+    display: none;
+    background-color: $nav-subitem-bg;
+  }
+  
+  .toc-h4 {
+    padding-left: $nav-padding + $nav-padding + $nav-padding + $nav-indent;
+    font-size: 12px;
+  }
+
   .toc-footer {
     padding: 1em 0;
     margin-top: 1em;
@@ -328,6 +347,15 @@ html, body {
     clear: both;
   }
 
+  // the div is the tocify hidden div for placeholding stuff
+  & > h1,
+  & > h2,
+  & > h3,
+  & > h4,
+  & > div {
+    clear: both;
+  }
+
   &>h1, &>h2, &>h3, &>h4, &>h5, &>h6, &>p, &>table, &>ul, &>ol, &>aside, &>dl {
     margin-right: $examples-width;
     padding: 0 $main-padding;
@@ -369,6 +397,26 @@ html, body {
     margin-top: 4em;
     margin-bottom: 0;
     border-top: 1px solid #ccc;
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
+    background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
+  }
+
+  h3 {
+    @extend %header-font;
+    font-size: 16px;
+    margin-top: 0.5em;
+    margin-bottom: 0;
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
+    background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
+  }
+
+  h4 {
+    @extend %header-font;
+    font-size: 13px;
+    margin-top: 0.5em;
+    margin-bottom: 0;
     padding-top: 1.2em;
     padding-bottom: 1.2em;
     background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
