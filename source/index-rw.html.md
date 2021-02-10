@@ -6,4 +6,4 @@ title: Reference - Resource Watch API
 
 ---
 
-<meta http-equiv="Refresh" content="0; url='/'" />
+<meta http-equiv="Refresh" content="0; url='index.html'" />
