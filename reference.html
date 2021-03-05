@@ -804,13 +804,13 @@
                             <a href="#include-entities-associated-with-the-widgets" class="toc-h3 toc-link" data-title="Include entities associated with the widgets">Include entities associated with the widgets</a>
                               <ul class="toc-list-h4">
                                   <li>
-                                    <a href="#vocabulary" class="toc-h4 toc-link" data-title="Vocabulary">Vocabulary</a>
+                                    <a href="#include-vocabulary" class="toc-h4 toc-link" data-title="Include Vocabulary">Include Vocabulary</a>
                                   </li>
                                   <li>
-                                    <a href="#user" class="toc-h4 toc-link" data-title="User">User</a>
+                                    <a href="#include-user" class="toc-h4 toc-link" data-title="Include User">Include User</a>
                                   </li>
                                   <li>
-                                    <a href="#metadata" class="toc-h4 toc-link" data-title="Metadata">Metadata</a>
+                                    <a href="#include-metadata" class="toc-h4 toc-link" data-title="Include Metadata">Include Metadata</a>
                                   </li>
                                   <li>
                                     <a href="#requesting-multiple-additional-entities" class="toc-h4 toc-link" data-title="Requesting multiple additional entities">Requesting multiple additional entities</a>
@@ -7637,7 +7637,7 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 <p>The Widget service currently supports sorting using the <code>sort</code> query parameter. Sorting widgets adheres to the conventions defined in the <a href="concepts.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="reference.html#widget-reference">Widget reference</a> section for a detailed description of the fields you can use when sorting. In addition to all widget model fields, you can sort the returned results by the name (using <code>user.name</code>) or role (using <code>user.role</code>) of the user owner of the widget. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
 <h3 id='include-entities-associated-with-the-widgets'>Include entities associated with the widgets</h3>
 <p>When loading widget data, you can optionally pass an <code>includes</code> query argument to load additional data.</p>
-<h4 id='vocabulary'>Vocabulary</h4>
+<h4 id='include-vocabulary'>Include Vocabulary</h4>
 <p>Loads related <a href="reference.html#vocabularies-and-tags">vocabularies</a>. If none are found, an empty array is returned.</p>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/widget?includes=vocabulary"</span>
 </code></pre></div>
@@ -7694,7 +7694,7 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
         </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><h4 id='user'>User</h4><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/widget?includes=user"</span>
+</span></code></pre></div><h4 id='include-user'>Include User</h4><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/widget?includes=user"</span>
 </code></pre></div>
 <blockquote>
 <p>Example response:</p>
@@ -7737,7 +7737,7 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <p>Loads the name and email address of the author of the widget. If the user issuing the request has role <code>ADMIN</code>, the response will also display the role of the widget&#39;s author. If the data is not available (for example, the user has since been deleted), no <code>user</code> property will be added to the widget object.</p>
-<h4 id='metadata'>Metadata</h4><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/widget?includes=metadata"</span>
+<h4 id='include-metadata'>Include Metadata</h4><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/widget?includes=metadata"</span>
 </code></pre></div>
 <blockquote>
 <p>Example response:</p>
