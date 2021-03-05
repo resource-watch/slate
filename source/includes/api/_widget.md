@@ -302,7 +302,7 @@ The Widget service currently supports sorting using the `sort` query parameter. 
 
 When loading widget data, you can optionally pass an `includes` query argument to load additional data.
 
-#### Vocabulary
+#### Include Vocabulary
 
 Loads related [vocabularies](reference.html#vocabularies-and-tags). If none are found, an empty array is returned.
 
@@ -365,7 +365,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=vocabulary"
 }
 ```
 
-#### User
+#### Include User
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?includes=user"
@@ -415,7 +415,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=user"
 Loads the name and email address of the author of the widget. If the user issuing the request has role `ADMIN`, the response will also display the role of the widget's author. If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
 
 
-#### Metadata
+#### Include Metadata
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/widget?includes=metadata"
