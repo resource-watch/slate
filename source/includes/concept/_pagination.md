@@ -95,5 +95,4 @@ The following endpoints adhere to the pagination conventions defined above:
 * [Datasets service](reference.html#dataset)
 * [Layers service](reference.html#layer)
 * [Tasks service](reference.html#tasks)
-* [Users service](reference.html#user-management)
 * [Widgets service](reference.html#widget)
