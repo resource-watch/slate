@@ -371,12 +371,72 @@ Error code     | Error message  | Description
 
 #### Pagination
 
+> Example request using the "cursor" strategy:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/user?strategy=cursor"
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+> Example request using the "offset" strategy:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/user?strategy=offset"
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+Currently, this endpoint supports 2 pagination strategies: **"cursor"** and **"offset"**. Both strategies are available via the "strategy" query parameter: `strategy=offset` to use the "offset" strategy, and `strategy=cursor` to use the "cursor" strategy;
+
+**Until May 1st 2021, if nothing is provided, the default strategy used will be "offset".** After May 1st, the "offset" strategy will be officially deprecated, and the "cursor" strategy will become the default. During this period, the "offset" strategy will still be accessible by passing the `strategy=offset` parameter in the request.
+
+**After September 30th 2021, the "offset" strategy will be officially deprecated.** Passing the `strategy=offset` parameter will no longer be supported, and the "cursor" strategy will remain the default going forward.
+
+**If you are here for the first time, you should use the "cursor" strategy.**
+
+#### Pagination using cursor strategy
+
 > Example request to the first page with "cursor" strategy:
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/auth/user?strategy=cursor"
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
+```
+
+> Example response, including the "links" object in the response body:
+
+```json
+{
+    "data": [
+        {
+            "id": "57bc261af098ce980079873e",
+            "_id": "57bc261af098ce980079873e",
+            "email": "your@email.com",
+            "name": "",
+            "createdAt": "2021-03-24T09:19:25.000Z",
+            "updatedAt": "2021-03-26T09:54:08.000Z",
+            "role": "USER",
+            "provider": "facebook",
+            "extraUserData": { "apps": ["gfw"] }
+        },
+        {...},
+        {...},
+        {...},
+        {...},
+        {...},
+        {...},
+        {...},
+        {...},
+        {...}
+    ],
+    "links": {
+        "self": "http://api.resourcewatch.org/auth/user?strategy=cursor&page[before]=00ucw0wd1cUIGDMed5d6&page[size]=10",
+        "first": "http://api.resourcewatch.org/auth/user?strategy=cursor&page[size]=10",
+        "next": "http://api.resourcewatch.org/auth/user?strategy=cursor&page[after]=00ucw0wd1cUIGDMed5d6&page[size]=10"
+    }
+}
 ```
 
 > Example request to the page after the cursor provided with "cursor" strategy:
@@ -387,6 +447,16 @@ curl -X GET "https://api.resourcewatch.org/auth/user?strategy=cursor&page[after]
 -H "Authorization: Bearer <your-token>" \
 ```
 
+Cursor-based pagination works by returning a slice of results, and a pointer to the end of the slice returned. On subsequent requests, you can then use the cursor to request the next slice of results after (or before) the cursor provided. Cursor-paginated methods accept limiting the amount of returned results through the `page[size]` query parameter - defaults to 10, with a maximum supported value of 200 -, and control of the slice returned through the `page[after]` and `page[before]` query parameters.
+
+By default, if you don't pass a `page[after]` or `page[before]` parameter, you'll receive the first portion of results. Paginated responses include a top-level `links` object in the response body, that includes the link you should use to fetch the previous or next page of data.
+
+If the slice of data you received is smaller than the `page[size]` provided (or 10, the default value), that indicates no further results.
+
+**Please keep in mind that, until May 1st 2021, you need to provide `strategy=cursor` to use this pagination strategy.**
+
+#### Pagination using offset strategy
+
 > DEPRECATED: Example request to load page 2 using 25 results per page using the "offset" strategy:
 
 ```shell
@@ -395,10 +465,15 @@ curl -X GET "https://api.resourcewatch.org/auth/user?strategy=offset&page[number
 -H "Authorization: Bearer <your-token>" \
 ```
 
-This endpoint currently supports 2 pagination strategies:
+Until September 30th 2021, like with many other resources across the RW API, you can also paginate results with a strategy based on page number (`page[number]`)
+and page size (`page[size]`).
 
-* a strategy based on **limit** and **offset**, as you'll find with many other resources across the API. To use this strategy, you should provide a query parameter `strategy=offset` in your request, and identify the page size (`page[size]`) and page number (`page[number]`) you want to fetch. **This strategy has been deprecated - you should migrate to the cursor strategy defined below.**
-* a strategy based on **cursors** - for this strategy, you get the first page of the list, and then use the link defined in the `links.next` property oif the response body to fetch the following page. To use this strategy, you should provide a query parameter `strategy=cursor` in your request, and identify the cursor using the `page[after]` query parameter.
+You can read more about this pagination strategy in the [Pagination guidelines for the RW API](concepts.html#pagination). Please keep in mind that:
+
+* from May 1st 2021 onwards, you need to provide `strategy=offset` to use this pagination strategy;
+* **from September 30th 2021 onwards, this strategy is officially deprecated and will be removed.**
+
+Also, due to the inner workings of the underlying system used by the RW API for user management, the higher the page number is, the longer the response will take to be returned. This is the principal reason we are deprecating this strategy, and a very valid reason why you should avoid using this strategy altogether.
 
 #### Filters
 
