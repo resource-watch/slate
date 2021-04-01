@@ -1900,9 +1900,6 @@
                     <a href="#login-3rd-party-oauth" class="toc-h2 toc-link" data-title="Login (3rd party oauth)">Login (3rd party oauth)</a>
                       <ul class="toc-list-h3">
                           <li>
-                            <a href="#3rd-party-authentication-using-twitter" class="toc-h3 toc-link" data-title="3rd party authentication using Twitter">3rd party authentication using Twitter</a>
-                          </li>
-                          <li>
                             <a href="#3rd-party-authentication-using-google" class="toc-h3 toc-link" data-title="3rd party authentication using Google">3rd party authentication using Google</a>
                           </li>
                           <li>
@@ -1910,6 +1907,9 @@
                           </li>
                           <li>
                             <a href="#3rd-party-authentication-using-apple" class="toc-h3 toc-link" data-title="3rd party authentication using Apple">3rd party authentication using Apple</a>
+                          </li>
+                          <li>
+                            <a href="#common-authorization-callback" class="toc-h3 toc-link" data-title="Common authorization callback">Common authorization callback</a>
                           </li>
                       </ul>
                   </li>
@@ -1922,9 +1922,6 @@
                           <li>
                             <a href="#register-a-new-user-account" class="toc-h3 toc-link" data-title="Register a new user account">Register a new user account</a>
                           </li>
-                          <li>
-                            <a href="#confirm-user-account" class="toc-h3 toc-link" data-title="Confirm user account">Confirm user account</a>
-                          </li>
                       </ul>
                   </li>
                   <li>
@@ -1936,12 +1933,6 @@
                           <li>
                             <a href="#post-lt-base-api-url-gt-auth-reset-password" class="toc-h3 toc-link" data-title="POST <code>&lt;BASE API URL&gt;/auth/reset-password</code>">POST <code>&lt;BASE API URL&gt;/auth/reset-password</code></a>
                           </li>
-                          <li>
-                            <a href="#get-lt-base-api-url-gt-auth-reset-password-token" class="toc-h3 toc-link" data-title="GET <code>&lt;BASE API URL&gt;/auth/reset-password/:token</code>">GET <code>&lt;BASE API URL&gt;/auth/reset-password/:token</code></a>
-                          </li>
-                          <li>
-                            <a href="#post-lt-base-api-url-gt-auth-reset-password-token" class="toc-h3 toc-link" data-title="POST <code>&lt;BASE API URL&gt;/auth/reset-password/:token</code>">POST <code>&lt;BASE API URL&gt;/auth/reset-password/:token</code></a>
-                          </li>
                       </ul>
                   </li>
                   <li>
@@ -1952,6 +1943,12 @@
                               <ul class="toc-list-h4">
                                   <li>
                                     <a href="#pagination" class="toc-h4 toc-link" data-title="Pagination">Pagination</a>
+                                  </li>
+                                  <li>
+                                    <a href="#pagination-using-cursor-strategy" class="toc-h4 toc-link" data-title="Pagination using cursor strategy">Pagination using cursor strategy</a>
+                                  </li>
+                                  <li>
+                                    <a href="#pagination-using-offset-strategy" class="toc-h4 toc-link" data-title="Pagination using offset strategy">Pagination using offset strategy</a>
                                   </li>
                                   <li>
                                     <a href="#filters" class="toc-h4 toc-link" data-title="Filters">Filters</a>
@@ -2443,7 +2440,7 @@
 </tr>
 <tr>
 <td>user.role</td>
-<td>Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
+<td>Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-user-ids-by-role">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></td>
 <td>String</td>
 <td><code>ADMIN</code>, <code>MANAGER</code> or <code>USER</code></td>
 </tr>
@@ -2567,7 +2564,7 @@
 <li><code>layer</code> - loads all layers associated with each dataset.</li>
 <li><code>vocabulary</code> - loads all vocabulary entities associated with each dataset.</li>
 <li><code>metadata</code> - loads all metadata associated with each dataset.</li>
-<li><code>user</code> - loads the name, email address and role of the author of the dataset. If you do not issue this request as an <code>ADMIN</code> user, or if no user data is available, the <code>user</code> object will be empty.</li>
+<li><code>user</code> - loads the name, email address and role of the author of the dataset. If you do not issue this request as an <code>ADMIN</code> user, or if no user data is available, the <code>user</code> object will be empty. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-users-by-ids">underlying endpoint used to find users by ids</a>, the performance of the request while including user information might be degraded.</strong></li>
 </ul>
 
 <p><strong>Note:</strong> If you include related entities (e.g. layers) with query filters, the filters will not cascade to the related entities.</p>
@@ -6262,7 +6259,7 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 <ul>
 <li><code>id</code></li>
 <li><code>userName</code></li>
-<li><code>userRole</code>: filtering by the role of the owning user can be done using the <code>user.role</code> query argument. If the requesting user does not have the ADMIN role, this filter is ignored.</li>
+<li><code>userRole</code>: filtering by the role of the owning user can be done using the <code>user.role</code> query argument. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-user-ids-by-role">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></li>
 <li>Filtering by fields of type <code>Object</code> is not supported.</li>
 </ul>
 
@@ -6376,6 +6373,8 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 <p>Loads the name and email address of the author of the layer. If you request this issue as an authenticated user with <code>ADMIN</code> role, you will additionally get the author&#39;s role.</p>
 
 <p>If the data is not available (for example, the user has since been deleted), no <code>user</code> property will be added to the layer object.</p>
+
+<p><strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-users-by-ids">underlying endpoint used to find users by ids</a>, the performance of the request while including user information might be degraded.</strong></p>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/layer?includes=user"</span>
 </code></pre></div>
 <blockquote>
@@ -7604,7 +7603,7 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 <ul>
 <li><code>id</code></li>
 <li><code>userName</code></li>
-<li><code>userRole</code>: filtering by the role of the owning user can be done using the <code>user.role</code> query argument.</li>
+<li><code>userRole</code>: filtering by the role of the owning user can be done using the <code>user.role</code> query argument. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-user-ids-by-role">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></li>
 </ul>
 
 <p>Additionally, you can use the following filters:</p>
@@ -7737,6 +7736,8 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <p>Loads the name and email address of the author of the widget. If the user issuing the request has role <code>ADMIN</code>, the response will also display the role of the widget&#39;s author. If the data is not available (for example, the user has since been deleted), no <code>user</code> property will be added to the widget object.</p>
+
+<p><strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-users-by-ids">underlying endpoint used to find users by ids</a>, the performance of the request while including user information might be degraded.</strong></p>
 <h4 id='include-metadata'>Include Metadata</h4><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/widget?includes=metadata"</span>
 </code></pre></div>
 <blockquote>
@@ -16401,6 +16402,8 @@ curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/topic?filte
 <p>Loads the name and email address of the author of the topic. If you request this issue as an authenticated user with ADMIN role, you will additionally get the author&#39;s role.</p>
 
 <p>If the data is not available (for example, the user has since been deleted), no <code>user</code> property will be added to the layer object.</p>
+
+<p><strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-users-by-ids">underlying endpoint used to find users by ids</a>, the performance of the request while including user information might be degraded.</strong></p>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/topic?includes<span class="o">=</span>user
 </code></pre></div>
 <blockquote>
@@ -16722,7 +16725,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </tr>
 <tr>
 <td>user.role</td>
-<td style="text-align: center">The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored.</td>
+<td style="text-align: center">The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-user-ids-by-role">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></td>
 <td style="text-align: right"><code>ADMIN</code>, <code>MANAGER</code> or <code>USER</code></td>
 </tr>
 <tr>
@@ -16832,6 +16835,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <p>Loads the name and email address of the owner of the dashboard. If you request this issue as an authenticated user with ADMIN role, you will additionally get the owner&#39;s role.</p>
 
 <p>If the data is not available (for example, the user has since been deleted), no <code>user</code> property will be added to the layer object.</p>
+
+<p><strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-users-by-ids">underlying endpoint used to find users by ids</a>, the performance of the request while including user information might be degraded.</strong></p>
 <h2 id='getting-a-dashboard-by-its-id'>Getting a dashboard by its ID</h2>
 <blockquote>
 <p>How to get a dashboard by its ID:</p>
@@ -17706,44 +17711,41 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <p>For each provider, there&#39;s a corresponding endpoint that starts the authentication flow. These endpoints simply redirect the user to the respective provider page, along with some data that allows the provider to contact the RW API when the login process is finished. You can forward users to these endpoints if, for example, you want to have your own login links on your UI.</p>
 
 <p>Keep in mind that, depending on the <code>origin</code> application you specify, different Twitter, Facebook or Google applications will be used. Also, not all <code>origin</code> applications support all 3 providers.</p>
-<h3 id='3rd-party-authentication-using-twitter'>3rd party authentication using Twitter</h3>
-<ul>
-<li>GET <code>&lt;BASE API URL&gt;/auth/twitter</code> - Starts authentication using the configured Twitter settings</li>
-<li>GET <code>&lt;BASE API URL&gt;/auth/twitter/callback</code> - Callback used once Twitter auth is done</li>
-</ul>
 <h3 id='3rd-party-authentication-using-google'>3rd party authentication using Google</h3>
 <ul>
 <li>GET <code>&lt;BASE API URL&gt;/auth/google</code> - Starts authentication using the configured Google settings</li>
-<li>GET <code>&lt;BASE API URL&gt;/auth/google/callback</code> - Callback used once Google auth is done</li>
 <li>GET <code>&lt;BASE API URL&gt;/auth/google/token?access_token=&lt;Google token&gt;</code> - Endpoint that expects the Google token used by the API to validate the user session. It</li>
 </ul>
 <h3 id='3rd-party-authentication-using-facebook'>3rd party authentication using Facebook</h3>
 <ul>
 <li>GET <code>&lt;BASE API URL&gt;/auth/facebook</code> - Starts authentication using the configured Facebook settings</li>
-<li>GET <code>&lt;BASE API URL&gt;/auth/facebook/callback</code> - Callback used once Facebook auth is done</li>
 <li>GET <code>&lt;BASE API URL&gt;/auth/facebook/token?access_token=&lt;Facebook token&gt;</code> - Endpoint that expects the Facebook token used by the API to validate the user session.</li>
 </ul>
 <h3 id='3rd-party-authentication-using-apple'>3rd party authentication using Apple</h3>
 <ul>
 <li>GET <code>&lt;BASE API URL&gt;/auth/apple</code> - Starts authentication using the configured Apple settings</li>
-<li>POST <code>&lt;BASE API URL&gt;/auth/apple/callback</code> - Callback used once Apple auth is done</li>
 <li>GET <code>&lt;BASE API URL&gt;/auth/apple/token?access_token=&lt;Apple JSON Web Token&gt;</code> - Endpoint that expects the Apple JSON Web Token obtained by the user while authenticating using another application. It validates that token using Apple&#39;s services, and if valid, creates/updates the user&#39;s RW API account. It returns a RW API JSON Web Token.</li>
+</ul>
+<h3 id='common-authorization-callback'>Common authorization callback</h3>
+<p>All forms of 3rd party login return to the same endpoint:</p>
+
+<ul>
+<li>POST <code>&lt;BASE API URL&gt;/auth/authorization-code/callback</code></li>
 </ul>
 <h2 id='registration'>Registration</h2>
 <p>Registration endpoints support both HTML and JSON output formats, depending on the <code>Content-type</code> provided in the request.</p>
 <h3 id='view-the-registration-page'>View the registration page</h3><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/sign-up"</span>
 </code></pre></div>
-<p>Account creation page, for accounts using email + password based login for HTML requests. Not supported on JSON requests.</p>
+<p>Account creation page, for accounts using email-based login for HTML requests. Not supported on JSON requests.</p>
 <h3 id='register-a-new-user-account'>Register a new user account</h3>
 <blockquote>
-<p>Account creation using email + password</p>
+<p>Account creation using email</p>
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="s2">"https://api.resourcewatch.org/auth/sign-up"</span> <span class="se">\</span>
 <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
  <span class="s1">'{
+    "name: "Your name"
     "email":"your-email@provider.com",
-    "password":"potato",
-    "repeatPassword":"potato",
     "apps": ["rw"]
 }'</span>
 </code></pre></div>
@@ -17753,6 +17755,7 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Your name"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-email@provider.com"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-27T10:59:03.531Z"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
@@ -17763,28 +17766,23 @@ If you are accessing these endpoints from a browser, it will typically generate 
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <blockquote>
-<p>Account creation using email + password with a user defined origin app</p>
+<p>Account creation using email with a user defined origin app</p>
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="s2">"https://api.resourcewatch.org/auth/sign-up?origin=rw"</span> <span class="se">\</span>
 <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
  <span class="s1">'{
+    "name: "Your name"
     "email":"your-email@provider.com",
-    "password":"potato",
-    "repeatPassword":"potato",
     "apps": ["rw"]
 }'</span>
 </code></pre></div>
-<p>Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.</p>
-
-<p>The combination of both <code>user email</code> and <code>provider</code> must be unique - a given email address may be associated with multiple, non-related user accounts by using different authentication providers (email+password, facebook, twitter, apple, etc).</p>
+<p>Account creation endpoint, for accounts using email-based login for both HTML and JSON requests. The <code>email</code> must be unique, otherwise a 422 HTTP response will be returned.</p>
 
 <p>For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.</p>
 
 <p>For JSON requests, successful logins will return a JSON object containing the details of the user.</p>
 
-<p>Keep in mind that this endpoint creates a <strong>deactivated</strong> user account. A successful call to this endpoint send an email to the user, with a link that the user must click in order to confirm their account. Once confirmed using this process, the user account becomes activated and fully functional, and the user will be able to log in.</p>
-
-<p>The email sent to the user will have the identity of the <code>origin</code> app provided on the request, with a system-wide fallback (GFW) being used in case none is provided.</p>
+<p>Keep in mind that this endpoint creates a <strong>deactivated</strong> user account. A successful call to this endpoint send an email to the user, with a link that the user must click in order to confirm their account and define their password. Once confirmed using this process, the user account becomes activated and fully functional, and the user will be able to log in.</p>
 
 <p>While optional, it&#39;s highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user&#39;s apps match datasets, widgets, etc. All accounts created this way will have the <code>USER</code> role.</p>
 
@@ -17804,47 +17802,10 @@ If you are accessing these endpoints from a browser, it will typically generate 
 </tr>
 <tr>
 <td>422</td>
-<td>Email, Password and Repeat password are required.</td>
+<td>Email is required.</td>
 <td>You are missing one of the required fields.</td>
 </tr>
 </tbody></table>
-<h3 id='confirm-user-account'>Confirm user account</h3>
-<blockquote>
-<p>JSON Request:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/confirm/:token"</span> <span class="se">\</span>
-<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>
-</code></pre></div>
-<blockquote>
-<p>JSON Response:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadc495eae7358322dd64b"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadc495eae7358322dd64b"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info@vizzuality.com"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:06:17.676Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:06:17.676Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<blockquote>
-<p>Request with callback:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/confirm/:token?callbackUrl=https://your-app.com"</span>
-</code></pre></div>
-<p>Endpoint used in the user validation email to confirm the address upon registration.</p>
-
-<p>It accepts an optional <code>callbackUrl</code> query parameter with an URL to which the user will be redirect if the confirmation succeeds.</p>
-
-<p>Should no <code>callbackUrl</code> be provided, the user is redirected to an URL based on the first application associated to their user account - see <code>ct-oauth-plugin</code> configuration for more info.</p>
-
-<p>Should that application have no configured redirect URL, or the user have no configured app, they are redirect to a platform-wide default URL - see <code>ct-oauth-plugin</code> configuration for more info.</p>
 <h2 id='password-recovery'>Password recovery</h2>
 <p>Password recovery endpoints support both HTML and JSON output formats, depending on the <code>Content-type</code> provided in the request. These can be used either as part of your application (for example, if you want your UI to have these features built in) or as a standalone, end user facing interface (for applications that prefer to rely on the existing UI elements provided by the RW API).</p>
 <h3 id='get-lt-base-api-url-gt-auth-reset-password'>GET <code>&lt;BASE API URL&gt;/auth/reset-password</code></h3>
@@ -17885,85 +17846,6 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <td>You need to specify the email address in the request body.</td>
 </tr>
 </tbody></table>
-<h3 id='get-lt-base-api-url-gt-auth-reset-password-token'>GET <code>&lt;BASE API URL&gt;/auth/reset-password/:token</code></h3>
-<p>Endpoint used when the user clicks the link sent in the reset password email. This endpoint is meant to be used only by the end user.</p>
-
-<p><strong>Errors</strong></p>
-
-<table><thead>
-<tr>
-<th>Error code</th>
-<th>Error message</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>422</td>
-<td>Token expired.</td>
-<td>The reset password link is more than 24 hours old and is no longer valid.</td>
-</tr>
-</tbody></table>
-<h3 id='post-lt-base-api-url-gt-auth-reset-password-token'>POST <code>&lt;BASE API URL&gt;/auth/reset-password/:token</code></h3>
-<blockquote>
-<p>New password submission</p>
-</blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="s2">"https://api.resourcewatch.org/auth/reset-password/&lt;email token&gt;"</span> <span class="se">\</span>
-<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
- <span class="s1">'{
-    "password":"potato",
-    "repeatPassword":"potato"
-}'</span>
-</code></pre></div>
-<blockquote>
-<p>Response</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADMIN"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5dbadb0adf24534d1ad05dfb"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.user@example.com"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-            </span><span class="s2">"rw"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"gfw"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-31T13:00:58.191Z"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p>Endpoint used to submit the new password.</p>
-
-<p>For HTML requests, it will redirect the user to the configured redirect URL on success, or return to the &quot;Reset your password&quot; form on error.</p>
-
-<p>For JSON requests, it will return the user object on success, or a JSON object containing details in case of error.</p>
-
-<p><strong>Errors</strong></p>
-
-<table><thead>
-<tr>
-<th>Error code</th>
-<th>Error message</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>422</td>
-<td>Token expired.</td>
-<td>The reset password link is more than 24 hours old and is no longer valid.</td>
-</tr>
-<tr>
-<td>422</td>
-<td>Password and Repeat password are required.</td>
-<td>You need to specify both the <code>password</code> and the <code>repeatPassword</code> values.</td>
-</tr>
-<tr>
-<td>422</td>
-<td>Password and Repeat password not equal.</td>
-<td>You need to specify equal <code>password</code> and <code>repeatPassword</code> values.</td>
-</tr>
-</tbody></table>
 <h2 id='user-details-management'>User details management</h2>
 <p>This section covers endpoints that focus on retrieving, modifying or deleting user accounts. Unlike previous endpoints, these are meant to be consumed by applications, and will always produce a JSON response.</p>
 <h3 id='getting-all-users'>Getting all users</h3>
@@ -17996,14 +17878,8 @@ If you are accessing these endpoints from a browser, it will typically generate 
      </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
          </span><span class="nl">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
          </span><span class="nl">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
-         </span><span class="nl">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
          </span><span class="nl">"prev"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="p">,</span><span class="w">
          </span><span class="nl">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=1&amp;page[size]=10"</span><span class="w">
-     </span><span class="p">},</span><span class="w">
-     </span><span class="nl">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-         </span><span class="nl">"total-pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-         </span><span class="nl">"total-items"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-         </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
      </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
@@ -18026,13 +17902,100 @@ If you are accessing these endpoints from a browser, it will typically generate 
 </tbody></table>
 <h4 id='pagination'>Pagination</h4>
 <blockquote>
-<p>Example request to load page 2 using 25 results per page</p>
+<p>Example request using the &quot;cursor&quot; strategy:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/user?page[number]=2&amp;page[size]=25"</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/user?strategy=cursor"</span>
 <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
 <span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
 </code></pre></div>
-<p>The Users service adheres to the conventions defined in the <a href="concepts.html#pagination">Pagination guidelines for the RW API</a>, so we recommend reading that section for more details on how paginate your users list.</p>
+<blockquote>
+<p>Example request using the &quot;offset&quot; strategy:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/user?strategy=offset"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre></div>
+<p>Currently, this endpoint supports 2 pagination strategies: <strong>&quot;cursor&quot;</strong> and <strong>&quot;offset&quot;</strong>. Both strategies are available via the &quot;strategy&quot; query parameter: <code>strategy=offset</code> to use the &quot;offset&quot; strategy, and <code>strategy=cursor</code> to use the &quot;cursor&quot; strategy;</p>
+
+<p><strong>Until May 1st 2021, if nothing is provided, the default strategy used will be &quot;offset&quot;.</strong> After May 1st, the &quot;offset&quot; strategy will be officially deprecated, and the &quot;cursor&quot; strategy will become the default. During this period, the &quot;offset&quot; strategy will still be accessible by passing the <code>strategy=offset</code> parameter in the request.</p>
+
+<p><strong>After September 30th 2021, the &quot;offset&quot; strategy will be officially deprecated.</strong> Passing the <code>strategy=offset</code> parameter will no longer be supported, and the &quot;cursor&quot; strategy will remain the default going forward.</p>
+
+<p><strong>If you are here for the first time, you should use the &quot;cursor&quot; strategy.</strong></p>
+<h4 id='pagination-using-cursor-strategy'>Pagination using cursor strategy</h4>
+<blockquote>
+<p>Example request to the first page with &quot;cursor&quot; strategy:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/user?strategy=cursor"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre></div>
+<blockquote>
+<p>Example response, including the &quot;links&quot; object in the response body:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc261af098ce980079873e"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57bc261af098ce980079873e"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your@email.com"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-24T09:19:25.000Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-26T09:54:08.000Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"gfw"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="err">...</span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"self"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/auth/user?strategy=cursor&amp;page[before]=00ucw0wd1cUIGDMed5d6&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/auth/user?strategy=cursor&amp;page[size]=10"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://api.resourcewatch.org/auth/user?strategy=cursor&amp;page[after]=00ucw0wd1cUIGDMed5d6&amp;page[size]=10"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<blockquote>
+<p>Example request to the page after the cursor provided with &quot;cursor&quot; strategy:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/user?strategy=cursor&amp;page[after]=00ucw0wd1cUIGDMed5d6"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre></div>
+<p>Cursor-based pagination works by returning a slice of results, and a pointer to the end of the slice returned. On subsequent requests, you can then use the cursor to request the next slice of results after (or before) the cursor provided. Cursor-paginated methods accept limiting the amount of returned results through the <code>page[size]</code> query parameter - defaults to 10, with a maximum supported value of 200 -, and control of the slice returned through the <code>page[after]</code> and <code>page[before]</code> query parameters.</p>
+
+<p>By default, if you don&#39;t pass a <code>page[after]</code> or <code>page[before]</code> parameter, you&#39;ll receive the first portion of results. Paginated responses include a top-level <code>links</code> object in the response body, that includes the link you should use to fetch the previous or next page of data.</p>
+
+<p>If the slice of data you received is smaller than the <code>page[size]</code> provided (or 10, the default value), that indicates no further results.</p>
+
+<p><strong>Please keep in mind that, until May 1st 2021, you need to provide <code>strategy=cursor</code> to use this pagination strategy.</strong></p>
+<h4 id='pagination-using-offset-strategy'>Pagination using offset strategy</h4>
+<blockquote>
+<p>DEPRECATED: Example request to load page 2 using 25 results per page using the &quot;offset&quot; strategy:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/auth/user?strategy=offset&amp;page[number]=2&amp;page[size]=25"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+</code></pre></div>
+<p>Until September 30th 2021, like with many other resources across the RW API, you can also paginate results with a strategy based on page number (<code>page[number]</code>)
+and page size (<code>page[size]</code>).</p>
+
+<p>You can read more about this pagination strategy in the <a href="concepts.html#pagination">Pagination guidelines for the RW API</a>. Please keep in mind that:</p>
+
+<ul>
+<li>from May 1st 2021 onwards, you need to provide <code>strategy=offset</code> to use this pagination strategy;</li>
+<li><strong>from September 30th 2021 onwards, this strategy is officially deprecated and will be removed.</strong></li>
+</ul>
+
+<p>Also, due to the inner workings of the underlying system used by the RW API for user management, the higher the page number is, the longer the response will take to be returned. This is the principal reason we are deprecating this strategy, and a very valid reason why you should avoid using this strategy altogether.</p>
 <h4 id='filters'>Filters</h4>
 <blockquote>
 <p>List users with the ADMIN role (and associated with the current user&#39;s app)</p>

@@ -825,6 +825,17 @@
               </ul>
           </li>
           <li>
+            <a href="#user-management" class="toc-h1 toc-link" data-title="User Management">User Management</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#finding-users-by-ids" class="toc-h2 toc-link" data-title="Finding users by ids">Finding users by ids</a>
+                  </li>
+                  <li>
+                    <a href="#finding-user-ids-by-role" class="toc-h2 toc-link" data-title="Finding user ids by role">Finding user ids by role</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#graph" class="toc-h1 toc-link" data-title="Graph">Graph</a>
               <ul class="toc-list-h2">
                   <li>
@@ -3582,6 +3593,74 @@ curl <span class="nt">-X</span> POST https://api.resourcewatch.org/auth/user/fin
 <td style="text-align: right">1</td>
 </tr>
 </tbody></table>
+<h1 id='user-management'>User Management</h1>
+<p>When communicating with the Authorization microservice from other microservices, you have access to additional endpoints that are not available when using the public API. This section details these endpoints.</p>
+<h2 id='finding-users-by-ids'>Finding users by ids</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST https://api.resourcewatch.org/auth/user/find-by-ids <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span>  <span class="nt">-d</span> <span class="se">\</span>
+ <span class="s1">'{ "ids": ["5e4d273dce77c53768bc24f9"] }'</span>
+</code></pre></div>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d273dce77c53768bc24f9"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5e4d273dce77c53768bc24f9"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your@email.com"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-24T09:19:25.000Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-26T09:54:08.000Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"gfw"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>You can find a set of users given their ids using the following endpoint. The ids of the users to find should be provided in the <code>ids</code> field of the request body.</p>
+
+<p>Please keep in mind that, under the hood, user management relies on Okta - for this reason, this endpoint depends on Okta&#39;s user search functionalities to find users by ids, and thus, inherits Okta&#39;s limitations. Okta limits user search at a maximum of 200 users per request, so in practice, this means we can only fetch pages of 200 users at a time. If you try to find, for instance, 400 users by ids, 2 requests will need to be made to Okta to fulfill this request, and as such, the performance of this endpoint might be degraded.</p>
+
+<p><strong>Due to these limitations, we advise only resort to this endpoint when you have no other valid alternative to find users. Even in that case, you might run into slow response times or, ultimately, not receiving the expected results when calling this endpoint.</strong></p>
+<h2 id='finding-user-ids-by-role'>Finding user ids by role</h2>
+<blockquote>
+<p>Request structure to find user ids by role:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/auth/user/ids/:role <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre></div>
+<blockquote>
+<p>Example request to find user ids of ADMIN users:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/auth/user/ids/ADMIN <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span>
+</code></pre></div>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"5e4d273dce77c53768bc24f9"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"5e4d273dce77c53768bc24f8"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"5e4d273dce77c53768bc24f7"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"5e4d273dce77c53768bc24f6"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"5e4d273dce77c53768bc24f5"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"5e4d273dce77c53768bc24f4"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"5e4d273dce77c53768bc24f3"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>You can find the ids of the users for a given role using the following endpoint. Valid roles include &quot;USER&quot;, &quot;MANAGER&quot; and &quot;ADMIN&quot;. The response includes the array of ids matching the role provided in the <code>data</code> field.</p>
+
+<p>Please keep in mind that, under the hood, user management relies on Okta - for this reason, this endpoint depends on Okta&#39;s user search functionalities to find users by role, and thus, inherits Okta&#39;s limitations. Okta limits user search at a maximum of 200 users per request, so in practice, this means we can only fetch pages of 200 users at a time. If you try to find, for instance, users for the &quot;USER&quot; role, since there&#39;s a high number of &quot;USER&quot; users, many requests will have to be made to Okta to fulfill this request. As such, the performance of this endpoint might be degraded.</p>
+
+<p><strong>Due to these limitations, we advise only resort to this endpoint when you have no other valid alternative to find users. Even in that case, you might run into slow response times or, ultimately, not receiving the expected results when calling this endpoint.</strong></p>
+
+<p>Also, please note that existing endpoints may rely on this endpoint to be able to fulfill their requests. This is the case of sorting or filtering datasets/widgets/layers by user role, for instance. As such, the performance of these endpoints may also be affected by the degradation of performance of this endpoint. </p>
 <h1 id='graph'>Graph</h1>
 <p>The interaction with some of the graph endpoints is restricted to other RW API services - the following sections describe these endpoints. Keep in mind user-facing graph endpoints are described in detail in the <a href="reference.html#graph">graph endpoint documentation</a>. The <a href="concepts.html#graph">graph concept docs</a> might also be a useful resource for learning what the RW API graph is and what it has to offer you.</p>
 <h2 id='creating-dataset-graph-nodes'>Creating dataset graph nodes</h2>
