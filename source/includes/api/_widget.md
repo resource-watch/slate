@@ -263,7 +263,7 @@ The widget list endpoint provides a wide range of filters that you can use to ta
 
 - `id`
 - `userName`
-- `userRole`: filtering by the role of the owning user can be done using the `user.role` query argument.
+- `userRole`: filtering by the role of the owning user can be done using the `user.role` query argument. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#finding-user-ids-by-role), the performance of the request while using this filter might be degraded.**
 
 Additionally, you can use the following filters:
 
@@ -414,6 +414,7 @@ curl -X GET "https://api.resourcewatch.org/v1/widget?includes=user"
 
 Loads the name and email address of the author of the widget. If the user issuing the request has role `ADMIN`, the response will also display the role of the widget's author. If the data is not available (for example, the user has since been deleted), no `user` property will be added to the widget object.
 
+**Please keep in mind that, due to the limitations of the [underlying endpoint used to find users by ids](developer.html#finding-users-by-ids), the performance of the request while including user information might be degraded.**
 
 #### Include Metadata
 
