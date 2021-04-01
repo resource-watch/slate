@@ -88,7 +88,7 @@ name           | Filter dashboards by name (partial matches and case-insensitive
 published      | Filter dashboards by publishing status (true, false).                             | Boolean
 private        | Filter dashboards by private status (true, false).                                | Boolean
 user           | Filter dashboards by author user id.                                              | Text
-user.role      | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. | `ADMIN`, `MANAGER` or `USER`
+user.role      | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#finding-user-ids-by-role), the performance of the request while using this filter might be degraded.** | `ADMIN`, `MANAGER` or `USER`
 application    | The application to which the dashboard belongs. Read more about this field [here](concepts.html#applications). | Text (single value)
 is-highlighted | Filter dashboards by highlighted ones (true,false).                               | Boolean
 is-featured    | Filter dashboards by featured ones (true,false).                                  | Boolean
@@ -194,6 +194,8 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?includes=user
 Loads the name and email address of the owner of the dashboard. If you request this issue as an authenticated user with ADMIN role, you will additionally get the owner's role.
 
 If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
+
+**Please keep in mind that, due to the limitations of the [underlying endpoint used to find users by ids](developer.html#finding-users-by-ids), the performance of the request while including user information might be degraded.**
 
 ## Getting a dashboard by its ID
 

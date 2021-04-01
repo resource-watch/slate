@@ -23,6 +23,7 @@ includes:
   - dev/microservices
   - dev/areas_notification_emails
   - dev/subscriptions
+  - dev/user_management
   - dev/graph
 
 logo: logo-rw.png

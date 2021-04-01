@@ -184,28 +184,26 @@ For each provider, there's a corresponding endpoint that starts the authenticati
 
 Keep in mind that, depending on the `origin` application you specify, different Twitter, Facebook or Google applications will be used. Also, not all `origin` applications support all 3 providers.
 
-### 3rd party authentication using Twitter
-
-- GET `<BASE API URL>/auth/twitter` - Starts authentication using the configured Twitter settings
-- GET `<BASE API URL>/auth/twitter/callback` - Callback used once Twitter auth is done
-
 ### 3rd party authentication using Google
 
 - GET `<BASE API URL>/auth/google` - Starts authentication using the configured Google settings
-- GET `<BASE API URL>/auth/google/callback` - Callback used once Google auth is done
 - GET `<BASE API URL>/auth/google/token?access_token=<Google token>` - Endpoint that expects the Google token used by the API to validate the user session. It
 
 ### 3rd party authentication using Facebook
 
 - GET `<BASE API URL>/auth/facebook` - Starts authentication using the configured Facebook settings
-- GET `<BASE API URL>/auth/facebook/callback` - Callback used once Facebook auth is done
 - GET `<BASE API URL>/auth/facebook/token?access_token=<Facebook token>` - Endpoint that expects the Facebook token used by the API to validate the user session.
 
 ### 3rd party authentication using Apple
 
 - GET `<BASE API URL>/auth/apple` - Starts authentication using the configured Apple settings
-- POST `<BASE API URL>/auth/apple/callback` - Callback used once Apple auth is done
 - GET `<BASE API URL>/auth/apple/token?access_token=<Apple JSON Web Token>` - Endpoint that expects the Apple JSON Web Token obtained by the user while authenticating using another application. It validates that token using Apple's services, and if valid, creates/updates the user's RW API account. It returns a RW API JSON Web Token.
+
+### Common authorization callback
+
+All forms of 3rd party login return to the same endpoint:
+
+- POST `<BASE API URL>/auth/authorization-code/callback`
 
 ## Registration
 
@@ -217,20 +215,19 @@ Registration endpoints support both HTML and JSON output formats, depending on t
 curl -X GET "https://api.resourcewatch.org/auth/sign-up"
 ```
 
-Account creation page, for accounts using email + password based login for HTML requests. Not supported on JSON requests.
+Account creation page, for accounts using email-based login for HTML requests. Not supported on JSON requests.
 
 
 ### Register a new user account
 
-> Account creation using email + password
+> Account creation using email
 
 ```shell
 curl -X POST "https://api.resourcewatch.org/auth/sign-up" \
 -H "Content-Type: application/json"  -d \
  '{
+    "name: "Your name"
     "email":"your-email@provider.com",
-    "password":"potato",
-    "repeatPassword":"potato",
     "apps": ["rw"]
 }'
 ```
@@ -241,6 +238,7 @@ curl -X POST "https://api.resourcewatch.org/auth/sign-up" \
 {
   "data": {
     "id": "5bfd237767b3176dd63f2eb7",
+    "name": "Your name",
     "email": "your-email@provider.com",
     "createdAt": "2018-11-27T10:59:03.531Z",
     "role": "USER",
@@ -251,30 +249,25 @@ curl -X POST "https://api.resourcewatch.org/auth/sign-up" \
 }
 ```
 
-> Account creation using email + password with a user defined origin app
+> Account creation using email with a user defined origin app
 
 ```shell
 curl -X POST "https://api.resourcewatch.org/auth/sign-up?origin=rw" \
 -H "Content-Type: application/json"  -d \
  '{
+    "name: "Your name"
     "email":"your-email@provider.com",
-    "password":"potato",
-    "repeatPassword":"potato",
     "apps": ["rw"]
 }'
 ```
 
-Account creation endpoint, for accounts using email + password based login for both HTML and JSON requests.
-
-The combination of both `user email` and `provider` must be unique - a given email address may be associated with multiple, non-related user accounts by using different authentication providers (email+password, facebook, twitter, apple, etc).
+Account creation endpoint, for accounts using email-based login for both HTML and JSON requests. The `email` must be unique, otherwise a 422 HTTP response will be returned.
 
 For HTML requests, it will display a message informing about any validation error, or informing the user in case of success.
 
 For JSON requests, successful logins will return a JSON object containing the details of the user.
 
-Keep in mind that this endpoint creates a **deactivated** user account. A successful call to this endpoint send an email to the user, with a link that the user must click in order to confirm their account. Once confirmed using this process, the user account becomes activated and fully functional, and the user will be able to log in.
-
-The email sent to the user will have the identity of the `origin` app provided on the request, with a system-wide fallback (GFW) being used in case none is provided.
+Keep in mind that this endpoint creates a **deactivated** user account. A successful call to this endpoint send an email to the user, with a link that the user must click in order to confirm their account and define their password. Once confirmed using this process, the user account becomes activated and fully functional, and the user will be able to log in.
 
 While optional, it's highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user's apps match datasets, widgets, etc. All accounts created this way will have the `USER` role.
 
@@ -283,50 +276,8 @@ While optional, it's highly recommended that you specify which apps the user wil
 Error code     | Error message  | Description
 -------------- | -------------- | --------------
 422            | Email exists.  | An account already exists for the provided email address.
-422            | Email, Password and Repeat password are required.  | You are missing one of the required fields.
+422            | Email is required.  | You are missing one of the required fields.
 
-
-### Confirm user account
-
-> JSON Request:
-
-```shell
-curl -X GET "https://api.resourcewatch.org/auth/confirm/:token" \
--H "Content-Type: application/json"
-```
-
-> JSON Response:
-
-```json
-{
-    "data": {
-        "id": "5dbadc495eae7358322dd64b",
-        "_id": "5dbadc495eae7358322dd64b",
-        "email": "info@vizzuality.com",
-        "createdAt": "2019-10-31T13:06:17.676Z",
-        "updatedAt": "2019-10-31T13:06:17.676Z",
-        "role": "USER",
-        "provider": "local",
-        "extraUserData": {
-            "apps": []
-        }
-    }
-}
-```
-
-> Request with callback:
-
-```shell
-curl -X GET "https://api.resourcewatch.org/auth/confirm/:token?callbackUrl=https://your-app.com"
-```
-
-Endpoint used in the user validation email to confirm the address upon registration.
-
-It accepts an optional `callbackUrl` query parameter with an URL to which the user will be redirect if the confirmation succeeds.
-
-Should no `callbackUrl` be provided, the user is redirected to an URL based on the first application associated to their user account - see `ct-oauth-plugin` configuration for more info.
-
-Should that application have no configured redirect URL, or the user have no configured app, they are redirect to a platform-wide default URL - see `ct-oauth-plugin` configuration for more info.
 
 ## Password recovery
 
@@ -367,64 +318,6 @@ Error code     | Error message  | Description
 -------------- | -------------- | --------------
 422            | Mail required. | You need to specify the email address in the request body.
 
-### GET `<BASE API URL>/auth/reset-password/:token`
-
-Endpoint used when the user clicks the link sent in the reset password email. This endpoint is meant to be used only by the end user.
-
-**Errors**
-
-Error code     | Error message  | Description
--------------- | -------------- | --------------
-422            | Token expired. | The reset password link is more than 24 hours old and is no longer valid.
-
-
-### POST `<BASE API URL>/auth/reset-password/:token`
-
-> New password submission
-
-```shell
-curl -X POST "https://api.resourcewatch.org/auth/reset-password/<email token>" \
--H "Content-Type: application/json"  -d \
- '{
-    "password":"potato",
-    "repeatPassword":"potato"
-}'
-```
-
-> Response
-
-```json
-{
-    "provider": "local",
-    "role": "ADMIN",
-    "_id": "5dbadb0adf24534d1ad05dfb",
-    "id": "5dbadb0adf24534d1ad05dfb",
-    "email": "test.user@example.com",
-    "extraUserData": {
-        "apps": [
-            "rw",
-            "gfw"
-        ]
-    },
-    "createdAt": "2019-10-31T13:00:58.191Z",
-    "updatedAt": "2019-10-31T13:00:58.191Z"
-}
-```
-
-Endpoint used to submit the new password.
-
-For HTML requests, it will redirect the user to the configured redirect URL on success, or return to the "Reset your password" form on error.
-
-For JSON requests, it will return the user object on success, or a JSON object containing details in case of error.
-
-**Errors**
-
-Error code     | Error message  | Description
--------------- | -------------- | --------------
-422            | Token expired. | The reset password link is more than 24 hours old and is no longer valid.
-422            | Password and Repeat password are required. | You need to specify both the `password` and the `repeatPassword` values.
-422            | Password and Repeat password not equal. | You need to specify equal `password` and `repeatPassword` values.
-                                                           
 
 ## User details management
 
@@ -462,14 +355,8 @@ curl -X GET "https://api.resourcewatch.org/auth/user"
      "links": {
          "self": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
          "first": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
-         "last": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
          "prev": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10",
          "next": "https://api.resourcewatch.org/auth/user?page[number]=1&page[size]=10"
-     },
-     "meta": {
-         "total-pages": 1,
-         "total-items": 3,
-         "size": 10
      }
 }
 ```
@@ -484,15 +371,109 @@ Error code     | Error message  | Description
 
 #### Pagination
 
-> Example request to load page 2 using 25 results per page
+> Example request using the "cursor" strategy:
 
 ```shell
-curl -X GET "https://api.resourcewatch.org/auth/user?page[number]=2&page[size]=25"
+curl -X GET "https://api.resourcewatch.org/auth/user?strategy=cursor"
 -H "Content-Type: application/json"  -d \
 -H "Authorization: Bearer <your-token>" \
 ```
 
-The Users service adheres to the conventions defined in the [Pagination guidelines for the RW API](concepts.html#pagination), so we recommend reading that section for more details on how paginate your users list.
+> Example request using the "offset" strategy:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/user?strategy=offset"
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+Currently, this endpoint supports 2 pagination strategies: **"cursor"** and **"offset"**. Both strategies are available via the "strategy" query parameter: `strategy=offset` to use the "offset" strategy, and `strategy=cursor` to use the "cursor" strategy;
+
+**Until May 1st 2021, if nothing is provided, the default strategy used will be "offset".** After May 1st, the "offset" strategy will be officially deprecated, and the "cursor" strategy will become the default. During this period, the "offset" strategy will still be accessible by passing the `strategy=offset` parameter in the request.
+
+**After September 30th 2021, the "offset" strategy will be officially deprecated.** Passing the `strategy=offset` parameter will no longer be supported, and the "cursor" strategy will remain the default going forward.
+
+**If you are here for the first time, you should use the "cursor" strategy.**
+
+#### Pagination using cursor strategy
+
+> Example request to the first page with "cursor" strategy:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/user?strategy=cursor"
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+> Example response, including the "links" object in the response body:
+
+```json
+{
+    "data": [
+        {
+            "id": "57bc261af098ce980079873e",
+            "_id": "57bc261af098ce980079873e",
+            "email": "your@email.com",
+            "name": "",
+            "createdAt": "2021-03-24T09:19:25.000Z",
+            "updatedAt": "2021-03-26T09:54:08.000Z",
+            "role": "USER",
+            "provider": "local",
+            "extraUserData": { "apps": ["gfw"] }
+        },
+        {...},
+        {...},
+        {...},
+        {...},
+        {...},
+        {...},
+        {...},
+        {...},
+        {...}
+    ],
+    "links": {
+        "self": "http://api.resourcewatch.org/auth/user?strategy=cursor&page[before]=00ucw0wd1cUIGDMed5d6&page[size]=10",
+        "first": "http://api.resourcewatch.org/auth/user?strategy=cursor&page[size]=10",
+        "next": "http://api.resourcewatch.org/auth/user?strategy=cursor&page[after]=00ucw0wd1cUIGDMed5d6&page[size]=10"
+    }
+}
+```
+
+> Example request to the page after the cursor provided with "cursor" strategy:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/user?strategy=cursor&page[after]=00ucw0wd1cUIGDMed5d6"
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+Cursor-based pagination works by returning a slice of results, and a pointer to the end of the slice returned. On subsequent requests, you can then use the cursor to request the next slice of results after (or before) the cursor provided. Cursor-paginated methods accept limiting the amount of returned results through the `page[size]` query parameter - defaults to 10, with a maximum supported value of 200 -, and control of the slice returned through the `page[after]` and `page[before]` query parameters.
+
+By default, if you don't pass a `page[after]` or `page[before]` parameter, you'll receive the first portion of results. Paginated responses include a top-level `links` object in the response body, that includes the link you should use to fetch the previous or next page of data.
+
+If the slice of data you received is smaller than the `page[size]` provided (or 10, the default value), that indicates no further results.
+
+**Please keep in mind that, until May 1st 2021, you need to provide `strategy=cursor` to use this pagination strategy.**
+
+#### Pagination using offset strategy
+
+> DEPRECATED: Example request to load page 2 using 25 results per page using the "offset" strategy:
+
+```shell
+curl -X GET "https://api.resourcewatch.org/auth/user?strategy=offset&page[number]=2&page[size]=25"
+-H "Content-Type: application/json"  -d \
+-H "Authorization: Bearer <your-token>" \
+```
+
+Until September 30th 2021, like with many other resources across the RW API, you can also paginate results with a strategy based on page number (`page[number]`)
+and page size (`page[size]`).
+
+You can read more about this pagination strategy in the [Pagination guidelines for the RW API](concepts.html#pagination). Please keep in mind that:
+
+* from May 1st 2021 onwards, you need to provide `strategy=offset` to use this pagination strategy;
+* **from September 30th 2021 onwards, this strategy is officially deprecated and will be removed.**
+
+Also, due to the inner workings of the underlying system used by the RW API for user management, the higher the page number is, the longer the response will take to be returned. This is the principal reason we are deprecating this strategy, and a very valid reason why you should avoid using this strategy altogether.
 
 #### Filters
 

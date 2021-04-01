@@ -90,6 +90,8 @@ Loads the name and email address of the author of the topic. If you request this
 
 If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
 
+**Please keep in mind that, due to the limitations of the [underlying endpoint used to find users by ids](developer.html#finding-users-by-ids), the performance of the request while including user information might be degraded.**
+
 ```shell
 curl -X GET https://api.resourcewatch.org/v1/topic?includes=user
 ```

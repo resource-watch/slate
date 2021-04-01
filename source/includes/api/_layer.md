@@ -313,7 +313,7 @@ The layer list endpoint provides a wide range of filters that you can use to tai
 
 - `id`
 - `userName`
-- `userRole`: filtering by the role of the owning user can be done using the `user.role` query argument. If the requesting user does not have the ADMIN role, this filter is ignored.
+- `userRole`: filtering by the role of the owning user can be done using the `user.role` query argument. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#finding-user-ids-by-role), the performance of the request while using this filter might be degraded.**
 - Filtering by fields of type `Object` is not supported.
 
 Additionally, you can use the following filters:
@@ -440,6 +440,8 @@ Loads all vocabulary entities associated with each layer. Internally this uses t
 Loads the name and email address of the author of the layer. If you request this issue as an authenticated user with `ADMIN` role, you will additionally get the author's role.
 
 If the data is not available (for example, the user has since been deleted), no `user` property will be added to the layer object.
+
+**Please keep in mind that, due to the limitations of the [underlying endpoint used to find users by ids](developer.html#finding-users-by-ids), the performance of the request while including user information might be degraded.**
 
 ```shell
 curl -X GET "https://api.resourcewatch.org/v1/layer?includes=user"

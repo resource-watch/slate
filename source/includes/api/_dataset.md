@@ -171,7 +171,7 @@ clonedHost.hostPath |                                                           
 widgetRelevantProps |                                                                         | Array       | any valid text
 layerRelevantProps |                                                                          | Array       | any valid text
 subscribable   | If the dataset is subscribable (i.e. contains a non-empty object in the `subscribable` field) | Boolean     | `true` or `false`
-user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. | String      | `ADMIN`, `MANAGER` or `USER`
+user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#finding-user-ids-by-role), the performance of the request while using this filter might be degraded.** | String      | `ADMIN`, `MANAGER` or `USER`
 vocabulary[name]| Filter returned datasets by vocabulary tags. Does not support regexes.       | String      | any valid text
 collection     | Filter returned datasets collection id. Does not support regexes.            | String      | any valid text
 favourite      | Filter by favourited datasets. See [this section](reference.html#favorites) for more info. Does not support regexes. | String      | any valid text
@@ -295,7 +295,7 @@ When fetching datasets, you can request additional entities to be loaded. The fo
 * `layer` - loads all layers associated with each dataset.
 * `vocabulary` - loads all vocabulary entities associated with each dataset.
 * `metadata` - loads all metadata associated with each dataset.
-* `user` - loads the name, email address and role of the author of the dataset. If you do not issue this request as an `ADMIN` user, or if no user data is available, the `user` object will be empty.
+* `user` - loads the name, email address and role of the author of the dataset. If you do not issue this request as an `ADMIN` user, or if no user data is available, the `user` object will be empty. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find users by ids](developer.html#finding-users-by-ids), the performance of the request while including user information might be degraded.**
 
 **Note:** If you include related entities (e.g. layers) with query filters, the filters will not cascade to the related entities.
 
