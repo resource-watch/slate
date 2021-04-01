@@ -418,7 +418,7 @@ curl -X GET "https://api.resourcewatch.org/auth/user?strategy=cursor"
             "createdAt": "2021-03-24T09:19:25.000Z",
             "updatedAt": "2021-03-26T09:54:08.000Z",
             "role": "USER",
-            "provider": "facebook",
+            "provider": "local",
             "extraUserData": { "apps": ["gfw"] }
         },
         {...},
