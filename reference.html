@@ -2440,7 +2440,7 @@
 </tr>
 <tr>
 <td>user.role</td>
-<td>Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-user-ids-by-role">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></td>
+<td>Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#user-management">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></td>
 <td>String</td>
 <td><code>ADMIN</code>, <code>MANAGER</code> or <code>USER</code></td>
 </tr>
@@ -2485,6 +2485,8 @@
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dataset?sort<span class="o">=</span>user.role
 </code></pre></div>
 <p>The Dataset service currently supports sorting using the <code>sort</code> query parameter. Sorting dataset adheres to the conventions defined in the <a href="concepts.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="reference.html#dataset-reference">Dataset reference</a> section for a detailed description of the fields you can use when sorting. In addition to all dataset model fields, you can sort the returned results by the name (using <code>user.name</code>) or role (using <code>user.role</code>) of the user owner of the dataset. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
+
+<p><strong>Please also keep in mind that, due to the limitations of the <a href="developer.html#user-management">underlying endpoint used to find user ids by name or role</a>, the performance of the request while using this sort might be degraded.</strong></p>
 <h4 id='special-sorting-criteria'>Special sorting criteria</h4>
 <blockquote>
 <p>Sorting datasets with special criteria</p>
@@ -6259,7 +6261,7 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 <ul>
 <li><code>id</code></li>
 <li><code>userName</code></li>
-<li><code>userRole</code>: filtering by the role of the owning user can be done using the <code>user.role</code> query argument. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-user-ids-by-role">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></li>
+<li><code>userRole</code>: filtering by the role of the owning user can be done using the <code>user.role</code> query argument. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#user-management">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></li>
 <li>Filtering by fields of type <code>Object</code> is not supported.</li>
 </ul>
 
@@ -6291,6 +6293,8 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/layer?sort=user.role"</span>
 </code></pre></div>
 <p>The Layer service currently supports sorting using the <code>sort</code> query parameter. Sorting layer adheres to the conventions defined in the <a href="concepts.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="reference.html#layer-reference">Layer reference</a> section for a detailed description of the fields you can use when sorting. In addition to all layer model fields, you can sort the returned results by the name (using <code>user.name</code>) or role (using <code>user.role</code>) of the user owner of the layer. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
+
+<p><strong>Please also keep in mind that, due to the limitations of the <a href="developer.html#user-management">underlying endpoint used to find user ids by name or role</a>, the performance of the request while using this sort might be degraded.</strong></p>
 <h3 id='include-entities-associated-with-the-layers'>Include entities associated with the layers</h3>
 <p>When fetching layers, you can request additional entities to be loaded. The following entities are available:</p>
 <h4 id='vocabulary'>Vocabulary</h4>
@@ -7603,7 +7607,7 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 <ul>
 <li><code>id</code></li>
 <li><code>userName</code></li>
-<li><code>userRole</code>: filtering by the role of the owning user can be done using the <code>user.role</code> query argument. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-user-ids-by-role">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></li>
+<li><code>userRole</code>: filtering by the role of the owning user can be done using the <code>user.role</code> query argument. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#user-management">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></li>
 </ul>
 
 <p>Additionally, you can use the following filters:</p>
@@ -7634,6 +7638,8 @@ curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="s2">"https://api.resourcewatch.org/v1/widget?sort=user.role"</span>
 </code></pre></div>
 <p>The Widget service currently supports sorting using the <code>sort</code> query parameter. Sorting widgets adheres to the conventions defined in the <a href="concepts.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. Additionally, you can check out the <a href="reference.html#widget-reference">Widget reference</a> section for a detailed description of the fields you can use when sorting. In addition to all widget model fields, you can sort the returned results by the name (using <code>user.name</code>) or role (using <code>user.role</code>) of the user owner of the widget. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
+
+<p><strong>Please also keep in mind that, due to the limitations of the <a href="developer.html#user-management">underlying endpoint used to find user ids by name or role</a>, the performance of the request while using this sort might be degraded.</strong></p>
 <h3 id='include-entities-associated-with-the-widgets'>Include entities associated with the widgets</h3>
 <p>When loading widget data, you can optionally pass an <code>includes</code> query argument to load additional data.</p>
 <h4 id='include-vocabulary'>Include Vocabulary</h4>
@@ -16725,7 +16731,7 @@ If the original topic contains functioning widgets, they will be duplicated and 
 </tr>
 <tr>
 <td>user.role</td>
-<td style="text-align: center">The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#finding-user-ids-by-role">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></td>
+<td style="text-align: center">The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. <strong>Please keep in mind that, due to the limitations of the <a href="developer.html#user-management">underlying endpoint used to find user ids by role</a>, the performance of the request while using this filter might be degraded.</strong></td>
 <td style="text-align: right"><code>ADMIN</code>, <code>MANAGER</code> or <code>USER</code></td>
 </tr>
 <tr>
@@ -16780,6 +16786,8 @@ If the original topic contains functioning widgets, they will be duplicated and 
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET https://api.resourcewatch.org/v1/dashboard?sort<span class="o">=</span>user.role
 </code></pre></div>
 <p>The Dashboards service currently supports sorting using the <code>sort</code> query parameter. Sorting dashboards adheres to the conventions defined in the <a href="concepts.html#sorting">Sorting guidelines for the RW API</a>, so we strongly recommend reading that section before proceeding. In addition to all dashboard model fields, you can sort the returned results by the name (using <code>user.name</code>) or role (using <code>user.role</code>) of the user owner of the dashboard. Keep in mind that sorting by user data is restricted to ADMIN users.</p>
+
+<p><strong>Please also keep in mind that, due to the limitations of the <a href="developer.html#user-management">underlying endpoint used to find user ids by name or role</a>, the performance of the request while using this sort might be degraded.</strong></p>
 <h3 id='include-related-entities'>Include related entities</h3>
 <p>When loading dashboards, you can optionally pass an <code>includes</code> query argument to load additional data.</p>
 <h4 id='user'>User</h4>
