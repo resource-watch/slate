@@ -171,7 +171,7 @@ clonedHost.hostPath |                                                           
 widgetRelevantProps |                                                                         | Array       | any valid text
 layerRelevantProps |                                                                          | Array       | any valid text
 subscribable   | If the dataset is subscribable (i.e. contains a non-empty object in the `subscribable` field) | Boolean     | `true` or `false`
-user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#finding-user-ids-by-role), the performance of the request while using this filter might be degraded.** | String      | `ADMIN`, `MANAGER` or `USER`
+user.role      | Filter results by the role of the owner of the dataset. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#user-management), the performance of the request while using this filter might be degraded.** | String      | `ADMIN`, `MANAGER` or `USER`
 vocabulary[name]| Filter returned datasets by vocabulary tags. Does not support regexes.       | String      | any valid text
 collection     | Filter returned datasets collection id. Does not support regexes.            | String      | any valid text
 favourite      | Filter by favourited datasets. See [this section](reference.html#favorites) for more info. Does not support regexes. | String      | any valid text
@@ -205,6 +205,8 @@ curl -X GET https://api.resourcewatch.org/v1/dataset?sort=user.role
 ```
 
 The Dataset service currently supports sorting using the `sort` query parameter. Sorting dataset adheres to the conventions defined in the [Sorting guidelines for the RW API](concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Dataset reference](reference.html#dataset-reference) section for a detailed description of the fields you can use when sorting. In addition to all dataset model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dataset. Keep in mind that sorting by user data is restricted to ADMIN users.
+
+**Please also keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by name or role](developer.html#user-management), the performance of the request while using this sort might be degraded.**
 
 #### Special sorting criteria
 

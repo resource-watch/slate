@@ -88,7 +88,7 @@ name           | Filter dashboards by name (partial matches and case-insensitive
 published      | Filter dashboards by publishing status (true, false).                             | Boolean
 private        | Filter dashboards by private status (true, false).                                | Boolean
 user           | Filter dashboards by author user id.                                              | Text
-user.role      | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#finding-user-ids-by-role), the performance of the request while using this filter might be degraded.** | `ADMIN`, `MANAGER` or `USER`
+user.role      | The role of the user who created the dashboard. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#user-management), the performance of the request while using this filter might be degraded.** | `ADMIN`, `MANAGER` or `USER`
 application    | The application to which the dashboard belongs. Read more about this field [here](concepts.html#applications). | Text (single value)
 is-highlighted | Filter dashboards by highlighted ones (true,false).                               | Boolean
 is-featured    | Filter dashboards by featured ones (true,false).                                  | Boolean
@@ -133,6 +133,8 @@ curl -X GET https://api.resourcewatch.org/v1/dashboard?sort=user.role
 ```
 
 The Dashboards service currently supports sorting using the `sort` query parameter. Sorting dashboards adheres to the conventions defined in the [Sorting guidelines for the RW API](concepts.html#sorting), so we strongly recommend reading that section before proceeding. In addition to all dashboard model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the dashboard. Keep in mind that sorting by user data is restricted to ADMIN users.
+
+**Please also keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by name or role](developer.html#user-management), the performance of the request while using this sort might be degraded.**
 
 ### Include related entities
 

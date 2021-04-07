@@ -313,7 +313,7 @@ The layer list endpoint provides a wide range of filters that you can use to tai
 
 - `id`
 - `userName`
-- `userRole`: filtering by the role of the owning user can be done using the `user.role` query argument. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#finding-user-ids-by-role), the performance of the request while using this filter might be degraded.**
+- `userRole`: filtering by the role of the owning user can be done using the `user.role` query argument. If the requesting user does not have the ADMIN role, this filter is ignored. **Please keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by role](developer.html#user-management), the performance of the request while using this filter might be degraded.**
 - Filtering by fields of type `Object` is not supported.
 
 Additionally, you can use the following filters:
@@ -348,6 +348,8 @@ curl -X GET "https://api.resourcewatch.org/v1/layer?sort=user.role"
 ```
 
 The Layer service currently supports sorting using the `sort` query parameter. Sorting layer adheres to the conventions defined in the [Sorting guidelines for the RW API](concepts.html#sorting), so we strongly recommend reading that section before proceeding. Additionally, you can check out the [Layer reference](reference.html#layer-reference) section for a detailed description of the fields you can use when sorting. In addition to all layer model fields, you can sort the returned results by the name (using `user.name`) or role (using `user.role`) of the user owner of the layer. Keep in mind that sorting by user data is restricted to ADMIN users.
+
+**Please also keep in mind that, due to the limitations of the [underlying endpoint used to find user ids by name or role](developer.html#user-management), the performance of the request while using this sort might be degraded.**
 
 ### Include entities associated with the layers
 
