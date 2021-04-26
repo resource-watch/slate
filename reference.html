@@ -17647,17 +17647,15 @@ If you are accessing these endpoints from a browser, it will typically generate 
 <p>Response</p>
 </blockquote>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-email@provider.com"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-27T10:59:03.531Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-27T10:59:03.531Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfd237767b3176dd63f2eb7"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-email@provider.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-27T10:59:03.531Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-11-27T10:59:03.531Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USER"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"local"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"extraUserData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"apps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
@@ -17714,21 +17712,25 @@ If you are accessing these endpoints from a browser, it will typically generate 
 </tr>
 </tbody></table>
 <h2 id='login-3rd-party-oauth'>Login (3rd party oauth)</h2>
-<p>Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Twitter, Apple or Google. These 4 authentication mechanisms use <a href="https://en.wikipedia.org/wiki/OAuth">OAuth</a> access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.</p>
+<p>Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Apple or Google. These 4 authentication mechanisms use <a href="https://en.wikipedia.org/wiki/OAuth">OAuth</a> access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.</p>
 
 <p>For each provider, there&#39;s a corresponding endpoint that starts the authentication flow. These endpoints simply redirect the user to the respective provider page, along with some data that allows the provider to contact the RW API when the login process is finished. You can forward users to these endpoints if, for example, you want to have your own login links on your UI.</p>
 
-<p>Keep in mind that, depending on the <code>origin</code> application you specify, different Twitter, Facebook or Google applications will be used. Also, not all <code>origin</code> applications support all 3 providers.</p>
+<p>Keep in mind that, depending on the <code>origin</code> application you specify, different Facebook, Google or Apple applications will be used. Also, not all <code>origin</code> applications support all 3 providers.</p>
 <h3 id='3rd-party-authentication-using-google'>3rd party authentication using Google</h3>
 <ul>
 <li>GET <code>&lt;BASE API URL&gt;/auth/google</code> - Starts authentication using the configured Google settings</li>
-<li>GET <code>&lt;BASE API URL&gt;/auth/google/token?access_token=&lt;Google token&gt;</code> - Endpoint that expects the Google token used by the API to validate the user session. It</li>
+<li>GET <code>&lt;BASE API URL&gt;/auth/google/token?access_token=&lt;Google token&gt;</code> - Endpoint that expects the Google token used by the API to validate the user session.</li>
 </ul>
+
+<p><strong>Note:</strong> For the access token based login with Google, you should make sure to request the <code>https://www.googleapis.com/auth/userinfo.email</code> scope. This scope will make sure that the RW API can find the user email address in the payload returned by Google validating the access token. If the email is present in the payload returned by Google, it will be used to login the RW API account. If not, the RW API will use &quot;fake email&quot;, composed using Google&#39;s unique user identifier, as the email address for the RW API account to log in.</p>
 <h3 id='3rd-party-authentication-using-facebook'>3rd party authentication using Facebook</h3>
 <ul>
 <li>GET <code>&lt;BASE API URL&gt;/auth/facebook</code> - Starts authentication using the configured Facebook settings</li>
 <li>GET <code>&lt;BASE API URL&gt;/auth/facebook/token?access_token=&lt;Facebook token&gt;</code> - Endpoint that expects the Facebook token used by the API to validate the user session.</li>
 </ul>
+
+<p><strong>Note:</strong> For the access token based login with Facebook, you should make sure to request the <code>email</code> scope. This scope will make sure that the RW API can find the user email address in the payload returned by Facebook validating the access token. If the email is present in the payload returned by Facebook, it will be used to login the RW API account. If not, the RW API will use &quot;fake email&quot;, composed using Facebook&#39;s unique user identifier, as the email address for the RW API account to log in.</p>
 <h3 id='3rd-party-authentication-using-apple'>3rd party authentication using Apple</h3>
 <ul>
 <li>GET <code>&lt;BASE API URL&gt;/auth/apple</code> - Starts authentication using the configured Apple settings</li>
@@ -17794,6 +17796,8 @@ If you are accessing these endpoints from a browser, it will typically generate 
 
 <p>While optional, it&#39;s highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user&#39;s apps match datasets, widgets, etc. All accounts created this way will have the <code>USER</code> role.</p>
 
+<p>This endpoint also supports receiving a <code>callbackUrl</code> parameter (this can either be provided as query parameter or as part of the request body). This field contains the URL where the user will be redirected to after confirming their account. If not provided, it will default to the value of the <code>HTTP Referrer</code> header of the sign-up request.</p>
+
 <p><strong>Errors</strong></p>
 
 <table><thead>
@@ -17837,7 +17841,9 @@ If you are accessing these endpoints from a browser, it will typically generate 
 </span></code></pre></div>
 <p>Endpoint where the password reset request is sent. If an account associated with the provided email address exists, a message will be sent to it with a link that will allow the user to reset their account&#39;s password. That link will be valid for 24 hours.</p>
 
-<p>Note that, for security reasons, if no account associated with the provided email address exists, the output will be the same.  </p>
+<p>Note that, for security reasons, if no account associated with the provided email address exists, the output will be the same.</p>
+
+<p>This endpoint supports receiving a <code>callbackUrl</code> parameter (this can either be provided as query parameter or as part of the request body). This field contains the URL where the user will be redirected to after resetting their password. If not provided, it will default to the value of the <code>HTTP Referrer</code> header of the sign-up request.</p>
 
 <p><strong>Errors</strong></p>
 
