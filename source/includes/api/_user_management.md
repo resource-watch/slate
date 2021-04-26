@@ -120,17 +120,15 @@ curl -X GET "https://api.resourcewatch.org/auth/check-logged" \
 
 ```json
 {
-  "data": {
-    "id": "5bfd237767b3176dd63f2eb7",
-    "_id": "5bfd237767b3176dd63f2eb7",
-    "email": "your-email@provider.com",
-    "createdAt": "2018-11-27T10:59:03.531Z",
-    "updatedAt": "2018-11-27T10:59:03.531Z",
-    "role": "USER",
-    "provider": "local",
-    "extraUserData": {
-      "apps": ["rw"]
-    }
+  "id": "5bfd237767b3176dd63f2eb7",
+  "_id": "5bfd237767b3176dd63f2eb7",
+  "email": "your-email@provider.com",
+  "createdAt": "2018-11-27T10:59:03.531Z",
+  "updatedAt": "2018-11-27T10:59:03.531Z",
+  "role": "USER",
+  "provider": "local",
+  "extraUserData": {
+    "apps": ["rw"]
   }
 }
 ```
@@ -178,21 +176,25 @@ Error code     | Error message  | Description
 
 ## Login (3rd party oauth)
 
-Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Twitter, Apple or Google. These 4 authentication mechanisms use [OAuth](https://en.wikipedia.org/wiki/OAuth) access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.
+Besides its own email + password login mechanism, that you can interact with and build your own UI on top of, the RW API also provides authentication using 3rd party accounts, like Facebook, Apple or Google. These 4 authentication mechanisms use [OAuth](https://en.wikipedia.org/wiki/OAuth) access delegation, meaning users can use their accounts on these platforms to access the RW API. For each mechanism, users will be informed, when logging in, which data the RW API requires to provide this access.
 
 For each provider, there's a corresponding endpoint that starts the authentication flow. These endpoints simply redirect the user to the respective provider page, along with some data that allows the provider to contact the RW API when the login process is finished. You can forward users to these endpoints if, for example, you want to have your own login links on your UI.
 
-Keep in mind that, depending on the `origin` application you specify, different Twitter, Facebook or Google applications will be used. Also, not all `origin` applications support all 3 providers.
+Keep in mind that, depending on the `origin` application you specify, different Facebook, Google or Apple applications will be used. Also, not all `origin` applications support all 3 providers.
 
 ### 3rd party authentication using Google
 
 - GET `<BASE API URL>/auth/google` - Starts authentication using the configured Google settings
-- GET `<BASE API URL>/auth/google/token?access_token=<Google token>` - Endpoint that expects the Google token used by the API to validate the user session. It
+- GET `<BASE API URL>/auth/google/token?access_token=<Google token>` - Endpoint that expects the Google token used by the API to validate the user session.
+
+**Note:** For the access token based login with Google, you should make sure to request the `https://www.googleapis.com/auth/userinfo.email` scope. This scope will make sure that the RW API can find the user email address in the payload returned by Google validating the access token. If the email is present in the payload returned by Google, it will be used to login the RW API account. If not, the RW API will use "fake email", composed using Google's unique user identifier, as the email address for the RW API account to log in.
 
 ### 3rd party authentication using Facebook
 
 - GET `<BASE API URL>/auth/facebook` - Starts authentication using the configured Facebook settings
 - GET `<BASE API URL>/auth/facebook/token?access_token=<Facebook token>` - Endpoint that expects the Facebook token used by the API to validate the user session.
+
+**Note:** For the access token based login with Facebook, you should make sure to request the `email` scope. This scope will make sure that the RW API can find the user email address in the payload returned by Facebook validating the access token. If the email is present in the payload returned by Facebook, it will be used to login the RW API account. If not, the RW API will use "fake email", composed using Facebook's unique user identifier, as the email address for the RW API account to log in.
 
 ### 3rd party authentication using Apple
 
@@ -271,6 +273,8 @@ Keep in mind that this endpoint creates a **deactivated** user account. A succes
 
 While optional, it's highly recommended that you specify which apps the user will be granted access to, as most API operation validate the user's apps match datasets, widgets, etc. All accounts created this way will have the `USER` role.
 
+This endpoint also supports receiving a `callbackUrl` parameter (this can either be provided as query parameter or as part of the request body). This field contains the URL where the user will be redirected to after confirming their account. If not provided, it will default to the value of the `HTTP Referrer` header of the sign-up request.
+
 **Errors**
 
 Error code     | Error message  | Description
@@ -310,7 +314,9 @@ curl -X POST "https://api.resourcewatch.org/auth/reset-password" \
 
 Endpoint where the password reset request is sent. If an account associated with the provided email address exists, a message will be sent to it with a link that will allow the user to reset their account's password. That link will be valid for 24 hours.
 
-Note that, for security reasons, if no account associated with the provided email address exists, the output will be the same.  
+Note that, for security reasons, if no account associated with the provided email address exists, the output will be the same.
+
+This endpoint supports receiving a `callbackUrl` parameter (this can either be provided as query parameter or as part of the request body). This field contains the URL where the user will be redirected to after resetting their password. If not provided, it will default to the value of the `HTTP Referrer` header of the sign-up request.
 
 **Errors**
 
