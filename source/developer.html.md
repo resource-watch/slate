@@ -25,6 +25,7 @@ includes:
   - dev/subscriptions
   - dev/user_management
   - dev/graph
+  - dev/fw_contextual_layers
 
 logo: logo-rw.png
 
