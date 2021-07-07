@@ -694,3 +694,23 @@ html, body {
 .copy-clipboard:hover {
   opacity: 0.8;
 }
+
+
+/*
+See Slate Issue 855 for a suggestions about how to get code blocks in the center column rather than always in the right column.
+https://github.com/slatedocs/slate/issues/855#issuecomment-337706179
+*/
+.content {
+  .center-column + pre {
+    position: static;
+    float: none;
+    clear: none;
+    margin: 0 28px;
+    left: 0;
+    margin-right: $examples-width !important;
+    width: 45% !important;     // May need to adjust this
+
+  }
+}
+
+
