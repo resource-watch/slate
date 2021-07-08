@@ -318,7 +318,12 @@ While the workflow above will cover most of the changes you'll do as an RW API d
 
 ### Infrastructure as code using Terraform
 
-Each of the 3 RW API environments lives on a separate AWS account. Aside from scale-related aspects, the 3 infrastructures are meant to be as equal to each other as possible. To achieve this, as well as ease of maintenance, infrastructure is maintained using [Terraform](https://www.terraform.io/), an [infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code) tool. If you are not familiar with Terraform, we recommend learning about it before proceeding.
+Each of the 3 RW API environments lives on a separate AWS account. To ease maintenance, the infrastructure configuration is shared by all 3 environments, and is maintained using a common [Terraform](https://www.terraform.io/) project, an [infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code) tool. If you are not familiar with Terraform, we recommend learning about it before proceeding.
+
+Structure-wise, the 3 RW API environments are mostly equal, with the differences between them being the following:
+- Scale and redundancy: the production environment has more and more capable hardware, to account for higher user load and also to provide redundancy on key services
+- Sites: due to its stability-oriented purpose, the production environment also hosts the sites for some WRI-related projects, which run in dedicated [EKS node groups](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html), and that do not exist on the dev or staging clusters.
+- Availability: being a development-only resource, the dev environment does not necessarily need to be available 24/7, and it may be intentionally unavailable as a cost-saving measure - we call this [hibernation](#rw-api-hibernation).
 
 Due to the structure of the RW API infrastructure, the final architecture is defined by 2 Terraform projects:
 
@@ -331,6 +336,14 @@ While the Kubernetes Terraform project contains an increasingly large portion of
 
 - [Some resources](https://github.com/resource-watch/api-infrastructure/tree/production/k8s-aws) are provisioned using traditional YAML files, that need to be manually applied using `kubectl apply` once the Kubernetes cluster is up and running. The link above contains not only said YAML files, but also associated documentation.
 - [Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/) are kept in a separate, private repository. Said repository has multiple YAML files, and organized by cluster, and then by Kubernetes namespace. Each of these YAML files needs to be manually applied whenever needed.
+
+#### RW API hibernation
+
+As mentioned above, to save costs on the dev environment, its functionality may be turned off at times when it's not needed - we called this "hibernation". The goal is to have a way to dial down resources in times when they are not needed (which we anticipate will be most of the time), while also giving RW API developers a simple and easy way to restore full functionality in times when it's needed. 
+
+This can be achieved by modifying the `hibernate` boolean variable in the [Terraform dev variables file](https://github.com/resource-watch/api-infrastructure/blob/e0c60966e82f98b2f05939169389d9170a4f4985/terraform/vars/terraform-dev.tfvars#L24) and applying these changes (Github Actions will do this automatically on push/merge to the `dev` branch). Setting this value to `true` will cause the dev RW API to go into hibernation and become unavailable, while `false` restore its functionality. Keep in mind that both hibernation and restoration processes will take a few minutes, so we recommend the company of your favourite beverage while you carry out these steps.
+
+One important note here: while it's meant to be used with the dev environment only, there is no failsafe mechanism in place preventing the staging or production environments from being set into hibernation as well. When modifying the Terraform variables file, be sure you are on the correct file, otherwise you may accidentally cause staging or production unavailability.
 
 ### Access to infrastructure resources
 
