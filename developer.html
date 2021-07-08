@@ -581,6 +581,11 @@
                       <ul class="toc-list-h3">
                           <li>
                             <a href="#infrastructure-as-code-using-terraform" class="toc-h3 toc-link" data-title="Infrastructure as code using Terraform">Infrastructure as code using Terraform</a>
+                              <ul class="toc-list-h4">
+                                  <li>
+                                    <a href="#rw-api-hibernation" class="toc-h4 toc-link" data-title="RW API hibernation">RW API hibernation</a>
+                                  </li>
+                              </ul>
                           </li>
                           <li>
                             <a href="#access-to-infrastructure-resources" class="toc-h3 toc-link" data-title="Access to infrastructure resources">Access to infrastructure resources</a>
@@ -1904,7 +1909,12 @@ Make sure to checkout with `--config core.autocrlf=input`. This avoids an issue 
 <h2 id='infrastructure-configuration'>Infrastructure configuration</h2>
 <p>While the workflow above will cover most of the changes you&#39;ll do as an RW API developer - changes to the code that powers the API - from time to time you&#39;ll need to adjust the actual infrastructure on which the API runs. This section covers what you need to know to be able to manage the infrastructure.</p>
 <h3 id='infrastructure-as-code-using-terraform'>Infrastructure as code using Terraform</h3>
-<p>Each of the 3 RW API environments lives on a separate AWS account. Aside from scale-related aspects, the 3 infrastructures are meant to be as equal to each other as possible. To achieve this, as well as ease of maintenance, infrastructure is maintained using <a href="https://www.terraform.io/">Terraform</a>, an <a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">infrastructure as code</a> tool. If you are not familiar with Terraform, we recommend learning about it before proceeding.</p>
+<p>Each of the 3 RW API environments lives on a separate AWS account. To ease maintenance, the infrastructure configuration is shared by all 3 environments, and is maintained using a common <a href="https://www.terraform.io/">Terraform</a> project, an <a href="https://en.wikipedia.org/wiki/Infrastructure_as_code">infrastructure as code</a> tool. If you are not familiar with Terraform, we recommend learning about it before proceeding.</p>
+
+<p>Structure-wise, the 3 RW API environments are mostly equal, with the differences between them being the following:
+- Scale and redundancy: the production environment has more and more capable hardware, to account for higher user load and also to provide redundancy on key services
+- Sites: due to its stability-oriented purpose, the production environment also hosts the sites for some WRI-related projects, which run in dedicated <a href="https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html">EKS node groups</a>, and that do not exist on the dev or staging clusters.
+- Availability: being a development-only resource, the dev environment does not necessarily need to be available 24/7, and it may be intentionally unavailable as a cost-saving measure - we call this <a href="#rw-api-hibernation">hibernation</a>.</p>
 
 <p>Due to the structure of the RW API infrastructure, the final architecture is defined by 2 Terraform projects:</p>
 
@@ -1921,6 +1931,12 @@ Make sure to checkout with `--config core.autocrlf=input`. This avoids an issue 
 <li><a href="https://github.com/resource-watch/api-infrastructure/tree/production/k8s-aws">Some resources</a> are provisioned using traditional YAML files, that need to be manually applied using <code>kubectl apply</code> once the Kubernetes cluster is up and running. The link above contains not only said YAML files, but also associated documentation.</li>
 <li><a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes secrets</a> are kept in a separate, private repository. Said repository has multiple YAML files, and organized by cluster, and then by Kubernetes namespace. Each of these YAML files needs to be manually applied whenever needed.</li>
 </ul>
+<h4 id='rw-api-hibernation'>RW API hibernation</h4>
+<p>As mentioned above, to save costs on the dev environment, its functionality may be turned off at times when it&#39;s not needed - we called this &quot;hibernation&quot;. The goal is to have a way to dial down resources in times when they are not needed (which we anticipate will be most of the time), while also giving RW API developers a simple and easy way to restore full functionality in times when it&#39;s needed. </p>
+
+<p>This can be achieved by modifying the <code>hibernate</code> boolean variable in the <a href="https://github.com/resource-watch/api-infrastructure/blob/e0c60966e82f98b2f05939169389d9170a4f4985/terraform/vars/terraform-dev.tfvars#L24">Terraform dev variables file</a> and applying these changes (Github Actions will do this automatically on push/merge to the <code>dev</code> branch). Setting this value to <code>true</code> will cause the dev RW API to go into hibernation and become unavailable, while <code>false</code> restore its functionality. Keep in mind that both hibernation and restoration processes will take a few minutes, so we recommend the company of your favourite beverage while you carry out these steps.</p>
+
+<p>One important note here: while it&#39;s meant to be used with the dev environment only, there is no failsafe mechanism in place preventing the staging or production environments from being set into hibernation as well. When modifying the Terraform variables file, be sure you are on the correct file, otherwise you may accidentally cause staging or production unavailability.</p>
 <h3 id='access-to-infrastructure-resources'>Access to infrastructure resources</h3>
 <p>For management or debug purposes, you may need to access the infrastructure resources. Depending on what you want to achieve, there are multiple paths forward. However, for all of them, a common required element is an AWS account with the adequate permissions. These permissions will depend on what you&#39;re trying to achieve in particular. The AWS IAM permission mechanism is too powerful and complex to cover here, so be prepared to see a few &quot;permission denied&quot; from time to time, and to discuss with your fellow RW API developers what permissions you are missing that will allow you to access a give resource.</p>
 <h4 id='infrastructure-details'>Infrastructure details</h4>
