@@ -951,6 +951,22 @@
                   </li>
               </ul>
           </li>
+          <li>
+            <a href="#forest-watcher-contextual-layers" class="toc-h1 toc-link" data-title="Forest Watcher Contextual layers">Forest Watcher Contextual layers</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#updating-the-tree-cover-loss-data" class="toc-h2 toc-link" data-title="Updating the Tree Cover Loss data">Updating the Tree Cover Loss data</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#update-the-tree-cover-loss-layer-url" class="toc-h3 toc-link" data-title="Update the Tree Cover Loss layer URL">Update the Tree Cover Loss layer URL</a>
+                          </li>
+                          <li>
+                            <a href="#creating-updating-a-fw-contextual-layer" class="toc-h3 toc-link" data-title="Creating/updating a FW contextual layer">Creating/updating a FW contextual layer</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </li>
       </ul>
         <ul class="toc-footer">
             <li><a href='quickstart.html'>Getting started</a></li>
@@ -4118,6 +4134,29 @@ curl <span class="nt">-X</span> POST https://api.resourcewatch.org/auth/user/fin
 <td>No graph node for the resource with id provided was found.</td>
 </tr>
 </tbody></table>
+<h1 id='forest-watcher-contextual-layers'>Forest Watcher Contextual layers</h1><h2 id='updating-the-tree-cover-loss-data'>Updating the Tree Cover Loss data</h2>
+<p>The <a href="https://github.com/gfw-api/fw-contextual-layers">FW Contextual layers microservice</a> serves tree cover loss (TCL) data in tile format through one of its endpoints. The underlying dataset that is used to create these tiles is updated regularly - typically once a year - through a process that requires minor modifications to the configuration of the service. Below we&#39;ll outline the steps to carry out this update</p>
+<h3 id='update-the-tree-cover-loss-layer-url'>Update the Tree Cover Loss layer URL</h3>
+<p>The first step is updating the source code of the Contextual layers microservice - specifically <a href="https://github.com/gfw-api/fw-contextual-layers/blob/a8442da2c7a4e68625867479860c0185f35488a8/config/default.json#L17">this line</a> - and setting the updated URL for the updated dataset containing the tree cover loss data. This updated dataset will be used as a replacement of the previous one. On the more common scenario of the yearly updates to the TCL data, this means that the new dataset should have the data for all previously existing years, plus the newly added year.</p>
+
+<p>Once you&#39;ve done this, be sure to follow the <a href="#microservice-development-guide">Microservice development guide</a> to test and deploy your changes to all relevant live environments.</p>
+<h3 id='creating-updating-a-fw-contextual-layer'>Creating/updating a FW contextual layer</h3>
+<p>At this stage, the FW Contextual layers is already capable of serving the updated data through the <a href="reference.html#getting-loss-layer-tiles">tile endpoint</a>. However, the Contextual layers microservice also has a built-in layer listing mechanism, which you may want to update, for the convenience of end users. You can learn more about it in the <a href="reference.html#contextual-layers">FW Contextual layers endpoint documentation section</a>.</p>
+
+<blockquote>
+<p>Example request to add a new contextual layer</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST https://api.resourcewatch.org/v1/contextual-layer <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Authorization: Bearer &lt;your-token&gt;"</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="se">\</span>
+<span class="s1">'{
+    "isPublic": true,
+    "name": "Tree Cover Loss (2019)",
+    "url": "https://api.resourcewatch.org/contextual-layer/loss-layer/2018/2019/{z}/{x}/{y}.png",
+    "enabled": true
+}'</span>
+</code></pre></div>
+<p>In the scenario where you are updating the TCL layer to add a new year of data, you typically want to add a new contextual layer to the list of existing ones, so it shows up in future listings of layers used by client applications (and thus becomes available to end users through client UIs). To do so, you should use the <a href="reference.html#creating-a-contextual-layer-for-a-team">Create contextual layer endpoint</a> with a payload similar to the example on the side. The example above illustrates how you would add new data for the 2019 year - be sure to adjust the layer name and URL to match your needs.</p>
 
       </div>
       <div class="dark-box">
